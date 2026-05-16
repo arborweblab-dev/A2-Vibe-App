@@ -121,8 +121,9 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats }) => {
 
   if (!isOpen) return null;
 
-  const tipAmount = bill ? (parseFloat(bill) * (tipPerc / 100)).toFixed(2) : '0.00';
-  const totalBill = bill ? (parseFloat(bill) + parseFloat(tipAmount)).toFixed(2) : '0.00';
+  const billVal = parseFloat(bill) || 0;
+  const tipAmount = (billVal * (tipPerc / 100)).toFixed(2);
+  const totalBill = (billVal + parseFloat(tipAmount)).toFixed(2);
 
   const POIs = [
     { name: "Michigan Stadium", type: "Landmark", color: "bg-[#00274c]", desc: "The Big House. Essential Saturday destination." },
@@ -190,7 +191,7 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats }) => {
                 value={bill}
                 onChange={(e) => setBill(e.target.value)}
                 placeholder="0.00" 
-                className={`w-full p-5 rounded-2xl bg-black/20 border ${theme.border} text-white font-bold text-xl outline-none focus:border-[#ffcb05]`} 
+                className={`w-full p-5 rounded-2xl bg-black/20 border border-white/10 text-white font-bold text-xl outline-none focus:border-[#ffcb05]`} 
               />
               <div className="grid grid-cols-4 gap-2">
                 {[15, 18, 20, 25].map(p => (
@@ -261,8 +262,8 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
     return () => clearInterval(interval);
   }, [featuredPosts]);
 
-  const nextHighlight = (e) => { e.stopPropagation(); setHighlightIdx(p => (p + 1) % featuredPosts.length); };
-  const prevHighlight = (e) => { e.stopPropagation(); setHighlightIdx(p => (p - 1 + featuredPosts.length) % featuredPosts.length); };
+  const nextHighlight = (e) => { if(e) e.stopPropagation(); setHighlightIdx(p => (p + 1) % featuredPosts.length); };
+  const prevHighlight = (e) => { if(e) e.stopPropagation(); setHighlightIdx(p => (p - 1 + featuredPosts.length) % featuredPosts.length); };
 
   return (
     <div className="space-y-12 animate-fade text-left relative z-10 pb-16 font-sans w-full">
@@ -287,7 +288,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <div className="flex-1 p-4 flex flex-col justify-between">
                 <h4 className={`font-bold text-xs ${theme.text} line-clamp-2 leading-tight uppercase tracking-tight`}>{item.name}</h4>
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black text-[#34a4b8]">{item.price}</span>
+                  <span className="text-[10px] font-black text-[#34a4b8] uppercase">{item.price}</span>
                   <button onClick={(e) => { e.stopPropagation(); item.url && window.open(item.url, '_blank'); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">View</button>
                 </div>
               </div>
@@ -304,10 +305,10 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
         </div>
         <div className="grid grid-cols-4 gap-4 px-1">
           {[
+            { label: 'Transit', icon: <Navigation size={22}/>, link: 'https://www.theride.org/' },
             { label: 'Eats', icon: <Utensils size={22}/>, path: 'home' },
             { label: 'Pulse', icon: <Zap size={22}/>, path: 'fun' },
-            { label: 'Culture', icon: <Building size={22}/>, path: 'fun' },
-            { label: 'Transit', icon: <Navigation size={22}/>, link: 'https://www.theride.org/' }
+            { label: 'Logs', icon: <BookText size={22}/>, path: 'journal' }
           ].map(item => (
             <button key={item.label} onClick={() => item.link ? window.open(item.link, '_blank') : (item.path && setView(item.path))} className="flex flex-col items-center gap-2 active:scale-95 group">
               <div className="p-4 rounded-2xl text-white shadow-lg bg-[#00274c] group-hover:scale-105 transition-transform">{item.icon}</div>
@@ -328,7 +329,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               {res.img && <img src={res.img} className="w-full h-28 object-cover" alt="" />}
               <div className="p-4">
                 <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title}</h4>
-                <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-1">Gourmet A2</p>
+                <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-widest mt-1">Gourmet A2</p>
               </div>
               <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}><Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} /></button>
             </div>
@@ -339,7 +340,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
       <section>
         <div className="flex items-center gap-2 mb-5 px-2">
           <Sparkles size={18} className="text-[#ffcb05]" />
-          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Highlights</h2>
         </div>
         
         {featuredPosts && featuredPosts.length > 0 && (
@@ -349,7 +350,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               
               <div className="absolute bottom-12 left-8 right-8 text-white space-y-3">
-                <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block">Trending Now</span>
+                <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block">Best of A2</span>
                 <h4 className="text-2xl font-header font-black uppercase italic leading-tight drop-shadow-md tracking-tighter">{featuredPosts[highlightIdx]?.title || ''}</h4>
                 <p className="text-sm font-medium opacity-80 line-clamp-2 leading-relaxed italic">{featuredPosts[highlightIdx]?.excerpt || ''}</p>
               </div>
@@ -375,22 +376,12 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
 const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, setView, onNavigateFlavors }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const [activeTool, setActiveTool] = useState(null);
-
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
-
-  const diningFavorites = (favorites || []).filter(f => f.type === 'dining');
-  const experienceFavorites = (favorites || []).filter(f => f.type === 'experience');
-  const articleFavorites = (favorites || []).filter(f => f.type === 'article');
-  const amazonFavorites = (favorites || []).filter(f => f.type === 'amazon');
 
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col items-center">
       <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} />
-      
-      <div className="w-full px-2">
-        <h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>The Hub</h2>
-      </div>
-
+      <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>The Hub</h2></div>
       <div className="space-y-10 px-2 w-full">
         <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
@@ -410,89 +401,12 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
              <Camera size={20} />
           </button>
         </div>
-
-        <section className="space-y-5 w-full">
-           <div className="flex items-center gap-2 px-1">
-              <Sparkles size={18} className="text-[#34a4b8]" />
-              <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban Tools</h4>
-           </div>
-           <div className="grid grid-cols-2 gap-3">
-              <button onClick={() => setActiveTool('hots')} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}>
-                 <div className="p-2 bg-[#ffcb05]/10 text-[#ffcb05] rounded-lg"><MapPin size={18}/></div>
-                 <span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>Hot Spots</span>
-              </button>
-              <button onClick={() => setActiveTool('water')} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}>
-                 <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg"><Droplets size={18}/></div>
-                 <span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>Hydration</span>
-              </button>
-              <button onClick={() => setActiveTool('calc')} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}>
-                 <div className="p-2 bg-emerald-500/10 text-emerald-500 rounded-lg"><Calculator size={18}/></div>
-                 <span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>Tip Calc</span>
-              </button>
-              <button onClick={() => setActiveTool('weather')} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}>
-                 <div className="p-2 bg-[#34a4b8]/10 text-[#34a4b8] rounded-lg"><Thermometer size={18}/></div>
-                 <span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>Forecast</span>
-              </button>
-           </div>
-        </section>
-
+        <section className="space-y-5 w-full"><div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban Tools</h4></div><div className="grid grid-cols-2 gap-3">
+            {[{id:'hots',i:MapPin,l:'Hot Spots',color:'#ffcb05'},{id:'water',i:Droplets,l:'Hydration',color:'#34a4b8'},{id:'calc',i:Calculator,l:'Tip Calc',color:'#10b981'},{id:'weather',i:Thermometer,l:'Forecast',color:'#34a4b8'}].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.i size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
+        </div></section>
         <section className="space-y-8 w-full">
-          <div className="space-y-5">
-            <div className="flex items-center justify-between px-1">
-               <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Saved Gear</h4>
-               <button onClick={() => setView('essentials')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Shop Local</button>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {amazonFavorites.length === 0 ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No city gear saved yet</div> : amazonFavorites.map(fav => (
-                  <div key={`${fav.type}_${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
-                    {fav.img && <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" />}
-                    <div className="flex-1">
-                      <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name}</p>
-                      <p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.price}</p>
-                    </div>
-                    <button onClick={(e) => { e.stopPropagation(); toggleFavorite(fav); }} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
-                  </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-5">
-            <div className="flex items-center justify-between px-1">
-               <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Saved Activities</h4>
-               <button onClick={() => setView('fun')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore</button>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {experienceFavorites.length === 0 ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No activities saved yet</div> : experienceFavorites.map(fav => (
-                  <div key={`${fav.type}_${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
-                    {fav.img && <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" />}
-                    <div className="flex-1">
-                      <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-[#34a4b8] mt-1 tracking-widest">{fav.category}</p>
-                    </div>
-                    <button onClick={(e) => { e.stopPropagation(); toggleFavorite(fav); }} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
-                  </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-5">
-            <div className="flex items-center justify-between px-1">
-               <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Saved Dining</h4>
-               <button onClick={onNavigateFlavors} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore</button>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {diningFavorites.length === 0 ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No dining saved yet</div> : diningFavorites.map(fav => (
-                  <div key={`${fav.type}_${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
-                    {fav.img && <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" />}
-                    <div className="flex-1">
-                      <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-[#34a4b8] mt-1 tracking-widest">A2 Eats</p>
-                    </div>
-                    <button onClick={(e) => { e.stopPropagation(); toggleFavorite(fav); }} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
-                  </div>
-              ))}
-            </div>
-          </div>
+           <div className="space-y-5"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>My A2 List</h4>
+           <div className="grid grid-cols-1 gap-4">{!favorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No activities saved yet</div> : (favorites || []).map(fav => (<div key={`${fav.type}_${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.price || 'City Insider'}</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
         </section>
       </div>
     </div>
@@ -533,7 +447,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites }) => {
     return (posts || []).filter(p => (p.allCategories || []).some(cat => cat.toLowerCase().includes(activeCat.toLowerCase())));
   }, [posts, activeCat]);
 
-  if (loading) return <div className="py-40 text-center"><Zap className="animate-pulse mx-auto text-[#ffcb05]" size={48} /></div>;
+  if (loading) return <div className="py-40 text-center"><Anchor className="animate-spin mx-auto text-[#ffcb05]" size={48} /></div>;
 
   return (
     <div className="animate-fade space-y-10 text-left relative z-10 pb-20 w-full flex flex-col items-center">
@@ -541,7 +455,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites }) => {
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>The Journal</h1>
         <div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar">
           {CATEGORIES_JOURNAL.map(cat => (
-            <button key={cat} onClick={() => setActiveCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all ${activeCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg' : `text-slate-500 bg-white/5 border-white/5`}`}>{cat}</button>
+            <button key={cat} onClick={() => setActiveCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all ${activeCat === cat ? 'bg-[#34a4b8] border-[#34a4b8] text-white shadow-lg' : `text-slate-500 bg-white/5 border-white/5`}`}>{cat}</button>
           ))}
         </div>
       </div>
@@ -568,12 +482,22 @@ export default function App() {
   const [view, setView] = useState('home');
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
-  const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
-  const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
+  
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem('a2v_favorites');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [stats, setStats] = useState(() => {
+    const saved = localStorage.getItem('a2v_stats');
+    return saved ? JSON.parse(saved) : { water: 0, drinks: 0 };
+  });
+
   const [itineraries, setItineraries] = useState([]);
   const [dining, setDining] = useState([]);
   const [featuredPosts, setFeaturedPosts] = useState([]);
   const [essentials, setEssentials] = useState([]);
+  const [activeExpCat, setActiveExpCat] = useState('All');
+  const [visibleCount, setVisibleCount] = useState(6);
   const theme = THEMES[themeKey] || THEMES.dark;
 
   useEffect(() => { localStorage.setItem('a2v_favorites', JSON.stringify(favorites)); }, [favorites]);
@@ -590,11 +514,22 @@ export default function App() {
           const data = await resItin.json();
           setItineraries(data.map(i => ({ id: i.id, name: decodeHTML(i.title?.rendered), price: i.acf?.price || i.acf?.starting_price || "--", category: i.acf?.display_category || "Experience", longDesc: i.content?.rendered, img: i._embedded?.['wp:featuredmedia']?.[0]?.source_url || null, url: i.acf?.booking_url || null, type: 'experience' })));
         }
+
         const resEss = await fetch('https://captainkeywest.com/wp-json/wp/v2/amazon_essential?_embed&per_page=40');
         if (resEss.ok) {
           const data = await resEss.json();
-          setEssentials(data.map(e => ({ id: e.id, name: decodeHTML(e.title?.rendered), price: e.acf?.price || "$--", img: e._embedded?.['wp:featuredmedia']?.[0]?.source_url || null, url: e.acf?.affiliate_link || null, longDesc: e.content?.rendered, category: 'A2 Gear', type: 'amazon' })));
+          setEssentials(data.map(e => ({ 
+            id: e.id, 
+            name: decodeHTML(e.title?.rendered), 
+            price: e.acf?.price || "$--", 
+            img: e._embedded?.['wp:featuredmedia']?.[0]?.source_url || null, 
+            url: e.acf?.affiliate_link || null, 
+            longDesc: e.content?.rendered,
+            category: 'City Gear',
+            type: 'amazon' 
+          })));
         }
+
         const resPosts = await fetch('https://captainkeywest.com/wp-json/wp/v2/posts?_embed&per_page=100');
         if (resPosts.ok) {
           const data = await resPosts.json();
@@ -613,6 +548,13 @@ export default function App() {
     else { setFavorites([...favorites, { ...item, savedAt: Date.now() }]); }
   };
 
+  const shuffledExp = useMemo(() => {
+    const list = itineraries || [];
+    const shuffled = [...list].sort(() => Math.random() - 0.5);
+    if (activeExpCat === 'All') return shuffled;
+    return shuffled.filter(i => (i.category || "").toLowerCase().includes(activeExpCat.toLowerCase()));
+  }, [itineraries, activeExpCat]);
+
   return (
     <div className={`min-h-screen ${theme.windowBg} font-sans transition-colors duration-500 flex flex-col items-center overflow-x-hidden`}>
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -621,7 +563,10 @@ export default function App() {
         <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/80 backdrop-blur-xl border-b ${theme.border} px-5 py-5 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
           <div className="flex items-center gap-4 cursor-pointer" onClick={() => setView('home')}>
             <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black"><Building size={20}/></div>
-            <div className="flex flex-col leading-none text-left"><span className={`text-[11px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span><span className={`text-[9px] font-header font-bold uppercase tracking-widest opacity-70 ${theme.text}`}>Vibe</span></div>
+            <div className="flex flex-col leading-none text-left">
+              <span className={`text-[10px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span>
+              <span className={`text-[9px] font-header font-bold uppercase tracking-widest opacity-50 ${theme.text}`}>Vibe</span>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={() => setView('profile')} className={`p-3 rounded-2xl bg-black/5 ${theme.text}`}><User size={20}/></button>
@@ -636,25 +581,38 @@ export default function App() {
           {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} onNavigateFlavors={() => navigateToSection('island-flavors')} />}
           {view === 'fun' && (
             <div className="space-y-12 animate-fade w-full">
-               <div className="text-center px-4"><h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Curated Pulse</h1></div>
+               <div className="text-center px-4"><h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Curated Pulse</h1><div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">{CATEGORIES_EXP.map((cat) => <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>)}</div></div>
                <div className="space-y-5 px-1 pt-4 w-full">
-                  {(itineraries || []).map(exp => (
-                    <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
-                        {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
-                        <div className="flex-1 p-5 flex flex-col justify-between text-left">
-                           <div className="flex justify-between items-start"><div className="max-w-[85%]"><h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2`}>{exp.name}</h4><span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-widest mt-2 block">{exp.category}</span></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button></div>
-                           <div className="flex items-center justify-between"><span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price}</span><button onClick={(e) => { e.stopPropagation(); exp.url && window.open(exp.url, '_blank'); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md">Book Now</button></div>
+                  {shuffledExp && shuffledExp.length > 0 ? (
+                    <>
+                      {shuffledExp.slice(0, activeExpCat === 'All' ? visibleCount : shuffledExp.length).map(exp => (
+                        <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
+                            {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
+                            <div className="flex-1 p-5 flex flex-col justify-between text-left">
+                               <div className="flex justify-between items-start"><div className="max-w-[85%]"><h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4><span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button></div>
+                               <div className="flex items-center justify-between"><span className={`text-[10px] font-black uppercase text-slate-500`}>BOOKED @ {exp.price}</span><button onClick={(e) => { e.stopPropagation(); exp.url && window.open(exp.url, '_blank'); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md">Book Now</button></div>
+                            </div>
                         </div>
-                    </div>
-                  ))}
+                      ))}
+                      {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
+                        <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Experiences</button>
+                      )}
+                    </>
+                  ) : <div className="py-20 text-center opacity-30 text-sm italic">No pulse found for this category.</div>}
                </div>
+               <section className="px-1 space-y-5 w-full">
+                  <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Exploration</h2></div>
+                  <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory px-1">
+                    <button onClick={() => window.open('https://www.theride.org/', '_blank')} className={`${theme.card} min-w-[160px] p-6 rounded-3xl border ${theme.border} flex flex-col items-center gap-4 shadow-md active:scale-95 transition-all snap-start`}><div className="p-4 bg-[#34a4b8]/10 text-[#34a4b8] rounded-2xl"><Navigation size={28} /></div><span className={`text-[11px] font-bold uppercase text-center leading-tight ${theme.text}`}>Bus Routes</span></button>
+                  </div>
+               </section>
             </div>
           )}
           {view === 'essentials' && (
             <div className="space-y-12 animate-fade text-left relative z-10 font-sans pb-20 w-full">
                <section><h2 className={`text-xl font-header font-black uppercase px-2 tracking-tighter ${theme.text}`}>City Gear</h2><div className="grid grid-cols-2 gap-4 px-1 mt-6">
                  {(essentials || []).map(x => (
-                   <div key={x.id} onClick={()=>setSelectedItem(x)} className={`${theme.card} p-4 border ${theme.border} rounded-[24px] cursor-pointer shadow-sm group`}><img src={x.img} className="w-full aspect-square object-cover rounded-2xl mb-3 group-hover:scale-105 transition-transform" alt="" /><h4 className={`text-xs font-bold uppercase ${theme.text} line-clamp-1`}>{x.name}</h4><div className="flex items-center justify-between mt-2"><p className="text-base font-black text-[#ffcb05]">{x.price}</p><button onClick={(e) => { e.stopPropagation(); x.url && window.open(x.url, '_blank'); }} className="bg-[#00274c] text-[#ffcb05] text-[10px] font-bold uppercase px-4 py-2 rounded-xl active:scale-95 border border-[#ffcb05]/20">Buy</button></div></div>
+                   <div key={x.id} onClick={()=>setSelectedItem(x)} className={`${theme.card} p-4 border ${theme.border} rounded-[24px] cursor-pointer shadow-sm group`}><img src={x.img} className="w-full aspect-square object-cover rounded-2xl mb-3 group-hover:scale-105 transition-transform" alt="" /><h4 className={`text-xs font-bold uppercase ${theme.text} line-clamp-1`}>{x.name}</h4><div className="flex items-center justify-between mt-2"><p className="text-base font-black text-[#ffcb05]">{x.price}</p><button onClick={(e) => { e.stopPropagation(); x.url && window.open(x.url, '_blank'); }} className="bg-[#00274c] text-[#ffcb05] text-[10px] font-bold uppercase px-4 py-2 rounded-xl active:scale-95 transition-all border border-[#ffcb05]/20">Buy</button></div></div>
                  ))}</div></section>
             </div>
           )}
@@ -677,7 +635,7 @@ export default function App() {
       <style dangerouslySetInnerHTML={{ __html: `
         .font-header { font-family: 'Outfit', sans-serif; }
         .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
-        .wp-content p { margin-bottom: 1.2rem; line-height: 1.6; }
+        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
         .wp-content strong { color: #ffcb05; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
