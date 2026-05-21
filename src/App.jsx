@@ -10,7 +10,7 @@ import {
   Anchor, Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
   ChevronLeft, ChevronRight, BookText, ShoppingBag, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Map, Navigation, Sun, Ship,
-  Clock, Map as MapIcon
+  Clock
 } from 'lucide-react';
 
 // --- 1. FIREBASE CONFIGURATION ---
@@ -262,8 +262,8 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
     return () => clearInterval(interval);
   }, [featuredPosts]);
 
-  const nextHighlight = (e) => { if(e) e.stopPropagation(); setHighlightIdx(p => (p + 1) % featuredPosts.length); };
-  const prevHighlight = (e) => { if(e) e.stopPropagation(); setHighlightIdx(p => (p - 1 + featuredPosts.length) % featuredPosts.length); };
+  const nextHighlight = (e) => { e.stopPropagation(); setHighlightIdx(p => (p + 1) % featuredPosts.length); };
+  const prevHighlight = (e) => { e.stopPropagation(); setHighlightIdx(p => (p - 1 + featuredPosts.length) % featuredPosts.length); };
 
   return (
     <div className="space-y-12 animate-fade text-left relative z-10 pb-16 font-sans w-full">
@@ -288,7 +288,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <div className="flex-1 p-4 flex flex-col justify-between">
                 <h4 className={`font-bold text-xs ${theme.text} line-clamp-2 leading-tight uppercase tracking-tight`}>{item.name}</h4>
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black text-[#34a4b8] uppercase">{item.price}</span>
+                  <span className="text-[10px] font-black text-[#34a4b8]">{item.price}</span>
                   <button onClick={(e) => { e.stopPropagation(); item.url && window.open(item.url, '_blank'); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">View</button>
                 </div>
               </div>
@@ -305,10 +305,10 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
         </div>
         <div className="grid grid-cols-4 gap-4 px-1">
           {[
-            { label: 'Transit', icon: <Navigation size={22}/>, link: 'https://www.theride.org/' },
             { label: 'Eats', icon: <Utensils size={22}/>, path: 'home' },
             { label: 'Pulse', icon: <Zap size={22}/>, path: 'fun' },
-            { label: 'Logs', icon: <BookText size={22}/>, path: 'journal' }
+            { label: 'Culture', icon: <Building size={22}/>, path: 'fun' },
+            { label: 'Transit', icon: <Navigation size={22}/>, link: 'https://www.theride.org/' }
           ].map(item => (
             <button key={item.label} onClick={() => item.link ? window.open(item.link, '_blank') : (item.path && setView(item.path))} className="flex flex-col items-center gap-2 active:scale-95 group">
               <div className="p-4 rounded-2xl text-white shadow-lg bg-[#00274c] group-hover:scale-105 transition-transform">{item.icon}</div>
@@ -326,12 +326,18 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
         <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar">
           {(dining || []).map(res => (
             <div key={res.id} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`${theme.card} min-w-[220px] h-44 rounded-[24px] border ${theme.border} overflow-hidden shadow-sm active:scale-95 transition-transform cursor-pointer relative group`}>
-              {res.img && <img src={res.img} className="w-full h-28 object-cover" alt="" />}
+              {res.img ? (
+                <img src={res.img} className="w-full h-28 object-cover" alt="" />
+              ) : (
+                <div className="w-full h-28 bg-[#00274c]/20 flex items-center justify-center"><Building size={24} className="text-[#ffcb05]/40" /></div>
+              )}
               <div className="p-4">
                 <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title}</h4>
-                <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-widest mt-1">Gourmet A2</p>
+                <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-1">Gourmet A2</p>
               </div>
-              <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}><Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} /></button>
+              <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}>
+                <Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} />
+              </button>
             </div>
           ))}
         </div>
@@ -340,7 +346,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
       <section>
         <div className="flex items-center gap-2 mb-5 px-2">
           <Sparkles size={18} className="text-[#ffcb05]" />
-          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Highlights</h2>
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
         </div>
         
         {featuredPosts && featuredPosts.length > 0 && (
@@ -350,7 +356,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               
               <div className="absolute bottom-12 left-8 right-8 text-white space-y-3">
-                <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block">Best of A2</span>
+                <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block">Trending Now</span>
                 <h4 className="text-2xl font-header font-black uppercase italic leading-tight drop-shadow-md tracking-tighter">{featuredPosts[highlightIdx]?.title || ''}</h4>
                 <p className="text-sm font-medium opacity-80 line-clamp-2 leading-relaxed italic">{featuredPosts[highlightIdx]?.excerpt || ''}</p>
               </div>
@@ -377,6 +383,9 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   const [headerIdx, setHeaderIdx] = useState(0);
   const [activeTool, setActiveTool] = useState(null);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
+  const amazonFavorites = (favorites || []).filter(f => f.type === 'amazon');
+  const experienceFavorites = (favorites || []).filter(f => f.type === 'experience');
+  const diningFavorites = (favorites || []).filter(f => f.type === 'dining');
 
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col items-center">
@@ -397,16 +406,16 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                 <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">Personal Trip Planner</p>
              </div>
           </div>
-          <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90">
-             <Camera size={20} />
-          </button>
+          <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90"><Camera size={20} /></button>
         </div>
         <section className="space-y-5 w-full"><div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban Tools</h4></div><div className="grid grid-cols-2 gap-3">
-            {[{id:'hots',i:MapPin,l:'Hot Spots',color:'#ffcb05'},{id:'water',i:Droplets,l:'Hydration',color:'#34a4b8'},{id:'calc',i:Calculator,l:'Tip Calc',color:'#10b981'},{id:'weather',i:Thermometer,l:'Forecast',color:'#34a4b8'}].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.i size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
+            {[{id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},{id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},{id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},{id:'weather',icon:Thermometer,label:'Forecast',color:'#34a4b8'}].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
         </div></section>
         <section className="space-y-8 w-full">
-           <div className="space-y-5"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>My A2 List</h4>
-           <div className="grid grid-cols-1 gap-4">{!favorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No activities saved yet</div> : (favorites || []).map(fav => (<div key={`${fav.type}_${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.price || 'City Insider'}</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
+           <div className="space-y-5"><div className="flex items-center justify-between px-1"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Saved Gear</h4><button onClick={() => setView('essentials')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Shop A2</button></div>
+           <div className="grid grid-cols-1 gap-4">{!amazonFavorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No gear saved</div> : amazonFavorites.map(fav => (<div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.price}</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
+           <div className="space-y-5"><div className="flex items-center justify-between px-1"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>City Favs</h4><button onClick={onNavigateFlavors} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore</button></div>
+           <div className="grid grid-cols-1 gap-4">{!diningFavorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No dining saved</div> : diningFavorites.map(fav => (<div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">A2 Eats</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
         </section>
       </div>
     </div>
@@ -455,7 +464,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites }) => {
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>The Journal</h1>
         <div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar">
           {CATEGORIES_JOURNAL.map(cat => (
-            <button key={cat} onClick={() => setActiveCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all ${activeCat === cat ? 'bg-[#34a4b8] border-[#34a4b8] text-white shadow-lg' : `text-slate-500 bg-white/5 border-white/5`}`}>{cat}</button>
+            <button key={cat} onClick={() => setActiveCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all ${activeCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg' : `text-slate-500 bg-white/5 border-white/5`}`}>{cat}</button>
           ))}
         </div>
       </div>
@@ -564,13 +573,13 @@ export default function App() {
           <div className="flex items-center gap-4 cursor-pointer" onClick={() => setView('home')}>
             <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black"><Building size={20}/></div>
             <div className="flex flex-col leading-none text-left">
-              <span className={`text-[10px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span>
+              <span className={`text-[11px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span>
               <span className={`text-[9px] font-header font-bold uppercase tracking-widest opacity-50 ${theme.text}`}>Vibe</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={() => setView('profile')} className={`p-3 rounded-2xl bg-black/5 ${theme.text}`}><User size={20}/></button>
-            <button onClick={() => setThemeKey(theme.isDark ? 'light' : 'dark')} className={`p-3 rounded-2xl bg-black/5 ${theme.text}`}>{theme.isDark ? <Sun size={20} /> : <Moon size={20} />}</button>
+            <button onClick={() => setThemeKey(theme.isDark ? 'light' : 'dark')} className={`p-3 rounded-2xl bg-[#00274c] hover:bg-[#ffcb05] transition-colors border border-white/10 ${theme.text}`}>{theme.isDark ? <Sun size={20} className="text-[#ffcb05]" /> : <Moon size={20} />}</button>
           </div>
         </header>
 
@@ -612,22 +621,14 @@ export default function App() {
             <div className="space-y-12 animate-fade text-left relative z-10 font-sans pb-20 w-full">
                <section><h2 className={`text-xl font-header font-black uppercase px-2 tracking-tighter ${theme.text}`}>City Gear</h2><div className="grid grid-cols-2 gap-4 px-1 mt-6">
                  {(essentials || []).map(x => (
-                   <div key={x.id} onClick={()=>setSelectedItem(x)} className={`${theme.card} p-4 border ${theme.border} rounded-[24px] cursor-pointer shadow-sm group`}><img src={x.img} className="w-full aspect-square object-cover rounded-2xl mb-3 group-hover:scale-105 transition-transform" alt="" /><h4 className={`text-xs font-bold uppercase ${theme.text} line-clamp-1`}>{x.name}</h4><div className="flex items-center justify-between mt-2"><p className="text-base font-black text-[#ffcb05]">{x.price}</p><button onClick={(e) => { e.stopPropagation(); x.url && window.open(x.url, '_blank'); }} className="bg-[#00274c] text-[#ffcb05] text-[10px] font-bold uppercase px-4 py-2 rounded-xl active:scale-95 transition-all border border-[#ffcb05]/20">Buy</button></div></div>
+                   <div key={x.id} onClick={()=>setSelectedItem(x)} className={`${theme.card} p-4 border ${theme.border} rounded-[24px] cursor-pointer shadow-sm group`}><img src={x.img} className="w-full aspect-square object-cover rounded-2xl mb-3 group-hover:scale-105 transition-transform" alt="" /><h4 className={`text-xs font-bold uppercase ${theme.text} line-clamp-1`}>{x.name}</h4><div className="flex items-center justify-between mt-2"><p className="text-base font-black text-[#ffcb05]">{x.price}</p><button onClick={(e) => { e.stopPropagation(); x.url && window.open(x.url, '_blank'); }} className="bg-[#00274c] text-[#ffcb05] text-[10px] font-bold uppercase px-4 py-2 rounded-xl active:scale-95 border border-[#ffcb05]/20">Buy</button></div></div>
                  ))}</div></section>
             </div>
           )}
         </main>
         <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
-          {[
-            { id: 'home', icon: Building, label: 'Insider' }, 
-            { id: 'fun', icon: Sparkles, label: 'Pulse' }, 
-            { id: 'journal', icon: BookText, label: 'Journal' }, 
-            { id: 'essentials', icon: ShoppingBag, label: 'Gear' }, 
-            { id: 'profile', icon: User, label: 'Hub' }
-          ].map(v => (
-            <button key={v.id} onClick={() => setView(v.id)} className={`flex flex-col items-center gap-2 transition-all duration-300 ${view === v.id ? 'scale-110 opacity-100' : 'opacity-30'}`} style={view === v.id ? { color: '#ffcb05' } : { color: theme.isDark ? '#fff' : '#1a2b4b' }}>
-              <v.icon size={24} /><span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
-            </button>
+          {[{ id: 'home', icon: Building, label: 'Insider' }, { id: 'fun', icon: Sparkles, label: 'Pulse' }, { id: 'journal', icon: BookText, label: 'Journal' }, { id: 'essentials', icon: ShoppingBag, label: 'Gear' }, { id: 'profile', icon: User, label: 'Hub' }].map(v => (
+            <button key={v.id} onClick={() => setView(v.id)} className={`flex flex-col items-center gap-2 transition-all duration-300 ${view === v.id ? 'scale-110 opacity-100' : 'opacity-30'}`} style={view === v.id ? { color: '#ffcb05' } : { color: theme.isDark ? '#fff' : '#1a2b4b' }}><v.icon size={24} /><span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span></button>
           ))}
         </nav>
       </div>
