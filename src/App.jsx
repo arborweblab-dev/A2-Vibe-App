@@ -7,14 +7,12 @@ import {
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
-// (Make sure to create these files and export the arrays as shown in Step 1)
-// import { journalData } from './data/journalData';
+import { journalData } from './data/journalData';
 // import { eatsData } from './data/eatsData';
 // import { happeningsData } from './data/happeningsData';
 // import { gearData } from './data/gearData';
 
 // Placeholder data so the app doesn't break before you create the files:
-const journalData = []; 
 const eatsData = [];
 const happeningsData = [];
 const gearData = [];
@@ -368,7 +366,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   const diningFavorites = (favorites || []).filter(f => f.type === 'dining');
 
   return (
-    <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col items-center">
+    <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
       <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} />
       <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>My Vibe</h2></div>
       <div className="space-y-10 px-2 w-full">
@@ -411,7 +409,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts 
   }, [posts, activeCat]);
 
   return (
-    <div className="animate-fade space-y-10 text-left relative z-10 pb-20 w-full flex flex-col items-center">
+    <div className="animate-fade space-y-10 text-left relative z-10 pb-20 w-full flex flex-col">
       <div className="text-center px-4 w-full">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>City Journal</h1>
         <div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar">
@@ -502,7 +500,7 @@ export default function App() {
           </div>
         </header>
 
-        <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col items-center">
+        <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           {view === 'home' && <HomeView theme={theme} setView={setView} setSelectedItem={setSelectedItem} itineraries={itineraries} dining={dining} featuredPosts={featuredPosts} favorites={favorites} toggleFavorite={toggleFavorite} />}
           {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} posts={posts} />}
