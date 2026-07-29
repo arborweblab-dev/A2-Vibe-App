@@ -1,34 +1,25 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { initializeApp, getApps } from 'firebase/app';
 import { 
-  getAuth, signInAnonymously, onAuthStateChanged 
-} from 'firebase/auth';
-import { 
-  getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc 
-} from 'firebase/firestore';
-import { 
-  Anchor, Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
+  Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
   ChevronLeft, ChevronRight, BookText, ShoppingBag, User, Heart, 
-  Calculator, Thermometer, MapPin, Camera, Map, Navigation, Sun, Ship,
+  Calculator, Thermometer, MapPin, Camera, Map, Navigation, Sun, Moon,
   Clock
 } from 'lucide-react';
 
-// --- 1. FIREBASE CONFIGURATION ---
-const firebaseConfig = {
-  apiKey: "AIzaSyChT9hSee_3x1gzd9QEIl73aDVbbNdGjwo",
-  authDomain: "captain-key-west-app.firebaseapp.com",
-  projectId: "captain-key-west-app",
-  storageBucket: "captain-key-west-app.firebasestorage.app",
-  messagingSenderId: "445275121144",
-  appId: "1:445275121144:web:0d95feb58b37643819220d",
-  measurementId: "G-5C6BGS9K8L"
-};
+// --- 1. IMPORT LOCAL DATA ---
+// (Make sure to create these files and export the arrays as shown in Step 1)
+// import { journalData } from './data/journalData';
+// import { eatsData } from './data/eatsData';
+// import { happeningsData } from './data/happeningsData';
+// import { gearData } from './data/gearData';
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const auth = getAuth(app);
-const db = getFirestore(app);
-const appId = 'a2-vibe-v1'; 
+// Placeholder data so the app doesn't break before you create the files:
+const journalData = []; 
+const eatsData = [];
+const happeningsData = [];
+const gearData = [];
 
+// --- 2. CONFIGURATION ---
 const THEMES = {
   light: { primary: '#00274c', windowBg: 'bg-slate-200', appBg: 'bg-slate-50', card: 'bg-white', text: 'text-slate-900', secondaryText: 'text-slate-600', border: 'border-slate-200', isDark: false },
   dark: { primary: '#ffcb05', windowBg: 'bg-[#050b14]', appBg: 'bg-[#0a121e]', card: 'bg-[#151f2e]', text: 'text-slate-100', secondaryText: 'text-slate-400', border: 'border-slate-800', isDark: true }
@@ -37,23 +28,13 @@ const THEMES = {
 const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events'];
 const CATEGORIES_EXP = ['All', 'Tours', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems'];
 
+// Update these to local paths once you download them (e.g., "/images/slide-1.png")
 const SLIDE_IMAGES = [
-  "http://captainkeywest.com/wp-content/uploads/2026/03/Captain-Key-West-App-Image-1.png",
-  "http://captainkeywest.com/wp-content/uploads/2026/03/Captain-Key-West-App-Image-2.png",
-  "http://captainkeywest.com/wp-content/uploads/2026/03/Captain-Key-West-App-Image-3.png",
-  "http://captainkeywest.com/wp-content/uploads/2026/03/Captain-Key-West-App-Image-4.png",
-  "http://captainkeywest.com/wp-content/uploads/2026/03/Captain-Key-West-App-Image-8.png",
-  "http://captainkeywest.com/wp-content/uploads/2026/03/Captain-Key-West-App-Image-5.png"
+  "/images/placeholder-1.jpg", 
+  "/images/placeholder-2.jpg"
 ];
 
 // --- Helpers ---
-const decodeHTML = (html) => {
-  if (!html) return "";
-  const txt = document.createElement("textarea");
-  txt.innerHTML = html;
-  return txt.value;
-};
-
 const Watermark = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.02] flex items-center justify-center">
     <Building size={500} strokeWidth={0.5} className="rotate-12" />
@@ -61,7 +42,6 @@ const Watermark = () => (
 );
 
 // --- Components ---
-
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
@@ -105,7 +85,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           />
           {item.url && (
             <button onClick={() => window.open(item.url, '_blank')} className="w-full bg-[#ffcb05] text-black font-black uppercase text-base py-5 rounded-2xl shadow-xl active:scale-95 transition-all">
-              {item.type === 'amazon' ? 'Buy Now' : 'Book Activity'}
+              {item.type === 'amazon' ? 'Buy Now' : 'Check it out'}
             </button>
           )}
         </div>
@@ -182,7 +162,7 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats }) => {
                <p className="text-[10px] font-black uppercase text-slate-500 mb-1 tracking-widest">Total with Tip</p>
                <h2 className="text-5xl font-header font-black text-white">${totalBill}</h2>
                <div className="flex justify-center gap-4 mt-4 text-[#ffcb05] font-bold text-sm">
-                  <span>Tip: ${tipAmount}</span>
+                 <span>Tip: ${tipAmount}</span>
                </div>
             </div>
             <div className="space-y-4">
@@ -271,7 +251,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
         {SLIDE_IMAGES.map((img, i) => <img key={i} src={img} className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms] ${i === heroIdx ? 'opacity-100 scale-105' : 'opacity-0 scale-100'}`} alt="" />)}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         <div className="relative z-10 text-white">
-          <h1 className="text-4xl font-header font-black uppercase italic tracking-tighter mb-2">The Pulse</h1>
+          <h1 className="text-4xl font-header font-black uppercase italic tracking-tighter mb-2">The Scene</h1>
           <p className="text-[#ffcb05] font-header font-medium tracking-[0.05em] text-base">Curated by A2 Vibe.</p>
         </div>
       </section>
@@ -306,7 +286,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
         <div className="grid grid-cols-4 gap-4 px-1">
           {[
             { label: 'Eats', icon: <Utensils size={22}/>, path: 'home' },
-            { label: 'Pulse', icon: <Zap size={22}/>, path: 'fun' },
+            { label: 'Events', icon: <Zap size={22}/>, path: 'fun' },
             { label: 'Culture', icon: <Building size={22}/>, path: 'fun' },
             { label: 'Transit', icon: <Navigation size={22}/>, link: 'https://www.theride.org/' }
           ].map(item => (
@@ -321,7 +301,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
       <section id="island-flavors">
         <div className="flex items-center gap-2 mb-4 px-2">
           <Utensils size={18} className="text-[#34a4b8]" />
-          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Flavors</h2>
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Eats</h2>
         </div>
         <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar">
           {(dining || []).map(res => (
@@ -390,7 +370,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col items-center">
       <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} />
-      <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>The Hub</h2></div>
+      <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>My Vibe</h2></div>
       <div className="space-y-10 px-2 w-full">
         <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
@@ -398,12 +378,12 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           <div className="absolute bottom-8 left-8 flex items-center gap-4">
              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#00274c] to-[#ffcb05] p-0.5 shadow-2xl">
                 <div className={`w-full h-full rounded-full ${theme.card} flex items-center justify-center text-white`}>
-                   <Anchor size={24} />
+                   <MapPin size={24} />
                 </div>
              </div>
              <div>
                 <h3 className="text-2xl font-header font-black uppercase text-white drop-shadow-lg tracking-tight">Ann Arbor</h3>
-                <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">Personal Trip Planner</p>
+                <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">Your Saved Spots</p>
              </div>
           </div>
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90"><Camera size={20} /></button>
@@ -422,46 +402,18 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   );
 };
 
-const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites }) => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts }) => {
   const [activeCat, setActiveCat] = useState('All');
-
-  useEffect(() => {
-    const fetchWP = async () => {
-      try {
-        const res = await fetch('https://captainkeywest.com/wp-json/wp/v2/posts?_embed&per_page=50');
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          const filtered = data.filter(p => (p._embedded?.['wp:term']?.[0] || []).some(term => term.name === "Captains Journal"));
-          setPosts(filtered.map(p => ({
-            id: p.id, title: decodeHTML(p.title?.rendered),
-            excerpt: decodeHTML(p.excerpt?.rendered?.replace(/<[^>]*>/g, '').trim()).slice(0, 150) + '...',
-            author: p._embedded?.author?.[0]?.name || 'City Insider',
-            img: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
-            longDesc: p.content?.rendered,
-            category: (p._embedded?.['wp:term']?.[0] || []).find(t => t.name !== "Captains Journal")?.name || 'Dispatch',
-            allCategories: (p._embedded?.['wp:term']?.[0] || []).map(t => t.name) || [],
-            type: 'article'
-          })));
-        }
-      } catch (e) { console.warn("WP Fail"); }
-      finally { setLoading(false); }
-    };
-    fetchWP();
-  }, []);
 
   const filteredPosts = useMemo(() => {
     if (activeCat === 'All') return posts || [];
     return (posts || []).filter(p => (p.allCategories || []).some(cat => cat.toLowerCase().includes(activeCat.toLowerCase())));
   }, [posts, activeCat]);
 
-  if (loading) return <div className="py-40 text-center"><Anchor className="animate-spin mx-auto text-[#ffcb05]" size={48} /></div>;
-
   return (
     <div className="animate-fade space-y-10 text-left relative z-10 pb-20 w-full flex flex-col items-center">
       <div className="text-center px-4 w-full">
-        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>The Journal</h1>
+        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>City Journal</h1>
         <div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar">
           {CATEGORIES_JOURNAL.map(cat => (
             <button key={cat} onClick={() => setActiveCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all ${activeCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg' : `text-slate-500 bg-white/5 border-white/5`}`}>{cat}</button>
@@ -501,10 +453,13 @@ export default function App() {
     return saved ? JSON.parse(saved) : { water: 0, drinks: 0 };
   });
 
-  const [itineraries, setItineraries] = useState([]);
-  const [dining, setDining] = useState([]);
-  const [featuredPosts, setFeaturedPosts] = useState([]);
-  const [essentials, setEssentials] = useState([]);
+  // State is now instantly hydrated with your local data files
+  const [itineraries, setItineraries] = useState(happeningsData);
+  const [dining, setDining] = useState(eatsData);
+  const [posts, setPosts] = useState(journalData);
+  const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
+  const [essentials, setEssentials] = useState(gearData);
+  
   const [activeExpCat, setActiveExpCat] = useState('All');
   const [visibleCount, setVisibleCount] = useState(6);
   const theme = THEMES[themeKey] || THEMES.dark;
@@ -514,42 +469,6 @@ export default function App() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view]);
 
   const navigateToSection = (sectionId) => { setView('home'); setTimeout(() => { const element = document.getElementById(sectionId); if (element) element.scrollIntoView({ behavior: 'smooth' }); }, 150); };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const resItin = await fetch('https://captainkeywest.com/wp-json/wp/v2/itineraries?_embed&per_page=40');
-        if (resItin.ok) {
-          const data = await resItin.json();
-          setItineraries(data.map(i => ({ id: i.id, name: decodeHTML(i.title?.rendered), price: i.acf?.price || i.acf?.starting_price || "--", category: i.acf?.display_category || "Experience", longDesc: i.content?.rendered, img: i._embedded?.['wp:featuredmedia']?.[0]?.source_url || null, url: i.acf?.booking_url || null, type: 'experience' })));
-        }
-
-        const resEss = await fetch('https://captainkeywest.com/wp-json/wp/v2/amazon_essential?_embed&per_page=40');
-        if (resEss.ok) {
-          const data = await resEss.json();
-          setEssentials(data.map(e => ({ 
-            id: e.id, 
-            name: decodeHTML(e.title?.rendered), 
-            price: e.acf?.price || "$--", 
-            img: e._embedded?.['wp:featuredmedia']?.[0]?.source_url || null, 
-            url: e.acf?.affiliate_link || null, 
-            longDesc: e.content?.rendered,
-            category: 'City Gear',
-            type: 'amazon' 
-          })));
-        }
-
-        const resPosts = await fetch('https://captainkeywest.com/wp-json/wp/v2/posts?_embed&per_page=100');
-        if (resPosts.ok) {
-          const data = await resPosts.json();
-          const mapped = data.map(p => ({ id: p.id, title: decodeHTML(p.title?.rendered), excerpt: decodeHTML(p.excerpt?.rendered?.replace(/<[^>]*>/g, '').trim()).slice(0, 150) + '...', img: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || null, longDesc: p.content?.rendered, categories: (p._embedded?.['wp:term']?.[0] || []).map(t => t.name) || [], author: p._embedded?.author?.[0]?.name || 'Insider', isHighlight: p.acf?.is_highlight || false, url: p.acf?.menu_url || p.link, type: 'article' }));
-          setDining(mapped.filter(p => (p.categories || []).some(c => (c || "").toLowerCase().includes('dining'))).map(d => ({...d, type: 'dining'})));
-          setFeaturedPosts(mapped.filter(p => p.isHighlight).slice(0, 10)); 
-        }
-      } catch (e) { console.warn("WP Fail"); }
-    };
-    fetchData();
-  }, []);
 
   const toggleFavorite = (item) => {
     const isAlreadyFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
@@ -586,11 +505,11 @@ export default function App() {
         <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col items-center">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           {view === 'home' && <HomeView theme={theme} setView={setView} setSelectedItem={setSelectedItem} itineraries={itineraries} dining={dining} featuredPosts={featuredPosts} favorites={favorites} toggleFavorite={toggleFavorite} />}
-          {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} />}
+          {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} posts={posts} />}
           {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} onNavigateFlavors={() => navigateToSection('island-flavors')} />}
           {view === 'fun' && (
             <div className="space-y-12 animate-fade w-full">
-               <div className="text-center px-4"><h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Curated Pulse</h1><div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">{CATEGORIES_EXP.map((cat) => <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>)}</div></div>
+               <div className="text-center px-4"><h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Happenings</h1><div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">{CATEGORIES_EXP.map((cat) => <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>)}</div></div>
                <div className="space-y-5 px-1 pt-4 w-full">
                   {shuffledExp && shuffledExp.length > 0 ? (
                     <>
@@ -599,15 +518,15 @@ export default function App() {
                             {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
                             <div className="flex-1 p-5 flex flex-col justify-between text-left">
                                <div className="flex justify-between items-start"><div className="max-w-[85%]"><h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4><span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button></div>
-                               <div className="flex items-center justify-between"><span className={`text-[10px] font-black uppercase text-slate-500`}>BOOKED @ {exp.price}</span><button onClick={(e) => { e.stopPropagation(); exp.url && window.open(exp.url, '_blank'); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md">Book Now</button></div>
+                               <div className="flex items-center justify-between"><span className={`text-[10px] font-black uppercase text-slate-500`}>A2 LOCAL</span><button onClick={(e) => { e.stopPropagation(); exp.url && window.open(exp.url, '_blank'); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md">Details</button></div>
                             </div>
                         </div>
                       ))}
                       {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
-                        <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Experiences</button>
+                        <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                       )}
                     </>
-                  ) : <div className="py-20 text-center opacity-30 text-sm italic">No pulse found for this category.</div>}
+                  ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
                </div>
                <section className="px-1 space-y-5 w-full">
                   <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Exploration</h2></div>
@@ -627,7 +546,7 @@ export default function App() {
           )}
         </main>
         <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
-          {[{ id: 'home', icon: Building, label: 'Insider' }, { id: 'fun', icon: Sparkles, label: 'Pulse' }, { id: 'journal', icon: BookText, label: 'Journal' }, { id: 'essentials', icon: ShoppingBag, label: 'Gear' }, { id: 'profile', icon: User, label: 'Hub' }].map(v => (
+          {[{ id: 'home', icon: Building, label: 'Insider' }, { id: 'fun', icon: Sparkles, label: 'Happenings' }, { id: 'journal', icon: BookText, label: 'Journal' }, { id: 'essentials', icon: ShoppingBag, label: 'Gear' }, { id: 'profile', icon: User, label: 'My Vibe' }].map(v => (
             <button key={v.id} onClick={() => setView(v.id)} className={`flex flex-col items-center gap-2 transition-all duration-300 ${view === v.id ? 'scale-110 opacity-100' : 'opacity-30'}`} style={view === v.id ? { color: '#ffcb05' } : { color: theme.isDark ? '#fff' : '#1a2b4b' }}><v.icon size={24} /><span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span></button>
           ))}
         </nav>
