@@ -30,20 +30,6 @@ export const eatsData = [
     isHighlight: true
   },
   {
-    id: "eat-3",
-    title: "Sava's",
-    neighborhood: "Downtown",
-    tags: ["New American", "Brunch", "Cocktails"],
-    cuisine: "Modern American",
-    address: "216 S State St, Ann Arbor, MI 48104",
-    img: "/images/savas.jpg",
-    shortDesc: "Vibrant community hub serving upscale comfort food and cocktails.",
-    longDesc: "<p>Right near the U-M campus, Sava's offers a lively atmosphere with an extensive menu ranging from grain bowls to steaks.</p>",
-    ctaText: "Book Table",
-    url: "https://savasannarbor.com",
-    isHighlight: true
-  },
-  {
     id: "eat-4",
     title: "Mani Osteria & Bar",
     neighborhood: "Downtown",
