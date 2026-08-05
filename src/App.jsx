@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
-  ChevronLeft, ChevronRight, BookText, ShoppingBag, User, Heart, 
-  Calculator, Thermometer, MapPin, Camera, Map, Navigation, Sun, Moon,
-  Clock
+  ChevronLeft, ChevronRight, BookText, User, Heart, 
+  Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
+  Clock, Compass, Search
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
 import { journalData } from './data/journalData';
-// import { eatsData } from './data/eatsData';
+import { eatsData } from './data/eatsData';
 // import { happeningsData } from './data/happeningsData';
 // import { gearData } from './data/gearData';
 
-// Placeholder data so the app doesn't break before you create the files:
-const eatsData = [];
+// Placeholder data for uncreated files:
 const happeningsData = [];
 const gearData = [];
 
@@ -26,7 +25,6 @@ const THEMES = {
 const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events'];
 const CATEGORIES_EXP = ['All', 'Tours', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems'];
 
-// Update these to local paths once you download them (e.g., "/images/slide-1.png")
 const SLIDE_IMAGES = [
   "/images/placeholder-1.jpg", 
   "/images/placeholder-2.jpg"
@@ -74,16 +72,23 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
         </div>
         <div className="p-8 space-y-6">
           {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             {item.price && <div className="bg-[#ffcb05]/20 text-[#ffcb05] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
-            <div className="bg-[#00274c]/40 text-[#34a4b8] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">{item.category || 'City Guide'}</div>
+            {item.cuisine && <div className="bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.cuisine}</div>}
+            <div className="bg-[#00274c]/40 text-[#34a4b8] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">{item.category || item.neighborhood || 'City Guide'}</div>
           </div>
+          {item.address && (
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 bg-black/20 p-3 rounded-xl border border-white/5">
+              <MapPin size={16} className="text-[#ffcb05]" />
+              <span>{item.address}</span>
+            </div>
+          )}
           <div className={`text-base leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`} 
             dangerouslySetInnerHTML={{ __html: item.longDesc || item.desc || item.excerpt || 'Accessing city database...' }} 
           />
           {item.url && (
             <button onClick={() => window.open(item.url, '_blank')} className="w-full bg-[#ffcb05] text-black font-black uppercase text-base py-5 rounded-2xl shadow-xl active:scale-95 transition-all">
-              {item.type === 'amazon' ? 'Buy Now' : 'Check it out'}
+              {item.type === 'amazon' ? 'Buy Now' : 'Visit Website'}
             </button>
           )}
         </div>
@@ -283,7 +288,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
         </div>
         <div className="grid grid-cols-4 gap-4 px-1">
           {[
-            { label: 'Eats', icon: <Utensils size={22}/>, path: 'home' },
+            { label: 'Eats', icon: <Utensils size={22}/>, path: 'flavors' },
             { label: 'Events', icon: <Zap size={22}/>, path: 'fun' },
             { label: 'Culture', icon: <Building size={22}/>, path: 'fun' },
             { label: 'Transit', icon: <Navigation size={22}/>, link: 'https://www.theride.org/' }
@@ -297,9 +302,12 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
       </section>
 
       <section id="island-flavors">
-        <div className="flex items-center gap-2 mb-4 px-2">
-          <Utensils size={18} className="text-[#34a4b8]" />
-          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Eats</h2>
+        <div className="flex items-center justify-between mb-4 px-2">
+          <div className="flex items-center gap-2">
+            <Utensils size={18} className="text-[#34a4b8]" />
+            <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Eats</h2>
+          </div>
+          <button onClick={() => setView('flavors')} className="text-[10px] font-black uppercase text-[#ffcb05] tracking-widest">View All ({dining.length})</button>
         </div>
         <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar">
           {(dining || []).map(res => (
@@ -311,7 +319,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               )}
               <div className="p-4">
                 <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title}</h4>
-                <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-1">Gourmet A2</p>
+                <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-1">{res.cuisine || 'Gourmet A2'}</p>
               </div>
               <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}>
                 <Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} />
@@ -361,8 +369,6 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   const [headerIdx, setHeaderIdx] = useState(0);
   const [activeTool, setActiveTool] = useState(null);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
-  const amazonFavorites = (favorites || []).filter(f => f.type === 'amazon');
-  const experienceFavorites = (favorites || []).filter(f => f.type === 'experience');
   const diningFavorites = (favorites || []).filter(f => f.type === 'dining');
 
   return (
@@ -390,11 +396,76 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
             {[{id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},{id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},{id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},{id:'weather',icon:Thermometer,label:'Forecast',color:'#34a4b8'}].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
         </div></section>
         <section className="space-y-8 w-full">
-           <div className="space-y-5"><div className="flex items-center justify-between px-1"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Saved Gear</h4><button onClick={() => setView('essentials')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Shop A2</button></div>
-           <div className="grid grid-cols-1 gap-4">{!amazonFavorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No gear saved</div> : amazonFavorites.map(fav => (<div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.price}</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
-           <div className="space-y-5"><div className="flex items-center justify-between px-1"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>City Favs</h4><button onClick={onNavigateFlavors} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore</button></div>
-           <div className="grid grid-cols-1 gap-4">{!diningFavorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No dining saved</div> : diningFavorites.map(fav => (<div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">A2 Eats</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
+           <div className="space-y-5"><div className="flex items-center justify-between px-1"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>City Favs ({diningFavorites.length})</h4><button onClick={() => setView('flavors')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore All Eats</button></div>
+           <div className="grid grid-cols-1 gap-4">{!diningFavorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No dining spots saved yet</div> : diningFavorites.map(fav => (<div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.cuisine || 'A2 Eats'}</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
         </section>
+      </div>
+    </div>
+  );
+};
+
+const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredDining = useMemo(() => {
+    if (!searchQuery) return dining;
+    return dining.filter(d => 
+      d.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      d.cuisine?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.neighborhood?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [dining, searchQuery]);
+
+  return (
+    <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col">
+      <div className="text-center px-4 w-full space-y-4">
+        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Flavors</h1>
+        <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
+        
+        {/* Search Bar */}
+        <div className="relative max-w-md mx-auto w-full mt-4">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input 
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search restaurants, cuisine, or neighborhood..."
+            className={`w-full pl-12 pr-4 py-3.5 rounded-2xl ${theme.card} border ${theme.border} text-xs font-bold outline-none focus:border-[#ffcb05] shadow-inner`}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 px-1 w-full">
+        {filteredDining.length > 0 ? (
+          filteredDining.map(res => {
+            const isFavorited = (favorites || []).some(f => f.id === res.id && f.type === 'dining');
+            return (
+              <div 
+                key={res.id} 
+                onClick={() => setSelectedItem({...res, type: 'dining'})}
+                className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex gap-4 cursor-pointer shadow-md items-center group active:scale-[0.99] transition-transform`}
+              >
+                <img src={res.img} className="w-24 h-24 rounded-2xl object-cover shadow-inner flex-shrink-0" alt={res.title} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-start">
+                    <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{res.title}</h3>
+                    <span className="text-[9px] font-black uppercase text-[#ffcb05] bg-[#ffcb05]/10 px-2.5 py-1 rounded-lg flex-shrink-0 ml-2">{res.cuisine || 'Eats'}</span>
+                  </div>
+                  <p className="text-[10px] font-bold text-[#34a4b8] uppercase tracking-wider mt-1">{res.neighborhood}</p>
+                  <p className={`text-xs mt-1 line-clamp-1 ${theme.secondaryText}`}>{res.shortDesc}</p>
+                </div>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} 
+                  className={`p-3 rounded-full backdrop-blur-md flex-shrink-0 transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/10 text-slate-400'}`}
+                >
+                  <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
+                </button>
+              </div>
+            );
+          })
+        ) : (
+          <div className="py-20 text-center opacity-40 text-xs font-bold uppercase tracking-widest">No restaurants found matching your search.</div>
+        )}
       </div>
     </div>
   );
@@ -451,7 +522,6 @@ export default function App() {
     return saved ? JSON.parse(saved) : { water: 0, drinks: 0 };
   });
 
-  // State is now instantly hydrated with your local data files
   const [itineraries, setItineraries] = useState(happeningsData);
   const [dining, setDining] = useState(eatsData);
   const [posts, setPosts] = useState(journalData);
@@ -465,8 +535,6 @@ export default function App() {
   useEffect(() => { localStorage.setItem('a2v_favorites', JSON.stringify(favorites)); }, [favorites]);
   useEffect(() => { localStorage.setItem('a2v_stats', JSON.stringify(stats)); }, [stats]);
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view]);
-
-  const navigateToSection = (sectionId) => { setView('home'); setTimeout(() => { const element = document.getElementById(sectionId); if (element) element.scrollIntoView({ behavior: 'smooth' }); }, 150); };
 
   const toggleFavorite = (item) => {
     const isAlreadyFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
@@ -504,7 +572,8 @@ export default function App() {
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           {view === 'home' && <HomeView theme={theme} setView={setView} setSelectedItem={setSelectedItem} itineraries={itineraries} dining={dining} featuredPosts={featuredPosts} favorites={favorites} toggleFavorite={toggleFavorite} />}
           {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} posts={posts} />}
-          {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} onNavigateFlavors={() => navigateToSection('island-flavors')} />}
+          {view === 'flavors' && <FlavorsView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} dining={dining} />}
+          {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} />}
           {view === 'fun' && (
             <div className="space-y-12 animate-fade w-full">
                <div className="text-center px-4"><h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Happenings</h1><div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">{CATEGORIES_EXP.map((cat) => <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>)}</div></div>
@@ -534,17 +603,16 @@ export default function App() {
                </section>
             </div>
           )}
-          {view === 'essentials' && (
-            <div className="space-y-12 animate-fade text-left relative z-10 font-sans pb-20 w-full">
-               <section><h2 className={`text-xl font-header font-black uppercase px-2 tracking-tighter ${theme.text}`}>City Gear</h2><div className="grid grid-cols-2 gap-4 px-1 mt-6">
-                 {(essentials || []).map(x => (
-                   <div key={x.id} onClick={()=>setSelectedItem(x)} className={`${theme.card} p-4 border ${theme.border} rounded-[24px] cursor-pointer shadow-sm group`}><img src={x.img} className="w-full aspect-square object-cover rounded-2xl mb-3 group-hover:scale-105 transition-transform" alt="" /><h4 className={`text-xs font-bold uppercase ${theme.text} line-clamp-1`}>{x.name}</h4><div className="flex items-center justify-between mt-2"><p className="text-base font-black text-[#ffcb05]">{x.price}</p><button onClick={(e) => { e.stopPropagation(); x.url && window.open(x.url, '_blank'); }} className="bg-[#00274c] text-[#ffcb05] text-[10px] font-bold uppercase px-4 py-2 rounded-xl active:scale-95 border border-[#ffcb05]/20">Buy</button></div></div>
-                 ))}</div></section>
-            </div>
-          )}
         </main>
+
         <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
-          {[{ id: 'home', icon: Building, label: 'Insider' }, { id: 'fun', icon: Sparkles, label: 'Happenings' }, { id: 'journal', icon: BookText, label: 'Journal' }, { id: 'essentials', icon: ShoppingBag, label: 'Gear' }, { id: 'profile', icon: User, label: 'My Vibe' }].map(v => (
+          {[
+            { id: 'home', icon: Building, label: 'Insider' }, 
+            { id: 'fun', icon: Sparkles, label: 'Happenings' }, 
+            { id: 'journal', icon: BookText, label: 'Journal' }, 
+            { id: 'flavors', icon: Utensils, label: 'Flavors' }, 
+            { id: 'profile', icon: User, label: 'My Vibe' }
+          ].map(v => (
             <button key={v.id} onClick={() => setView(v.id)} className={`flex flex-col items-center gap-2 transition-all duration-300 ${view === v.id ? 'scale-110 opacity-100' : 'opacity-30'}`} style={view === v.id ? { color: '#ffcb05' } : { color: theme.isDark ? '#fff' : '#1a2b4b' }}><v.icon size={24} /><span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span></button>
           ))}
         </nav>
