@@ -20,7 +20,7 @@ const THEMES = {
 const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events'];
 const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
 
-// Updated local slideshow & profile images configuration
+// Updated local slideshow & profile banner images configuration
 const SLIDE_IMAGES = [
   "/images/1.png", 
   "/images/4.png", 
