@@ -9,12 +9,7 @@ import {
 // --- 1. IMPORT LOCAL DATA ---
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
-// import { happeningsData } from './data/happeningsData';
-// import { gearData } from './data/gearData';
-
-// Placeholder data for uncreated files:
-const happeningsData = [];
-const gearData = [];
+import { happeningsData } from './data/happeningsData';
 
 // --- 2. CONFIGURATION ---
 const THEMES = {
@@ -526,7 +521,6 @@ export default function App() {
   const [dining, setDining] = useState(eatsData);
   const [posts, setPosts] = useState(journalData);
   const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
-  const [essentials, setEssentials] = useState(gearData);
   
   const [activeExpCat, setActiveExpCat] = useState('All');
   const [visibleCount, setVisibleCount] = useState(6);
