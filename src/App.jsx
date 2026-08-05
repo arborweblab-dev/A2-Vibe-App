@@ -20,9 +20,14 @@ const THEMES = {
 const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events'];
 const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
 
+// Updated local slideshow & profile images configuration
 const SLIDE_IMAGES = [
-  "/images/placeholder-1.jpg", 
-  "/images/placeholder-2.jpg"
+  "/images/1.png", 
+  "/images/4.png", 
+  "/images/10.png", 
+  "/images/5.png", 
+  "/images/3.png", 
+  "/images/2.png"
 ];
 
 // --- Helpers ---
@@ -393,6 +398,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
       <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} />
       <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>My Vibe</h2></div>
       <div className="space-y-10 px-2 w-full">
+        {/* Profile Banner with Slide Images Cyle Option */}
         <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a121e] via-[#0a121e]/30 to-transparent" />
@@ -407,7 +413,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                 <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">Your Saved Spots</p>
              </div>
           </div>
-          <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90"><Camera size={20} /></button>
+          <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
         <section className="space-y-5 w-full"><div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban Tools</h4></div><div className="grid grid-cols-2 gap-3">
             {[{id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},{id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},{id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},{id:'weather',icon:Thermometer,label:'Forecast',color:'#34a4b8'}].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
@@ -597,9 +603,6 @@ export default function App() {
                     <>
                       {shuffledExp.slice(0, activeExpCat === 'All' ? visibleCount : shuffledExp.length).map(exp => (
                         <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
-                            {/* ========================================================================= */}
-                            {/* 🖼️ REPLACE EVENT IMAGE PATH HERE (e.g., in happeningsData.js or via img prop) */}
-                            {/* ========================================================================= */}
                             {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
                             
                             <div className="flex-1 p-5 flex flex-col justify-between text-left">
@@ -612,8 +615,6 @@ export default function App() {
                                </div>
                                <div className="flex items-center justify-between">
                                  <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
-                                 
-                                 {/* Details Modal Trigger Button */}
                                  <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
                                </div>
                             </div>
