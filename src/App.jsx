@@ -3,7 +3,7 @@ import {
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
-  Clock, Compass, Search
+  Clock, Compass, Search, Dice5, HelpCircle, Award, Users
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -17,10 +17,9 @@ const THEMES = {
   dark: { primary: '#ffcb05', windowBg: 'bg-[#050b14]', appBg: 'bg-[#0a121e]', card: 'bg-[#151f2e]', text: 'text-slate-100', secondaryText: 'text-slate-400', border: 'border-slate-800', isDark: true }
 };
 
-const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events'];
+const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
 const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
 
-// Updated local slideshow & profile banner images configuration
 const SLIDE_IMAGES = [
   "/images/1.png", 
   "/images/4.png", 
@@ -73,7 +72,6 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
         <div className="p-8 space-y-6">
           {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
           
-          {/* EXTRA PHOTO GALLERY PREVIEW FOR HAPPENINGS */}
           {item.type === 'experience' && (
             <div className="space-y-2">
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Event Gallery Highlights</p>
@@ -100,13 +98,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           />
           {item.url && (
             <button 
-              onClick={() => {
-                // =========================================================================
-                // 🔗 REPLACE EVENT URL HERE: 
-                // This triggers when users click the official website link inside the modal.
-                // =========================================================================
-                window.open(item.url, '_blank');
-              }} 
+              onClick={() => { window.open(item.url, '_blank'); }} 
               className="w-full bg-[#ffcb05] text-black font-black uppercase text-base py-5 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               <span>Visit Official Website</span>
@@ -119,10 +111,13 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   );
 };
 
-const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats }) => {
+const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining }) => {
   const [bill, setBill] = useState('');
   const [tipPerc, setTipPerc] = useState(20);
   const [weatherIdx, setWeatherIdx] = useState(new Date().getMonth());
+  const [randomSpot, setRandomSpot] = useState(null);
+  const [triviaAnswered, setTriviaAnswered] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
 
   if (!isOpen) return null;
 
@@ -156,13 +151,19 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats }) => {
 
   const currentW = weatherData[weatherIdx];
 
+  const spinRandomizer = () => {
+    if (!dining || dining.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * dining.length);
+    setRandomSpot(dining[randomIndex]);
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
       <div className={`${theme.card} relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} p-8`}>
         <div className="flex justify-between items-center mb-8">
            <h3 className="text-xl font-header font-black uppercase italic tracking-tighter" style={{ color: '#ffcb05' }}>
-             {type === 'hots' ? 'City Hot Spots' : type === 'calc' ? 'Tip Calculator' : type === 'weather' ? 'City Forecast' : 'Stay Hydrated'}
+             {type === 'hots' ? 'City Hot Spots' : type === 'calc' ? 'Tip Calculator' : type === 'weather' ? 'City Forecast' : type === 'water' ? 'Stay Hydrated' : type === 'randomizer' ? 'Weekend Pitcher / Randomizer' : type === 'trivia' ? 'Tree Town Trivia' : 'Mystery Spot'}
            </h3>
            <button onClick={onClose} className={`p-2 rounded-full bg-white/10 ${theme.isDark ? 'text-white' : 'text-black'}`}><X size={20}/></button>
         </div>
@@ -245,6 +246,66 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats }) => {
                 <button onClick={() => setStats({...stats, water: (stats.water || 0) + 1})} className="bg-blue-600 py-4 rounded-2xl text-white font-black uppercase text-xs shadow-lg shadow-blue-500/20">+ Water</button>
                 <button onClick={() => setStats({...stats, drinks: (stats.drinks || 0) + 1})} className="bg-[#ffcb05] py-4 rounded-2xl text-black font-black uppercase text-xs shadow-lg shadow-yellow-500/20">+ Drink</button>
              </div>
+          </div>
+        )}
+
+        {type === 'randomizer' && (
+          <div className="space-y-6 text-center py-4">
+            <p className={`text-xs ${theme.secondaryText}`}>Can't decide where to eat or hang out? Let the Weekend Pitcher pick your destination!</p>
+            {randomSpot ? (
+              <div className="p-6 rounded-3xl bg-black/20 border border-white/10 space-y-3 animate-fade">
+                <img src={randomSpot.img} className="w-full h-40 object-cover rounded-2xl shadow-md" alt="" />
+                <h4 className={`text-lg font-black uppercase ${theme.text}`}>{randomSpot.title}</h4>
+                <p className="text-xs text-[#ffcb05] font-bold uppercase">{randomSpot.cuisine || randomSpot.neighborhood}</p>
+                <p className={`text-xs ${theme.secondaryText}`}>{randomSpot.shortDesc}</p>
+              </div>
+            ) : (
+              <div className="p-10 border-2 border-dashed rounded-3xl opacity-40 text-xs font-bold uppercase">Click roll to pick a spot!</div>
+            )}
+            <button onClick={spinRandomizer} className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">Roll the Dice 🎲</button>
+          </div>
+        )}
+
+        {type === 'trivia' && (
+          <div className="space-y-6 text-center py-4">
+            <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
+              <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-lg text-[9px] font-black uppercase">Daily Challenge</span>
+              <h4 className={`text-sm font-bold ${theme.text}`}>Which Ann Arbor building's courtyard is rumored to have inspired Hogwarts architecture?</h4>
+            </div>
+            <div className="space-y-2">
+              {['U-M Law Quadrangle', 'Michigan Union', 'Angell Hall', 'Rackham Building'].map((opt) => {
+                const isCorrect = opt === 'U-M Law Quadrangle';
+                let btnStyle = 'bg-white/5 text-slate-300';
+                if (triviaAnswered) {
+                  if (isCorrect) btnStyle = 'bg-emerald-600 text-white font-bold';
+                  else if (selectedAnswer === opt) btnStyle = 'bg-red-600 text-white font-bold';
+                }
+                return (
+                  <button 
+                    key={opt}
+                    disabled={triviaAnswered}
+                    onClick={() => { setSelectedAnswer(opt); setTriviaAnswered(true); }}
+                    className={`w-full p-4 rounded-2xl text-xs font-bold transition-all border border-white/5 ${btnStyle}`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+            {triviaAnswered && <p className="text-xs text-[#ffcb05] font-bold uppercase animate-fade">Correct! The Gothic architecture of the Law Quad is a local legend.</p>}
+          </div>
+        )}
+
+        {type === 'mystery' && (
+          <div className="space-y-6 text-center py-4">
+            <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
+              <span className="bg-[#34a4b8] text-white px-3 py-1 rounded-lg text-[9px] font-black uppercase">Landmark ID</span>
+              <img src="/images/law-quad.jpg" className="w-full h-36 object-cover rounded-2xl shadow-md" alt="" />
+              <p className={`text-xs italic ${theme.secondaryText}`}>"Stunning stone gargoyles, quiet cloisters, and hidden carved faces..."</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-[#ffcb05]/20 text-[#ffcb05] font-black text-xs uppercase tracking-widest">
+              Spot: U-M Law Quadrangle
+            </div>
           </div>
         )}
       </div>
@@ -387,18 +448,41 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
   );
 };
 
-const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, setView, onNavigateFlavors }) => {
+const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, setView, dining }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const [activeTool, setActiveTool] = useState(null);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const diningFavorites = (favorites || []).filter(f => f.type === 'dining');
 
+  // Bucket list state saved in local storage
+  const [bucketList, setBucketList] = useState(() => {
+    const saved = localStorage.getItem('a2v_bucketlist');
+    return saved ? JSON.parse(saved) : [
+      { id: 1, text: "Get ice cream at Blank Slate", done: false },
+      { id: 2, text: "Find a fairy door on Main Street", done: false },
+      { id: 3, text: "Successfully dodge the Block M on the Diag", done: false },
+      { id: 4, text: "Walk the entire Nichols Arboretum trail", done: false },
+      { id: 5, text: "Grab a pastry at Cannelle", done: false }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('a2v_bucketlist', JSON.stringify(bucketList));
+  }, [bucketList]);
+
+  const toggleBucketItem = (id) => {
+    setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
+  };
+
+  const completedCount = bucketList.filter(i => i.done).length;
+
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
-      <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} />
+      <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} />
       <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>My Vibe</h2></div>
+      
       <div className="space-y-10 px-2 w-full">
-        {/* Profile Banner with Slide Images Cyle Option */}
+        {/* Profile Banner */}
         <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a121e] via-[#0a121e]/30 to-transparent" />
@@ -415,12 +499,77 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           </div>
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
-        <section className="space-y-5 w-full"><div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban Tools</h4></div><div className="grid grid-cols-2 gap-3">
-            {[{id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},{id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},{id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},{id:'weather',icon:Thermometer,label:'Forecast',color:'#34a4b8'}].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
-        </div></section>
+
+        {/* Fun Widgets & Tools */}
+        <section className="space-y-5 w-full">
+          <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              {id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},
+              {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
+              {id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},
+              {id:'weather',icon:Thermometer,label:'Forecast',color:'#34a4b8'},
+              {id:'randomizer',icon:Dice5,label:'Weekend Pitcher',color:'#f97316'},
+              {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
+              {id:'mystery',icon:Compass,label:'Mystery Spot',color:'#38bdf8'}
+            ].map(t=>(
+              <button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}>
+                <div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div>
+                <span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* A2 Bucket List / Passport Feature */}
+        <section className={`p-6 rounded-[32px] ${theme.card} border ${theme.border} space-y-4 shadow-xl`}>
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <Award size={20} className="text-[#ffcb05]" />
+              <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Bucket List Passport</h4>
+            </div>
+            <span className="text-xs font-black text-[#ffcb05] bg-[#ffcb05]/10 px-3 py-1 rounded-xl">{completedCount} / {bucketList.length} Done</span>
+          </div>
+          <div className="space-y-2">
+            {bucketList.map(item => (
+              <div 
+                key={item.id} 
+                onClick={() => toggleBucketItem(item.id)}
+                className={`p-3.5 rounded-2xl border ${theme.border} flex items-center gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
+              >
+                <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
+                  {item.done ? '✓' : ''}
+                </div>
+                <span className={`text-xs font-bold ${theme.text}`}>{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Saved City Favs */}
         <section className="space-y-8 w-full">
-           <div className="space-y-5"><div className="flex items-center justify-between px-1"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>City Favs ({diningFavorites.length})</h4><button onClick={() => setView('flavors')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore All Eats</button></div>
-           <div className="grid grid-cols-1 gap-4">{!diningFavorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No dining spots saved yet</div> : diningFavorites.map(fav => (<div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.cuisine || 'A2 Eats'}</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
+           <div className="space-y-5">
+             <div className="flex items-center justify-between px-1">
+               <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>City Favs ({diningFavorites.length})</h4>
+               <button onClick={() => setView('flavors')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore All Eats</button>
+             </div>
+             <div className="grid grid-cols-1 gap-4">
+               {!diningFavorites.length ? (
+                 <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No dining spots saved yet</div>
+               ) : (
+                 diningFavorites.map(fav => (
+                   <div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
+                     <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" />
+                     <div className="flex-1">
+                       <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
+                       <p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.cuisine || 'A2 Eats'}</p>
+                     </div>
+                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
+                   </div>
+                 ))
+               )}
+             </div>
+           </div>
         </section>
       </div>
     </div>
@@ -445,7 +594,6 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Flavors</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
         
-        {/* Search Bar */}
         <div className="relative max-w-md mx-auto w-full mt-4">
           <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input 
@@ -499,6 +647,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts 
 
   const filteredPosts = useMemo(() => {
     if (activeCat === 'All') return posts || [];
+    if (activeCat === 'Meetups') return (posts || []).filter(p => p.category === 'Meetups' || p.allCategories?.includes('Meetups'));
     return (posts || []).filter(p => (p.allCategories || []).some(cat => cat.toLowerCase().includes(activeCat.toLowerCase())));
   }, [posts, activeCat]);
 
@@ -594,7 +743,7 @@ export default function App() {
           {view === 'home' && <HomeView theme={theme} setView={setView} setSelectedItem={setSelectedItem} itineraries={itineraries} dining={dining} featuredPosts={featuredPosts} favorites={favorites} toggleFavorite={toggleFavorite} />}
           {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} posts={posts} />}
           {view === 'flavors' && <FlavorsView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} dining={dining} />}
-          {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} />}
+          {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} dining={dining} />}
           {view === 'fun' && (
             <div className="space-y-12 animate-fade w-full">
                <div className="text-center px-4"><h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Happenings</h1><div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">{CATEGORIES_EXP.map((cat) => <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>)}</div></div>
