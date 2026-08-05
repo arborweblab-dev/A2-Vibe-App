@@ -18,7 +18,7 @@ const THEMES = {
 };
 
 const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events'];
-const CATEGORIES_EXP = ['All', 'Tours', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems'];
+const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
 
 const SLIDE_IMAGES = [
   "/images/placeholder-1.jpg", 
@@ -67,6 +67,18 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
         </div>
         <div className="p-8 space-y-6">
           {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
+          
+          {/* EXTRA PHOTO GALLERY PREVIEW FOR HAPPENINGS */}
+          {item.type === 'experience' && (
+            <div className="space-y-2">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Event Gallery Highlights</p>
+              <div className="grid grid-cols-2 gap-3">
+                <img src={item.img} className="w-full h-28 object-cover rounded-2xl border border-white/5 opacity-80 hover:opacity-100 transition-opacity" alt="Event preview 1" />
+                <img src={item.img} className="w-full h-28 object-cover rounded-2xl border border-white/5 opacity-80 hover:opacity-100 transition-opacity" alt="Event preview 2" />
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center gap-4 flex-wrap">
             {item.price && <div className="bg-[#ffcb05]/20 text-[#ffcb05] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
             {item.cuisine && <div className="bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.cuisine}</div>}
@@ -82,8 +94,18 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
             dangerouslySetInnerHTML={{ __html: item.longDesc || item.desc || item.excerpt || 'Accessing city database...' }} 
           />
           {item.url && (
-            <button onClick={() => window.open(item.url, '_blank')} className="w-full bg-[#ffcb05] text-black font-black uppercase text-base py-5 rounded-2xl shadow-xl active:scale-95 transition-all">
-              {item.type === 'amazon' ? 'Buy Now' : 'Visit Website'}
+            <button 
+              onClick={() => {
+                // =========================================================================
+                // 🔗 REPLACE EVENT URL HERE: 
+                // This triggers when users click the official website link inside the modal.
+                // =========================================================================
+                window.open(item.url, '_blank');
+              }} 
+              className="w-full bg-[#ffcb05] text-black font-black uppercase text-base py-5 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <span>Visit Official Website</span>
+              <Navigation size={18} />
             </button>
           )}
         </div>
@@ -267,7 +289,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
                 <h4 className={`font-bold text-xs ${theme.text} line-clamp-2 leading-tight uppercase tracking-tight`}>{item.name}</h4>
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-black text-[#34a4b8]">{item.price}</span>
-                  <button onClick={(e) => { e.stopPropagation(); item.url && window.open(item.url, '_blank'); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">View</button>
+                  <button onClick={(e) => { e.stopPropagation(); setSelectedItem(item); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">Details</button>
                 </div>
               </div>
               <button onClick={(e) => { e.stopPropagation(); toggleFavorite(item); }} className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === item.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}><Heart size={14} fill={(favorites || []).some(f => f.id === item.id) ? "currentColor" : "none"} /></button>
@@ -538,9 +560,8 @@ export default function App() {
 
   const shuffledExp = useMemo(() => {
     const list = itineraries || [];
-    const shuffled = [...list].sort(() => Math.random() - 0.5);
-    if (activeExpCat === 'All') return shuffled;
-    return shuffled.filter(i => (i.category || "").toLowerCase().includes(activeExpCat.toLowerCase()));
+    const filtered = activeExpCat === 'All' ? list : list.filter(i => (i.category || "").toLowerCase().includes(activeExpCat.toLowerCase()));
+    return [...filtered];
   }, [itineraries, activeExpCat]);
 
   return (
@@ -576,10 +597,25 @@ export default function App() {
                     <>
                       {shuffledExp.slice(0, activeExpCat === 'All' ? visibleCount : shuffledExp.length).map(exp => (
                         <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
+                            {/* ========================================================================= */}
+                            {/* 🖼️ REPLACE EVENT IMAGE PATH HERE (e.g., in happeningsData.js or via img prop) */}
+                            {/* ========================================================================= */}
                             {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
+                            
                             <div className="flex-1 p-5 flex flex-col justify-between text-left">
-                               <div className="flex justify-between items-start"><div className="max-w-[85%]"><h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4><span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button></div>
-                               <div className="flex items-center justify-between"><span className={`text-[10px] font-black uppercase text-slate-500`}>A2 LOCAL</span><button onClick={(e) => { e.stopPropagation(); exp.url && window.open(exp.url, '_blank'); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md">Details</button></div>
+                               <div className="flex justify-between items-start">
+                                 <div className="max-w-[85%]">
+                                   <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
+                                   <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span>
+                                 </div>
+                                 <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
+                               </div>
+                               <div className="flex items-center justify-between">
+                                 <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
+                                 
+                                 {/* Details Modal Trigger Button */}
+                                 <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+                               </div>
                             </div>
                         </div>
                       ))}
