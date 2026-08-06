@@ -454,7 +454,6 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const diningFavorites = (favorites || []).filter(f => f.type === 'dining');
 
-  // Bucket list state saved in local storage
   const [bucketList, setBucketList] = useState(() => {
     const saved = localStorage.getItem('a2v_bucketlist');
     return saved ? JSON.parse(saved) : [
@@ -482,7 +481,6 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
       <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>My Vibe</h2></div>
       
       <div className="space-y-10 px-2 w-full">
-        {/* Profile Banner */}
         <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a121e] via-[#0a121e]/30 to-transparent" />
@@ -500,10 +498,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
 
-        {/* Fun Widgets & Tools */}
-        <section className="space-y-5 w-full">
-          <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
-          <div className="grid grid-cols-2 gap-3">
+        <section className="space-y-5 w-full"><div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div><div className="grid grid-cols-2 gap-3">
             {[
               {id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},
               {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
@@ -512,16 +507,9 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
               {id:'randomizer',icon:Dice5,label:'Weekend Pitcher',color:'#f97316'},
               {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
               {id:'mystery',icon:Compass,label:'Mystery Spot',color:'#38bdf8'}
-            ].map(t=>(
-              <button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}>
-                <div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div>
-                <span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span>
-              </button>
-            ))}
-          </div>
-        </section>
+            ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
+        </div></section>
 
-        {/* A2 Bucket List / Passport Feature */}
         <section className={`p-6 rounded-[32px] ${theme.card} border ${theme.border} space-y-4 shadow-xl`}>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
@@ -546,30 +534,9 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           </div>
         </section>
 
-        {/* Saved City Favs */}
         <section className="space-y-8 w-full">
-           <div className="space-y-5">
-             <div className="flex items-center justify-between px-1">
-               <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>City Favs ({diningFavorites.length})</h4>
-               <button onClick={() => setView('flavors')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore All Eats</button>
-             </div>
-             <div className="grid grid-cols-1 gap-4">
-               {!diningFavorites.length ? (
-                 <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No dining spots saved yet</div>
-               ) : (
-                 diningFavorites.map(fav => (
-                   <div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
-                     <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" />
-                     <div className="flex-1">
-                       <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
-                       <p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.cuisine || 'A2 Eats'}</p>
-                     </div>
-                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
-                   </div>
-                 ))
-               )}
-             </div>
-           </div>
+           <div className="space-y-5"><div className="flex items-center justify-between px-1"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>City Favs ({diningFavorites.length})</h4><button onClick={() => setView('flavors')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore All Eats</button></div>
+           <div className="grid grid-cols-1 gap-4">{!diningFavorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No dining spots saved yet</div> : diningFavorites.map(fav => (<div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.cuisine || 'A2 Eats'}</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
         </section>
       </div>
     </div>
@@ -787,14 +754,25 @@ export default function App() {
 
         <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
           {[
-            { id: 'home', icon: Building, label: 'Insider' }, 
-            { id: 'fun', icon: Sparkles, label: 'Happenings' }, 
-            { id: 'journal', icon: BookText, label: 'Journal' }, 
-            { id: 'flavors', icon: Utensils, label: 'Flavors' }, 
-            { id: 'profile', icon: User, label: 'My Vibe' }
-          ].map(v => (
-            <button key={v.id} onClick={() => setView(v.id)} className={`flex flex-col items-center gap-2 transition-all duration-300 ${view === v.id ? 'scale-110 opacity-100' : 'opacity-30'}`} style={view === v.id ? { color: '#ffcb05' } : { color: theme.isDark ? '#fff' : '#1a2b4b' }}><v.icon size={24} /><span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span></button>
-          ))}
+            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
+            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
+            { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
+            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
+            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
+          ].map(v => {
+            const isActive = view === v.id;
+            return (
+              <button 
+                key={v.id} 
+                onClick={() => setView(v.id)} 
+                className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
+                style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
+              >
+                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
+                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
+              </button>
+            );
+          })}
         </nav>
       </div>
 
@@ -805,7 +783,7 @@ export default function App() {
         .wp-content strong { color: #ffcb05; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
-        .bg-dark .wp-content, .bg-dark .wp-content p { color: #f1f5f9 !important; }
+        .bg-dark .wp-content, .wp-content p { color: #f1f5f9 !important; }
       `}} />
     </div>
   );
