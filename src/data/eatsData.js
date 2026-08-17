@@ -254,20 +254,6 @@ export const eatsData = [
     isHighlight: false
   },
   {
-    id: "eat-20",
-    title: "Taste Kitchen",
-    neighborhood: "East Liberty",
-    tags: ["Fine Dining", "French-Asian", "Modern"],
-    cuisine: "French-Asian Contemporary",
-    address: "621 E Liberty St, Ann Arbor, MI 48104",
-    img: "/images/taste-kitchen.jpg",
-    shortDesc: "Refined dining blending classic French techniques with Asian accents.",
-    longDesc: "<p>An intimate culinary destination offering artistically plated, flavor-forward dishes that shift with the seasonal harvest.</p>",
-    ctaText: "Book Table",
-    url: "https://tastekitchena2.com",
-    isHighlight: false
-  },
-  {
     id: "eat-21",
     title: "HopCat",
     neighborhood: "Downtown",
