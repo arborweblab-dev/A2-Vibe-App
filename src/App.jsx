@@ -107,7 +107,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           )}
         </div>
       </div>
-    </div>
+  </div>
   );
 };
 
@@ -417,13 +417,13 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
           <Sparkles size={18} className="text-[#ffcb05]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
         </div>
-        
+         
         {featuredPosts && featuredPosts.length > 0 && (
           <div className="px-1 relative">
             <div onClick={() => setSelectedItem(featuredPosts[highlightIdx])} className="relative h-[420px] rounded-[48px] overflow-hidden shadow-2xl cursor-pointer group border border-white/10">
               <img src={featuredPosts[highlightIdx]?.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-110" alt="" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              
+               
               <div className="absolute bottom-12 left-8 right-8 text-white space-y-3">
                 <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block">Trending Now</span>
                 <h4 className="text-2xl font-header font-black uppercase italic leading-tight drop-shadow-md tracking-tighter">{featuredPosts[highlightIdx]?.title || ''}</h4>
@@ -452,7 +452,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   const [headerIdx, setHeaderIdx] = useState(0);
   const [activeTool, setActiveTool] = useState(null);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
-  const diningFavorites = (favorites || []).filter(f => f.type === 'dining');
+  const userFavorites = favorites || [];
 
   const [bucketList, setBucketList] = useState(() => {
     const saved = localStorage.getItem('a2v_bucketlist');
@@ -479,7 +479,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
       <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} />
       <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>My Vibe</h2></div>
-      
+       
       <div className="space-y-10 px-2 w-full">
         <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
@@ -535,8 +535,28 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
         </section>
 
         <section className="space-y-8 w-full">
-           <div className="space-y-5"><div className="flex items-center justify-between px-1"><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>City Favs ({diningFavorites.length})</h4><button onClick={() => setView('flavors')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore All Eats</button></div>
-           <div className="grid grid-cols-1 gap-4">{!diningFavorites.length ? <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No dining spots saved yet</div> : diningFavorites.map(fav => (<div key={fav.id} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}><img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /><div className="flex-1"><p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p><p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.cuisine || 'A2 Eats'}</p></div><button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button></div>))}</div></div>
+           <div className="space-y-5">
+             <div className="flex items-center justify-between px-1">
+               <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>City Favs ({userFavorites.length})</h4>
+               <button onClick={() => setView('home')} className="text-[9px] font-black uppercase text-[#34a4b8] tracking-[0.2em]">Explore More</button>
+             </div>
+             <div className="grid grid-cols-1 gap-4">
+               {!userFavorites.length ? (
+                 <div className={`p-10 border-2 border-dashed rounded-[32px] text-center opacity-30 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No favorite spots saved yet</div>
+               ) : (
+                 userFavorites.map(fav => (
+                   <div key={`${fav.type || 'fav'}-${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
+                     {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className="w-16 h-16 rounded-2xl bg-black/10 flex items-center justify-center"><Building size={20} className="opacity-40"/></div>}
+                     <div className="flex-1">
+                       <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
+                       <p className="text-[9px] font-black uppercase text-[#ffcb05] mt-1 tracking-widest">{fav.cuisine || fav.category || 'A2 Favorite'}</p>
+                     </div>
+                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
+                   </div>
+                 ))
+               )}
+             </div>
+           </div>
         </section>
       </div>
     </div>
@@ -560,7 +580,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
       <div className="text-center px-4 w-full space-y-4">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Flavors</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
-        
+         
         <div className="relative max-w-md mx-auto w-full mt-4">
           <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input 
@@ -651,7 +671,7 @@ export default function App() {
   const [view, setView] = useState('home');
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
-  
+   
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem('a2v_favorites');
     return saved ? JSON.parse(saved) : [];
@@ -665,7 +685,7 @@ export default function App() {
   const [dining, setDining] = useState(eatsData);
   const [posts, setPosts] = useState(journalData);
   const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
-  
+   
   const [activeExpCat, setActiveExpCat] = useState('All');
   const [visibleCount, setVisibleCount] = useState(6);
   const theme = THEMES[themeKey] || THEMES.dark;
@@ -720,7 +740,7 @@ export default function App() {
                       {shuffledExp.slice(0, activeExpCat === 'All' ? visibleCount : shuffledExp.length).map(exp => (
                         <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
                             {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
-                            
+                             
                             <div className="flex-1 p-5 flex flex-col justify-between text-left">
                                <div className="flex justify-between items-start">
                                  <div className="max-w-[85%]">
