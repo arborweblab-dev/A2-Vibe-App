@@ -199,8 +199,8 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining, buck
                 placeholder="0.00" 
                 className={`w-full p-5 rounded-2xl bg-black/20 border border-white/10 text-white font-bold text-xl outline-none focus:border-[#ffcb05]`} 
               />
-              <div className="grid grid-cols-4 gap-2">
-                {[15, 18, 20, 25].map(p => (
+              <div className="grid grid-cols-3 gap-2">
+                {[18, 20, 25].map(p => (
                   <button 
                     key={p} 
                     onClick={() => setTipPerc(p)}
@@ -231,7 +231,7 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining, buck
         )}
 
         {type === 'water' && (
-          <div className="space-y-8 text-center py-6">
+          <div className="space-y-6 text-center py-4">
              <div className="flex justify-around items-center">
                 <div>
                    <p className="text-4xl font-black text-blue-400">{stats.water || 0}</p>
@@ -246,6 +246,7 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining, buck
                 <button onClick={() => setStats({...stats, water: (stats.water || 0) + 1})} className="bg-blue-600 py-4 rounded-2xl text-white font-black uppercase text-xs shadow-lg shadow-blue-500/20">+ Water</button>
                 <button onClick={() => setStats({...stats, drinks: (stats.drinks || 0) + 1})} className="bg-[#ffcb05] py-4 rounded-2xl text-black font-black uppercase text-xs shadow-lg shadow-yellow-500/20">+ Drink</button>
              </div>
+             <button onClick={() => setStats({...stats, water: 0, drinks: 0})} className="w-full py-3 bg-white/5 text-slate-400 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/5 active:scale-95 transition-all">Reset Hydration</button>
           </div>
         )}
 
@@ -501,8 +502,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
       <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} toggleBucketItem={toggleBucketItem} />
-      <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>My Vibe</h2></div>
-       
+      
       <div className="space-y-10 px-2 w-full">
         <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
@@ -514,28 +514,12 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                 </div>
              </div>
              <div>
-                <h3 className="text-2xl font-header font-black uppercase text-white drop-shadow-lg tracking-tight">Ann Arbor</h3>
-                <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">Your Saved Spots</p>
+                <h3 className="text-2xl font-header font-black uppercase text-white drop-shadow-lg tracking-tight">My Vibe</h3>
+                <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">Saved Spots, Eats & Happenings</p>
              </div>
           </div>
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
-
-        <section className="space-y-5 w-full">
-          <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              {id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},
-              {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
-              {id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},
-              {id:'weather',icon:Thermometer,label:'Forecast',color:'#34a4b8'},
-              {id:'randomizer',icon:Dice5,label:'Weekend Pitcher',color:'#f97316'},
-              {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
-              {id:'mystery',icon:Compass,label:'Mystery Spot',color:'#38bdf8'},
-              {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'}
-            ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
-          </div>
-        </section>
 
         <section className="space-y-8 w-full">
            <div className="space-y-5">
@@ -560,6 +544,22 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                )}
              </div>
            </div>
+        </section>
+
+        <section className="space-y-5 w-full">
+          <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              {id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},
+              {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
+              {id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},
+              {id:'weather',icon:Thermometer,label:'Forecast',color:'#34a4b8'},
+              {id:'randomizer',icon:Dice5,label:'Weekend Pitcher',color:'#f97316'},
+              {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
+              {id:'mystery',icon:Compass,label:'Mystery Spot',color:'#38bdf8'},
+              {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'}
+            ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
+          </div>
         </section>
       </div>
     </div>
