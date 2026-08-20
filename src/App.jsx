@@ -71,7 +71,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
         </div>
         <div className="p-8 space-y-6">
           {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
-           
+          
           {item.type === 'experience' && (
             <div className="space-y-2">
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Event Gallery Highlights</p>
@@ -504,6 +504,11 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
     setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
   };
 
+  const handleToolClick = (toolId) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setActiveTool(toolId);
+  };
+
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
       <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} toggleBucketItem={toggleBucketItem} />
@@ -622,7 +627,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
               {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
               {id:'mystery',icon:Compass,label:'Mystery Spot',color:'#38bdf8'},
               {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'}
-            ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
+            ].map(t=>(<button key={t.id} onClick={()=>handleToolClick(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
           </div>
         </section>
       </div>
@@ -738,7 +743,7 @@ export default function App() {
   const [view, setView] = useState('home');
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
-   
+  
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem('a2v_favorites');
     return saved ? JSON.parse(saved) : [];
@@ -752,7 +757,7 @@ export default function App() {
   const [dining, setDining] = useState(eatsData);
   const [posts, setPosts] = useState(journalData);
   const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
-   
+  
   const [activeExpCat, setActiveExpCat] = useState('All');
   const [visibleCount, setVisibleCount] = useState(6);
   const theme = THEMES[themeKey] || THEMES.dark;
@@ -813,7 +818,7 @@ export default function App() {
                                  <div className="max-w-[85%]">
                                    <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
                                    <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span>
-                                 </div>
+                                </div>
                                  <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
                                </div>
                                <div className="flex items-center justify-between">
