@@ -71,7 +71,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
         </div>
         <div className="p-8 space-y-6">
           {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
-           
+          
           {item.type === 'experience' && (
             <div className="space-y-2">
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Event Gallery Highlights</p>
@@ -160,7 +160,7 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining, buck
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} p-8`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} p-8 z-10`}>
         <div className="flex justify-between items-center mb-8">
            <h3 className="text-xl font-header font-black uppercase italic tracking-tighter" style={{ color: '#ffcb05' }}>
              {type === 'hots' ? 'City Hot Spots' : type === 'calc' ? 'Tip Calculator' : type === 'weather' ? 'City Forecast' : type === 'water' ? 'Stay Hydrated' : type === 'randomizer' ? 'Weekend Pitcher / Randomizer' : type === 'trivia' ? 'Tree Town Trivia' : type === 'bucket' ? 'A2 Bucket List Passport' : 'Mystery Spot'}
@@ -464,9 +464,9 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
                 {featuredPosts.map((_, i) => (
                   <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i === highlightIdx ? 'w-8 bg-[#ffcb05]' : 'w-2 bg-white/40'}`} />
-              ))}
-            </div>
+            ))}
           </div>
+        </div>
         </div>
         )}
       </section>
@@ -503,18 +503,6 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   const toggleBucketItem = (id) => {
     setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
   };
-
-  // Lock background scrolling when any modal/popup is active
-  useEffect(() => {
-    if (activeTool) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [activeTool]);
 
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
@@ -638,7 +626,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           </div>
         </section>
       </div>
-    </div>
+  </div>
   );
 };
 
@@ -704,7 +692,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
           <div className="py-20 text-center opacity-40 text-xs font-bold uppercase tracking-widest">No restaurants found matching your search.</div>
         )}
       </div>
-    </div>
+  </div>
   );
 };
 
@@ -834,14 +822,14 @@ export default function App() {
                                </div>
                             </div>
                         </div>
-                      ))}
+                        ))}
                       {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
                         <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                       )}
-                      </>
+                    </>
                   ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
                </div>
-               <section className="px-1 space-y-5 w-full">
+              <section className="px-1 space-y-5 w-full">
                   <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Exploration</h2></div>
                   <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory px-1">
                     <button onClick={() => window.open('https://www.theride.org/', '_blank')} className={`${theme.card} min-w-[160px] p-6 rounded-3xl border ${theme.border} flex flex-col items-center gap-4 shadow-md active:scale-95 transition-all snap-start`}><div className="p-4 bg-[#34a4b8]/10 text-[#34a4b8] rounded-2xl"><Navigation size={28} /></div><span className={`text-[11px] font-bold uppercase text-center leading-tight ${theme.text}`}>Bus Routes</span></button>
