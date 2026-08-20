@@ -71,7 +71,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
         </div>
         <div className="p-8 space-y-6">
           {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
-          
+           
           {item.type === 'experience' && (
             <div className="space-y-2">
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Event Gallery Highlights</p>
@@ -425,7 +425,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
                 <img src={res.img} className="w-full h-28 object-cover" alt="" />
               ) : (
                 <div className="w-full h-28 bg-[#00274c]/20 flex items-center justify-center"><Building size={24} className="text-[#ffcb05]/40" /></div>
-              )}
+            )}
               <div className="p-4">
                 <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title}</h4>
                 <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-1">{res.cuisine || 'Gourmet A2'}</p>
@@ -433,7 +433,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}>
                 <Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} />
               </button>
-            </div>
+          </div>
           ))}
         </div>
       </section>
@@ -464,13 +464,13 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
                 {featuredPosts.map((_, i) => (
                   <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i === highlightIdx ? 'w-8 bg-[#ffcb05]' : 'w-2 bg-white/40'}`} />
-                ))}
-              </div>
+              ))}
             </div>
           </div>
+        </div>
         )}
       </section>
-    </div>
+  </div>
   );
 };
 
@@ -504,10 +504,17 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
     setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
   };
 
-  const handleToolClick = (toolId) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setActiveTool(toolId);
-  };
+  // Lock background scrolling when any modal/popup is active
+  useEffect(() => {
+    if (activeTool) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [activeTool]);
 
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
@@ -627,7 +634,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
               {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
               {id:'mystery',icon:Compass,label:'Mystery Spot',color:'#38bdf8'},
               {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'}
-            ].map(t=>(<button key={t.id} onClick={()=>handleToolClick(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
+            ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
           </div>
         </section>
       </div>
@@ -831,7 +838,7 @@ export default function App() {
                       {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
                         <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                       )}
-                    </>
+                      </>
                   ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
                </div>
                <section className="px-1 space-y-5 w-full">
@@ -859,12 +866,12 @@ export default function App() {
                 onClick={() => setView(v.id)} 
                 className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
                 style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
-              >
+            >
                 <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
                 <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
-              </button>
-            );
-          })}
+            </button>
+          );
+        })}
         </nav>
       </div>
 
@@ -877,6 +884,6 @@ export default function App() {
         .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
         .bg-dark .wp-content, .wp-content p { color: #f1f5f9 !important; }
       `}} />
-    </div>
+  </div>
   );
 }
