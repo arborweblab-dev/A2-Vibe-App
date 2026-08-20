@@ -111,7 +111,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   );
 };
 
-const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining }) => {
+const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining, bucketList, toggleBucketItem }) => {
   const [bill, setBill] = useState('');
   const [tipPerc, setTipPerc] = useState(20);
   const [weatherIdx, setWeatherIdx] = useState(new Date().getMonth());
@@ -163,7 +163,7 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining }) =>
       <div className={`${theme.card} relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} p-8`}>
         <div className="flex justify-between items-center mb-8">
            <h3 className="text-xl font-header font-black uppercase italic tracking-tighter" style={{ color: '#ffcb05' }}>
-             {type === 'hots' ? 'City Hot Spots' : type === 'calc' ? 'Tip Calculator' : type === 'weather' ? 'City Forecast' : type === 'water' ? 'Stay Hydrated' : type === 'randomizer' ? 'Weekend Pitcher / Randomizer' : type === 'trivia' ? 'Tree Town Trivia' : 'Mystery Spot'}
+             {type === 'hots' ? 'City Hot Spots' : type === 'calc' ? 'Tip Calculator' : type === 'weather' ? 'City Forecast' : type === 'water' ? 'Stay Hydrated' : type === 'randomizer' ? 'Weekend Pitcher / Randomizer' : type === 'trivia' ? 'Tree Town Trivia' : type === 'bucket' ? 'A2 Bucket List Passport' : 'Mystery Spot'}
            </h3>
            <button onClick={onClose} className={`p-2 rounded-full bg-white/10 ${theme.isDark ? 'text-white' : 'text-black'}`}><X size={20}/></button>
         </div>
@@ -293,6 +293,31 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining }) =>
               })}
             </div>
             {triviaAnswered && <p className="text-xs text-[#ffcb05] font-bold uppercase animate-fade">Correct! The Gothic architecture of the Law Quad is a local legend.</p>}
+          </div>
+        )}
+
+        {type === 'bucket' && (
+          <div className="space-y-4 text-left py-2">
+            <div className="flex justify-between items-center mb-2 px-1">
+              <span className="text-xs font-black text-[#ffcb05] bg-[#ffcb05]/10 px-3 py-1 rounded-xl">
+                {bucketList.filter(i => i.done).length} / {bucketList.length} Done
+              </span>
+              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Checklist</span>
+            </div>
+            <div className="space-y-2">
+              {bucketList.map(item => (
+                <div 
+                  key={item.id} 
+                  onClick={() => toggleBucketItem(item.id)}
+                  className={`p-3.5 rounded-2xl border ${theme.border} flex items-center gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
+                >
+                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
+                    {item.done ? '✓' : ''}
+                  </div>
+                  <span className={`text-xs font-bold ${theme.text}`}>{item.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -473,11 +498,9 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
     setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
   };
 
-  const completedCount = bucketList.filter(i => i.done).length;
-
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
-      <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} />
+      <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} toggleBucketItem={toggleBucketItem} />
       <div className="w-full px-2"><h2 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>My Vibe</h2></div>
        
       <div className="space-y-10 px-2 w-full">
@@ -498,7 +521,9 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
 
-        <section className="space-y-5 w-full"><div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div><div className="grid grid-cols-2 gap-3">
+        <section className="space-y-5 w-full">
+          <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
+          <div className="grid grid-cols-2 gap-3">
             {[
               {id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},
               {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
@@ -506,31 +531,9 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
               {id:'weather',icon:Thermometer,label:'Forecast',color:'#34a4b8'},
               {id:'randomizer',icon:Dice5,label:'Weekend Pitcher',color:'#f97316'},
               {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
-              {id:'mystery',icon:Compass,label:'Mystery Spot',color:'#38bdf8'}
+              {id:'mystery',icon:Compass,label:'Mystery Spot',color:'#38bdf8'},
+              {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'}
             ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
-        </div></section>
-
-        <section className={`p-6 rounded-[32px] ${theme.card} border ${theme.border} space-y-4 shadow-xl`}>
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Award size={20} className="text-[#ffcb05]" />
-              <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Bucket List Passport</h4>
-            </div>
-            <span className="text-xs font-black text-[#ffcb05] bg-[#ffcb05]/10 px-3 py-1 rounded-xl">{completedCount} / {bucketList.length} Done</span>
-          </div>
-          <div className="space-y-2">
-            {bucketList.map(item => (
-              <div 
-                key={item.id} 
-                onClick={() => toggleBucketItem(item.id)}
-                className={`p-3.5 rounded-2xl border ${theme.border} flex items-center gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
-              >
-                <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
-                  {item.done ? '✓' : ''}
-                </div>
-                <span className={`text-xs font-bold ${theme.text}`}>{item.text}</span>
-              </div>
-            ))}
           </div>
         </section>
 
