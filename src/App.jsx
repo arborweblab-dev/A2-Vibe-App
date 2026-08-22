@@ -704,7 +704,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
   return (
     <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col">
       <div className="text-center px-4 w-full space-y-4">
-        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Flavors</h1>
+        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
            
         <div className="relative max-w-md mx-auto w-full mt-4">
