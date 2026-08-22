@@ -148,184 +148,186 @@ const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining, buck
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade font-sans">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} p-8 z-10`}>
-        <div className="flex justify-between items-center mb-8">
-           <h3 className="text-xl font-header font-black uppercase italic tracking-tighter" style={{ color: '#ffcb05' }}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+           <h3 className={`text-lg font-header font-black uppercase italic tracking-tight pr-4`} style={{ color: '#ffcb05' }}>
              {type === 'hots' ? 'City Hot Spots' : type === 'calc' ? 'Tip Calculator' : type === 'weather' ? 'City Forecast' : type === 'water' ? 'Stay Hydrated' : type === 'randomizer' ? 'Weekend Pitcher / Randomizer' : type === 'trivia' ? 'Tree Town Trivia' : type === 'bucket' ? 'A2 Bucket List Passport' : 'Mystery Spot'}
-           </h3>
-           <button onClick={onClose} className={`p-2 rounded-full bg-white/10 ${theme.isDark ? 'text-white' : 'text-black'}`}><X size={20}/></button>
-        </div>
+          </h3>
+         <button onClick={onClose} className={`p-2.5 rounded-full bg-white/10 backdrop-blur-sm transition-all active:scale-90 ${theme.isDark ? 'text-white' : 'text-black'}`}><X size={22}/></button>
+      </div>
 
-        {type === 'hots' && (
-          <div className="space-y-4">
-            {POIs.map(p => (
-              <div key={p.name} className={`p-5 rounded-[24px] border ${theme.border} bg-black/10 shadow-inner`}>
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className={`font-bold ${theme.text}`}>{p.name}</h4>
-                  <span className={`text-[8px] font-black uppercase text-white px-2 py-1 rounded-full ${p.color}`}>{p.type}</span>
-                </div>
-                <p className="text-xs text-slate-500 leading-relaxed">{p.desc}</p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {type === 'calc' && (
-          <div className="space-y-8">
-            <div className="bg-black/20 p-6 rounded-3xl border border-white/5 text-center">
-               <p className="text-[10px] font-black uppercase text-slate-500 mb-1 tracking-widest">Total with Tip</p>
-               <h2 className="text-5xl font-header font-black text-white">${totalBill}</h2>
-               <div className="flex justify-center gap-4 mt-4 text-[#ffcb05] font-bold text-sm">
-                 <span>Tip: ${tipAmount}</span>
-               </div>
-            </div>
+        <div className="p-8 space-y-6">
+          {type === 'hots' && (
             <div className="space-y-4">
-              <input 
-                type="number" 
-                value={bill}
-                onChange={(e) => setBill(e.target.value)}
-                placeholder="0.00" 
-                className={`w-full p-5 rounded-2xl bg-black/20 border border-white/10 text-white font-bold text-xl outline-none focus:border-[#ffcb05]`} 
-              />
-              <div className="grid grid-cols-3 gap-2">
-                {[18, 20, 25].map(p => (
-                  <button 
-                    key={p} 
-                    onClick={() => setTipPerc(p)}
-                    className={`py-4 rounded-xl font-black text-xs transition-all ${tipPerc === p ? 'bg-[#ffcb05] text-black scale-105 shadow-lg shadow-yellow-500/20' : 'bg-white/5 text-slate-400'}`}
-                  >
-                    {p}%
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {type === 'weather' && (
-          <div className="space-y-6">
-            <div className={`p-10 rounded-[32px] ${currentW.vibe} text-white text-center shadow-2xl relative overflow-hidden transition-all duration-500`}>
-               <div className="absolute top-0 right-0 p-4 opacity-20 rotate-12"><Building size={120} /></div>
-               <p className="text-xs font-black uppercase tracking-[0.3em] mb-2">{currentW.month}</p>
-               <h2 className="text-6xl font-header font-black">{currentW.high}°</h2>
-               <p className="text-sm font-bold opacity-80 mt-2">Avg Low: {currentW.low}°</p>
-            </div>
-            <div className="flex justify-between items-center gap-4">
-              <button onClick={() => setWeatherIdx(p => (p - 1 + 12) % 12)} className="p-4 bg-white/5 rounded-2xl text-white active:scale-90 transition-all"><ChevronLeft size={24}/></button>
-              <span className="font-header font-black uppercase text-[10px] tracking-widest text-slate-500">A2 Calendar</span>
-              <button onClick={() => setWeatherIdx(p => (p + 1) % 12)} className="p-4 bg-white/5 rounded-2xl text-white active:scale-90 transition-all"><ChevronRight size={24}/></button>
-            </div>
-          </div>
-        )}
-
-        {type === 'water' && (
-          <div className="space-y-6 text-center py-4">
-             <div className="flex justify-around items-center">
-                <div>
-                   <p className="text-4xl font-black text-blue-400">{stats.water || 0}</p>
-                   <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Water</p>
-                </div>
-                <div>
-                   <p className="text-4xl font-black text-[#ffcb05]">{stats.drinks || 0}</p>
-                   <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Beverages</p>
-                </div>
-             </div>
-             <div className="grid grid-cols-2 gap-4">
-                <button onClick={() => setStats({...stats, water: (stats.water || 0) + 1})} className="bg-blue-600 py-4 rounded-2xl text-white font-black uppercase text-xs shadow-lg shadow-blue-500/20">+ Water</button>
-                <button onClick={() => setStats({...stats, drinks: (stats.drinks || 0) + 1})} className="bg-[#ffcb05] py-4 rounded-2xl text-black font-black uppercase text-xs shadow-lg shadow-yellow-500/20">+ Drink</button>
-             </div>
-             <button onClick={() => setStats({...stats, water: 0, drinks: 0})} className="w-full py-3 bg-white/5 text-slate-400 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/5 active:scale-95 transition-all">Reset Hydration</button>
-          </div>
-        )}
-
-        {type === 'randomizer' && (
-          <div className="space-y-6 text-center py-4">
-            <p className={`text-xs ${theme.secondaryText}`}>Can't decide where to eat or hang out? Let the Weekend Pitcher pick your destination!</p>
-            {randomSpot ? (
-              <div className="p-6 rounded-3xl bg-black/20 border border-white/10 space-y-3 animate-fade">
-                <img src={randomSpot.img} className="w-full h-40 object-cover rounded-2xl shadow-md" alt="" />
-                <h4 className={`text-lg font-black uppercase ${theme.text}`}>{randomSpot.title}</h4>
-                <p className="text-xs text-[#ffcb05] font-bold uppercase">{randomSpot.cuisine || randomSpot.neighborhood}</p>
-                <p className={`text-xs ${theme.secondaryText}`}>{randomSpot.shortDesc}</p>
-              </div>
-            ) : (
-              <div className="p-10 border-2 border-dashed rounded-3xl opacity-40 text-xs font-bold uppercase">Click roll to pick a spot!</div>
-            )}
-            <button onClick={spinRandomizer} className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">Roll the Dice 🎲</button>
-          </div>
-        )}
-
-        {type === 'trivia' && (
-          <div className="space-y-6 text-center py-4">
-            <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
-              <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-lg text-[9px] font-black uppercase">Daily Challenge</span>
-              <h4 className={`text-sm font-bold ${theme.text}`}>Which Ann Arbor building's courtyard is rumored to have inspired Hogwarts architecture?</h4>
-            </div>
-            <div className="space-y-2">
-              {['U-M Law Quadrangle', 'Michigan Union', 'Angell Hall', 'Rackham Building'].map((opt) => {
-                const isCorrect = opt === 'U-M Law Quadrangle';
-                let btnStyle = 'bg-white/5 text-slate-300';
-                if (triviaAnswered) {
-                  if (isCorrect) btnStyle = 'bg-emerald-600 text-white font-bold';
-                  else if (selectedAnswer === opt) btnStyle = 'bg-red-600 text-white font-bold';
-                }
-                return (
-                  <button 
-                    key={opt}
-                    disabled={triviaAnswered}
-                    onClick={() => { setSelectedAnswer(opt); setTriviaAnswered(true); }}
-                    className={`w-full p-4 rounded-2xl text-xs font-bold transition-all border border-white/5 ${btnStyle}`}
-                  >
-                    {opt}
-                  </button>
-                );
-              })}
-            </div>
-            {triviaAnswered && <p className="text-xs text-[#ffcb05] font-bold uppercase animate-fade">Correct! The Gothic architecture of the Law Quad is a local legend.</p>}
-          </div>
-        )}
-
-        {type === 'bucket' && (
-          <div className="space-y-4 text-left py-2">
-            <div className="flex justify-between items-center mb-2 px-1">
-              <span className="text-xs font-black text-[#ffcb05] bg-[#ffcb05]/10 px-3 py-1 rounded-xl">
-                {bucketList.filter(i => i.done).length} / {bucketList.length} Done
-              </span>
-              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Checklist</span>
-            </div>
-            <div className="space-y-2">
-              {bucketList.map(item => (
-                <div 
-                  key={item.id} 
-                  onClick={() => toggleBucketItem(item.id)}
-                  className={`p-3.5 rounded-2xl border ${theme.border} flex items-center gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
-                >
-                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
-                    {item.done ? '✓' : ''}
+              {POIs.map(p => (
+                <div key={p.name} className={`p-5 rounded-[24px] border ${theme.border} bg-black/10 shadow-inner`}>
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className={`font-bold ${theme.text}`}>{p.name}</h4>
+                    <span className={`text-[8px] font-black uppercase text-white px-2 py-1 rounded-full ${p.color}`}>{p.type}</span>
                   </div>
-                  <span className={`text-xs font-bold ${theme.text}`}>{item.text}</span>
+                  <p className="text-xs text-slate-500 leading-relaxed">{p.desc}</p>
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          )}
 
-        {type === 'mystery' && (
-          <div className="space-y-6 text-center py-4">
-            <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
-              <span className="bg-[#34a4b8] text-white px-3 py-1 rounded-lg text-[9px] font-black uppercase">Landmark ID</span>
-              <img src="/images/law-quad.jpg" className="w-full h-36 object-cover rounded-2xl shadow-md" alt="" />
-              <p className={`text-xs italic ${theme.secondaryText}`}>"Stunning stone gargoyles, quiet cloisters, and hidden carved faces..."</p>
+          {type === 'calc' && (
+            <div className="space-y-8">
+              <div className="bg-black/20 p-6 rounded-3xl border border-white/5 text-center">
+                 <p className="text-[10px] font-black uppercase text-slate-500 mb-1 tracking-widest">Total with Tip</p>
+                 <h2 className="text-5xl font-header font-black text-white">${totalBill}</h2>
+                 <div className="flex justify-center gap-4 mt-4 text-[#ffcb05] font-bold text-sm">
+                   <span>Tip: ${tipAmount}</span>
+                 </div>
+              </div>
+              <div className="space-y-4">
+                <input 
+                  type="number" 
+                  value={bill}
+                  onChange={(e) => setBill(e.target.value)}
+                  placeholder="0.00" 
+                  className={`w-full p-5 rounded-2xl bg-black/20 border border-white/10 text-white font-bold text-xl outline-none focus:border-[#ffcb05]`} 
+                />
+                <div className="grid grid-cols-3 gap-2">
+                  {[18, 20, 25].map(p => (
+                    <button 
+                      key={p} 
+                      onClick={() => setTipPerc(p)}
+                      className={`py-4 rounded-xl font-black text-xs transition-all ${tipPerc === p ? 'bg-[#ffcb05] text-black scale-105 shadow-lg shadow-yellow-500/20' : 'bg-white/5 text-slate-400'}`}
+                    >
+                      {p}%
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="p-4 rounded-2xl bg-[#ffcb05]/20 text-[#ffcb05] font-black text-xs uppercase tracking-widest">
-              Spot: U-M Law Quadrangle
+          )}
+
+          {type === 'weather' && (
+            <div className="space-y-6">
+              <div className={`p-10 rounded-[32px] ${currentW.vibe} text-white text-center shadow-2xl relative overflow-hidden transition-all duration-500`}>
+                 <div className="absolute top-0 right-0 p-4 opacity-20 rotate-12"><Building size={120} /></div>
+                 <p className="text-xs font-black uppercase tracking-[0.3em] mb-2">{currentW.month}</p>
+                 <h2 className="text-6xl font-header font-black">{currentW.high}°</h2>
+                 <p className="text-sm font-bold opacity-80 mt-2">Avg Low: {currentW.low}°</p>
+              </div>
+              <div className="flex justify-between items-center gap-4">
+                <button onClick={() => setWeatherIdx(p => (p - 1 + 12) % 12)} className="p-4 bg-white/5 rounded-2xl text-white active:scale-90 transition-all"><ChevronLeft size={24}/></button>
+                <span className="font-header font-black uppercase text-[10px] tracking-widest text-slate-500">A2 Calendar</span>
+                <button onClick={() => setWeatherIdx(p => (p + 1) % 12)} className="p-4 bg-white/5 rounded-2xl text-white active:scale-90 transition-all"><ChevronRight size={24}/></button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {type === 'water' && (
+            <div className="space-y-6 text-center py-4">
+               <div className="flex justify-around items-center">
+                  <div>
+                   <p className="text-4xl font-black text-blue-400">{stats.water || 0}</p>
+                   <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Water</p>
+                  </div>
+                  <div>
+                   <p className="text-4xl font-black text-[#ffcb05]">{stats.drinks || 0}</p>
+                   <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Beverages</p>
+                  </div>
+               </div>
+               <div className="grid grid-cols-2 gap-4">
+                  <button onClick={() => setStats({...stats, water: (stats.water || 0) + 1})} className="bg-blue-600 py-4 rounded-2xl text-white font-black uppercase text-xs shadow-lg shadow-blue-500/20">+ Water</button>
+                  <button onClick={() => setStats({...stats, drinks: (stats.drinks || 0) + 1})} className="bg-[#ffcb05] py-4 rounded-2xl text-black font-black uppercase text-xs shadow-lg shadow-yellow-500/20">+ Drink</button>
+               </div>
+               <button onClick={() => setStats({...stats, water: 0, drinks: 0})} className="w-full py-3 bg-white/5 text-slate-400 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/5 active:scale-95 transition-all">Reset Hydration</button>
+            </div>
+          )}
+
+          {type === 'randomizer' && (
+            <div className="space-y-6 text-center py-4">
+              <p className={`text-xs ${theme.secondaryText}`}>Can't decide where to eat or hang out? Let the Weekend Pitcher pick your destination!</p>
+              {randomSpot ? (
+                <div className="p-6 rounded-3xl bg-black/20 border border-white/10 space-y-3 animate-fade">
+                  <img src={randomSpot.img} className="w-full h-40 object-cover rounded-2xl shadow-md" alt="" />
+                  <h4 className={`text-lg font-black uppercase ${theme.text}`}>{randomSpot.title}</h4>
+                  <p className="text-xs text-[#ffcb05] font-bold uppercase">{randomSpot.cuisine || randomSpot.neighborhood}</p>
+                  <p className={`text-xs ${theme.secondaryText}`}>{randomSpot.shortDesc}</p>
+                </div>
+              ) : (
+                <div className="p-10 border-2 border-dashed rounded-3xl opacity-40 text-xs font-bold uppercase">Click roll to pick a spot!</div>
+              )}
+              <button onClick={spinRandomizer} className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">Roll the Dice 🎲</button>
+            </div>
+          )}
+
+          {type === 'trivia' && (
+            <div className="space-y-6 text-center py-4">
+              <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
+                <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-lg text-[9px] font-black uppercase">Daily Challenge</span>
+                <h4 className={`text-sm font-bold ${theme.text}`}>Which Ann Arbor building's courtyard is rumored to have inspired Hogwarts architecture?</h4>
+              </div>
+              <div className="space-y-2">
+                {['U-M Law Quadrangle', 'Michigan Union', 'Angell Hall', 'Rackham Building'].map((opt) => {
+                  const isCorrect = opt === 'U-M Law Quadrangle';
+                  let btnStyle = 'bg-white/5 text-slate-300';
+                  if (triviaAnswered) {
+                    if (isCorrect) btnStyle = 'bg-emerald-600 text-white font-bold';
+                    else if (selectedAnswer === opt) btnStyle = 'bg-red-600 text-white font-bold';
+                  }
+                  return (
+                    <button 
+                      key={opt}
+                      disabled={triviaAnswered}
+                      onClick={() => { setSelectedAnswer(opt); setTriviaAnswered(true); }}
+                      className={`w-full p-4 rounded-2xl text-xs font-bold transition-all border border-white/5 ${btnStyle}`}
+                    >
+                      {opt}
+                    </button>
+                  );
+                })}
+              </div>
+              {triviaAnswered && <p className="text-xs text-[#ffcb05] font-bold uppercase animate-fade">Correct! The Gothic architecture of the Law Quad is a local legend.</p>}
+            </div>
+          )}
+
+          {type === 'bucket' && (
+            <div className="space-y-4 text-left py-2">
+              <div className="flex justify-between items-center mb-2 px-1">
+                <span className="text-xs font-black text-[#ffcb05] bg-[#ffcb05]/10 px-3 py-1 rounded-xl">
+                  {bucketList.filter(i => i.done).length} / {bucketList.length} Done
+                </span>
+                <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Checklist</span>
+              </div>
+              <div className="space-y-2">
+                {bucketList.map(item => (
+                  <div 
+                    key={item.id} 
+                    onClick={() => toggleBucketItem(item.id)}
+                    className={`p-3.5 rounded-2xl border ${theme.border} flex items-center gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
+                  >
+                    <div className={`w-5 h-5 rounded-lg border flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
+                      {item.done ? '✓' : ''}
+                    </div>
+                    <span className={`text-xs font-bold ${theme.text}`}>{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {type === 'mystery' && (
+            <div className="space-y-6 text-center py-4">
+              <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
+                <span className="bg-[#34a4b8] text-white px-3 py-1 rounded-lg text-[9px] font-black uppercase">Landmark ID</span>
+                <img src="/images/law-quad.jpg" className="w-full h-36 object-cover rounded-2xl shadow-md" alt="" />
+                <p className={`text-xs italic ${theme.secondaryText}`}>"Stunning stone gargoyles, quiet cloisters, and hidden carved faces..."</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-[#ffcb05]/20 text-[#ffcb05] font-black text-xs uppercase tracking-widest">
+                Spot: U-M Law Quadrangle
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+  </div>
   );
 };
 
@@ -355,8 +357,8 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
         <div className="relative z-10 text-white">
           <h1 className="text-4xl font-header font-black uppercase italic tracking-tighter mb-2">The Scene</h1>
           <p className="text-[#ffcb05] font-header font-medium tracking-[0.05em] text-base">Curated by A2 Vibe.</p>
-        </div>
-      </section>
+      </div>
+    </section>
 
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
@@ -372,13 +374,13 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-black text-[#34a4b8]">{item.price}</span>
                   <button onClick={(e) => { e.stopPropagation(); setSelectedItem(item); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">Details</button>
-                </div>
               </div>
-              <button onClick={(e) => { e.stopPropagation(); toggleFavorite(item); }} className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === item.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}><Heart size={14} fill={(favorites || []).some(f => f.id === item.id) ? "currentColor" : "none"} /></button>
             </div>
-          ))}
+            <button onClick={(e) => { e.stopPropagation(); toggleFavorite(item); }} className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === item.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}><Heart size={14} fill={(favorites || []).some(f => f.id === item.id) ? "currentColor" : "none"} /></button>
         </div>
-      </section>
+        ))}
+      </div>
+    </section>
 
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
@@ -413,20 +415,20 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
             <div key={res.id} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`${theme.card} min-w-[220px] h-44 rounded-[24px] border ${theme.border} overflow-hidden shadow-sm active:scale-95 transition-transform cursor-pointer relative group`}>
               {res.img ? (
                 <img src={res.img} className="w-full h-28 object-cover" alt="" />
-              ) : (
-                <div className="w-full h-28 bg-[#00274c]/20 flex items-center justify-center"><Building size={24} className="text-[#ffcb05]/40" /></div>
-              )}
-              <div className="p-4">
-                <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title}</h4>
-                <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-1">{res.cuisine || 'Gourmet A2'}</p>
-              </div>
-              <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}>
-                <Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} />
-              </button>
-          </div>
-          ))}
+            ) : (
+              <div className="w-full h-28 bg-[#00274c]/20 flex items-center justify-center"><Building size={24} className="text-[#ffcb05]/40" /></div>
+            )}
+            <div className="p-4">
+              <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title}</h4>
+              <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-1">{res.cuisine || 'Gourmet A2'}</p>
+            </div>
+            <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}>
+              <Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} />
+            </button>
         </div>
-      </section>
+        ))}
+      </div>
+    </section>
 
       <section>
         <div className="flex items-center gap-2 mb-5 px-2">
@@ -457,9 +459,9 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
             ))}
           </div>
         </div>
-        </div>
-        )}
-      </section>
+      </div>
+      )}
+    </section>
   </div>
   );
 };
@@ -511,7 +513,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
              <div>
                 <h3 className="text-2xl font-header font-black uppercase text-white drop-shadow-lg tracking-tight">My Vibe</h3>
                 <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">Saved Spots, Eats & Happenings</p>
-             </div>
+            </div>
           </div>
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
@@ -720,7 +722,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts 
           );
         })}
       </div>
-    </div>
+  </div>
   );
 };
 
@@ -805,55 +807,55 @@ export default function App() {
                                    <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span>
                                  </div>
                                  <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
-                               </div>
+                              </div>
                                <div className="flex items-center justify-between">
                                  <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
                                  <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
-                               </div>
-                            </div>
+                              </div>
                         </div>
-                        ))}
+                      </div>
+                      ))}
                       {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
                         <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                       )}
                     </>
                   ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
-               </div>
-              <section className="px-1 space-y-5 w-full">
-                  <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Exploration</h2></div>
-                  <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory px-1">
-                    <button onClick={() => window.open('https://www.theride.org/', '_blank')} className={`${theme.card} min-w-[160px] p-6 rounded-3xl border ${theme.border} flex flex-col items-center gap-4 shadow-md active:scale-95 transition-all snap-start`}><div className="p-4 bg-[#34a4b8]/10 text-[#34a4b8] rounded-2xl"><Navigation size={28} /></div><span className={`text-[11px] font-bold uppercase text-center leading-tight ${theme.text}`}>Bus Routes</span></button>
-                  </div>
-               </section>
-            </div>
-          )}
-        </main>
+              </div>
+             <section className="px-1 space-y-5 w-full">
+                 <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Exploration</h2></div>
+                 <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory px-1">
+                  <button onClick={() => window.open('https://www.theride.org/', '_blank')} className={`${theme.card} min-w-[160px] p-6 rounded-3xl border ${theme.border} flex flex-col items-center gap-4 shadow-md active:scale-95 transition-all snap-start`}><div className="p-4 bg-[#34a4b8]/10 text-[#34a4b8] rounded-2xl"><Navigation size={28} /></div><span className={`text-[11px] font-bold uppercase text-center leading-tight ${theme.text}`}>Bus Routes</span></button>
+              </div>
+              </section>
+          </div>
+        )}
+      </main>
 
-        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
-          {[
-            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
-            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-            { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
-            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
-            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
-          ].map(v => {
-            const isActive = view === v.id;
-            return (
-              <button 
-                key={v.id} 
-                onClick={() => setView(v.id)} 
-                className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
-                style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
-              >
-                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
-                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
-              </button>
-            );
+      <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
+        {[
+          { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
+          { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
+          { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
+          { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
+          { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
+        ].map(v => {
+          const isActive = view === v.id;
+          return (
+            <button 
+              key={v.id} 
+              onClick={() => setView(v.id)} 
+              className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
+              style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
+            >
+              <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
+              <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
+            </button>
+          );
         })}
-        </nav>
-      </div>
+      </nav>
+    </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
+    <style dangerouslySetInnerHTML={{ __html: `
         .font-header { font-family: 'Outfit', sans-serif; }
         .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
         .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
