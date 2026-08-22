@@ -3,7 +3,7 @@ import {
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
-  Clock, Compass, Search, Dice5, HelpCircle, Award, Users
+  Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -101,13 +101,41 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   );
 };
 
-const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, bucketList, toggleBucketItem }) => {
+const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) => {
   const [bill, setBill] = useState('');
   const [tipPerc, setTipPerc] = useState(20);
   const [weatherIdx, setWeatherIdx] = useState(new Date().getMonth());
   const [randomSpot, setRandomSpot] = useState(null);
   const [triviaAnswered, setTriviaAnswered] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+  // Bucket list state for tool view
+  const [bucketList, setBucketList] = useState(() => {
+    const saved = localStorage.getItem('a2v_bucketlist');
+    return saved ? JSON.parse(saved) : [
+      { id: 1, text: "Catch a game at the Big House", done: false },
+      { id: 2, text: "Walk through the Nichols Arboretum", done: false },
+      { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
+      { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
+    ];
+  });
+  const [newBucketText, setNewBucketText] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('a2v_bucketlist', JSON.stringify(bucketList));
+  }, [bucketList]);
+
+  const toggleBucketItem = (id) => {
+    setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
+  };
+
+  const addBucketItem = (e) => {
+    e.preventDefault();
+    if (!newBucketText.trim()) return;
+    const newItem = { id: Date.now(), text: newBucketText.trim(), done: false };
+    setBucketList([...bucketList, newItem]);
+    setNewBucketText('');
+  };
 
   const billVal = parseFloat(bill) || 0;
   const tipAmount = (billVal * (tipPerc / 100)).toFixed(2);
@@ -309,7 +337,25 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
               </span>
               <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Checklist</span>
             </div>
-            <div className="space-y-2">
+
+            {/* Add Custom Item Form */}
+            <form onSubmit={addBucketItem} className="flex gap-2">
+              <input 
+                type="text"
+                value={newBucketText}
+                onChange={(e) => setNewBucketText(e.target.value)}
+                placeholder="Add custom bucket list item..."
+                className={`flex-1 p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]`}
+              />
+              <button 
+                type="submit"
+                className="bg-[#ffcb05] text-black px-5 rounded-2xl font-black text-xs uppercase shadow-lg active:scale-95 transition-all flex items-center justify-center"
+              >
+                <Plus size={18} />
+              </button>
+            </form>
+
+            <div className="space-y-2 mt-2">
               {bucketList.map(item => (
                 <div 
                   key={item.id} 
@@ -339,7 +385,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
           </div>
         )}
       </div>
-    </div>
+  </div>
   );
 };
 
@@ -779,11 +825,7 @@ export default function App() {
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           
           {activeTool ? (
-            <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={JSON.parse(localStorage.getItem('a2v_bucketlist') || '[]')} toggleBucketItem={(id) => {
-              const list = JSON.parse(localStorage.getItem('a2v_bucketlist') || '[]');
-              const updated = list.map(item => item.id === id ? { ...item, done: !item.done } : item);
-              localStorage.setItem('a2v_bucketlist', JSON.stringify(updated));
-            }} />
+            <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} />
           ) : (
             <>
               {view === 'home' && <HomeView theme={theme} setView={setView} setSelectedItem={setSelectedItem} itineraries={itineraries} dining={dining} featuredPosts={featuredPosts} favorites={favorites} toggleFavorite={toggleFavorite} />}
@@ -806,60 +848,60 @@ export default function App() {
                                        <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
                                        <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span>
                                      </div>
-                                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
-                                   </div>
-                                   <div className="flex items-center justify-between">
-                                     <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
-                                     <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
-                                   </div>
-                                </div>
-                            </div>
-                            ))}
+                                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
+                                  </div>
+                                 <div className="flex items-center justify-between">
+                                   <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
+                                   <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+                                 </div>
+                              </div>
+                          </div>
+                          ))}
                           {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                           )}
-                        </>
-                      ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
-                   </div>
+                      </>
+                    ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
+                  </div>
                 </div>
               )}
-            </>
-          )}
-        </main>
+          </>
+        )}
+      </main>
 
-        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
-          {[
-            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
-            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-            { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
-            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
-            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
-          ].map(v => {
-            const isActive = !activeTool && view === v.id;
-            return (
-              <button 
-                key={v.id} 
-                onClick={() => { setActiveTool(null); setView(v.id); }} 
-                className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
-                style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
-              >
-                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
-                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .font-header { font-family: 'Outfit', sans-serif; }
-        .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
-        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
-        .wp-content strong { color: #ffcb05; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
-        .bg-dark .wp-content, .wp-content p { color: #f1f5f9 !important; }
-      `}} />
+      <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
+        {[
+          { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
+          { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
+          { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
+          { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
+          { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
+        ].map(v => {
+          const isActive = !activeTool && view === v.id;
+          return (
+            <button 
+              key={v.id} 
+              onClick={() => { setActiveTool(null); setView(v.id); }} 
+              className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
+              style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
+            >
+              <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
+              <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
+            </button>
+          );
+        })}
+      </nav>
   </div>
-  );
+
+  <style dangerouslySetInnerHTML={{ __html: `
+    .font-header { font-family: 'Outfit', sans-serif; }
+    .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
+    .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
+    .wp-content strong { color: #ffcb05; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
+    .bg-dark .wp-content, .wp-content p { color: #f1f5f9 !important; }
+  `}} />
+ </div>
+ );
 }
