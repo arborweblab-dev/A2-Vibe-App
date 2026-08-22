@@ -157,9 +157,10 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   };
 
   return (
-    <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
-      <div className={`sticky top-20 z-40 flex justify-between items-center py-4 px-2 ${theme.card}/95 backdrop-blur-md border-b ${theme.border}`}>
-        <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter`} style={{ color: '#ffcb05' }}>
+    <div className="animate-fade space-y-6 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
+      {/* Non-overlapping solid header wrapper */}
+      <div className={`sticky top-0 z-40 flex justify-between items-center py-4 px-4 ${theme.appBg} border-b ${theme.border} shadow-sm -mx-5 w-[calc(100%+40px)] mb-4`}>
+        <h1 className={`text-xl font-header font-black uppercase italic tracking-tighter`} style={{ color: '#ffcb05' }}>
           {toolTitles[type] || 'City Tool'}
         </h1>
         <button 
@@ -170,7 +171,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
         </button>
       </div>
 
-      <div className="px-1 space-y-6 w-full">
+      <div className="px-1 space-y-6 w-full pt-2">
         {type === 'hots' && (
           <div className="space-y-4">
             {POIs.map(p => (
