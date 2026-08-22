@@ -3,7 +3,7 @@ import {
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
-  Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus
+  Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -110,14 +110,16 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
   // Bucket list state for tool view
+  const defaultBucketItems = [
+    { id: 1, text: "Catch a game at the Big House", done: false },
+    { id: 2, text: "Walk through the Nichols Arboretum", done: false },
+    { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
+    { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
+  ];
+
   const [bucketList, setBucketList] = useState(() => {
     const saved = localStorage.getItem('a2v_bucketlist');
-    return saved ? JSON.parse(saved) : [
-      { id: 1, text: "Catch a game at the Big House", done: false },
-      { id: 2, text: "Walk through the Nichols Arboretum", done: false },
-      { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
-      { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
-    ];
+    return saved ? JSON.parse(saved) : defaultBucketItems;
   });
   const [newBucketText, setNewBucketText] = useState('');
 
@@ -127,6 +129,15 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
 
   const toggleBucketItem = (id) => {
     setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
+  };
+
+  const deleteBucketItem = (id, e) => {
+    e.stopPropagation();
+    setBucketList(bucketList.filter(item => item.id !== id));
+  };
+
+  const resetBucketList = () => {
+    setBucketList(defaultBucketItems);
   };
 
   const addBucketItem = (e) => {
@@ -335,7 +346,12 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
               <span className="text-xs font-black text-[#ffcb05] bg-[#ffcb05]/10 px-3 py-1 rounded-xl">
                 {bucketList.filter(i => i.done).length} / {bucketList.length} Done
               </span>
-              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Checklist</span>
+              <button 
+                onClick={resetBucketList} 
+                className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} hover:text-[#ffcb05] transition-colors`}
+              >
+                <RotateCcw size={12} /> Reset List
+              </button>
             </div>
 
             {/* Add Custom Item Form */}
@@ -356,18 +372,33 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
             </form>
 
             <div className="space-y-2 mt-2">
-              {bucketList.map(item => (
-                <div 
-                  key={item.id} 
-                  onClick={() => toggleBucketItem(item.id)}
-                  className={`p-3.5 rounded-2xl border ${theme.border} flex items-center gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
-                >
-                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
-                    {item.done ? '✓' : ''}
-                  </div>
-                  <span className={`text-xs font-bold ${theme.text}`}>{item.text}</span>
+              {bucketList.length === 0 ? (
+                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                  Your bucket list is empty. Add items above or reset!
                 </div>
-              ))}
+              ) : (
+                bucketList.map(item => (
+                  <div 
+                    key={item.id} 
+                    onClick={() => toggleBucketItem(item.id)}
+                    className={`p-3.5 rounded-2xl border ${theme.border} flex items-center justify-between gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
+                >
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <div className={`w-5 h-5 rounded-lg border flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
+                        {item.done ? '✓' : ''}
+                      </div>
+                      <span className={`text-xs font-bold truncate ${theme.text}`}>{item.text}</span>
+                    </div>
+                    <button 
+                      onClick={(e) => deleteBucketItem(item.id, e)}
+                      className="text-slate-400 hover:text-red-500 p-1.5 rounded-lg transition-colors flex-shrink-0"
+                      title="Delete item"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -483,7 +514,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/20 text-white'}`}>
                 <Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} />
               </button>
-          </div>
+            </div>
           ))}
         </div>
       </section>
@@ -493,13 +524,13 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
           <Sparkles size={18} className="text-[#ffcb05]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
         </div>
-          
+           
         {featuredPosts && featuredPosts.length > 0 && (
           <div className="px-1 relative">
             <div onClick={() => setSelectedItem(featuredPosts[highlightIdx])} className="relative h-[420px] rounded-[48px] overflow-hidden shadow-2xl cursor-pointer group border border-white/10">
               <img src={featuredPosts[highlightIdx]?.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-110" alt="" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                
+                 
               <div className="absolute bottom-12 left-8 right-8 text-white space-y-3">
                 <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block">Trending Now</span>
                 <h4 className="text-2xl font-header font-black uppercase italic leading-tight drop-shadow-md tracking-tighter">{featuredPosts[highlightIdx]?.title || ''}</h4>
@@ -653,7 +684,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
             ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
           </div>
         </section>
-      </div>
+    </div>
   </div>
   );
 };
@@ -675,7 +706,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
       <div className="text-center px-4 w-full space-y-4">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Flavors</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
-          
+           
         <div className="relative max-w-md mx-auto w-full mt-4">
           <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input 
@@ -823,7 +854,7 @@ export default function App() {
 
         <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
-          
+           
           {activeTool ? (
             <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} />
           ) : (
@@ -848,60 +879,60 @@ export default function App() {
                                        <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
                                        <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span>
                                      </div>
-                                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
-                                  </div>
-                                 <div className="flex items-center justify-between">
-                                   <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
-                                   <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
-                                 </div>
-                              </div>
-                          </div>
-                          ))}
+                                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
+                                   </div>
+                                   <div className="flex items-center justify-between">
+                                     <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
+                                     <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+                                   </div>
+                                </div>
+                            </div>
+                            ))}
                           {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                           )}
-                      </>
-                    ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
-                  </div>
+                        </>
+                      ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
+                   </div>
                 </div>
               )}
-          </>
-        )}
-      </main>
+            </>
+          )}
+        </main>
 
-      <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
-        {[
-          { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
-          { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-          { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
-          { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
-          { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
-        ].map(v => {
-          const isActive = !activeTool && view === v.id;
-          return (
-            <button 
-              key={v.id} 
-              onClick={() => { setActiveTool(null); setView(v.id); }} 
-              className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
-              style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
-            >
-              <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
-              <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
-            </button>
-          );
-        })}
-      </nav>
+        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
+          {[
+            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
+            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
+            { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
+            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
+            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
+          ].map(v => {
+            const isActive = !activeTool && view === v.id;
+            return (
+              <button 
+                key={v.id} 
+                onClick={() => { setActiveTool(null); setView(v.id); }} 
+                className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
+                style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
+              >
+                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
+                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .font-header { font-family: 'Outfit', sans-serif; }
+        .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
+        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
+        .wp-content strong { color: #ffcb05; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
+        .bg-dark .wp-content, .wp-content p { color: #f1f5f9 !important; }
+      `}} />
   </div>
-
-  <style dangerouslySetInnerHTML={{ __html: `
-    .font-header { font-family: 'Outfit', sans-serif; }
-    .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
-    .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
-    .wp-content strong { color: #ffcb05; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
-    .bg-dark .wp-content, .wp-content p { color: #f1f5f9 !important; }
-  `}} />
- </div>
- );
+  );
 }
