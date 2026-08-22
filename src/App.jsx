@@ -71,16 +71,6 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
         </div>
         <div className="p-8 space-y-6">
           {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
-          
-          {item.type === 'experience' && (
-            <div className="space-y-2">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Event Gallery Highlights</p>
-              <div className="grid grid-cols-2 gap-3">
-                <img src={item.img} className="w-full h-28 object-cover rounded-2xl border border-white/5 opacity-80 hover:opacity-100 transition-opacity" alt="Event preview 1" />
-                <img src={item.img} className="w-full h-28 object-cover rounded-2xl border border-white/5 opacity-80 hover:opacity-100 transition-opacity" alt="Event preview 2" />
-              </div>
-            </div>
-          )}
 
           <div className="flex items-center gap-4 flex-wrap">
             {item.price && <div className="bg-[#ffcb05]/20 text-[#ffcb05] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
@@ -425,7 +415,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
                 <img src={res.img} className="w-full h-28 object-cover" alt="" />
               ) : (
                 <div className="w-full h-28 bg-[#00274c]/20 flex items-center justify-center"><Building size={24} className="text-[#ffcb05]/40" /></div>
-            )}
+              )}
               <div className="p-4">
                 <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title}</h4>
                 <p className="text-[8px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-1">{res.cuisine || 'Gourmet A2'}</p>
@@ -813,7 +803,7 @@ export default function App() {
                                  <div className="max-w-[85%]">
                                    <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
                                    <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span>
-                                </div>
+                                 </div>
                                  <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
                                </div>
                                <div className="flex items-center justify-between">
@@ -854,11 +844,11 @@ export default function App() {
                 onClick={() => setView(v.id)} 
                 className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
                 style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
-            >
+              >
                 <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
                 <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
-            </button>
-          );
+              </button>
+            );
         })}
         </nav>
       </div>
