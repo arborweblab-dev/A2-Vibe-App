@@ -382,7 +382,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
                     key={item.id} 
                     onClick={() => toggleBucketItem(item.id)}
                     className={`p-3.5 rounded-2xl border ${theme.border} flex items-center justify-between gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
-                >
+                  >
                     <div className="flex items-center gap-3 overflow-hidden">
                       <div className={`w-5 h-5 rounded-lg border flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
                         {item.done ? '✓' : ''}
