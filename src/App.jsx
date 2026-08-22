@@ -37,7 +37,71 @@ const Watermark = () => (
 );
 
 // --- Components ---
-const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites, stats, setStats, dining, bucketList, toggleBucketItem }) => {
+const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
+  if (!isOpen || !item) return null;
+  const isFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
+  
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <h3 className={`text-lg font-header font-black uppercase italic tracking-tight pr-4`} style={{ color: '#ffcb05' }}>
+            {item.name || item.title || 'Spotlight'}
+          </h3>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => toggleFavorite(item)} 
+              className="p-2.5 rounded-full transition-all duration-300 bg-white/5 active:scale-90"
+            >
+              <Heart 
+                size={22} 
+                className="text-[#ffcb05] drop-shadow-[0_0_8px_rgba(255,203,5,0.5)]" 
+                fill={isFavorited ? "#ffcb05" : "none"} 
+                strokeWidth={2.5}
+              />
+            </button>
+            <button 
+              onClick={onClose} 
+              className={`p-2.5 rounded-full bg-white/10 backdrop-blur-sm transition-all active:scale-90 ${theme.isDark ? 'text-white' : 'text-black'}`}
+            >
+              <X size={22}/>
+            </button>
+          </div>
+        </div>
+        <div className="p-8 space-y-6">
+          {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
+
+          <div className="flex items-center gap-4 flex-wrap">
+            {item.price && <div className="bg-[#ffcb05]/20 text-[#ffcb05] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
+            {item.cuisine && <div className="bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.cuisine}</div>}
+            <div className="bg-[#00274c]/40 text-[#34a4b8] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">{item.category || item.neighborhood || 'City Guide'}</div>
+          </div>
+          {item.address && (
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 bg-black/20 p-3 rounded-xl border border-white/5">
+              <MapPin size={16} className="text-[#ffcb05]" />
+              <span>{item.address}</span>
+            </div>
+          )}
+          <div className={`text-base leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`} 
+            dangerouslySetInnerHTML={{ __html: item.longDesc || item.desc || item.excerpt || 'Accessing city database...' }} 
+          />
+          {item.url && (
+            <button 
+              onClick={() => { window.open(item.url, '_blank'); }} 
+              className="w-full bg-[#ffcb05] text-black font-black uppercase text-base py-5 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <span>Visit Official Website</span>
+              <Navigation size={18} />
+            </button>
+          )}
+        </div>
+      </div>
+  </div>
+  );
+};
+
+const ToolPopup = ({ type, isOpen, onClose, theme, stats, setStats, dining, bucketList, toggleBucketItem }) => {
   const [bill, setBill] = useState('');
   const [tipPerc, setTipPerc] = useState(20);
   const [weatherIdx, setWeatherIdx] = useState(new Date().getMonth());
@@ -45,9 +109,8 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites, stats,
   const [triviaAnswered, setTriviaAnswered] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-  if (!isOpen || !item) return null;
-  const isFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
-  
+  if (!isOpen) return null;
+
   const billVal = parseFloat(bill) || 0;
   const tipAmount = (billVal * (tipPerc / 100)).toFixed(2);
   const totalBill = (billVal + parseFloat(tipAmount)).toFixed(2);
@@ -84,241 +147,185 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites, stats,
     setRandomSpot(dining[randomIndex]);
   };
 
-  const isTool = item.isTool;
-  const toolType = item.toolType;
-
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade text-left font-sans">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
-          <h3 className={`text-lg font-header font-black uppercase italic tracking-tight pr-4`} style={{ color: '#ffcb05' }}>
-            {item.name || item.title || 'Spotlight'}
-          </h3>
-          <div className="flex items-center gap-3">
-            {!isTool && (
-              <button 
-                onClick={() => toggleFavorite(item)} 
-                className="p-2.5 rounded-full transition-all duration-300 bg-white/5 active:scale-90"
-              >
-                <Heart 
-                  size={22} 
-                  className="text-[#ffcb05] drop-shadow-[0_0_8px_rgba(255,203,5,0.5)]" 
-                  fill={isFavorited ? "#ffcb05" : "none"} 
-                  strokeWidth={2.5}
-                />
-              </button>
-            )}
-            <button 
-              onClick={onClose} 
-              className={`p-2.5 rounded-full bg-white/10 backdrop-blur-sm transition-all active:scale-90 ${theme.isDark ? 'text-white' : 'text-black'}`}
-            >
-              <X size={22}/>
-            </button>
-          </div>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} p-8 z-10`}>
+        <div className="flex justify-between items-center mb-8">
+           <h3 className="text-xl font-header font-black uppercase italic tracking-tighter" style={{ color: '#ffcb05' }}>
+             {type === 'hots' ? 'City Hot Spots' : type === 'calc' ? 'Tip Calculator' : type === 'weather' ? 'City Forecast' : type === 'water' ? 'Stay Hydrated' : type === 'randomizer' ? 'Weekend Pitcher / Randomizer' : type === 'trivia' ? 'Tree Town Trivia' : type === 'bucket' ? 'A2 Bucket List Passport' : 'Mystery Spot'}
+           </h3>
+           <button onClick={onClose} className={`p-2 rounded-full bg-white/10 ${theme.isDark ? 'text-white' : 'text-black'}`}><X size={20}/></button>
         </div>
-        <div className="p-8 space-y-6">
-          {isTool ? (
-            <>
-              {toolType === 'hots' && (
-                <div className="space-y-4">
-                  {POIs.map(p => (
-                    <div key={p.name} className={`p-5 rounded-[24px] border ${theme.border} bg-black/10 shadow-inner`}>
-                      <div className="flex justify-between items-center mb-2">
-                        <h4 className={`font-bold ${theme.text}`}>{p.name}</h4>
-                        <span className={`text-[8px] font-black uppercase text-white px-2 py-1 rounded-full ${p.color}`}>{p.type}</span>
-                      </div>
-                      <p className="text-xs text-slate-500 leading-relaxed">{p.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
 
-              {toolType === 'calc' && (
-                <div className="space-y-8">
-                  <div className="bg-black/20 p-6 rounded-3xl border border-white/5 text-center">
-                     <p className="text-[10px] font-black uppercase text-slate-500 mb-1 tracking-widest">Total with Tip</p>
-                     <h2 className="text-5xl font-header font-black text-white">${totalBill}</h2>
-                     <div className="flex justify-center gap-4 mt-4 text-[#ffcb05] font-bold text-sm">
-                       <span>Tip: ${tipAmount}</span>
-                     </div>
-                  </div>
-                  <div className="space-y-4">
-                    <input 
-                      type="number" 
-                      value={bill}
-                      onChange={(e) => setBill(e.target.value)}
-                      placeholder="0.00" 
-                      className={`w-full p-5 rounded-2xl bg-black/20 border border-white/10 text-white font-bold text-xl outline-none focus:border-[#ffcb05]`} 
-                    />
-                    <div className="grid grid-cols-3 gap-2">
-                      {[18, 20, 25].map(p => (
-                        <button 
-                          key={p} 
-                          onClick={() => setTipPerc(p)}
-                          className={`py-4 rounded-xl font-black text-xs transition-all ${tipPerc === p ? 'bg-[#ffcb05] text-black scale-105 shadow-lg shadow-yellow-500/20' : 'bg-white/5 text-slate-400'}`}
-                        >
-                          {p}%
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+        {type === 'hots' && (
+          <div className="space-y-4">
+            {POIs.map(p => (
+              <div key={p.name} className={`p-5 rounded-[24px] border ${theme.border} bg-black/10 shadow-inner`}>
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className={`font-bold ${theme.text}`}>{p.name}</h4>
+                  <span className={`text-[8px] font-black uppercase text-white px-2 py-1 rounded-full ${p.color}`}>{p.type}</span>
                 </div>
-              )}
-
-              {toolType === 'weather' && (
-                <div className="space-y-6">
-                  <div className={`p-10 rounded-[32px] ${currentW.vibe} text-white text-center shadow-2xl relative overflow-hidden transition-all duration-500`}>
-                     <div className="absolute top-0 right-0 p-4 opacity-20 rotate-12"><Building size={120} /></div>
-                     <p className="text-xs font-black uppercase tracking-[0.3em] mb-2">{currentW.month}</p>
-                     <h2 className="text-6xl font-header font-black">{currentW.high}°</h2>
-                     <p className="text-sm font-bold opacity-80 mt-2">Avg Low: {currentW.low}°</p>
-                  </div>
-                  <div className="flex justify-between items-center gap-4">
-                    <button onClick={() => setWeatherIdx(p => (p - 1 + 12) % 12)} className="p-4 bg-white/5 rounded-2xl text-white active:scale-90 transition-all"><ChevronLeft size={24}/></button>
-                    <span className="font-header font-black uppercase text-[10px] tracking-widest text-slate-500">A2 Calendar</span>
-                    <button onClick={() => setWeatherIdx(p => (p + 1) % 12)} className="p-4 bg-white/5 rounded-2xl text-white active:scale-90 transition-all"><ChevronRight size={24}/></button>
-                  </div>
-                </div>
-              )}
-
-              {toolType === 'water' && (
-                <div className="space-y-6 text-center py-4">
-                   <div className="flex justify-around items-center">
-                      <div>
-                         <p className="text-4xl font-black text-blue-400">{stats.water || 0}</p>
-                         <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Water</p>
-                      </div>
-                      <div>
-                         <p className="text-4xl font-black text-[#ffcb05]">{stats.drinks || 0}</p>
-                         <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Beverages</p>
-                      </div>
-                   </div>
-                   <div className="grid grid-cols-2 gap-4">
-                      <button onClick={() => setStats({...stats, water: (stats.water || 0) + 1})} className="bg-blue-600 py-4 rounded-2xl text-white font-black uppercase text-xs shadow-lg shadow-blue-500/20">+ Water</button>
-                      <button onClick={() => setStats({...stats, drinks: (stats.drinks || 0) + 1})} className="bg-[#ffcb05] py-4 rounded-2xl text-black font-black uppercase text-xs shadow-lg shadow-yellow-500/20">+ Drink</button>
-                   </div>
-                   <button onClick={() => setStats({...stats, water: 0, drinks: 0})} className="w-full py-3 bg-white/5 text-slate-400 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/5 active:scale-95 transition-all">Reset Hydration</button>
-                </div>
-              )}
-
-              {toolType === 'randomizer' && (
-                <div className="space-y-6 text-center py-4">
-                  <p className={`text-xs ${theme.secondaryText}`}>Can't decide where to eat or hang out? Let the Weekend Pitcher pick your destination!</p>
-                  {randomSpot ? (
-                    <div className="p-6 rounded-3xl bg-black/20 border border-white/10 space-y-3 animate-fade">
-                      <img src={randomSpot.img} className="w-full h-40 object-cover rounded-2xl shadow-md" alt="" />
-                      <h4 className={`text-lg font-black uppercase ${theme.text}`}>{randomSpot.title}</h4>
-                      <p className="text-xs text-[#ffcb05] font-bold uppercase">{randomSpot.cuisine || randomSpot.neighborhood}</p>
-                      <p className={`text-xs ${theme.secondaryText}`}>{randomSpot.shortDesc}</p>
-                    </div>
-                  ) : (
-                    <div className="p-10 border-2 border-dashed rounded-3xl opacity-40 text-xs font-bold uppercase">Click roll to pick a spot!</div>
-                  )}
-                  <button onClick={spinRandomizer} className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">Roll the Dice 🎲</button>
-                </div>
-              )}
-
-              {toolType === 'trivia' && (
-                <div className="space-y-6 text-center py-4">
-                  <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
-                    <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-lg text-[9px] font-black uppercase">Daily Challenge</span>
-                    <h4 className={`text-sm font-bold ${theme.text}`}>Which Ann Arbor building's courtyard is rumored to have inspired Hogwarts architecture?</h4>
-                  </div>
-                  <div className="space-y-2">
-                    {['U-M Law Quadrangle', 'Michigan Union', 'Angell Hall', 'Rackham Building'].map((opt) => {
-                      const isCorrect = opt === 'U-M Law Quadrangle';
-                      let btnStyle = 'bg-white/5 text-slate-300';
-                      if (triviaAnswered) {
-                        if (isCorrect) btnStyle = 'bg-emerald-600 text-white font-bold';
-                        else if (selectedAnswer === opt) btnStyle = 'bg-red-600 text-white font-bold';
-                      }
-                      return (
-                        <button 
-                          key={opt}
-                          disabled={triviaAnswered}
-                          onClick={() => { setSelectedAnswer(opt); setTriviaAnswered(true); }}
-                          className={`w-full p-4 rounded-2xl text-xs font-bold transition-all border border-white/5 ${btnStyle}`}
-                        >
-                          {opt}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {triviaAnswered && <p className="text-xs text-[#ffcb05] font-bold uppercase animate-fade">Correct! The Gothic architecture of the Law Quad is a local legend.</p>}
-                </div>
-              )}
-
-              {toolType === 'bucket' && (
-                <div className="space-y-4 text-left py-2">
-                  <div className="flex justify-between items-center mb-2 px-1">
-                    <span className="text-xs font-black text-[#ffcb05] bg-[#ffcb05]/10 px-3 py-1 rounded-xl">
-                      {bucketList.filter(i => i.done).length} / {bucketList.length} Done
-                    </span>
-                    <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Checklist</span>
-                  </div>
-                  <div className="space-y-2">
-                    {bucketList.map(item => (
-                      <div 
-                        key={item.id} 
-                        onClick={() => toggleBucketItem(item.id)}
-                        className={`p-3.5 rounded-2xl border ${theme.border} flex items-center gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
-                      >
-                        <div className={`w-5 h-5 rounded-lg border flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
-                          {item.done ? '✓' : ''}
-                        </div>
-                        <span className={`text-xs font-bold ${theme.text}`}>{item.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {toolType === 'mystery' && (
-                <div className="space-y-6 text-center py-4">
-                  <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
-                    <span className="bg-[#34a4b8] text-white px-3 py-1 rounded-lg text-[9px] font-black uppercase">Landmark ID</span>
-                    <img src="/images/law-quad.jpg" className="w-full h-36 object-cover rounded-2xl shadow-md" alt="" />
-                    <p className={`text-xs italic ${theme.secondaryText}`}>"Stunning stone gargoyles, quiet cloisters, and hidden carved faces..."</p>
-                  </div>
-                  <div className="p-4 rounded-2xl bg-[#ffcb05]/20 text-[#ffcb05] font-black text-xs uppercase tracking-widest">
-                    Spot: U-M Law Quadrangle
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
-
-              <div className="flex items-center gap-4 flex-wrap">
-                {item.price && <div className="bg-[#ffcb05]/20 text-[#ffcb05] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
-                {item.cuisine && <div className="bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.cuisine}</div>}
-                <div className="bg-[#00274c]/40 text-[#34a4b8] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">{item.category || item.neighborhood || 'City Guide'}</div>
+                <p className="text-xs text-slate-500 leading-relaxed">{p.desc}</p>
               </div>
-              {item.address && (
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-400 bg-black/20 p-3 rounded-xl border border-white/5">
-                  <MapPin size={16} className="text-[#ffcb05]" />
-                  <span>{item.address}</span>
-                </div>
-              )}
-              <div className={`text-base leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`} 
-                dangerouslySetInnerHTML={{ __html: item.longDesc || item.desc || item.excerpt || 'Accessing city database...' }} 
+            ))}
+          </div>
+        )}
+
+        {type === 'calc' && (
+          <div className="space-y-8">
+            <div className="bg-black/20 p-6 rounded-3xl border border-white/5 text-center">
+               <p className="text-[10px] font-black uppercase text-slate-500 mb-1 tracking-widest">Total with Tip</p>
+               <h2 className="text-5xl font-header font-black text-white">${totalBill}</h2>
+               <div className="flex justify-center gap-4 mt-4 text-[#ffcb05] font-bold text-sm">
+                 <span>Tip: ${tipAmount}</span>
+               </div>
+            </div>
+            <div className="space-y-4">
+              <input 
+                type="number" 
+                value={bill}
+                onChange={(e) => setBill(e.target.value)}
+                placeholder="0.00" 
+                className={`w-full p-5 rounded-2xl bg-black/20 border border-white/10 text-white font-bold text-xl outline-none focus:border-[#ffcb05]`} 
               />
-              {item.url && (
-                <button 
-                  onClick={() => { window.open(item.url, '_blank'); }} 
-                  className="w-full bg-[#ffcb05] text-black font-black uppercase text-base py-5 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
+              <div className="grid grid-cols-3 gap-2">
+                {[18, 20, 25].map(p => (
+                  <button 
+                    key={p} 
+                    onClick={() => setTipPerc(p)}
+                    className={`py-4 rounded-xl font-black text-xs transition-all ${tipPerc === p ? 'bg-[#ffcb05] text-black scale-105 shadow-lg shadow-yellow-500/20' : 'bg-white/5 text-slate-400'}`}
+                  >
+                    {p}%
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {type === 'weather' && (
+          <div className="space-y-6">
+            <div className={`p-10 rounded-[32px] ${currentW.vibe} text-white text-center shadow-2xl relative overflow-hidden transition-all duration-500`}>
+               <div className="absolute top-0 right-0 p-4 opacity-20 rotate-12"><Building size={120} /></div>
+               <p className="text-xs font-black uppercase tracking-[0.3em] mb-2">{currentW.month}</p>
+               <h2 className="text-6xl font-header font-black">{currentW.high}°</h2>
+               <p className="text-sm font-bold opacity-80 mt-2">Avg Low: {currentW.low}°</p>
+            </div>
+            <div className="flex justify-between items-center gap-4">
+              <button onClick={() => setWeatherIdx(p => (p - 1 + 12) % 12)} className="p-4 bg-white/5 rounded-2xl text-white active:scale-90 transition-all"><ChevronLeft size={24}/></button>
+              <span className="font-header font-black uppercase text-[10px] tracking-widest text-slate-500">A2 Calendar</span>
+              <button onClick={() => setWeatherIdx(p => (p + 1) % 12)} className="p-4 bg-white/5 rounded-2xl text-white active:scale-90 transition-all"><ChevronRight size={24}/></button>
+            </div>
+          </div>
+        )}
+
+        {type === 'water' && (
+          <div className="space-y-6 text-center py-4">
+             <div className="flex justify-around items-center">
+                <div>
+                   <p className="text-4xl font-black text-blue-400">{stats.water || 0}</p>
+                   <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Water</p>
+                </div>
+                <div>
+                   <p className="text-4xl font-black text-[#ffcb05]">{stats.drinks || 0}</p>
+                   <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Beverages</p>
+                </div>
+             </div>
+             <div className="grid grid-cols-2 gap-4">
+                <button onClick={() => setStats({...stats, water: (stats.water || 0) + 1})} className="bg-blue-600 py-4 rounded-2xl text-white font-black uppercase text-xs shadow-lg shadow-blue-500/20">+ Water</button>
+                <button onClick={() => setStats({...stats, drinks: (stats.drinks || 0) + 1})} className="bg-[#ffcb05] py-4 rounded-2xl text-black font-black uppercase text-xs shadow-lg shadow-yellow-500/20">+ Drink</button>
+             </div>
+             <button onClick={() => setStats({...stats, water: 0, drinks: 0})} className="w-full py-3 bg-white/5 text-slate-400 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/5 active:scale-95 transition-all">Reset Hydration</button>
+          </div>
+        )}
+
+        {type === 'randomizer' && (
+          <div className="space-y-6 text-center py-4">
+            <p className={`text-xs ${theme.secondaryText}`}>Can't decide where to eat or hang out? Let the Weekend Pitcher pick your destination!</p>
+            {randomSpot ? (
+              <div className="p-6 rounded-3xl bg-black/20 border border-white/10 space-y-3 animate-fade">
+                <img src={randomSpot.img} className="w-full h-40 object-cover rounded-2xl shadow-md" alt="" />
+                <h4 className={`text-lg font-black uppercase ${theme.text}`}>{randomSpot.title}</h4>
+                <p className="text-xs text-[#ffcb05] font-bold uppercase">{randomSpot.cuisine || randomSpot.neighborhood}</p>
+                <p className={`text-xs ${theme.secondaryText}`}>{randomSpot.shortDesc}</p>
+              </div>
+            ) : (
+              <div className="p-10 border-2 border-dashed rounded-3xl opacity-40 text-xs font-bold uppercase">Click roll to pick a spot!</div>
+            )}
+            <button onClick={spinRandomizer} className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">Roll the Dice 🎲</button>
+          </div>
+        )}
+
+        {type === 'trivia' && (
+          <div className="space-y-6 text-center py-4">
+            <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
+              <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-lg text-[9px] font-black uppercase">Daily Challenge</span>
+              <h4 className={`text-sm font-bold ${theme.text}`}>Which Ann Arbor building's courtyard is rumored to have inspired Hogwarts architecture?</h4>
+            </div>
+            <div className="space-y-2">
+              {['U-M Law Quadrangle', 'Michigan Union', 'Angell Hall', 'Rackham Building'].map((opt) => {
+                const isCorrect = opt === 'U-M Law Quadrangle';
+                let btnStyle = 'bg-white/5 text-slate-300';
+                if (triviaAnswered) {
+                  if (isCorrect) btnStyle = 'bg-emerald-600 text-white font-bold';
+                  else if (selectedAnswer === opt) btnStyle = 'bg-red-600 text-white font-bold';
+                }
+                return (
+                  <button 
+                    key={opt}
+                    disabled={triviaAnswered}
+                    onClick={() => { setSelectedAnswer(opt); setTriviaAnswered(true); }}
+                    className={`w-full p-4 rounded-2xl text-xs font-bold transition-all border border-white/5 ${btnStyle}`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+            {triviaAnswered && <p className="text-xs text-[#ffcb05] font-bold uppercase animate-fade">Correct! The Gothic architecture of the Law Quad is a local legend.</p>}
+          </div>
+        )}
+
+        {type === 'bucket' && (
+          <div className="space-y-4 text-left py-2">
+            <div className="flex justify-between items-center mb-2 px-1">
+              <span className="text-xs font-black text-[#ffcb05] bg-[#ffcb05]/10 px-3 py-1 rounded-xl">
+                {bucketList.filter(i => i.done).length} / {bucketList.length} Done
+              </span>
+              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Checklist</span>
+            </div>
+            <div className="space-y-2">
+              {bucketList.map(item => (
+                <div 
+                  key={item.id} 
+                  onClick={() => toggleBucketItem(item.id)}
+                  className={`p-3.5 rounded-2xl border ${theme.border} flex items-center gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
                 >
-                  <span>Visit Official Website</span>
-                  <Navigation size={18} />
-                </button>
-              )}
-            </>
-          )}
-        </div>
+                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>
+                    {item.done ? '✓' : ''}
+                  </div>
+                  <span className={`text-xs font-bold ${theme.text}`}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {type === 'mystery' && (
+          <div className="space-y-6 text-center py-4">
+            <div className="p-5 rounded-3xl bg-black/20 border border-white/10 space-y-3">
+              <span className="bg-[#34a4b8] text-white px-3 py-1 rounded-lg text-[9px] font-black uppercase">Landmark ID</span>
+              <img src="/images/law-quad.jpg" className="w-full h-36 object-cover rounded-2xl shadow-md" alt="" />
+              <p className={`text-xs italic ${theme.secondaryText}`}>"Stunning stone gargoyles, quiet cloisters, and hidden carved faces..."</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-[#ffcb05]/20 text-[#ffcb05] font-black text-xs uppercase tracking-widest">
+              Spot: U-M Law Quadrangle
+            </div>
+          </div>
+        )}
       </div>
-  </div>
+    </div>
   );
 };
 
@@ -459,6 +466,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
 
 const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, setView, dining }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
+  const [activeTool, setActiveTool] = useState(null);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
 
@@ -486,26 +494,10 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
     setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
   };
 
-  const openToolModal = (t) => {
-    const titles = {
-      hots: 'City Hot Spots',
-      calc: 'Tip Calculator',
-      weather: 'City Forecast',
-      water: 'Stay Hydrated',
-      randomizer: 'Weekend Pitcher / Randomizer',
-      trivia: 'Tree Town Trivia',
-      mystery: 'Mystery Spot',
-      bucket: 'A2 Bucket List Passport'
-    };
-    setSelectedItem({
-      isTool: true,
-      toolType: t.id,
-      name: titles[t.id] || 'Tool'
-    });
-  };
-
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
+      <ToolPopup type={activeTool} isOpen={!!activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} toggleBucketItem={toggleBucketItem} />
+      
       <div className="space-y-10 px-2 w-full">
         <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
@@ -620,7 +612,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
               {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
               {id:'mystery',icon:Compass,label:'Mystery Spot',color:'#38bdf8'},
               {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'}
-            ].map(t=>(<button key={t.id} onClick={()=>openToolModal(t)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
+            ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
           </div>
         </section>
       </div>
@@ -791,7 +783,7 @@ export default function App() {
         </header>
 
         <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
-          <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} toggleBucketItem={toggleBucketItem} />
+          <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           {view === 'home' && <HomeView theme={theme} setView={setView} setSelectedItem={setSelectedItem} itineraries={itineraries} dining={dining} featuredPosts={featuredPosts} favorites={favorites} toggleFavorite={toggleFavorite} />}
           {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} posts={posts} />}
           {view === 'flavors' && <FlavorsView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} dining={dining} />}
@@ -864,7 +856,7 @@ export default function App() {
       <style dangerouslySetInnerHTML={{ __html: `
         .font-header { font-family: 'Outfit', sans-serif; }
         .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
-        .wp-content p { margin-bottom: 1.6; line-height: 1.6; }
+        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
         .wp-content strong { color: #ffcb05; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
