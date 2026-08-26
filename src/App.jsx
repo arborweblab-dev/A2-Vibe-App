@@ -109,7 +109,6 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
   const [triviaAnswered, setTriviaAnswered] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-  // Bucket list state for tool view
   const defaultBucketItems = [
     { id: 1, text: "Catch a game at the Big House", done: false },
     { id: 2, text: "Walk through the Nichols Arboretum", done: false },
@@ -197,7 +196,6 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
 
   return (
     <div className="animate-fade space-y-6 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
-      {/* Non-overlapping solid header wrapper */}
       <div className={`sticky top-0 z-40 flex justify-between items-center py-4 px-4 ${theme.appBg} border-b ${theme.border} shadow-sm -mx-5 w-[calc(100%+40px)] mb-4`}>
         <h1 className={`text-xl font-header font-black uppercase italic tracking-tighter`} style={{ color: '#ffcb05' }}>
           {toolTitles[type] || 'City Tool'}
@@ -354,7 +352,6 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
               </button>
             </div>
 
-            {/* Add Custom Item Form */}
             <form onSubmit={addBucketItem} className="flex gap-2">
               <input 
                 type="text"
@@ -416,7 +413,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
           </div>
         )}
       </div>
-  </div>
+    </div>
   );
 };
 
@@ -524,13 +521,13 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
           <Sparkles size={18} className="text-[#ffcb05]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
         </div>
-           
+         
         {featuredPosts && featuredPosts.length > 0 && (
           <div className="px-1 relative">
             <div onClick={() => setSelectedItem(featuredPosts[highlightIdx])} className="relative h-[420px] rounded-[48px] overflow-hidden shadow-2xl cursor-pointer group border border-white/10">
               <img src={featuredPosts[highlightIdx]?.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-110" alt="" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                 
+                
               <div className="absolute bottom-12 left-8 right-8 text-white space-y-3">
                 <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block">Trending Now</span>
                 <h4 className="text-2xl font-header font-black uppercase italic leading-tight drop-shadow-md tracking-tighter">{featuredPosts[highlightIdx]?.title || ''}</h4>
@@ -560,7 +557,6 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
 
-  // Categorize favorites into Eats, Happenings, and Journal
   const eatsFavs = userFavorites.filter(f => f.type === 'dining' || f.cuisine);
   const happeningsFavs = userFavorites.filter(f => f.type === 'experience' || (f.name && !f.cuisine));
   const journalFavs = userFavorites.filter(f => f.type === 'journal' || f.excerpt || (f.title && !f.cuisine));
@@ -585,9 +581,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
 
-        {/* Categorized City Favs */}
         <div className="space-y-8">
-          {/* Eats Category */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -614,7 +608,6 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
             </div>
           </div>
 
-          {/* Happenings Category */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -641,7 +634,6 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
             </div>
           </div>
 
-          {/* Journal Category */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -684,7 +676,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
             ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
           </div>
         </section>
-    </div>
+      </div>
   </div>
   );
 };
@@ -829,8 +821,14 @@ export default function App() {
 
   const shuffledExp = useMemo(() => {
     const list = itineraries || [];
-    const filtered = activeExpCat === 'All' ? list : list.filter(i => (i.category || "").toLowerCase().includes(activeExpCat.toLowerCase()));
-    return [...filtered];
+    if (activeExpCat === 'All') return list;
+    return list.filter(i => {
+      const cat = (i.category || "").toLowerCase();
+      const filter = activeExpCat.toLowerCase();
+      if (filter === 'museums') return cat.includes('museum') || cat.includes('arts') || cat.includes('culture');
+      if (filter === 'parks') return cat.includes('park') || cat.includes('nature');
+      return cat.includes(filter);
+    });
   }, [itineraries, activeExpCat]);
 
   return (
@@ -887,7 +885,7 @@ export default function App() {
                                    </div>
                                 </div>
                             </div>
-                            ))}
+                          ))}
                           {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                           )}
@@ -931,8 +929,8 @@ export default function App() {
         .wp-content strong { color: #ffcb05; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
-        .bg-dark .wp-content, .wp-content p { color: #f1f5f9 !important; }
+        .bg-dark .wp-content, p { color: #f1f5f9 !important; }
       `}} />
-  </div>
+    </div>
   );
 }
