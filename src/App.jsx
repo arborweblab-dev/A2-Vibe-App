@@ -75,7 +75,9 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           <div className="flex items-center gap-4 flex-wrap">
             {item.price && <div className="bg-[#ffcb05]/20 text-[#ffcb05] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
             {item.cuisine && <div className="bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.cuisine}</div>}
-            <div className="bg-[#00274c]/40 text-[#34a4b8] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">{item.category || item.neighborhood || 'City Guide'}</div>
+            <div className="bg-[#00274c]/40 text-[#34a4b8] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
+              {Array.isArray(item.category) ? item.category.join(' • ') : (item.category || item.neighborhood || 'City Guide')}
+            </div>
           </div>
           {item.address && (
             <div className="flex items-center gap-2 text-xs font-bold text-slate-400 bg-black/20 p-3 rounded-xl border border-white/5">
@@ -819,15 +821,26 @@ export default function App() {
     else { setFavorites([...favorites, { ...item, savedAt: Date.now() }]); }
   };
 
+  // MULTIPLE CATEGORIES MATCHING LOGIC
   const shuffledExp = useMemo(() => {
     const list = itineraries || [];
     if (activeExpCat === 'All') return list;
     return list.filter(i => {
-      const cat = (i.category || "").toLowerCase();
-      const filter = activeExpCat.toLowerCase();
-      if (filter === 'museums') return cat.includes('museum') || cat.includes('arts') || cat.includes('culture');
-      if (filter === 'parks') return cat.includes('park') || cat.includes('nature');
-      return cat.includes(filter);
+      // Check if item has a single 'category' string, comma-separated string, or an array 'categories' / 'category'
+      let itemCats = [];
+      if (Array.isArray(i.category)) {
+        itemCats = i.category;
+      } else if (Array.isArray(i.categories)) {
+        itemCats = i.categories;
+      } else if (typeof i.category === 'string') {
+        itemCats = i.category.split(',').map(c => c.trim());
+      }
+
+      const filterVal = activeExpCat.toLowerCase();
+      
+      // Match if any category matches or contains the filter keyword
+      return itemCats.some(c => c.toLowerCase().includes(filterVal)) || 
+             (filterVal === 'museums' && (i.name?.toLowerCase().includes('museum') || i.shortDesc?.toLowerCase().includes('museum')));
     });
   }, [itineraries, activeExpCat]);
 
@@ -875,7 +888,9 @@ export default function App() {
                                    <div className="flex justify-between items-start">
                                      <div className="max-w-[85%]">
                                        <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
-                                       <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">{exp.category}</span>
+                                       <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">
+                                         {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
+                                       </span>
                                      </div>
                                      <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
                                    </div>
