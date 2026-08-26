@@ -5,7 +5,7 @@ export const happeningsData = [
   {
     id: "oct-01",
     name: "U-M Homecoming Weekend Tailgate",
-    category: "Sports",
+    category: ["Sports", "Festivals"],
     price: "Free",
     neighborhood: "U-M Campus",
     img: "/images/oct-football.jpg",
@@ -17,7 +17,7 @@ export const happeningsData = [
   {
     id: "oct-02",
     name: "Blast Corn Maze",
-    category: "Family Friendly",
+    category: ["Family Friendly", "Hidden Gems"],
     price: "$15",
     neighborhood: "Dexter",
     img: "/images/oct-cornmaze.jpg",
@@ -29,7 +29,7 @@ export const happeningsData = [
   {
     id: "oct-03",
     name: "Arb Fall Color Tour",
-    category: "Parks",
+    category: ["Parks", "Hidden Gems"],
     price: "Free",
     neighborhood: "U-M East",
     img: "/images/oct-arb.jpg",
@@ -41,7 +41,7 @@ export const happeningsData = [
   {
     id: "oct-04",
     name: "Kerrytown Pumpkins & Pints",
-    category: "Festivals",
+    category: ["Festivals", "Hidden Gems"],
     price: "Varies",
     neighborhood: "Kerrytown",
     img: "/images/oct-pumpkins.jpg",
@@ -53,7 +53,7 @@ export const happeningsData = [
   {
     id: "oct-05",
     name: "Ghost Tour: Downtown Ann Arbor",
-    category: "Local Secrets",
+    category: ["Hidden Gems", "Tours"],
     price: "$20",
     neighborhood: "Downtown",
     img: "/images/oct-ghost.jpg",
@@ -65,7 +65,7 @@ export const happeningsData = [
   {
     id: "oct-06",
     name: "U-M Museum of Art: Fall Opening",
-    category: "Arts & Culture",
+    category: ["Museums", "Arts & Culture"],
     price: "Free",
     neighborhood: "U-M Campus",
     img: "/images/oct-ummaa.jpg",
@@ -77,7 +77,7 @@ export const happeningsData = [
   {
     id: "oct-07",
     name: "Halloween Pumpkin Carving Workshop",
-    category: "Workshops",
+    category: ["Workshops", "Family Friendly"],
     price: "$10",
     neighborhood: "West Side",
     img: "/images/oct-carving.jpg",
@@ -89,7 +89,7 @@ export const happeningsData = [
   {
     id: "oct-08",
     name: "Ann Arbor Symphony: Fall Pops",
-    category: "Arts & Culture",
+    category: ["Arts & Culture", "Nightlife"],
     price: "$35",
     neighborhood: "Downtown",
     img: "/images/oct-symphony.jpg",
@@ -101,7 +101,7 @@ export const happeningsData = [
   {
     id: "oct-09",
     name: "Farmer’s Market Harvest Festival",
-    category: "Festivals",
+    category: ["Festivals", "Hidden Gems"],
     price: "Free",
     neighborhood: "Kerrytown",
     img: "/images/oct-harvest.jpg",
@@ -113,7 +113,7 @@ export const happeningsData = [
   {
     id: "oct-10",
     name: "Huron River Moonlight Paddle",
-    category: "Hidden Gems",
+    category: ["Hidden Gems", "Parks"],
     price: "$40",
     neighborhood: "Island Park",
     img: "/images/oct-paddle.jpg",
@@ -125,7 +125,7 @@ export const happeningsData = [
   {
     id: "oct-11",
     name: "University Musical Society (UMS) Performance",
-    category: "Arts & Culture",
+    category: ["Arts & Culture", "Tours"],
     price: "$45",
     neighborhood: "U-M Campus",
     img: "/images/oct-ums.jpg",
@@ -137,7 +137,7 @@ export const happeningsData = [
   {
     id: "oct-12",
     name: "Downtown Trick-or-Treat",
-    category: "Family Friendly",
+    category: ["Family Friendly", "Festivals"],
     price: "Free",
     neighborhood: "Downtown",
     img: "/images/oct-trick.jpg",
@@ -149,7 +149,7 @@ export const happeningsData = [
   {
     id: "oct-13",
     name: "Halloween Horror Film Marathon",
-    category: "Nightlife",
+    category: ["Nightlife", "Arts & Culture"],
     price: "$20",
     neighborhood: "Downtown",
     img: "/images/oct-horror.jpg",
@@ -161,7 +161,7 @@ export const happeningsData = [
   {
     id: "oct-14",
     name: "West Side Artisans Market",
-    category: "Hidden Gems",
+    category: ["Hidden Gems", "Festivals"],
     price: "Free",
     neighborhood: "West Side",
     img: "/images/oct-artisans.jpg",
@@ -173,7 +173,7 @@ export const happeningsData = [
   {
     id: "oct-15",
     name: "Closing of the Season: River Cleanup",
-    category: "Community Reports",
+    category: ["Parks", "Workshops"],
     price: "Free",
     neighborhood: "Bandemer Park",
     img: "/images/oct-cleanup.jpg",
