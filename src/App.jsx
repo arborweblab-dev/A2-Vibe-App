@@ -10,7 +10,7 @@ import {
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 // --- 2. CONFIGURATION ---
 const THEMES = {
