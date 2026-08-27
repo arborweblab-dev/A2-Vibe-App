@@ -10,8 +10,7 @@ import {
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
-import { Analytics } from "@vercel/analytics/next";
-
+import { Analytics } from '@vercel/analytics/react';
 // --- 2. CONFIGURATION ---
 const THEMES = {
   light: { primary: '#00274c', windowBg: 'bg-slate-200', appBg: 'bg-slate-50', card: 'bg-white', text: 'text-slate-900', secondaryText: 'text-slate-600', border: 'border-slate-200', isDark: false },
