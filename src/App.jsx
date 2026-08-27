@@ -10,6 +10,7 @@ import {
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
+import { Analytics } from '@vercel/analytics/react';
 
 // --- 2. CONFIGURATION ---
 const THEMES = {
@@ -935,6 +936,7 @@ export default function App() {
             );
           })}
         </nav>
+    
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
@@ -946,6 +948,7 @@ export default function App() {
         .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
         .bg-dark .wp-content, p { color: #f1f5f9 !important; }
       `}} />
+   <Analytics />    
     </div>
   );
 }
