@@ -237,8 +237,8 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
             <div className="space-y-4">
               <input 
                 type="number" 
-                value={bill}
-                onChange={(e) => setBill(e.target.value)}
+                value={bill} 
+                onChange={(e) => setBill(e.target.value)} 
                 placeholder="0.00" 
                 className={`w-full p-5 rounded-2xl bg-black/20 border border-white/10 text-white font-bold text-xl outline-none focus:border-[#ffcb05]`} 
               />
@@ -246,7 +246,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
                 {[18, 20, 25].map(p => (
                   <button 
                     key={p} 
-                    onClick={() => setTipPerc(p)}
+                    onClick={() => setTipPerc(p)} 
                     className={`py-4 rounded-xl font-black text-xs transition-all ${tipPerc === p ? 'bg-[#ffcb05] text-black scale-105 shadow-lg shadow-yellow-500/20' : 'bg-white/5 text-slate-400'}`}
                   >
                     {p}%
@@ -326,9 +326,9 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
                 }
                 return (
                   <button 
-                    key={opt}
-                    disabled={triviaAnswered}
-                    onClick={() => { setSelectedAnswer(opt); setTriviaAnswered(true); }}
+                    key={opt} 
+                    disabled={triviaAnswered} 
+                    onClick={() => { setSelectedAnswer(opt); setTriviaAnswered(true); }} 
                     className={`w-full p-4 rounded-2xl text-xs font-bold transition-all border border-white/5 ${btnStyle}`}
                   >
                     {opt}
@@ -356,14 +356,14 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
 
             <form onSubmit={addBucketItem} className="flex gap-2">
               <input 
-                type="text"
-                value={newBucketText}
-                onChange={(e) => setNewBucketText(e.target.value)}
-                placeholder="Add custom bucket list item..."
-                className={`flex-1 p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]`}
+                type="text" 
+                value={newBucketText} 
+                onChange={(e) => setNewBucketText(e.target.value)} 
+                placeholder="Add custom bucket list item..." 
+                className={`flex-1 p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]`} 
               />
               <button 
-                type="submit"
+                type="submit" 
                 className="bg-[#ffcb05] text-black px-5 rounded-2xl font-black text-xs uppercase shadow-lg active:scale-95 transition-all flex items-center justify-center"
               >
                 <Plus size={18} />
@@ -379,7 +379,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
                 bucketList.map(item => (
                   <div 
                     key={item.id} 
-                    onClick={() => toggleBucketItem(item.id)}
+                    onClick={() => toggleBucketItem(item.id)} 
                     className={`p-3.5 rounded-2xl border ${theme.border} flex items-center justify-between gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : 'bg-black/10'}`}
                   >
                     <div className="flex items-center gap-3 overflow-hidden">
@@ -389,8 +389,8 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
                       <span className={`text-xs font-bold truncate ${theme.text}`}>{item.text}</span>
                     </div>
                     <button 
-                      onClick={(e) => deleteBucketItem(item.id, e)}
-                      className="text-slate-400 hover:text-red-500 p-1.5 rounded-lg transition-colors flex-shrink-0"
+                      onClick={(e) => deleteBucketItem(item.id, e)} 
+                      className="text-slate-400 hover:text-red-500 p-1.5 rounded-lg transition-colors flex-shrink-0" 
                       title="Delete item"
                     >
                       <Trash2 size={16} />
@@ -415,7 +415,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
           </div>
         )}
       </div>
-  </div>
+    </div>
   );
 };
 
@@ -487,7 +487,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <span className={`text-[10px] font-black uppercase tracking-tighter text-center ${theme.isDark ? 'text-white' : 'text-slate-600'}`}>{item.label}</span>
             </button>
           ))}
-      </div>
+        </div>
       </section>
 
       <section id="island-flavors">
@@ -515,7 +515,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               </button>
             </div>
           ))}
-      </div>
+        </div>
       </section>
 
       <section>
@@ -523,7 +523,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
           <Sparkles size={18} className="text-[#ffcb05]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
         </div>
-         
+          
         {featuredPosts && featuredPosts.length > 0 && (
           <div className="px-1 relative">
             <div onClick={() => setSelectedItem(featuredPosts[highlightIdx])} className="relative h-[420px] rounded-[48px] overflow-hidden shadow-2xl cursor-pointer group border border-white/10">
@@ -544,13 +544,13 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
                 {featuredPosts.map((_, i) => (
                   <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i === highlightIdx ? 'w-8 bg-[#ffcb05]' : 'w-2 bg-white/40'}`} />
-              ))}
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      )}
+        )}
       </section>
-  </div>
+    </div>
   );
 };
 
@@ -607,10 +607,10 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                   </div>
                 ))
               )}
+            </div>
           </div>
-        </div>
 
-        <div className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
                 <Sparkles size={16} className="text-[#38bdf8]" />
@@ -633,10 +633,10 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                   </div>
                 ))
               )}
+            </div>
           </div>
-        </div>
 
-        <div className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
                 <BookText size={16} className="text-[#a855f7]" />
@@ -659,11 +659,11 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                   </div>
                 ))
               )}
+            </div>
           </div>
         </div>
-      </div>
 
-      <section className="space-y-5 w-full">
+        <section className="space-y-5 w-full">
           <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
           <div className="grid grid-cols-2 gap-3">
             {[
@@ -677,8 +677,8 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
               {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'}
             ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
           </div>
-      </section>
-    </div>
+        </section>
+      </div>
   </div>
   );
 };
@@ -720,32 +720,32 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
             return (
               <div 
                 key={res.id} 
-                onClick={() => setSelectedItem({...res, type: 'dining'})}
+                onClick={() => setSelectedItem({...res, type: 'dining'})} 
                 className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex gap-4 cursor-pointer shadow-md items-center group active:scale-[0.99] transition-transform`}
               >
                 <img src={res.img} className="w-24 h-24 rounded-2xl object-cover shadow-inner flex-shrink-0" alt={res.title} />
-                <div className="flex-1 min-w-0 overflow-hidden">
-                  <div className="flex justify-between items-start gap-2">
-                    <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{res.title}</h3>
-                    <span className="text-[9px] font-black uppercase text-[#ffcb05] bg-[#ffcb05]/10 px-2.5 py-1 rounded-lg flex-shrink-0">{res.cuisine || 'Eats'}</span>
+                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                  <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{res.title}</h3>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <span className="text-[9px] font-black uppercase text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md inline-block whitespace-nowrap">{res.cuisine || 'Eats'}</span>
+                    {res.neighborhood && <span className="text-[10px] font-bold text-[#34a4b8] uppercase tracking-wider truncate">{res.neighborhood}</span>}
                   </div>
-                  <p className="text-[10px] font-bold text-[#34a4b8] uppercase tracking-wider mt-1 truncate">{res.neighborhood}</p>
-                  <p className={`text-xs mt-1 truncate ${theme.secondaryText}`}>{res.shortDesc}</p>
+                  <p className={`text-xs mt-1 line-clamp-1 ${theme.secondaryText}`}>{res.shortDesc}</p>
                 </div>
                 <button 
                   onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} 
                   className={`p-3 rounded-full backdrop-blur-md flex-shrink-0 transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/10 text-slate-400'}`}
                 >
                   <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
-              </button>
-            </div>
-          );
+                </button>
+              </div>
+            );
           })
         ) : (
           <div className="py-20 text-center opacity-40 text-xs font-bold uppercase tracking-widest">No restaurants found matching your search.</div>
-      )}
+        )}
+      </div>
     </div>
-  </div>
   );
 };
 
@@ -826,7 +826,6 @@ export default function App() {
     const list = itineraries || [];
     if (activeExpCat === 'All') return list;
     return list.filter(i => {
-      // Check if item has a single 'category' string, comma-separated string, or an array 'categories' / 'category'
       let itemCats = [];
       if (Array.isArray(i.category)) {
         itemCats = i.category;
@@ -838,7 +837,6 @@ export default function App() {
 
       const filterVal = activeExpCat.toLowerCase();
       
-      // Match if any category matches or contains the filter keyword
       return itemCats.some(c => c.toLowerCase().includes(filterVal)) || 
              (filterVal === 'museums' && (i.name?.toLowerCase().includes('museum') || i.shortDesc?.toLowerCase().includes('museum')));
     });
@@ -885,67 +883,67 @@ export default function App() {
                                 {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
                                  
                                 <div className="flex-1 p-5 flex flex-col justify-between text-left">
-                                    <div className="flex justify-between items-start">
-                                      <div className="max-w-[85%]">
-                                        <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
-                                        <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">
-                                           {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
-                                        </span>
-                                      </div>
-                                      <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                      <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
-                                      <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
-                                    </div>
+                                   <div className="flex justify-between items-start">
+                                     <div className="max-w-[85%]">
+                                       <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
+                                       <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">
+                                         {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
+                                       </span>
+                                     </div>
+                                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
+                                   </div>
+                                   <div className="flex items-center justify-between">
+                                     <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
+                                     <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+                                   </div>
                                 </div>
                             </div>
                           ))}
                           {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
-                        )}
+                          )}
                         </>
                       ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
                    </div>
-              </div>
-            )}
-          </>
-        )}
-      </main>
+                </div>
+              )}
+            </>
+          )}
+        </main>
 
-      <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
-        {[
-          { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
-          { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-          { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
-          { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
-          { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
-        ].map(v => {
-          const isActive = !activeTool && view === v.id;
-          return (
-            <button 
-              key={v.id} 
-              onClick={() => { setActiveTool(null); setView(v.id); }} 
-              className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
-              style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
-            >
-              <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
-              <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
-            </button>
-          );
-        })}
-      </nav>
+        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
+          {[
+            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
+            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
+            { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
+            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
+            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
+          ].map(v => {
+            const isActive = !activeTool && view === v.id;
+            return (
+              <button 
+                key={v.id} 
+                onClick={() => { setActiveTool(null); setView(v.id); }} 
+                className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
+                style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
+              >
+                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
+                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .font-header { font-family: 'Outfit', sans-serif; }
+        .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
+        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
+        .wp-content strong { color: #ffcb05; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
+        .bg-dark .wp-content, p { color: #f1f5f9 !important; }
+      `}} />
     </div>
-
-    <style dangerouslySetInnerHTML={{ __html: `
-      .font-header { font-family: 'Outfit', sans-serif; }
-      .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
-      .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
-      .wp-content strong { color: #ffcb05; }
-      .no-scrollbar::-webkit-scrollbar { display: none; }
-      .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
-      .bg-dark .wp-content, p { color: #f1f5f9 !important; }
-    `}} />
-  </div>
-);
+  );
 }
