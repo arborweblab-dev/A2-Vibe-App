@@ -10,7 +10,7 @@ import {
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
-import { Analytics } from '@vercel/analytics/react';
+
 // --- 2. CONFIGURATION ---
 const THEMES = {
   light: { primary: '#00274c', windowBg: 'bg-slate-200', appBg: 'bg-slate-50', card: 'bg-white', text: 'text-slate-900', secondaryText: 'text-slate-600', border: 'border-slate-200', isDark: false },
@@ -415,7 +415,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
           </div>
         )}
       </div>
-    </div>
+  </div>
   );
 };
 
@@ -487,7 +487,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               <span className={`text-[10px] font-black uppercase tracking-tighter text-center ${theme.isDark ? 'text-white' : 'text-slate-600'}`}>{item.label}</span>
             </button>
           ))}
-        </div>
+      </div>
       </section>
 
       <section id="island-flavors">
@@ -515,7 +515,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               </button>
             </div>
           ))}
-        </div>
+      </div>
       </section>
 
       <section>
@@ -547,8 +547,8 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
               ))}
           </div>
         </div>
-        </div>
-        )}
+      </div>
+      )}
       </section>
   </div>
   );
@@ -607,10 +607,10 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                   </div>
                 ))
               )}
-            </div>
           </div>
+        </div>
 
-          <div className="space-y-4">
+        <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
                 <Sparkles size={16} className="text-[#38bdf8]" />
@@ -633,10 +633,10 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                   </div>
                 ))
               )}
-            </div>
           </div>
+        </div>
 
-          <div className="space-y-4">
+        <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
                 <BookText size={16} className="text-[#a855f7]" />
@@ -659,11 +659,11 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
                   </div>
                 ))
               )}
-            </div>
           </div>
         </div>
+      </div>
 
-        <section className="space-y-5 w-full">
+      <section className="space-y-5 w-full">
           <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
           <div className="grid grid-cols-2 gap-3">
             {[
@@ -677,8 +677,8 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
               {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'}
             ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
           </div>
-        </section>
-      </div>
+      </section>
+    </div>
   </div>
   );
 };
@@ -700,7 +700,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
       <div className="text-center px-4 w-full space-y-4">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
-           
+          
         <div className="relative max-w-md mx-auto w-full mt-4">
           <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input 
@@ -724,28 +724,28 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
                 className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex gap-4 cursor-pointer shadow-md items-center group active:scale-[0.99] transition-transform`}
               >
                 <img src={res.img} className="w-24 h-24 rounded-2xl object-cover shadow-inner flex-shrink-0" alt={res.title} />
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start">
+                <div className="flex-1 min-w-0 overflow-hidden">
+                  <div className="flex justify-between items-start gap-2">
                     <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{res.title}</h3>
-                    <span className="text-[9px] font-black uppercase text-[#ffcb05] bg-[#ffcb05]/10 px-2.5 py-1 rounded-lg flex-shrink-0 ml-2">{res.cuisine || 'Eats'}</span>
+                    <span className="text-[9px] font-black uppercase text-[#ffcb05] bg-[#ffcb05]/10 px-2.5 py-1 rounded-lg flex-shrink-0">{res.cuisine || 'Eats'}</span>
                   </div>
-                  <p className="text-[10px] font-bold text-[#34a4b8] uppercase tracking-wider mt-1">{res.neighborhood}</p>
-                  <p className={`text-xs mt-1 line-clamp-1 ${theme.secondaryText}`}>{res.shortDesc}</p>
+                  <p className="text-[10px] font-bold text-[#34a4b8] uppercase tracking-wider mt-1 truncate">{res.neighborhood}</p>
+                  <p className={`text-xs mt-1 truncate ${theme.secondaryText}`}>{res.shortDesc}</p>
                 </div>
                 <button 
                   onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} 
                   className={`p-3 rounded-full backdrop-blur-md flex-shrink-0 transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/10 text-slate-400'}`}
                 >
                   <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
-                </button>
-              </div>
-            );
+              </button>
+            </div>
+          );
           })
         ) : (
           <div className="py-20 text-center opacity-40 text-xs font-bold uppercase tracking-widest">No restaurants found matching your search.</div>
-        )}
-      </div>
+      )}
     </div>
+  </div>
   );
 };
 
@@ -865,7 +865,7 @@ export default function App() {
 
         <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
-           
+          
           {activeTool ? (
             <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} />
           ) : (
@@ -885,69 +885,67 @@ export default function App() {
                                 {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
                                  
                                 <div className="flex-1 p-5 flex flex-col justify-between text-left">
-                                   <div className="flex justify-between items-start">
-                                     <div className="max-w-[85%]">
-                                       <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
-                                       <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">
-                                         {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
-                                       </span>
-                                     </div>
-                                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
-                                   </div>
-                                   <div className="flex items-center justify-between">
-                                     <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
-                                     <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
-                                   </div>
+                                    <div className="flex justify-between items-start">
+                                      <div className="max-w-[85%]">
+                                        <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
+                                        <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">
+                                           {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
+                                        </span>
+                                      </div>
+                                      <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
+                                      <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+                                    </div>
                                 </div>
                             </div>
                           ))}
                           {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
-                          )}
+                        )}
                         </>
                       ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
                    </div>
-                </div>
-              )}
-            </>
-          )}
-        </main>
+              </div>
+            )}
+          </>
+        )}
+      </main>
 
-        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
-          {[
-            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
-            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-            { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
-            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
-            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
-          ].map(v => {
-            const isActive = !activeTool && view === v.id;
-            return (
-              <button 
-                key={v.id} 
-                onClick={() => { setActiveTool(null); setView(v.id); }} 
-                className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
-                style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
-              >
-                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
-                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-    
-      </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .font-header { font-family: 'Outfit', sans-serif; }
-        .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
-        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
-        .wp-content strong { color: #ffcb05; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
-        .bg-dark .wp-content, p { color: #f1f5f9 !important; }
-      `}} />
-   <Analytics />    
+      <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
+        {[
+          { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
+          { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
+          { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
+          { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
+          { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
+        ].map(v => {
+          const isActive = !activeTool && view === v.id;
+          return (
+            <button 
+              key={v.id} 
+              onClick={() => { setActiveTool(null); setView(v.id); }} 
+              className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-40 hover:opacity-75'}`}
+              style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#64748b') }}
+            >
+              <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
+              <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
+            </button>
+          );
+        })}
+      </nav>
     </div>
-  );
+
+    <style dangerouslySetInnerHTML={{ __html: `
+      .font-header { font-family: 'Outfit', sans-serif; }
+      .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
+      .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
+      .wp-content strong { color: #ffcb05; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
+      .bg-dark .wp-content, p { color: #f1f5f9 !important; }
+    `}} />
+  </div>
+);
 }
