@@ -695,22 +695,51 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
     );
   }, [dining, searchQuery]);
 
+  const featuredDining = useMemo(() => {
+    const featured = dining.filter(d => d.isFeatured);
+    return featured.length > 0 ? featured.slice(0, 5) : dining.slice(0, 5);
+  }, [dining]);
+
   return (
     <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col">
       <div className="text-center px-4 w-full space-y-4">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
-          
-        <div className="relative max-w-md mx-auto w-full mt-4">
-          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input 
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search restaurants, cuisine, or neighborhood..."
-            className={`w-full pl-12 pr-4 py-3.5 rounded-2xl ${theme.card} border ${theme.border} text-xs font-bold outline-none focus:border-[#ffcb05] shadow-inner`}
-          />
+      </div>
+
+      <div className="px-1 w-full">
+        <div className="flex items-center gap-2 mb-4 px-2">
+          <Sparkles size={18} className="text-[#ffcb05]" />
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Flavors</h2>
         </div>
+        <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
+          {featuredDining.map(res => (
+            <div key={`feat-${res.id}`} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`min-w-[280px] h-48 ${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg snap-center relative group cursor-pointer flex-shrink-0`}>
+              {res.img ? (
+                <img src={res.img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
+              ) : (
+                <div className="absolute inset-0 bg-[#00274c]/20 flex items-center justify-center"><Building size={32} className="text-[#ffcb05]/40" /></div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <span className="bg-[#ffcb05] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Spotlight</span>
+                <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{res.title}</h3>
+                <p className="text-[10px] font-black text-[#ffcb05] uppercase tracking-wider mt-1">{res.cuisine || 'Gourmet A2'}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="relative max-w-md mx-auto w-full px-4">
+        <Search size={18} className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-400" />
+        <input 
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search restaurants, cuisine, or neighborhood..."
+          className={`w-full pl-12 pr-4 py-3.5 rounded-2xl ${theme.card} border ${theme.border} text-xs font-bold outline-none focus:border-[#ffcb05] shadow-inner`}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-4 px-1 w-full">
@@ -874,7 +903,44 @@ export default function App() {
               {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} dining={dining} setActiveTool={setActiveTool} />}
               {view === 'fun' && (
                 <div className="space-y-12 animate-fade w-full">
-                   <div className="text-center px-4"><h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2  Happenings</h1><div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">{CATEGORIES_EXP.map((cat) => <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>)}</div></div>
+                   <div className="text-center px-4">
+                     <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Happenings</h1>
+                   </div>
+
+                   {/* FEATURED CTA CARDS SECTION */}
+                   {(() => {
+                     const featuredHappenings = (itineraries || []).filter(e => e.isFeatured);
+                     const displayFeatured = featuredHappenings.length > 0 ? featuredHappenings.slice(0, 5) : (itineraries || []).slice(0, 5);
+                     
+                     return (
+                       <div className="px-1 w-full">
+                         <div className="flex items-center gap-2 mb-4 px-2">
+                           <Zap size={18} className="text-[#ffcb05]" />
+                           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Events</h2>
+                         </div>
+                         <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
+                           {displayFeatured.map(exp => (
+                             <div key={`feat-${exp.id}`} onClick={()=>setSelectedItem(exp)} className={`min-w-[280px] h-48 ${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg snap-center relative group cursor-pointer flex-shrink-0`}>
+                               {exp.img && <img src={exp.img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />}
+                               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                               <div className="absolute bottom-4 left-4 right-4 text-white">
+                                 <span className="bg-[#38bdf8] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Top Pick</span>
+                                 <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{exp.name}</h3>
+                                 <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
+                                   {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
+                                 </span>
+                               </div>
+                             </div>
+                           ))}
+                         </div>
+                       </div>
+                     );
+                   })()}
+
+                   <div className="text-center px-4">
+                     <div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">{CATEGORIES_EXP.map((cat) => <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>)}</div>
+                   </div>
+                   
                    <div className="space-y-5 px-1 pt-4 w-full">
                       {shuffledExp && shuffledExp.length > 0 ? (
                         <>
