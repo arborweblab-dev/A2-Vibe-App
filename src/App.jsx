@@ -1,4 +1,12 @@
 // src/App.jsx
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'firebase/firestore';
+import { app } from './firebase'; // Adjust path if needed
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
@@ -11,6 +19,8 @@ import {
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
+
+
 
 // --- 2. CONFIGURATION ---
 const THEMES = {
