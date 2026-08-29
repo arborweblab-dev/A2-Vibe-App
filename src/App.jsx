@@ -3,7 +3,7 @@ import {
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
-  Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw
+  Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, Tag, Flame
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -46,9 +46,12 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
       <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
         <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
-          <h3 className={`text-lg font-header font-black uppercase italic tracking-tight pr-4`} style={{ color: '#ffcb05' }}>
-            {item.name || item.title || 'Spotlight'}
-          </h3>
+          <div className="flex items-center gap-2 pr-4">
+            {item.isFeatured && <span className="bg-[#ffcb05] text-black px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider">Featured Spot</span>}
+            <h3 className={`text-lg font-header font-black uppercase italic tracking-tight`} style={{ color: '#ffcb05' }}>
+              {item.name || item.title || 'Spotlight'}
+            </h3>
+          </div>
           <div className="flex items-center gap-3">
             <button 
               onClick={() => toggleFavorite(item)} 
@@ -79,15 +82,55 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
               {Array.isArray(item.category) ? item.category.join(' • ') : (item.category || item.neighborhood || 'City Guide')}
             </div>
           </div>
+
           {item.address && (
             <div className="flex items-center gap-2 text-xs font-bold text-slate-400 bg-black/20 p-3 rounded-xl border border-white/5">
               <MapPin size={16} className="text-[#ffcb05]" />
               <span>{item.address}</span>
             </div>
           )}
+
+          {/* Expanded Featured Content: Menu / Specials / Coupons */}
+          {item.isFeatured && (
+            <div className="space-y-4 pt-2 border-t border-white/10">
+              {item.menuHighlights && (
+                <div className="bg-black/20 p-4 rounded-2xl border border-white/5">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-[#ffcb05] mb-2 flex items-center gap-1.5">
+                    <Utensils size={14} /> Menu Highlights
+                  </h4>
+                  <ul className="space-y-1.5">
+                    {item.menuHighlights.map((m, idx) => (
+                      <li key={idx} className="text-xs flex justify-between text-slate-300 font-medium">
+                        <span>{m.item}</span>
+                        <span className="text-[#ffcb05] font-bold">{m.price}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {item.specials && (
+                <div className="bg-[#ffcb05]/10 p-4 rounded-2xl border border-[#ffcb05]/20">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-[#ffcb05] mb-2 flex items-center gap-1.5">
+                    <Flame size={14} /> Current Specials & Offers
+                  </h4>
+                  <div className="space-y-2">
+                    {item.specials.map((s, idx) => (
+                      <div key={idx} className="text-xs bg-black/20 p-2.5 rounded-xl border border-white/5">
+                        <p className="font-bold text-white">{s.title}</p>
+                        <p className="text-slate-400 text-[11px] mt-0.5">{s.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className={`text-base leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`} 
             dangerouslySetInnerHTML={{ __html: item.longDesc || item.desc || item.excerpt || 'Accessing city database...' }} 
           />
+
           {item.url && (
             <button 
               onClick={() => { window.open(item.url, '_blank'); }} 
@@ -717,6 +760,51 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
         {filteredDining.length > 0 ? (
           filteredDining.map(res => {
             const isFavorited = (favorites || []).some(f => f.id === res.id && f.type === 'dining');
+            const isFeatured = res.isFeatured;
+
+            if (isFeatured) {
+              return (
+                <div 
+                  key={res.id} 
+                  onClick={() => setSelectedItem({...res, type: 'dining'})} 
+                  className={`relative rounded-[36px] overflow-hidden shadow-xl cursor-pointer group border-2 border-[#ffcb05]/40 transition-transform active:scale-[0.99] ${theme.card}`}
+                >
+                  <div className="relative h-48 w-full">
+                    <img src={res.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={res.title} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                    <div className="absolute top-4 left-4 bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
+                      <Flame size={12} /> Featured Spot
+                    </div>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} 
+                      className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/40 text-white'}`}
+                    >
+                      <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
+                    </button>
+                    <div className="absolute bottom-4 left-6 right-6 text-white space-y-1">
+                      <h3 className="font-header font-black text-xl uppercase italic tracking-tight">{res.title}</h3>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[9px] font-black uppercase text-black bg-[#ffcb05] px-2.5 py-0.5 rounded-md">{res.cuisine || 'Eats'}</span>
+                        {res.neighborhood && <span className="text-[10px] font-bold text-sky-300 uppercase tracking-wider">{res.neighborhood}</span>}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-5 space-y-3 bg-black/20">
+                    <p className={`text-xs line-clamp-2 ${theme.secondaryText}`}>{res.shortDesc}</p>
+                    {res.specials && res.specials.length > 0 && (
+                      <div className="bg-[#ffcb05]/10 border border-[#ffcb05]/20 rounded-2xl p-3 flex items-center gap-3">
+                        <Tag size={16} className="text-[#ffcb05] flex-shrink-0" />
+                        <div className="text-[11px] truncate">
+                          <span className="font-bold text-[#ffcb05] uppercase">Special: </span>
+                          <span className={theme.text}>{res.specials[0].title}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <div 
                 key={res.id} 
@@ -874,31 +962,79 @@ export default function App() {
               {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} dining={dining} setActiveTool={setActiveTool} />}
               {view === 'fun' && (
                 <div className="space-y-12 animate-fade w-full">
-                   <div className="text-center px-4"><h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2  Happenings</h1><div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">{CATEGORIES_EXP.map((cat) => <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>)}</div></div>
+                   <div className="text-center px-4">
+                     <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Happenings</h1>
+                     <p className={`text-xs mt-1 ${theme.secondaryText}`}>Discover local events, festivals, and cultural activities.</p>
+                     <div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">
+                       {CATEGORIES_EXP.map((cat) => (
+                         <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>
+                       ))}
+                     </div>
+                   </div>
+
                    <div className="space-y-5 px-1 pt-4 w-full">
                       {shuffledExp && shuffledExp.length > 0 ? (
                         <>
-                          {shuffledExp.slice(0, activeExpCat === 'All' ? visibleCount : shuffledExp.length).map(exp => (
-                            <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
-                                {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
-                                 
-                                <div className="flex-1 p-5 flex flex-col justify-between text-left">
-                                   <div className="flex justify-between items-start">
-                                     <div className="max-w-[85%]">
-                                       <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
-                                       <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">
-                                         {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
-                                       </span>
-                                     </div>
-                                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
-                                   </div>
-                                   <div className="flex items-center justify-between">
-                                     <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
-                                     <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
-                                   </div>
+                          {shuffledExp.slice(0, activeExpCat === 'All' ? visibleCount : shuffledExp.length).map(exp => {
+                            const isFavorited = (favorites || []).some(f => f.id === exp.id);
+                            const isFeatured = exp.isFeatured;
+
+                            if (isFeatured) {
+                              return (
+                                <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`relative rounded-[36px] overflow-hidden shadow-xl cursor-pointer group border-2 border-[#ffcb05]/40 transition-transform active:scale-[0.99] ${theme.card}`}>
+                                  <div className="relative h-48 w-full">
+                                    {exp.img && <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="" />}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                                    <div className="absolute top-4 left-4 bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
+                                      <Flame size={12} /> Featured Event
+                                    </div>
+                                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/40 text-white'}`}>
+                                      <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
+                                    </button>
+                                    <div className="absolute bottom-4 left-6 right-6 text-white space-y-1">
+                                      <h4 className="font-header font-black text-xl uppercase italic tracking-tight">{exp.name}</h4>
+                                      <span className="text-[9px] font-black uppercase text-black bg-[#ffcb05] px-2.5 py-0.5 rounded-md inline-block">
+                                        {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="p-5 space-y-3 bg-black/20">
+                                    <p className={`text-xs line-clamp-2 ${theme.secondaryText}`}>{exp.shortDesc}</p>
+                                    {exp.specials && exp.specials.length > 0 && (
+                                      <div className="bg-[#ffcb05]/10 border border-[#ffcb05]/20 rounded-2xl p-3 flex items-center gap-3">
+                                        <Tag size={16} className="text-[#ffcb05] flex-shrink-0" />
+                                        <div className="text-[11px] truncate">
+                                          <span className="font-bold text-[#ffcb05] uppercase">Offer: </span>
+                                          <span className={theme.text}>{exp.specials[0].title}</span>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
-                            </div>
-                          ))}
+                              );
+                            }
+
+                            return (
+                              <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
+                                  {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
+                                  <div className="flex-1 p-5 flex flex-col justify-between text-left">
+                                     <div className="flex justify-between items-start">
+                                       <div className="max-w-[85%]">
+                                         <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
+                                         <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">
+                                           {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
+                                         </span>
+                                       </div>
+                                       <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
+                                     </div>
+                                     <div className="flex items-center justify-between">
+                                       <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
+                                       <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+                                     </div>
+                                  </div>
+                              </div>
+                            );
+                          })}
                           {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                           )}
