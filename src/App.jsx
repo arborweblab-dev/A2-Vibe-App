@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
@@ -19,6 +20,7 @@ const THEMES = {
 
 const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
 const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
+const MONTHS_EXP = ['All Months', 'October', 'November', 'December'];
 
 const SLIDE_IMAGES = [
   "/images/1.png", 
@@ -78,6 +80,11 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
             <div className="bg-[#00274c]/40 text-[#34a4b8] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
               {Array.isArray(item.category) ? item.category.join(' • ') : (item.category || item.neighborhood || 'City Guide')}
             </div>
+            {item.month && (
+               <div className="bg-[#a855f7]/20 text-[#a855f7] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
+                 {item.month}
+               </div>
+            )}
           </div>
           {item.address && (
             <div className="flex items-center gap-2 text-xs font-bold text-slate-400 bg-black/20 p-3 rounded-xl border border-white/5">
@@ -837,6 +844,7 @@ export default function App() {
   const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
   
   const [activeExpCat, setActiveExpCat] = useState('All');
+  const [activeMonth, setActiveMonth] = useState('All Months');
   const [visibleCount, setVisibleCount] = useState(6);
   const theme = THEMES[themeKey] || THEMES.dark;
 
@@ -850,26 +858,36 @@ export default function App() {
     else { setFavorites([...favorites, { ...item, savedAt: Date.now() }]); }
   };
 
-  // MULTIPLE CATEGORIES MATCHING LOGIC
+  // MULTIPLE CATEGORIES MATCHING LOGIC (With Month Filtering Added)
   const shuffledExp = useMemo(() => {
-    const list = itineraries || [];
-    if (activeExpCat === 'All') return list;
-    return list.filter(i => {
-      let itemCats = [];
-      if (Array.isArray(i.category)) {
-        itemCats = i.category;
-      } else if (Array.isArray(i.categories)) {
-        itemCats = i.categories;
-      } else if (typeof i.category === 'string') {
-        itemCats = i.category.split(',').map(c => c.trim());
-      }
+    let list = itineraries || [];
+    
+    // 1. Filter by Selected Month
+    if (activeMonth !== 'All Months') {
+      list = list.filter(i => i.month === activeMonth);
+    }
+    
+    // 2. Filter by Category Selection
+    if (activeExpCat !== 'All') {
+      list = list.filter(i => {
+        let itemCats = [];
+        if (Array.isArray(i.category)) {
+          itemCats = i.category;
+        } else if (Array.isArray(i.categories)) {
+          itemCats = i.categories;
+        } else if (typeof i.category === 'string') {
+          itemCats = i.category.split(',').map(c => c.trim());
+        }
 
-      const filterVal = activeExpCat.toLowerCase();
-      
-      return itemCats.some(c => c.toLowerCase().includes(filterVal)) || 
-             (filterVal === 'museums' && (i.name?.toLowerCase().includes('museum') || i.shortDesc?.toLowerCase().includes('museum')));
-    });
-  }, [itineraries, activeExpCat]);
+        const filterVal = activeExpCat.toLowerCase();
+        
+        return itemCats.some(c => c.toLowerCase().includes(filterVal)) || 
+               (filterVal === 'museums' && (i.name?.toLowerCase().includes('museum') || i.shortDesc?.toLowerCase().includes('museum')));
+      });
+    }
+
+    return list;
+  }, [itineraries, activeExpCat, activeMonth]);
 
   return (
     <div className={`min-h-screen ${theme.windowBg} font-sans transition-colors duration-500 flex flex-col items-center overflow-x-hidden`}>
@@ -938,13 +956,38 @@ export default function App() {
                    })()}
 
                    <div className="text-center px-4">
-                     <div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar px-1">{CATEGORIES_EXP.map((cat) => <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>)}</div>
+                     
+                     {/* MONTH FILTER COMPONENT */}
+                     <div className="flex overflow-x-auto gap-3 mt-6 mb-2 no-scrollbar px-1">
+                        {MONTHS_EXP.map((m) => (
+                           <button 
+                             key={m} 
+                             onClick={() => setActiveMonth(m)} 
+                             className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeMonth === m ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}
+                           >
+                             {m}
+                           </button>
+                        ))}
+                     </div>
+
+                     {/* CATEGORY FILTER COMPONENT */}
+                     <div className="flex overflow-x-auto gap-3 mb-2 no-scrollbar px-1">
+                       {CATEGORIES_EXP.map((cat) => (
+                         <button 
+                           key={cat} 
+                           onClick={() => setActiveExpCat(cat)} 
+                           className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#38bdf8] border-[#38bdf8] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}
+                         >
+                           {cat}
+                         </button>
+                       ))}
+                     </div>
                    </div>
                    
                    <div className="space-y-5 px-1 pt-4 w-full">
                       {shuffledExp && shuffledExp.length > 0 ? (
                         <>
-                          {shuffledExp.slice(0, activeExpCat === 'All' ? visibleCount : shuffledExp.length).map(exp => (
+                          {shuffledExp.slice(0, activeExpCat === 'All' && activeMonth === 'All Months' ? visibleCount : shuffledExp.length).map(exp => (
                             <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
                                 {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
                                  
@@ -965,11 +1008,11 @@ export default function App() {
                                 </div>
                             </div>
                           ))}
-                          {activeExpCat === 'All' && visibleCount < (shuffledExp.length || 0) && (
+                          {activeExpCat === 'All' && activeMonth === 'All Months' && visibleCount < (shuffledExp.length || 0) && (
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                           )}
                         </>
-                      ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this category.</div>}
+                      ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this filter combination.</div>}
                    </div>
                 </div>
               )}
