@@ -6,7 +6,6 @@ import { app } from './firebase'; // Adjust path if needed
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
@@ -19,8 +18,6 @@ import {
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
-
-
 
 // --- 2. CONFIGURATION ---
 const THEMES = {
@@ -41,6 +38,13 @@ const SLIDE_IMAGES = [
   "/images/2.png"
 ];
 
+const DEFAULT_BUCKET_ITEMS = [
+  { id: 1, text: "Catch a game at the Big House", done: false },
+  { id: 2, text: "Walk through the Nichols Arboretum", done: false },
+  { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
+  { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
+];
+
 // --- Helpers ---
 const Watermark = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.02] flex items-center justify-center">
@@ -49,8 +53,6 @@ const Watermark = () => (
 );
 
 // --- Components ---
-const [user, setUser] = useState(null);
-
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
@@ -122,30 +124,14 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   );
 };
 
-const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) => {
+const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, bucketList, setBucketList }) => {
   const [bill, setBill] = useState('');
   const [tipPerc, setTipPerc] = useState(20);
   const [weatherIdx, setWeatherIdx] = useState(new Date().getMonth());
   const [randomSpot, setRandomSpot] = useState(null);
   const [triviaAnswered, setTriviaAnswered] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-
-  const defaultBucketItems = [
-    { id: 1, text: "Catch a game at the Big House", done: false },
-    { id: 2, text: "Walk through the Nichols Arboretum", done: false },
-    { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
-    { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
-  ];
-
-  const [bucketList, setBucketList] = useState(() => {
-    const saved = localStorage.getItem('a2v_bucketlist');
-    return saved ? JSON.parse(saved) : defaultBucketItems;
-  });
   const [newBucketText, setNewBucketText] = useState('');
-
-  useEffect(() => {
-    localStorage.setItem('a2v_bucketlist', JSON.stringify(bucketList));
-  }, [bucketList]);
 
   const toggleBucketItem = (id) => {
     setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
@@ -157,7 +143,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining }) =
   };
 
   const resetBucketList = () => {
-    setBucketList(defaultBucketItems);
+    setBucketList(DEFAULT_BUCKET_ITEMS);
   };
 
   const addBucketItem = (e) => {
@@ -836,6 +822,8 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts 
 };
 
 export default function App() {
+  const [user, setUser] = useState(null);
+  
   const [view, setView] = useState('home');
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
@@ -845,9 +833,15 @@ export default function App() {
     const saved = localStorage.getItem('a2v_favorites');
     return saved ? JSON.parse(saved) : [];
   });
+  
   const [stats, setStats] = useState(() => {
     const saved = localStorage.getItem('a2v_stats');
     return saved ? JSON.parse(saved) : { water: 0, drinks: 0 };
+  });
+
+  const [bucketList, setBucketList] = useState(() => {
+    const saved = localStorage.getItem('a2v_bucketlist');
+    return saved ? JSON.parse(saved) : DEFAULT_BUCKET_ITEMS;
   });
 
   const [itineraries, setItineraries] = useState(happeningsData);
@@ -860,8 +854,63 @@ export default function App() {
   const [visibleCount, setVisibleCount] = useState(6);
   const theme = THEMES[themeKey] || THEMES.dark;
 
-  useEffect(() => { localStorage.setItem('a2v_favorites', JSON.stringify(favorites)); }, [favorites]);
-  useEffect(() => { localStorage.setItem('a2v_stats', JSON.stringify(stats)); }, [stats]);
+  // Firebase Auth Listener (Step 6)
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      
+      if (currentUser) {
+        // User is signed in, fetch their data from Firestore
+        const userRef = doc(db, 'users', currentUser.uid);
+        const docSnap = await getDoc(userRef);
+        
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setFavorites(data.favorites || []);
+          setStats(data.stats || { water: 0, drinks: 0 });
+          setBucketList(data.bucketList || DEFAULT_BUCKET_ITEMS);
+        }
+      } else {
+        // User signed out, reset to local storage defaults
+        const savedFavs = localStorage.getItem('a2v_favorites');
+        setFavorites(savedFavs ? JSON.parse(savedFavs) : []);
+        
+        const savedStats = localStorage.getItem('a2v_stats');
+        setStats(savedStats ? JSON.parse(savedStats) : { water: 0, drinks: 0 });
+        
+        const savedBucket = localStorage.getItem('a2v_bucketlist');
+        setBucketList(savedBucket ? JSON.parse(savedBucket) : DEFAULT_BUCKET_ITEMS);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Firebase Syncing Hooks (Step 7)
+  useEffect(() => {
+    if (user) {
+      setDoc(doc(db, 'users', user.uid), { favorites }, { merge: true });
+    } else {
+      localStorage.setItem('a2v_favorites', JSON.stringify(favorites));
+    }
+  }, [favorites, user]);
+
+  useEffect(() => {
+    if (user) {
+      setDoc(doc(db, 'users', user.uid), { stats }, { merge: true });
+    } else {
+      localStorage.setItem('a2v_stats', JSON.stringify(stats));
+    }
+  }, [stats, user]);
+
+  useEffect(() => {
+    if (user) {
+      setDoc(doc(db, 'users', user.uid), { bucketList }, { merge: true });
+    } else {
+      localStorage.setItem('a2v_bucketlist', JSON.stringify(bucketList));
+    }
+  }, [bucketList, user]);
+
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view, activeTool]);
 
   const toggleFavorite = (item) => {
@@ -924,7 +973,16 @@ export default function App() {
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           
           {activeTool ? (
-            <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} />
+            <ToolFullScreenView 
+              type={activeTool} 
+              onClose={() => setActiveTool(null)} 
+              theme={theme} 
+              stats={stats} 
+              setStats={setStats} 
+              dining={dining} 
+              bucketList={bucketList}
+              setBucketList={setBucketList}
+            />
           ) : (
             <>
               {view === 'home' && <HomeView theme={theme} setView={setView} setSelectedItem={setSelectedItem} itineraries={itineraries} dining={dining} featuredPosts={featuredPosts} favorites={favorites} toggleFavorite={toggleFavorite} />}
