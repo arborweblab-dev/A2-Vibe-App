@@ -49,6 +49,8 @@ const Watermark = () => (
 );
 
 // --- Components ---
+const [user, setUser] = useState(null);
+
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
