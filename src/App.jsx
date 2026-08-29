@@ -73,7 +73,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           </div>
         </div>
         <div className="p-8 space-y-6">
-          {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
+          {item.img && <img src={item.img} className="w-full h-72 object-cover rounded-[32px] shadow-lg" alt="" />}
 
           <div className="flex items-center gap-4 flex-wrap">
             {item.price && <div className="bg-[#ffcb05]/20 text-[#ffcb05] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
@@ -767,34 +767,34 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
                 <div 
                   key={res.id} 
                   onClick={() => setSelectedItem({...res, type: 'dining'})} 
-                  className={`relative rounded-[36px] overflow-hidden shadow-xl cursor-pointer group border-2 border-[#ffcb05]/40 transition-transform active:scale-[0.99] ${theme.card}`}
+                  className={`relative rounded-[36px] overflow-hidden shadow-2xl cursor-pointer group border-2 border-[#ffcb05]/40 transition-transform active:scale-[0.99] ${theme.card}`}
                 >
-                  <div className="relative h-48 w-full">
+                  <div className="relative h-64 w-full">
                     <img src={res.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={res.title} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    <div className="absolute top-4 left-4 bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
-                      <Flame size={12} /> Featured Spot
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+                    <div className="absolute top-4 left-4 bg-[#ffcb05] text-black px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg">
+                      <Flame size={14} /> Featured Spot
                     </div>
                     <button 
                       onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} 
-                      className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/40 text-white'}`}
+                      className={`absolute top-4 right-4 p-3.5 rounded-full backdrop-blur-md transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/40 text-white'}`}
                     >
-                      <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
+                      <Heart size={20} fill={isFavorited ? "currentColor" : "none"} />
                     </button>
-                    <div className="absolute bottom-4 left-6 right-6 text-white space-y-1">
-                      <h3 className="font-header font-black text-xl uppercase italic tracking-tight">{res.title}</h3>
+                    <div className="absolute bottom-6 left-6 right-6 text-white space-y-2">
+                      <h3 className="font-header font-black text-2xl uppercase italic tracking-tight">{res.title}</h3>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[9px] font-black uppercase text-black bg-[#ffcb05] px-2.5 py-0.5 rounded-md">{res.cuisine || 'Eats'}</span>
-                        {res.neighborhood && <span className="text-[10px] font-bold text-sky-300 uppercase tracking-wider">{res.neighborhood}</span>}
+                        <span className="text-[10px] font-black uppercase text-black bg-[#ffcb05] px-3 py-1 rounded-md">{res.cuisine || 'Eats'}</span>
+                        {res.neighborhood && <span className="text-xs font-bold text-sky-300 uppercase tracking-wider">{res.neighborhood}</span>}
                       </div>
                     </div>
                   </div>
-                  <div className="p-5 space-y-3 bg-black/20">
-                    <p className={`text-xs line-clamp-2 ${theme.secondaryText}`}>{res.shortDesc}</p>
+                  <div className="p-6 space-y-4 bg-black/20">
+                    <p className={`text-sm leading-relaxed ${theme.secondaryText}`}>{res.shortDesc}</p>
                     {res.specials && res.specials.length > 0 && (
-                      <div className="bg-[#ffcb05]/10 border border-[#ffcb05]/20 rounded-2xl p-3 flex items-center gap-3">
-                        <Tag size={16} className="text-[#ffcb05] flex-shrink-0" />
-                        <div className="text-[11px] truncate">
+                      <div className="bg-[#ffcb05]/10 border border-[#ffcb05]/20 rounded-2xl p-4 flex items-center gap-3">
+                        <Tag size={18} className="text-[#ffcb05] flex-shrink-0" />
+                        <div className="text-xs truncate">
                           <span className="font-bold text-[#ffcb05] uppercase">Special: </span>
                           <span className={theme.text}>{res.specials[0].title}</span>
                         </div>
@@ -981,29 +981,29 @@ export default function App() {
 
                             if (isFeatured) {
                               return (
-                                <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`relative rounded-[36px] overflow-hidden shadow-xl cursor-pointer group border-2 border-[#ffcb05]/40 transition-transform active:scale-[0.99] ${theme.card}`}>
-                                  <div className="relative h-48 w-full">
+                                <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`relative rounded-[36px] overflow-hidden shadow-2xl cursor-pointer group border-2 border-[#ffcb05]/40 transition-transform active:scale-[0.99] ${theme.card}`}>
+                                  <div className="relative h-64 w-full">
                                     {exp.img && <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="" />}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                                    <div className="absolute top-4 left-4 bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
-                                      <Flame size={12} /> Featured Event
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+                                    <div className="absolute top-4 left-4 bg-[#ffcb05] text-black px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg">
+                                      <Flame size={14} /> Featured Event
                                     </div>
-                                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/40 text-white'}`}>
-                                      <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
+                                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`absolute top-4 right-4 p-3.5 rounded-full backdrop-blur-md transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/40 text-white'}`}>
+                                      <Heart size={20} fill={isFavorited ? "currentColor" : "none"} />
                                     </button>
-                                    <div className="absolute bottom-4 left-6 right-6 text-white space-y-1">
-                                      <h4 className="font-header font-black text-xl uppercase italic tracking-tight">{exp.name}</h4>
-                                      <span className="text-[9px] font-black uppercase text-black bg-[#ffcb05] px-2.5 py-0.5 rounded-md inline-block">
+                                    <div className="absolute bottom-6 left-6 right-6 text-white space-y-2">
+                                      <h4 className="font-header font-black text-2xl uppercase italic tracking-tight">{exp.name}</h4>
+                                      <span className="text-[10px] font-black uppercase text-black bg-[#ffcb05] px-3 py-1 rounded-md inline-block">
                                         {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
                                       </span>
                                     </div>
                                   </div>
-                                  <div className="p-5 space-y-3 bg-black/20">
-                                    <p className={`text-xs line-clamp-2 ${theme.secondaryText}`}>{exp.shortDesc}</p>
+                                  <div className="p-6 space-y-4 bg-black/20">
+                                    <p className={`text-sm leading-relaxed ${theme.secondaryText}`}>{exp.shortDesc}</p>
                                     {exp.specials && exp.specials.length > 0 && (
-                                      <div className="bg-[#ffcb05]/10 border border-[#ffcb05]/20 rounded-2xl p-3 flex items-center gap-3">
-                                        <Tag size={16} className="text-[#ffcb05] flex-shrink-0" />
-                                        <div className="text-[11px] truncate">
+                                      <div className="bg-[#ffcb05]/10 border border-[#ffcb05]/20 rounded-2xl p-4 flex items-center gap-3">
+                                        <Tag size={18} className="text-[#ffcb05] flex-shrink-0" />
+                                        <div className="text-xs truncate">
                                           <span className="font-bold text-[#ffcb05] uppercase">Offer: </span>
                                           <span className={theme.text}>{exp.specials[0].title}</span>
                                         </div>
