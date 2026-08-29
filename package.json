@@ -8,8 +8,7 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-    "dependencies": {
-    "firebase": "^12.18.0",
+  "dependencies": {
     "@vercel/analytics": "^1.4.1",
     "clsx": "^2.1.0",
     "firebase": "^10.8.0",
