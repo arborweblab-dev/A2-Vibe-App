@@ -559,7 +559,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
   );
 };
 
-const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, setView, dining, setActiveTool }) => {
+const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, setView, dining, setActiveTool, user, handleLogin, handleLogout }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
@@ -586,6 +586,20 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
              </div>
           </div>
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
+        </div>
+
+        <div className={`${theme.card} p-5 rounded-[32px] border ${theme.border} flex flex-col gap-4 text-center shadow-lg mx-1`}>
+          {user ? (
+            <>
+              <p className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>Logged in as {user.displayName || user.email}</p>
+              <button onClick={handleLogout} className="bg-red-500/10 text-red-500 py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Sign Out</button>
+            </>
+          ) : (
+            <>
+              <p className={`text-[10px] font-bold uppercase tracking-widest ${theme.secondaryText}`}>Sign in to sync your favorites and stats across devices!</p>
+              <button onClick={handleLogin} className="bg-[#ffcb05] text-black py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">Sign in with Google</button>
+            </>
+          )}
         </div>
 
         <div className="space-y-8">
@@ -854,7 +868,25 @@ export default function App() {
   const [visibleCount, setVisibleCount] = useState(6);
   const theme = THEMES[themeKey] || THEMES.dark;
 
-  // Firebase Auth Listener (Step 6)
+  // --- Auth Handlers ---
+  const handleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Login Error:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Logout Error:", error);
+    }
+  };
+
+  // Firebase Auth Listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -886,7 +918,7 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Firebase Syncing Hooks (Step 7)
+  // Firebase Syncing Hooks
   useEffect(() => {
     if (user) {
       setDoc(doc(db, 'users', user.uid), { favorites }, { merge: true });
@@ -988,7 +1020,7 @@ export default function App() {
               {view === 'home' && <HomeView theme={theme} setView={setView} setSelectedItem={setSelectedItem} itineraries={itineraries} dining={dining} featuredPosts={featuredPosts} favorites={favorites} toggleFavorite={toggleFavorite} />}
               {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} posts={posts} />}
               {view === 'flavors' && <FlavorsView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} dining={dining} />}
-              {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} dining={dining} setActiveTool={setActiveTool} />}
+              {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} dining={dining} setActiveTool={setActiveTool} user={user} handleLogin={handleLogin} handleLogout={handleLogout} />}
               {view === 'fun' && (
                 <div className="space-y-12 animate-fade w-full">
                    <div className="text-center px-4">
