@@ -833,6 +833,9 @@ export default function App() {
   const [posts, setPosts] = useState(journalData);
   const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
   
+  const [activeExpCat, setActiveExpCat] = useState('All');
+  const [activeMonth, setActiveMonth] = useState('All Months');
+  const [visibleCount, setVisibleCount] = useState(6);
   const theme = THEMES[themeKey] || THEMES.dark;
 
   // --- Auth Handlers ---
@@ -856,6 +859,7 @@ export default function App() {
         const sf = localStorage.getItem('a2v_favorites'); setFavorites(sf ? JSON.parse(sf) : []);
         const ss = localStorage.getItem('a2v_stats'); setStats(ss ? JSON.parse(ss) : { water: 0, drinks: 0 });
         const st = localStorage.getItem('a2v_vibetags'); setVibeTags(st ? JSON.parse(st) : []);
+        const sb = localStorage.getItem('a2v_bucketlist'); setBucketList(sb ? JSON.parse(sb) : DEFAULT_BUCKET_ITEMS);
       }
     });
     return () => unsubscribe();
@@ -874,6 +878,19 @@ export default function App() {
     if (isAlreadyFavorited) { setFavorites(favorites.filter(f => !(f.id === item.id && f.type === item.type))); } 
     else { setFavorites([...favorites, { ...item, savedAt: Date.now() }]); }
   };
+
+  const shuffledExp = useMemo(() => {
+    let list = itineraries || [];
+    if (activeMonth !== 'All Months') list = list.filter(i => i.month === activeMonth);
+    if (activeExpCat !== 'All') {
+      list = list.filter(i => {
+        let itemCats = Array.isArray(i.category) ? i.category : (Array.isArray(i.categories) ? i.categories : (typeof i.category === 'string' ? i.category.split(',').map(c => c.trim()) : []));
+        const filterVal = activeExpCat.toLowerCase();
+        return itemCats.some(c => c.toLowerCase().includes(filterVal)) || (filterVal === 'museums' && (i.name?.toLowerCase().includes('museum') || i.shortDesc?.toLowerCase().includes('museum')));
+      });
+    }
+    return list;
+  }, [itineraries, activeExpCat, activeMonth]);
 
   return (
     <div className={`min-h-screen ${theme.windowBg} font-sans transition-colors duration-500 flex flex-col items-center overflow-x-hidden`}>
@@ -942,10 +959,38 @@ export default function App() {
                      );
                    })()}
 
+                   {/* --- MISSING TOOL GRID RESTORED HERE --- */}
+                   <section className="space-y-5 px-1 w-full">
+                     <div className="flex items-center gap-2"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
+                     <div className="grid grid-cols-2 gap-3">
+                       {[
+                         {id:'community',icon:MessageSquare,label:'Local Gems',color:'#38bdf8'},
+                         {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
+                         {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'},
+                         {id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},
+                         {id:'randomizer',icon:Dice5,label:'Weekend Pitcher',color:'#f97316'},
+                         {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'}
+                       ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
+                     </div>
+                   </section>
+
+                   <div className="text-center px-4">
+                     <div className="flex overflow-x-auto gap-3 mt-6 mb-2 no-scrollbar px-1">
+                        {MONTHS_EXP.map((m) => (
+                           <button key={m} onClick={() => setActiveMonth(m)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeMonth === m ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{m}</button>
+                        ))}
+                     </div>
+                     <div className="flex overflow-x-auto gap-3 mb-2 no-scrollbar px-1">
+                       {CATEGORIES_EXP.map((cat) => (
+                         <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#38bdf8] border-[#38bdf8] text-black shadow-lg scale-105' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}>{cat}</button>
+                       ))}
+                     </div>
+                   </div>
+                   
                    <div className="space-y-5 px-1 pt-4 w-full">
-                      {itineraries && itineraries.length > 0 ? (
+                      {shuffledExp && shuffledExp.length > 0 ? (
                         <>
-                          {itineraries.slice(0, 6).map(exp => (
+                          {shuffledExp.slice(0, activeExpCat === 'All' && activeMonth === 'All Months' ? visibleCount : shuffledExp.length).map(exp => (
                             <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
                                 {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
                                 <div className="flex-1 p-5 flex flex-col justify-between text-left">
@@ -965,8 +1010,11 @@ export default function App() {
                                 </div>
                             </div>
                           ))}
+                          {activeExpCat === 'All' && activeMonth === 'All Months' && visibleCount < (shuffledExp.length || 0) && (
+                            <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
+                          )}
                         </>
-                      ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found.</div>}
+                      ) : <div className="py-20 text-center opacity-30 text-sm italic">No events found for this filter combination.</div>}
                    </div>
                 </div>
               )}
