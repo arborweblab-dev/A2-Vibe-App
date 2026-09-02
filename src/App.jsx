@@ -1130,10 +1130,20 @@ const HubView = ({
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
 
-  const eatsFavs = userFavorites.filter(f => f.type === 'dining' || f.cuisine);
-  const happeningsFavs = userFavorites.filter(f => f.type === 'experience' || (f.name && !f.cuisine && f.type !== 'park'));
-  const journalFavs = userFavorites.filter(f => f.type === 'journal' || f.excerpt || (f.title && !f.cuisine && f.type !== 'park'));
-  const parksFavs = userFavorites.filter(f => f.type === 'park' || f.category?.toLowerCase().includes('preserve') || f.category?.toLowerCase().includes('arb'));
+  const eatsFavs = userFavorites.filter(f => f.type === 'dining' || Boolean(f.cuisine));
+  const parksFavs = userFavorites.filter(f => {
+    if (f.type === 'park') return true;
+    const catStr = Array.isArray(f.category)
+      ? f.category.join(' ')
+      : (typeof f.category === 'string' ? f.category : '');
+    return catStr.toLowerCase().includes('preserve') || catStr.toLowerCase().includes('arb');
+  });
+  const happeningsFavs = userFavorites.filter(f => 
+    (f.type === 'experience' || (f.name && !f.cuisine)) && f.type !== 'park'
+  );
+  const journalFavs = userFavorites.filter(f => 
+    (f.type === 'journal' || f.excerpt || (f.title && !f.cuisine && !f.name)) && f.type !== 'park'
+  );
 
   // Community Forum State
   const [selectedForumChannel, setSelectedForumChannel] = useState('All');
@@ -1251,7 +1261,9 @@ const HubView = ({
                     {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Trees size={20} className="text-emerald-500 opacity-60"/></div>}
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm font-bold leading-tight truncate ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-emerald-600 dark:text-emerald-400 mt-1 tracking-widest truncate">{fav.category || 'Nature Preserve'}</p>
+                      <p className="text-[9px] font-black uppercase text-emerald-600 dark:text-emerald-400 mt-1 tracking-widest truncate">
+                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'Nature Preserve')}
+                      </p>
                     </div>
                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
                   </div>
@@ -1305,7 +1317,9 @@ const HubView = ({
                     {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={20} className="opacity-40"/></div>}
                     <div className="flex-1">
                       <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest">{fav.category || 'A2 Event'}</p>
+                      <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest">
+                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'A2 Event')}
+                      </p>
                     </div>
                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
                   </div>
@@ -1332,7 +1346,9 @@ const HubView = ({
                     {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={20} className="opacity-40"/></div>}
                     <div className="flex-1">
                       <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest">{fav.category || 'City Journal'}</p>
+                      <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest">
+                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'City Journal')}
+                      </p>
                     </div>
                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
                   </div>
@@ -1710,7 +1726,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
                   <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{res.title}</h3>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
                     <span className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md inline-block whitespace-nowrap">{res.cuisine || 'Eats'}</span>
-                    {res.neighborhood && <span className="text-[10px] font-bold text-[#0284c7] dark:text-[#34a4b8] uppercase tracking-wider truncate">{res.neighborhood}</span>}
+                    {res.neighborhood && <span className="text-[10px] font-bold text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-wider truncate">{res.neighborhood}</span>}
                   </div>
                   <p className={`text-xs mt-1 line-clamp-1 ${theme.secondaryText}`}>{res.shortDesc}</p>
                 </div>
