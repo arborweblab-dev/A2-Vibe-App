@@ -1589,7 +1589,7 @@ export default function App() {
         .wp-content strong { color: #ffcb05; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
-        .bg-dark .wp-content, p { color: #f1f5f9 !important; }
+        .bg-\\[\\#0a121e\\] .wp-content, .bg-\\[\\#0a121e\\] .wp-content p { color: #f1f5f9 !important; }
       `}} />
     </div>
   );
