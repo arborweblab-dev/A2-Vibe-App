@@ -13,13 +13,83 @@ import {
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
   Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
-  PenTool, ShieldCheck, MessageCircle, Send
+  PenTool, ShieldCheck, MessageCircle, Send, Trees
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
+
+// --- CURATED PARKS & NATURE PRESERVES DATA ---
+const PARKS_DATA = [
+  {
+    id: 'park-arb',
+    name: 'Nichols Arboretum',
+    title: 'Nichols Arboretum',
+    type: 'park',
+    category: 'Nature & Arb',
+    address: '1610 Washington Hts, Ann Arbor, MI',
+    img: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
+    shortDesc: 'Iconic 123-acre river valley featuring the Peony Garden, river trails, and historic tree collections.',
+    longDesc: '<p>Beloved by locals as "The Arb," this historic reserve along the Huron River offers miles of gravel pathways, panoramic hillside vistas, glacial topography, and the world-renowned Nichols Arboretum Peony Garden.</p>'
+  },
+  {
+    id: 'park-gallup',
+    name: 'Gallup Park & Canoe Livery',
+    title: 'Gallup Park & Canoe Livery',
+    type: 'park',
+    category: 'Riverfront & Trails',
+    address: '3000 Fuller Rd, Ann Arbor, MI',
+    img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+    shortDesc: 'Scenic 69-acre park winding along the Huron River with pedestrian bridges, boat launches, and trails.',
+    longDesc: '<p>Gallup Park is Ann Arbor’s premier riverfront escape. Features 3 miles of paved trails traversing small islands, wooden footbridges, picnic pavilions, wildlife viewing spots, and seasonal kayak and canoe rentals.</p>'
+  },
+  {
+    id: 'park-bird-hills',
+    name: 'Bird Hills Nature Area',
+    title: 'Bird Hills Nature Area',
+    type: 'park',
+    category: 'Woodland Preserve',
+    address: 'Newport Rd & Bird Rd, Ann Arbor, MI',
+    img: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80',
+    shortDesc: 'Ann Arbor’s largest city nature park with 146 acres of quiet dirt trails under dense hardwood canopy.',
+    longDesc: '<p>A sanctuary for trail runners and bird watchers, Bird Hills is an untouched forested refuge featuring rugged terrain, deep ravines, and native oak and maple groves without bikes or motorized access.</p>'
+  },
+  {
+    id: 'park-matthaei',
+    name: 'Matthaei Botanical Gardens',
+    title: 'Matthaei Botanical Gardens',
+    type: 'park',
+    category: 'Botanic Garden',
+    address: '1800 N Dixboro Rd, Ann Arbor, MI',
+    img: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80',
+    shortDesc: 'Sprawling conservatories, display gardens, wetlands, and peaceful nature loops on Dixboro Road.',
+    longDesc: '<p>Features a 10,000+ square foot tropical and desert conservatory surrounded by outdoor display beds, bonsai gardens, boardwalk trails over Fleming Creek, and sweeping wildflower habitats.</p>'
+  },
+  {
+    id: 'park-barton',
+    name: 'Barton Nature Area',
+    title: 'Barton Nature Area',
+    type: 'park',
+    category: 'Wetland & River',
+    address: 'Huron River Dr, Ann Arbor, MI',
+    img: 'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=800&q=80',
+    shortDesc: 'Quiet 102-acre natural area bordered by Barton Pond and the Huron River with boardwalk passages.',
+    longDesc: '<p>Located just northwest of downtown, Barton Nature Area features scenic river overlooks, rich marshlands, and walking connections through foot bridges to Huron River Drive and Foster Bridge.</p>'
+  },
+  {
+    id: 'park-bandemer',
+    name: 'Bandemer Park',
+    title: 'Bandemer Park',
+    type: 'park',
+    category: 'Waterfront & Disc Golf',
+    address: '1352 Lakeshore Dr, Ann Arbor, MI',
+    img: 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=800&q=80',
+    shortDesc: 'Waterfront park featuring boardwalks along Argo Pond, a 9-hole disc golf course, and dirt bike jumps.',
+    longDesc: '<p>Bordering the west side of Argo Pond, Bandemer offers docks for crew shells and canoes, a shaded disc golf run, accessibility to the B2B Trail, and panoramic views of the water.</p>'
+  }
+];
 
 // --- STRIPE PAYMENT LINKS CONFIGURATION ---
 const STRIPE_LINKS = {
@@ -83,13 +153,75 @@ const handleShare = async (item, e) => {
   }
 };
 
-const Watermark = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.02] flex items-center justify-center">
-    <Building size={500} strokeWidth={0.5} className="rotate-12" />
-  </div>
-);
+// --- PARKS & NATURE PRESERVES MODAL ---
+const ParksDirectoryModal = ({ isOpen, onClose, theme, setSelectedItem, toggleFavorite, favorites }) => {
+  if (!isOpen) return null;
 
-// --- Components ---
+  return (
+    <div className="fixed inset-0 z-[105] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
+              <Trees size={20} />
+            </div>
+            <div>
+              <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">Green Spaces</span>
+              <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Parks & Preserves</h3>
+            </div>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-4">
+          <p className={`text-xs ${theme.secondaryText} leading-relaxed`}>
+            Escape into Tree Town’s pristine river valleys, nature preserves, and wooded canopies. Save spots directly to your Vibe profile.
+          </p>
+
+          <div className="grid grid-cols-1 gap-4 pt-1">
+            {PARKS_DATA.map((park) => {
+              const isFavorited = (favorites || []).some(f => f.id === park.id && f.type === 'park');
+              return (
+                <div 
+                  key={park.id}
+                  onClick={() => { onClose(); setSelectedItem(park); }}
+                  className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/40 active:scale-[0.99] transition-all`}
+                >
+                  <img src={park.img} alt={park.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
+                  <div className="flex-1 min-w-0 pr-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md truncate">
+                        {park.category}
+                      </span>
+                    </div>
+                    <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>{park.name}</h4>
+                    <p className={`text-xs mt-1 line-clamp-1 ${theme.secondaryText}`}>{park.shortDesc}</p>
+                    <div className={`flex items-center gap-1.5 text-[10px] mt-1.5 ${theme.secondaryText} truncate`}>
+                      <MapPin size={11} className="flex-shrink-0 text-[#b45309] dark:text-[#ffcb05]" />
+                      <span className="truncate">{park.address}</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); toggleFavorite(park); }}
+                    className={`p-2.5 rounded-full flex-shrink-0 backdrop-blur-md transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/20 text-slate-400' : 'bg-black/5 text-slate-600')}`}
+                    title="Add to My Vibe"
+                  >
+                    <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- PARTNER LISTING MODAL ---
 const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = 'restaurant' }) => {
   const [listingCategory, setListingCategory] = useState(initialCategory);
   const [bizType, setBizType] = useState('free');
@@ -163,7 +295,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
         </div>
 
         <div className="p-6 space-y-6">
-          {/* CATEGORY SELECTOR */}
           <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'} text-center`}>
             <button
               onClick={() => { setListingCategory('restaurant'); setSubmitted(false); }}
@@ -181,7 +312,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
             </button>
           </div>
 
-          {/* TIER TABS */}
           <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} text-center`}>
             <button
               onClick={() => setBizType('free')}
@@ -306,7 +436,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
             </div>
           ) : (
             <div className="space-y-6">
-              {/* BOOSTED OVERVIEW */}
               <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/30 text-white space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
@@ -334,7 +463,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                 </ul>
               </div>
 
-              {/* DISCOUNTED FEATURED PICK UPGRADE FOR RESTAURANTS */}
               {listingCategory === 'restaurant' && (
                 <div className="p-4 rounded-2xl bg-gradient-to-r from-[#f97316]/20 via-[#f97316]/10 to-transparent border border-[#f97316]/30 flex items-center justify-between gap-3">
                   <div>
@@ -357,7 +485,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                 </div>
               )}
 
-              {/* ANNUAL & MONTHLY OPTIONS */}
               <div className="space-y-3">
                 <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
                   <div>
@@ -394,7 +521,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                 </div>
               </div>
 
-              {/* STANDALONE ADD-ONS */}
               <div className="space-y-3 pt-2">
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Standalone Promos</p>
                 <div className="grid grid-cols-1 gap-2.5">
@@ -596,12 +722,13 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
   );
 };
 
+// --- SPOTLIGHT DETAIL MODAL ---
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
   
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade text-left font-sans">
+    <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
       <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
         <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
@@ -684,6 +811,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   );
 };
 
+// --- FULLSCREEN TOOLS ---
 const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, bucketList, setBucketList, user }) => {
   const [bill, setBill] = useState('');
   const [tipPerc, setTipPerc] = useState(20);
@@ -693,12 +821,10 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [newBucketText, setNewBucketText] = useState('');
 
-  // Community Data States
   const [communityGems, setCommunityGems] = useState([]);
   const [newGemTitle, setNewGemTitle] = useState('');
   const [newGemDesc, setNewGemDesc] = useState('');
 
-  // Leaderboard State
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
@@ -994,18 +1120,20 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   );
 };
 
+// --- MY VIBE (HUB VIEW) ---
 const HubView = ({ 
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
-  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal 
+  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal 
 }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
 
   const eatsFavs = userFavorites.filter(f => f.type === 'dining' || f.cuisine);
-  const happeningsFavs = userFavorites.filter(f => f.type === 'experience' || (f.name && !f.cuisine));
-  const journalFavs = userFavorites.filter(f => f.type === 'journal' || f.excerpt || (f.title && !f.cuisine));
+  const happeningsFavs = userFavorites.filter(f => f.type === 'experience' || (f.name && !f.cuisine && f.type !== 'park'));
+  const journalFavs = userFavorites.filter(f => f.type === 'journal' || f.excerpt || (f.title && !f.cuisine && f.type !== 'park'));
+  const parksFavs = userFavorites.filter(f => f.type === 'park' || f.category?.toLowerCase().includes('preserve') || f.category?.toLowerCase().includes('arb'));
 
   // Community Forum State
   const [selectedForumChannel, setSelectedForumChannel] = useState('All');
@@ -1105,6 +1233,34 @@ const HubView = ({
 
         {/* SAVED FAVORITES SECTIONS */}
         <div className="space-y-8">
+          {/* GREEN SPACES & PARKS FAVORITES */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-2">
+                <Trees size={16} className="text-emerald-500" />
+                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Green Spaces & Parks ({parksFavs.length})</h4>
+              </div>
+              <button onClick={onOpenParksModal} className="text-[9px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] hover:underline">Explore Parks →</button>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              {!parksFavs.length ? (
+                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No nature spots saved yet</div>
+              ) : (
+                parksFavs.map(fav => (
+                  <div key={`park-${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
+                    {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Trees size={20} className="text-emerald-500 opacity-60"/></div>}
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-bold leading-tight truncate ${theme.text}`}>{fav.name || fav.title}</p>
+                      <p className="text-[9px] font-black uppercase text-emerald-600 dark:text-emerald-400 mt-1 tracking-widest truncate">{fav.category || 'Nature Preserve'}</p>
+                    </div>
+                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* EATS FAVORITES */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -1131,6 +1287,7 @@ const HubView = ({
             </div>
           </div>
 
+          {/* HAPPENINGS FAVORITES */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -1157,6 +1314,7 @@ const HubView = ({
             </div>
           </div>
 
+          {/* JOURNAL FAVORITES */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -1214,7 +1372,7 @@ const HubView = ({
           </div>
         </section>
 
-        {/* BOTTOM OF MY VIBE SECTION: PROMOTION CTA */}
+        {/* BOTTOM PROMOTION CTA */}
         <div className="pt-2">
           <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
             <div className="space-y-1 text-left">
@@ -1232,7 +1390,7 @@ const HubView = ({
           </div>
         </div>
 
-        {/* --- EXPANDED A2 VIBE COMMUNITY FORUM & DISCUSSION BOARD --- */}
+        {/* COMMUNITY FORUM */}
         <section className={`space-y-6 w-full pt-8 border-t ${theme.border}`}>
           <div className="px-1 space-y-2">
             <div className="flex items-center justify-between">
@@ -1250,7 +1408,6 @@ const HubView = ({
             </p>
           </div>
 
-          {/* CHANNEL SELECTOR */}
           <div className="flex overflow-x-auto gap-2 no-scrollbar px-1">
             {FORUM_CHANNELS.map(ch => (
               <button
@@ -1263,7 +1420,6 @@ const HubView = ({
             ))}
           </div>
 
-          {/* INLINE FORUM POST BOX */}
           <div className={`${theme.card} p-4 rounded-3xl border ${theme.border} shadow-sm space-y-3`}>
             <div className="flex items-center justify-between">
               <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Post to the Community</span>
@@ -1318,7 +1474,6 @@ const HubView = ({
             </form>
           </div>
 
-          {/* FORUM FEED */}
           <div className="space-y-3 px-1">
             {filteredStories.length > 0 ? (
               filteredStories.map((post) => (
@@ -1348,13 +1503,16 @@ const HubView = ({
             )}
           </div>
         </section>
-
       </div>
     </div>
   );
 };
 
-const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, favorites, toggleFavorite, setView, onOpenPartnerModal }) => {
+// --- INSIDER / HOME VIEW ---
+const HomeView = ({ 
+  theme, setSelectedItem, itineraries, dining, featuredPosts, favorites, 
+  toggleFavorite, setView, onOpenPartnerModal, onOpenParksModal 
+}) => {
   const [heroIdx, setHeroIdx] = useState(0);
   const [highlightIdx, setHighlightIdx] = useState(0);
 
@@ -1408,17 +1566,19 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
         </div>
       </section>
 
+      {/* QUICK LAUNCH GRID WITH PARKS BUTTON INCLUDED */}
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
           <Ticket size={18} className="text-[#0284c7] dark:text-[#34a4b8]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Quick Launch</h2>
         </div>
-        <div className="grid grid-cols-4 gap-4 px-1">
+        <div className="grid grid-cols-5 gap-2.5 px-1">
           {[
-            { label: 'Eats', icon: <Utensils size={22}/>, path: 'flavors' },
-            { label: 'Events', icon: <Zap size={22}/>, path: 'fun' },
-            { label: 'List Biz', icon: <Store size={22}/>, action: () => onOpenPartnerModal('restaurant') },
-            { label: 'Transit', icon: <Navigation size={22}/>, link: 'https://www.theride.org/' }
+            { label: 'Eats', icon: <Utensils size={20}/>, path: 'flavors' },
+            { label: 'Events', icon: <Zap size={20}/>, path: 'fun' },
+            { label: 'Parks', icon: <Trees size={20} className="text-emerald-400"/>, action: onOpenParksModal },
+            { label: 'List Biz', icon: <Store size={20}/>, action: () => onOpenPartnerModal('restaurant') },
+            { label: 'Transit', icon: <Navigation size={20}/>, link: 'https://www.theride.org/' }
           ].map(item => (
             <button 
               key={item.label} 
@@ -1427,9 +1587,9 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
                 else if (item.link) window.open(item.link, '_blank');
                 else if (item.path) setView(item.path);
               }} 
-              className="flex flex-col items-center gap-2 active:scale-95 group"
+              className="flex flex-col items-center gap-1.5 active:scale-95 group"
             >
-              <div className="p-4 rounded-2xl text-white shadow-lg bg-[#00274c] group-hover:scale-105 transition-transform">{item.icon}</div>
+              <div className="p-3.5 rounded-2xl text-white shadow-lg bg-[#00274c] group-hover:scale-105 transition-transform flex items-center justify-center">{item.icon}</div>
               <span className={`text-[10px] font-black uppercase tracking-tighter text-center ${theme.isDark ? 'text-white' : 'text-slate-700'}`}>{item.label}</span>
             </button>
           ))}
@@ -1489,6 +1649,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
   );
 };
 
+// --- FLAVORS VIEW ---
 const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining, onOpenPartnerModal }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -1562,7 +1723,6 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
         )}
       </div>
 
-      {/* BOTTOM OF FLAVORS SECTION CTA (EATERIES ONLY) */}
       <div className="pt-4">
         <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#f97316]/30 flex items-center justify-between shadow-xl">
           <div className="space-y-1 text-left">
@@ -1583,6 +1743,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
   );
 };
 
+// --- JOURNAL VIEW ---
 const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, onOpenPartnerModal, onOpenContributorModal }) => {
   const [activeCat, setActiveCat] = useState('All');
 
@@ -1619,9 +1780,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts,
         })}
       </div>
 
-      {/* --- TWO SIDE-BY-SIDE SQUARE CTAS AT BOTTOM OF JOURNAL --- */}
       <div className="grid grid-cols-2 gap-3.5 px-1 pt-6">
-        {/* CARD 1: LIST EVENT */}
         <div 
           onClick={() => onOpenPartnerModal('general')}
           className="aspect-square rounded-[32px] p-5 flex flex-col justify-between cursor-pointer border border-[#38bdf8]/30 bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] shadow-xl group hover:border-[#38bdf8] active:scale-[0.98] transition-all"
@@ -1639,7 +1798,6 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts,
           </div>
         </div>
 
-        {/* CARD 2: SUBMIT LOCAL STORY / NEWS */}
         <div 
           onClick={onOpenContributorModal}
           className="aspect-square rounded-[32px] p-5 flex flex-col justify-between cursor-pointer border border-[#a855f7]/30 bg-gradient-to-br from-[#00274c] via-[#1a0f30] to-[#0a121e] shadow-xl group hover:border-[#a855f7] active:scale-[0.98] transition-all"
@@ -1670,6 +1828,7 @@ export default function App() {
   const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
   const [partnerModalCategory, setPartnerModalCategory] = useState('restaurant');
   const [isContributorModalOpen, setIsContributorModalOpen] = useState(false);
+  const [isParksModalOpen, setIsParksModalOpen] = useState(false);
   
   const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
   const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
@@ -1693,6 +1852,10 @@ export default function App() {
 
   const openContributorModal = () => {
     setIsContributorModalOpen(true);
+  };
+
+  const openParksModal = () => {
+    setIsParksModalOpen(true);
   };
 
   // --- Auth Handlers ---
@@ -1773,6 +1936,15 @@ export default function App() {
         <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           
+          <ParksDirectoryModal
+            isOpen={isParksModalOpen}
+            onClose={() => setIsParksModalOpen(false)}
+            theme={theme}
+            setSelectedItem={setSelectedItem}
+            toggleFavorite={toggleFavorite}
+            favorites={favorites}
+          />
+
           <PartnerListingModal 
             isOpen={isPartnerModalOpen} 
             onClose={() => setIsPartnerModalOpen(false)} 
@@ -1804,6 +1976,7 @@ export default function App() {
                   favorites={favorites} 
                   toggleFavorite={toggleFavorite} 
                   onOpenPartnerModal={openPartnerModal}
+                  onOpenParksModal={openParksModal}
                 />
               )}
               {view === 'journal' && (
@@ -1813,7 +1986,7 @@ export default function App() {
                   toggleFavorite={toggleFavorite} 
                   favorites={favorites} 
                   posts={posts} 
-                  onOpenPartnerModal={openPartnerModal}
+                  onOpenPartnerModal={openPartnerModal} 
                   onOpenContributorModal={openContributorModal}
                 />
               )}
@@ -1845,6 +2018,7 @@ export default function App() {
                   setVibeTags={setVibeTags} 
                   onOpenPartnerModal={openPartnerModal}
                   onOpenContributorModal={openContributorModal}
+                  onOpenParksModal={openParksModal}
                 />
               )}
               
@@ -1897,7 +2071,6 @@ export default function App() {
                      </div>
                    </div>
                    
-                   {/* HAPPENINGS LIST WITH DATE, TIME & SHARE */}
                    <div className="space-y-4 px-1 pt-4 w-full">
                       {shuffledExp && shuffledExp.length > 0 ? (
                         <>
@@ -1922,7 +2095,6 @@ export default function App() {
                                        </div>
                                      </div>
 
-                                     {/* EVENT DATE & TIME BADGE */}
                                      {exp.date && (
                                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">
                                          <Calendar size={13} />
@@ -1959,7 +2131,6 @@ export default function App() {
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                           )}
 
-                          {/* BOTTOM OF HAPPENINGS SECTION CTA (HAPPENINGS & EVENTS ONLY) */}
                           <div className="pt-6">
                             <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
                               <div className="space-y-1 text-left">
