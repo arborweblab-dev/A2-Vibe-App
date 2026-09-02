@@ -88,6 +88,24 @@ const Watermark = () => (
   </div>
 );
 
+// --- REUSABLE PARTNER CALLOUT BANNER ---
+const BusinessPartnerCTA = ({ onOpenPartnerModal, theme, className = "" }) => (
+  <div className={`mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl ${className}`}>
+    <div className="space-y-1 text-left">
+      <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest block">Restaurants, Bars & Shops</span>
+      <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Eatery Or Business</h4>
+      <p className="text-[11px] text-slate-300">Free counter/door QR badge or boosted showcase with $50 featured pick.</p>
+    </div>
+    <button
+      onClick={onOpenPartnerModal}
+      className="p-3.5 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
+      title="List your restaurant or business"
+    >
+      <Utensils size={18} />
+    </button>
+  </div>
+);
+
 // --- Components ---
 const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
   const [listingCategory, setListingCategory] = useState('restaurant'); // 'restaurant' or 'general'
@@ -886,20 +904,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
         </div>
 
         {/* RESTAURANT / BUSINESS PARTNER CALLOUT */}
-        <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
-          <div className="space-y-1">
-            <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest">Restaurants, Bars & Shops</span>
-            <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Eatery Or Business</h4>
-            <p className="text-[11px] text-slate-300">Free counter/door QR badge or boosted showcase with $50 featured pick.</p>
-          </div>
-          <button
-            onClick={onOpenPartnerModal}
-            className="p-3 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0"
-            title="List your restaurant or business"
-          >
-            <Utensils size={18} />
-          </button>
-        </div>
+        <BusinessPartnerCTA onOpenPartnerModal={onOpenPartnerModal} theme={theme} />
 
         {/* SAVED FAVORITES SECTIONS */}
         <div className="space-y-8">
@@ -1011,6 +1016,11 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
             ))}
           </div>
         </section>
+
+        {/* BOTTOM OF MY VIBE SECTION CTA */}
+        <div className="pt-2">
+          <BusinessPartnerCTA onOpenPartnerModal={onOpenPartnerModal} theme={theme} />
+        </div>
 
       </div>
     </div>
@@ -1175,7 +1185,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
         
-        {/* RESTAURANT LISTING CALLOUT BANNER */}
+        {/* RESTAURANT LISTING CALLOUT BANNER (TOP) */}
         <div className="max-w-md mx-auto p-4 rounded-2xl bg-gradient-to-r from-[#f97316]/20 via-[#f97316]/10 to-transparent border border-[#f97316]/30 flex items-center justify-between gap-3 text-left">
           <div className="space-y-0.5">
             <p className={`text-xs font-black uppercase ${theme.text}`}>Own or manage a local eatery?</p>
@@ -1238,6 +1248,11 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
         ) : (
           <div className={`py-20 text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.secondaryText}`}>No restaurants found matching your search.</div>
         )}
+      </div>
+
+      {/* BOTTOM OF FLAVORS SECTION CTA */}
+      <div className="pt-4">
+        <BusinessPartnerCTA onOpenPartnerModal={onOpenPartnerModal} theme={theme} />
       </div>
     </div>
   );
@@ -1554,8 +1569,20 @@ export default function App() {
                           {activeExpCat === 'All' && activeMonth === 'All Months' && visibleCount < (shuffledExp.length || 0) && (
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                           )}
+
+                          {/* BOTTOM OF HAPPENINGS SECTION CTA (AFTER LOAD MORE BUTTON) */}
+                          <div className="pt-6">
+                            <BusinessPartnerCTA onOpenPartnerModal={() => setIsPartnerModalOpen(true)} theme={theme} />
+                          </div>
                         </>
-                      ) : <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>}
+                      ) : (
+                        <>
+                          <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
+                          <div className="pt-4">
+                            <BusinessPartnerCTA onOpenPartnerModal={() => setIsPartnerModalOpen(true)} theme={theme} />
+                          </div>
+                        </>
+                      )}
                    </div>
                 </div>
               )}
