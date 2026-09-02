@@ -1,6 +1,10 @@
 // src/App.jsx
 import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { 
+  getFirestore, doc, setDoc, getDoc, collection, 
+  addDoc, updateDoc, arrayUnion, arrayRemove, 
+  onSnapshot, query, orderBy, limit 
+} from 'firebase/firestore';
 import { app } from './firebase'; // Adjust path if needed
 
 const auth = getAuth(app);
@@ -13,7 +17,7 @@ import {
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
   Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
-  PenTool, ShieldCheck, MessageCircle, Send, Trees
+  PenTool, ShieldCheck, MessageCircle, Send, Trees, Route, ThumbsUp, CheckSquare, Square, Copy
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -151,6 +155,208 @@ const handleShare = async (item, e) => {
       console.error("Failed to copy link", err);
     }
   }
+};
+
+// --- SHAREABLE ITINERARY BUILDER MODAL ---
+const CreateItineraryModal = ({ isOpen, onClose, favorites, user, theme }) => {
+  const [title, setTitle] = useState('');
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [shareToForum, setShareToForum] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [createdShareUrl, setCreatedShareUrl] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedIds(favorites.map(f => f.id));
+      setTitle(`${user?.displayName?.split(' ')[0] || 'My'} A2 Day Plan`);
+      setCreatedShareUrl('');
+    }
+  }, [isOpen, favorites, user]);
+
+  if (!isOpen) return null;
+
+  const toggleSelect = (id) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    if (!selectedIds.length) return alert('Select at least one spot to include in your itinerary.');
+    setIsSaving(true);
+
+    const chosenItems = favorites.filter(f => selectedIds.includes(f.id));
+    const itineraryData = {
+      title: title.trim(),
+      items: chosenItems,
+      author: user?.displayName || 'A2 Explorer',
+      userId: user?.uid || null,
+      votes: 0,
+      voters: [],
+      timestamp: Date.now()
+    };
+
+    try {
+      const docRef = await addDoc(collection(db, 'shared_itineraries'), itineraryData);
+      const generatedUrl = `${window.location.origin}/?itinerary=${docRef.id}`;
+      setCreatedShareUrl(generatedUrl);
+
+      if (shareToForum) {
+        await addDoc(collection(db, 'community_stories'), {
+          title: `🗺️ Itinerary: ${title.trim()}`,
+          channel: 'Events & Meetups',
+          content: `Stops: ${chosenItems.map(i => i.name || i.title).join(' ➔ ')}`,
+          author: user?.displayName || 'A2 Explorer',
+          userId: user?.uid || null,
+          likes: 0,
+          voters: [],
+          itineraryId: docRef.id,
+          timestamp: Date.now()
+        });
+      }
+    } catch (err) {
+      console.error('Error saving itinerary:', err);
+      alert('Could not create itinerary. Please check your connection.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const copyOrShareLink = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${title} on A2 Vibe`,
+          text: `Check out this custom Ann Arbor itinerary on A2 Vibe!`,
+          url: createdShareUrl
+        });
+      } catch (err) {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(createdShareUrl);
+        alert('Itinerary link copied to clipboard!');
+      } catch (err) {
+        console.error('Copy failed:', err);
+      }
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-[#ffcb05]/10 text-[#ffcb05]">
+              <Route size={20} />
+            </div>
+            <div>
+              <span className="text-[10px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] block">Custom Route</span>
+              <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Shareable Itinerary</h3>
+            </div>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          {createdShareUrl ? (
+            <div className="text-center py-6 space-y-4 animate-fade">
+              <div className="w-16 h-16 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 size={36} />
+              </div>
+              <h4 className={`text-lg font-black uppercase ${theme.text}`}>Itinerary Created!</h4>
+              <p className={`text-xs ${theme.secondaryText} leading-relaxed max-w-sm mx-auto`}>
+                Your custom itinerary is ready to share. Friends can open it directly, and community members can view and vote on it in the forum.
+              </p>
+              
+              <div className={`p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/30' : 'bg-slate-100'} border ${theme.border} flex items-center justify-between gap-2`}>
+                <span className={`text-[11px] font-bold truncate ${theme.text}`}>{createdShareUrl}</span>
+                <button onClick={copyOrShareLink} className="p-2 bg-[#ffcb05] text-black rounded-xl font-bold flex-shrink-0" title="Copy or Share link">
+                  <Copy size={16} />
+                </button>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button onClick={copyOrShareLink} className="flex-1 py-3.5 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2">
+                  <Share2 size={16} />
+                  <span>Share Link</span>
+                </button>
+                <button onClick={onClose} className={`px-6 py-3.5 ${theme.isDark ? 'bg-white/10 text-white' : 'bg-slate-200 text-slate-800'} rounded-2xl font-black uppercase text-xs active:scale-95 transition-all`}>
+                  Done
+                </button>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSave} className="space-y-4">
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Itinerary Title</label>
+                <input
+                  type="text"
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Saturday Coffee, Arb Hike & Craft Beer"
+                  className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Select Favorites to Include ({selectedIds.length})</label>
+                  <button type="button" onClick={() => setSelectedIds(favorites.map(f => f.id))} className="text-[10px] font-black uppercase text-[#ffcb05] hover:underline">Select All</button>
+                </div>
+                
+                <div className="max-h-60 overflow-y-auto space-y-2 pr-1 no-scrollbar">
+                  {favorites.map((fav) => {
+                    const isChecked = selectedIds.includes(fav.id);
+                    return (
+                      <div
+                        key={fav.id}
+                        onClick={() => toggleSelect(fav.id)}
+                        className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${isChecked ? 'border-[#ffcb05] bg-[#ffcb05]/10' : `${theme.border} opacity-70`}`}
+                      >
+                        <div className="flex items-center gap-3 truncate">
+                          {isChecked ? <CheckSquare size={18} className="text-[#ffcb05] flex-shrink-0" /> : <Square size={18} className="text-slate-500 flex-shrink-0" />}
+                          <span className={`text-xs font-bold truncate ${theme.text}`}>{fav.name || fav.title}</span>
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-[#0284c7] dark:text-[#38bdf8] flex-shrink-0">
+                          {fav.cuisine || (Array.isArray(fav.category) ? fav.category[0] : fav.category) || 'Spot'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <label className={`flex items-center gap-3 p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} border cursor-pointer`}>
+                <input
+                  type="checkbox"
+                  checked={shareToForum}
+                  onChange={(e) => setShareToForum(e.target.checked)}
+                  className="mt-0.5 rounded accent-[#ffcb05]"
+                />
+                <span className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-700'} leading-snug`}>
+                  Post this itinerary to the <strong>A2 Community Forum</strong> for voting and recommendations.
+                </span>
+              </label>
+
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Route size={16} />
+                <span>{isSaving ? 'Building Itinerary...' : 'Build & Generate Itinerary'}</span>
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 // --- PARKS & NATURE PRESERVES MODAL ---
@@ -591,6 +797,7 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
         contact: authorContact.trim() || 'Unlisted',
         userId: user?.uid || null,
         likes: 0,
+        voters: [],
         timestamp: Date.now()
       });
       setSubmitted(true);
@@ -807,7 +1014,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           </div>
         </div>
       </div>
-  </div>
+    </div>
   );
 };
 
@@ -1124,7 +1331,8 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
 const HubView = ({ 
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
-  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal 
+  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
+  onOpenItineraryModal
 }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
@@ -1173,6 +1381,7 @@ const HubView = ({
         author: user?.displayName || 'A2 Neighbor',
         userId: user?.uid || null,
         likes: 0,
+        voters: [],
         timestamp: Date.now()
       });
       setForumPostTitle('');
@@ -1182,6 +1391,29 @@ const HubView = ({
       alert('Could not publish. Please check your connection.');
     } finally {
       setIsPostingForum(false);
+    }
+  };
+
+  const handleVotePost = async (post, e) => {
+    if (e) e.stopPropagation();
+    if (!user) return alert('Please sign in to vote on community posts!');
+    const postRef = doc(db, 'community_stories', post.id);
+    const hasVoted = (post.voters || []).includes(user.uid);
+
+    try {
+      if (hasVoted) {
+        await updateDoc(postRef, {
+          likes: Math.max(0, (post.likes || 1) - 1),
+          voters: arrayRemove(user.uid)
+        });
+      } else {
+        await updateDoc(postRef, {
+          likes: (post.likes || 0) + 1,
+          voters: arrayUnion(user.uid)
+        });
+      }
+    } catch (err) {
+      console.error('Error toggling vote:', err);
     }
   };
 
@@ -1243,6 +1475,28 @@ const HubView = ({
 
         {/* SAVED FAVORITES SECTIONS */}
         <div className="space-y-8">
+          {/* ITINERARY LAUNCH BANNER */}
+          {userFavorites.length > 0 && (
+            <div className={`p-4 rounded-3xl border border-[#ffcb05]/30 bg-gradient-to-r from-[#ffcb05]/15 via-transparent to-transparent flex items-center justify-between gap-4 shadow-md`}>
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-2xl bg-[#ffcb05] text-black shadow-md flex-shrink-0">
+                  <Route size={20} />
+                </div>
+                <div>
+                  <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>Create Shareable Itinerary</h4>
+                  <p className={`text-[10px] ${theme.secondaryText}`}>Bundle your {userFavorites.length} saved spots into a custom route and share with friends.</p>
+                </div>
+              </div>
+              <button
+                onClick={onOpenItineraryModal}
+                className="px-4 py-2.5 bg-[#ffcb05] text-black rounded-xl text-xs font-black uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0"
+              >
+                <span>Build Route</span>
+                <ArrowRight size={14} />
+              </button>
+            </div>
+          )}
+
           {/* GREEN SPACES & PARKS FAVORITES */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
@@ -1406,7 +1660,7 @@ const HubView = ({
           </div>
         </div>
 
-        {/* COMMUNITY FORUM */}
+        {/* COMMUNITY FORUM WITH VOTING */}
         <section className={`space-y-6 w-full pt-8 border-t ${theme.border}`}>
           <div className="px-1 space-y-2">
             <div className="flex items-center justify-between">
@@ -1420,7 +1674,7 @@ const HubView = ({
               </div>
             </div>
             <p className={`text-xs ${theme.secondaryText} leading-relaxed`}>
-              A closed, community-powered bulletin board for Tree Town. Share upcoming projects, local news, townie meetups, announcements, and independent questions without tracking algorithms or corporate ads.
+              A closed, community-powered bulletin board for Tree Town. Share upcoming projects, local itineraries, townie meetups, and independent questions without tracking algorithms or corporate ads.
             </p>
           </div>
 
@@ -1492,26 +1746,42 @@ const HubView = ({
 
           <div className="space-y-3 px-1">
             {filteredStories.length > 0 ? (
-              filteredStories.map((post) => (
-                <div key={post.id} className={`${theme.card} p-4 rounded-3xl border ${theme.border} space-y-2 shadow-sm`}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 px-2.5 py-0.5 rounded-md">
-                      {post.channel || 'Community Chat'}
-                    </span>
-                    <span className={`text-[10px] font-medium ${theme.secondaryText}`}>
-                      {post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Recent'}
-                    </span>
+              filteredStories.map((post) => {
+                const userVoted = (post.voters || []).includes(user?.uid);
+                return (
+                  <div key={post.id} className={`${theme.card} p-4 rounded-3xl border ${theme.border} space-y-2 shadow-sm`}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 px-2.5 py-0.5 rounded-md">
+                        {post.channel || 'Community Chat'}
+                      </span>
+                      <span className={`text-[10px] font-medium ${theme.secondaryText}`}>
+                        {post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Recent'}
+                      </span>
+                    </div>
+                    <h4 className={`font-bold text-sm uppercase tracking-tight ${theme.text}`}>{post.title}</h4>
+                    <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{post.content}</p>
+                    
+                    <div className="flex items-center justify-between pt-2.5 border-t border-white/5 text-[10px]">
+                      <div className="flex items-center gap-2">
+                        <span className={`font-bold ${theme.secondaryText}`}>Spotted by {post.author}</span>
+                        {post.contact && post.contact !== 'Unlisted' && (
+                          <span className="text-[#38bdf8] font-bold truncate max-w-[140px]">{post.contact}</span>
+                        )}
+                      </div>
+
+                      {/* COMMUNITY FORUM VOTING BUTTON */}
+                      <button
+                        onClick={(e) => handleVotePost(post, e)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all active:scale-90 ${userVoted ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}
+                        title={user ? (userVoted ? 'Remove Vote' : 'Upvote post') : 'Sign in to vote'}
+                      >
+                        <ThumbsUp size={12} className={userVoted ? 'fill-black' : ''} />
+                        <span>{post.likes || 0}</span>
+                      </button>
+                    </div>
                   </div>
-                  <h4 className={`font-bold text-sm uppercase tracking-tight ${theme.text}`}>{post.title}</h4>
-                  <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{post.content}</p>
-                  <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[10px]">
-                    <span className={`font-bold ${theme.secondaryText}`}>Spotted by {post.author}</span>
-                    {post.contact && post.contact !== 'Unlisted' && (
-                      <span className="text-[#38bdf8] font-bold truncate max-w-[180px]">{post.contact}</span>
-                    )}
-                  </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
                 No community discussions in this channel yet. Be the first to share!
@@ -1845,6 +2115,7 @@ export default function App() {
   const [partnerModalCategory, setPartnerModalCategory] = useState('restaurant');
   const [isContributorModalOpen, setIsContributorModalOpen] = useState(false);
   const [isParksModalOpen, setIsParksModalOpen] = useState(false);
+  const [isItineraryModalOpen, setIsItineraryModalOpen] = useState(false);
   
   const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
   const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
@@ -1872,6 +2143,11 @@ export default function App() {
 
   const openParksModal = () => {
     setIsParksModalOpen(true);
+  };
+
+  const openItineraryModal = () => {
+    if (!favorites.length) return alert('Add items to your favorites first to assemble a custom itinerary!');
+    setIsItineraryModalOpen(true);
   };
 
   // --- Auth Handlers ---
@@ -1977,6 +2253,14 @@ export default function App() {
             onPostSuccess={() => {}}
           />
 
+          <CreateItineraryModal
+            isOpen={isItineraryModalOpen}
+            onClose={() => setIsItineraryModalOpen(false)}
+            favorites={favorites}
+            user={user}
+            theme={theme}
+          />
+
           {activeTool ? (
             <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} setBucketList={setBucketList} user={user} />
           ) : (
@@ -2035,6 +2319,7 @@ export default function App() {
                   onOpenPartnerModal={openPartnerModal}
                   onOpenContributorModal={openContributorModal}
                   onOpenParksModal={openParksModal}
+                  onOpenItineraryModal={openItineraryModal}
                 />
               )}
               
