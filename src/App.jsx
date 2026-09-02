@@ -186,7 +186,19 @@ const CreateItineraryModal = ({ isOpen, onClose, favorites, user, theme }) => {
     if (!selectedIds.length) return alert('Select at least one spot to include in your itinerary.');
     setIsSaving(true);
 
-    const chosenItems = favorites.filter(f => selectedIds.includes(f.id));
+    // Sanitize items: Firestore rejects objects with undefined properties
+    const chosenItems = favorites
+      .filter(f => selectedIds.includes(f.id))
+      .map(item => {
+        const cleanItem = {};
+        Object.keys(item).forEach(key => {
+          if (item[key] !== undefined) {
+            cleanItem[key] = item[key];
+          }
+        });
+        return cleanItem;
+      });
+
     const itineraryData = {
       title: title.trim(),
       items: chosenItems,
@@ -216,8 +228,12 @@ const CreateItineraryModal = ({ isOpen, onClose, favorites, user, theme }) => {
         });
       }
     } catch (err) {
-      console.error('Error saving itinerary:', err);
-      alert('Could not create itinerary. Please check your connection.');
+      console.error('Detailed Error saving itinerary:', err.code, err.message, err);
+      if (err.code === 'permission-denied') {
+        alert('Permission Denied: Please check your Firestore security rules for "shared_itineraries".');
+      } else {
+        alert(`Could not create itinerary: ${err.message || 'Please check your connection.'}`);
+      }
     } finally {
       setIsSaving(false);
     }
@@ -1436,7 +1452,7 @@ const HubView = ({
           <div className="absolute bottom-8 left-8 flex items-center gap-4">
              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#00274c] to-[#ffcb05] p-0.5 shadow-2xl">
                 <div className={`w-full h-full rounded-full ${theme.card} flex items-center justify-center text-white overflow-hidden`}>
-                   {user && user.photoURL ? <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" /> : <MapPin size={24} className={theme.text} />}
+                   {user && user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <MapPin size={24} className={theme.text} />}
                 </div>
              </div>
              <div>
