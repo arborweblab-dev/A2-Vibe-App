@@ -903,9 +903,6 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           )}
         </div>
 
-        {/* RESTAURANT / BUSINESS PARTNER CALLOUT */}
-        <BusinessPartnerCTA onOpenPartnerModal={onOpenPartnerModal} theme={theme} />
-
         {/* SAVED FAVORITES SECTIONS */}
         <div className="space-y-8">
           <div className="space-y-4">
@@ -1184,21 +1181,6 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
       <div className="text-center px-4 w-full space-y-4">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
-        
-        {/* RESTAURANT LISTING CALLOUT BANNER (TOP) */}
-        <div className="max-w-md mx-auto p-4 rounded-2xl bg-gradient-to-r from-[#f97316]/20 via-[#f97316]/10 to-transparent border border-[#f97316]/30 flex items-center justify-between gap-3 text-left">
-          <div className="space-y-0.5">
-            <p className={`text-xs font-black uppercase ${theme.text}`}>Own or manage a local eatery?</p>
-            <p className={`text-[10px] ${theme.secondaryText}`}>Free host stand QR placement or boosted showcase.</p>
-          </div>
-          <button
-            onClick={onOpenPartnerModal}
-            className="px-3.5 py-2 bg-[#f97316] text-white dark:text-black text-[10px] font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
-          >
-            <span>List Eatery</span>
-            <ArrowRight size={12} />
-          </button>
-        </div>
       </div>
 
       <div className="px-1 w-full">
@@ -1387,13 +1369,6 @@ export default function App() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => setIsPartnerModalOpen(true)}
-              className={`px-3 py-2 rounded-xl ${theme.isDark ? 'bg-white/5 hover:bg-white/10 text-[#ffcb05] border-white/10' : 'bg-slate-100 hover:bg-slate-200 text-[#b45309] border-slate-200'} text-[10px] font-black uppercase tracking-wider border flex items-center gap-1.5 transition-all`}
-            >
-              <Store size={14} />
-              <span className="hidden sm:inline">Add Listing</span>
-            </button>
             <button onClick={() => { setActiveTool(null); setView('profile'); }} className={`w-10 h-10 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'} flex items-center justify-center overflow-hidden border ${theme.text}`}>
               {user && user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <User size={18}/>}
             </button>
