@@ -12,13 +12,23 @@ import {
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
-  Share2, Calendar
+  Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
+
+// --- STRIPE PAYMENT LINKS CONFIGURATION ---
+// Replace these placeholder links with your live Stripe Payment Links from the Dashboard
+const STRIPE_LINKS = {
+  boostedAnnual: 'https://buy.stripe.com/test_boosted_annual_300',
+  boostedMonthly: 'https://buy.stripe.com/test_boosted_monthly_35',
+  promoJournal: 'https://buy.stripe.com/test_addon_journal_45',
+  promoSMSocial: 'https://buy.stripe.com/test_addon_social_25',
+  promoWeekend: 'https://buy.stripe.com/test_addon_weekend_35'
+};
 
 // --- 2. CONFIGURATION ---
 const THEMES = {
@@ -79,6 +89,265 @@ const Watermark = () => (
 );
 
 // --- Components ---
+const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
+  const [bizType, setBizType] = useState('free');
+  const [bizName, setBizName] = useState('');
+  const [bizContact, setBizContact] = useState('');
+  const [bizAddress, setBizAddress] = useState('');
+  const [agreedQR, setAgreedQR] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  if (!isOpen) return null;
+
+  const handleFreeSubmit = async (e) => {
+    e.preventDefault();
+    if (!agreedQR) return alert("Please confirm you will display the A2 Vibe QR placard.");
+    setSubmitting(true);
+    try {
+      await addDoc(collection(db, 'partner_submissions'), {
+        bizName,
+        bizContact,
+        bizAddress,
+        type: 'free_qr_partner',
+        userEmail: user?.email || 'unauthenticated',
+        userId: user?.uid || null,
+        status: 'pending_review',
+        timestamp: Date.now()
+      });
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Error saving listing submission:", err);
+      alert("Could not submit. Please check your network connection.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const openStripeCheckout = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div>
+            <span className="text-[10px] font-black uppercase text-[#38bdf8] tracking-[0.2em] block">Partner With A2 Vibe</span>
+            <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: '#ffcb05' }}>Add Your Business</h3>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full bg-white/10 backdrop-blur-sm transition-all active:scale-90 ${theme.isDark ? 'text-white' : 'text-black'}`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* TIER TABS */}
+          <div className="grid grid-cols-2 p-1 rounded-2xl bg-black/30 border border-white/10 text-center">
+            <button
+              onClick={() => setBizType('free')}
+              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'free' ? 'bg-[#ffcb05] text-black shadow-md' : 'text-slate-400'}`}
+            >
+              Free Partner Listing
+            </button>
+            <button
+              onClick={() => setBizType('boosted')}
+              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'boosted' ? 'bg-[#38bdf8] text-black shadow-md' : 'text-slate-400'}`}
+            >
+              Boosted & Promos
+            </button>
+          </div>
+
+          {bizType === 'free' ? (
+            <div>
+              {submitted ? (
+                <div className="text-center py-8 space-y-4 animate-fade">
+                  <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                    <CheckCircle2 size={36} />
+                  </div>
+                  <h4 className={`text-lg font-black uppercase ${theme.text}`}>Listing Request Received</h4>
+                  <p className={`text-xs ${theme.secondaryText} leading-relaxed max-w-sm mx-auto`}>
+                    We will review your submission and email your physical or digital printable A2 Vibe QR counter badge within 24-48 hours.
+                  </p>
+                  <button onClick={onClose} className="mt-4 px-6 py-3 bg-[#ffcb05] text-black rounded-xl font-black uppercase text-xs">
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleFreeSubmit} className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-black/20 border border-white/5 space-y-2">
+                    <div className="flex items-center gap-2 text-[#ffcb05]">
+                      <QrCode size={18} />
+                      <h4 className="text-xs font-black uppercase tracking-wider">Free Counter Partner Placement</h4>
+                    </div>
+                    <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
+                      Get a free verified listing in the Ann Arbor city database in exchange for placing a small A2 Vibe QR code sticker or standee on your checkout counter or storefront window.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Business / Venue Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={bizName}
+                      onChange={(e) => setBizName(e.target.value)}
+                      placeholder="e.g. Kerrytown Artisan Sweets"
+                      className="w-full p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Contact Email or Phone</label>
+                    <input
+                      type="text"
+                      required
+                      value={bizContact}
+                      onChange={(e) => setBizContact(e.target.value)}
+                      placeholder="e.g. hello@annarborsweets.com"
+                      className="w-full p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Physical Ann Arbor Area Address</label>
+                    <input
+                      type="text"
+                      required
+                      value={bizAddress}
+                      onChange={(e) => setBizAddress(e.target.value)}
+                      placeholder="e.g. 407 N 5th Ave, Ann Arbor, MI"
+                      className="w-full p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]"
+                    />
+                  </div>
+
+                  <label className="flex items-start gap-3 p-3 rounded-2xl bg-black/20 border border-white/5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={agreedQR}
+                      onChange={(e) => setAgreedQR(e.target.checked)}
+                      className="mt-0.5 rounded accent-[#ffcb05]"
+                    />
+                    <span className="text-[11px] text-slate-300 leading-snug">
+                      I agree to display the small A2 Vibe community QR placard at our checkout counter or front entrance.
+                    </span>
+                  </label>
+
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all"
+                  >
+                    {submitting ? 'Submitting...' : 'Claim Free Partner Listing'}
+                  </button>
+                </form>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* BOOSTED OVERVIEW */}
+              <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#38bdf8]/30 text-white space-y-3">
+                <span className="bg-[#38bdf8] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest inline-block">Full Visibility</span>
+                <h4 className="text-xl font-header font-black uppercase italic">Boosted A2 Showcase</h4>
+                <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
+                  <li className="flex items-center gap-2">✓ <strong>Expanded Photo Gallery</strong> (Up to 20 HD images)</li>
+                  <li className="flex items-center gap-2">✓ <strong>Full Editorial Description</strong> & menu/booking links</li>
+                  <li className="flex items-center gap-2">✓ <strong>Dedicated Feature Article</strong> in the City Journal</li>
+                  <li className="flex items-center gap-2">✓ <strong>Social Media Spotlight Posts</strong> across A2 Vibe feeds</li>
+                </ul>
+              </div>
+
+              {/* ANNUAL & MONTHLY OPTIONS */}
+              <div className="space-y-3">
+                <div className={`p-4 rounded-2xl border ${theme.border} bg-black/20 flex items-center justify-between gap-4`}>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black uppercase text-white">Annual Membership</span>
+                      <span className="bg-emerald-500/20 text-emerald-400 text-[8px] font-black px-2 py-0.5 rounded">SAVE $120</span>
+                    </div>
+                    <p className="text-xs font-bold text-[#ffcb05] mt-1">$25 / mo <span className="text-slate-400 font-normal">($300 billed yearly)</span></p>
+                  </div>
+                  <button
+                    onClick={() => openStripeCheckout(STRIPE_LINKS.boostedAnnual)}
+                    className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                  >
+                    <span>Select</span>
+                    <ExternalLink size={14} />
+                  </button>
+                </div>
+
+                <div className={`p-4 rounded-2xl border ${theme.border} bg-black/20 flex items-center justify-between gap-4`}>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black uppercase text-white">Intro Monthly Plan</span>
+                      <span className="bg-emerald-500/20 text-emerald-400 text-[8px] font-black px-2 py-0.5 rounded">SAVE $300 Y1</span>
+                    </div>
+                    <p className="text-xs font-bold text-[#38bdf8] mt-1">$35 / mo <span className="text-slate-400 font-normal">first 12 mos, then $60/mo</span></p>
+                  </div>
+                  <button
+                    onClick={() => openStripeCheckout(STRIPE_LINKS.boostedMonthly)}
+                    className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                  >
+                    <span>Select</span>
+                    <ExternalLink size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* A LA CARTE ADD-ONS */}
+              <div className="space-y-3 pt-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Standalone & Add-On Promos</p>
+                
+                <div className="grid grid-cols-1 gap-2.5">
+                  <div className={`p-3.5 rounded-2xl border ${theme.border} bg-black/10 flex items-center justify-between`}>
+                    <div>
+                      <p className="text-xs font-bold text-white">Dedicated City Journal Article</p>
+                      <p className="text-[10px] text-slate-400">Permanent published feature on web & app</p>
+                    </div>
+                    <button
+                      onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
+                      className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-[#ffcb05] text-[11px] font-black rounded-lg border border-white/10"
+                    >
+                      $45
+                    </button>
+                  </div>
+
+                  <div className={`p-3.5 rounded-2xl border ${theme.border} bg-black/10 flex items-center justify-between`}>
+                    <div>
+                      <p className="text-xs font-bold text-white">Social Media Blast</p>
+                      <p className="text-[10px] text-slate-400">Spotlight story & grid post to local audience</p>
+                    </div>
+                    <button
+                      onClick={() => openStripeCheckout(STRIPE_LINKS.promoSMSocial)}
+                      className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-[#38bdf8] text-[11px] font-black rounded-lg border border-white/10"
+                    >
+                      $25
+                    </button>
+                  </div>
+
+                  <div className={`p-3.5 rounded-2xl border ${theme.border} bg-black/10 flex items-center justify-between`}>
+                    <div>
+                      <p className="text-xs font-bold text-white">Weekend Pulse Push Feature</p>
+                      <p className="text-[10px] text-slate-400">Top hero billboard on Home & Happenings tab</p>
+                    </div>
+                    <button
+                      onClick={() => openStripeCheckout(STRIPE_LINKS.promoWeekend)}
+                      className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-emerald-400 text-[11px] font-black rounded-lg border border-white/10"
+                    >
+                      $35
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
@@ -479,7 +748,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   );
 };
 
-const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, setView, dining, setActiveTool, user, handleLogin, handleLogout, vibeTags, setVibeTags }) => {
+const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, setView, dining, setActiveTool, user, handleLogin, handleLogout, vibeTags, setVibeTags, onOpenPartnerModal }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
@@ -515,6 +784,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
 
+        {/* PROFILE CARD */}
         <div className={`${theme.card} p-5 rounded-[32px] border ${theme.border} flex flex-col gap-4 text-center shadow-lg mx-1`}>
           {user ? (
             <>
@@ -538,19 +808,23 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           )}
         </div>
 
-        {/* --- URBAN AND FUN TOOLS IN MY VIBE --- */}
-        <section className="space-y-5 w-full">
-          <div className="flex items-center gap-2 px-1"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              {id:'community',icon:MessageSquare,label:'Local Gems',color:'#38bdf8'},
-              {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
-              {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'},
-              {id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},
-            ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
+        {/* BUSINESS / PARTNER CTA CARD */}
+        <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
+          <div className="space-y-1">
+            <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest">Local Businesses & Organizers</span>
+            <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Spot To A2 Vibe</h4>
+            <p className="text-[11px] text-slate-300">Free counter QR placement or boosted promotion tiers.</p>
           </div>
-        </section>
+          <button
+            onClick={onOpenPartnerModal}
+            className="p-3 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0"
+            title="List your business"
+          >
+            <Store size={18} />
+          </button>
+        </div>
 
+        {/* SAVED FAVORITES SECTIONS */}
         <div className="space-y-8">
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
@@ -630,12 +904,43 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
             </div>
           </div>
         </div>
+
+        {/* --- URBAN AND FUN TOOLS (LOCATED BELOW FAVORITES AS REQUESTED) --- */}
+        <section className="space-y-5 w-full pt-4 border-t border-white/5">
+          <div className="flex items-center gap-2 px-1">
+            <Sparkles size={18} className="text-[#34a4b8]" />
+            <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              {id:'community',icon:MessageSquare,label:'Local Gems',color:'#38bdf8'},
+              {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
+              {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'},
+              {id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},
+              {id:'randomizer',icon:Dice5,label:'Weekend Pitcher',color:'#f97316'},
+              {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
+              {id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},
+            ].map(t => (
+              <button
+                key={t.id}
+                onClick={() => setActiveTool(t.id)}
+                className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}
+              >
+                <div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}>
+                  <t.icon size={18}/>
+                </div>
+                <span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
       </div>
-  </div>
+    </div>
   );
 };
 
-const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, favorites, toggleFavorite, setView }) => {
+const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, favorites, toggleFavorite, setView, onOpenPartnerModal }) => {
   const [heroIdx, setHeroIdx] = useState(0);
   const [highlightIdx, setHighlightIdx] = useState(0);
 
@@ -698,10 +1003,18 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
           {[
             { label: 'Eats', icon: <Utensils size={22}/>, path: 'flavors' },
             { label: 'Events', icon: <Zap size={22}/>, path: 'fun' },
-            { label: 'Culture', icon: <Building size={22}/>, path: 'fun' },
+            { label: 'List Biz', icon: <Store size={22}/>, action: onOpenPartnerModal },
             { label: 'Transit', icon: <Navigation size={22}/>, link: 'https://www.theride.org/' }
           ].map(item => (
-            <button key={item.label} onClick={() => item.link ? window.open(item.link, '_blank') : (item.path && setView(item.path))} className="flex flex-col items-center gap-2 active:scale-95 group">
+            <button 
+              key={item.label} 
+              onClick={() => {
+                if (item.action) item.action();
+                else if (item.link) window.open(item.link, '_blank');
+                else if (item.path) setView(item.path);
+              }} 
+              className="flex flex-col items-center gap-2 active:scale-95 group"
+            >
               <div className="p-4 rounded-2xl text-white shadow-lg bg-[#00274c] group-hover:scale-105 transition-transform">{item.icon}</div>
               <span className={`text-[10px] font-black uppercase tracking-tighter text-center ${theme.isDark ? 'text-white' : 'text-slate-600'}`}>{item.label}</span>
             </button>
@@ -882,6 +1195,7 @@ export default function App() {
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
+  const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
   
   const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
   const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
@@ -966,6 +1280,13 @@ export default function App() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setIsPartnerModalOpen(true)}
+              className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-wider text-[#ffcb05] border border-white/10 flex items-center gap-1.5 transition-all"
+            >
+              <Store size={14} />
+              <span className="hidden sm:inline">Add Listing</span>
+            </button>
             <button onClick={() => { setActiveTool(null); setView('profile'); }} className={`w-10 h-10 rounded-2xl bg-black/5 flex items-center justify-center overflow-hidden border border-white/10 ${theme.text}`}>
               {user && user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <User size={18}/>}
             </button>
@@ -976,14 +1297,51 @@ export default function App() {
         <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           
+          <PartnerListingModal 
+            isOpen={isPartnerModalOpen} 
+            onClose={() => setIsPartnerModalOpen(false)} 
+            theme={theme} 
+            user={user} 
+          />
+
           {activeTool ? (
             <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} setBucketList={setBucketList} user={user} />
           ) : (
             <>
-              {view === 'home' && <HomeView theme={theme} setView={setView} setSelectedItem={setSelectedItem} itineraries={itineraries} dining={dining} featuredPosts={featuredPosts} favorites={favorites} toggleFavorite={toggleFavorite} />}
+              {view === 'home' && (
+                <HomeView 
+                  theme={theme} 
+                  setView={setView} 
+                  setSelectedItem={setSelectedItem} 
+                  itineraries={itineraries} 
+                  dining={dining} 
+                  featuredPosts={featuredPosts} 
+                  favorites={favorites} 
+                  toggleFavorite={toggleFavorite} 
+                  onOpenPartnerModal={() => setIsPartnerModalOpen(true)}
+                />
+              )}
               {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} posts={posts} />}
               {view === 'flavors' && <FlavorsView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} dining={dining} />}
-              {view === 'profile' && <HubView theme={theme} favorites={favorites} toggleFavorite={toggleFavorite} stats={stats} setStats={setStats} setSelectedItem={setSelectedItem} setView={setView} dining={dining} setActiveTool={setActiveTool} user={user} handleLogin={handleLogin} handleLogout={handleLogout} vibeTags={vibeTags} setVibeTags={setVibeTags} />}
+              {view === 'profile' && (
+                <HubView 
+                  theme={theme} 
+                  favorites={favorites} 
+                  toggleFavorite={toggleFavorite} 
+                  stats={stats} 
+                  setStats={setStats} 
+                  setSelectedItem={setSelectedItem} 
+                  setView={setView} 
+                  dining={dining} 
+                  setActiveTool={setActiveTool} 
+                  user={user} 
+                  handleLogin={handleLogin} 
+                  handleLogout={handleLogout} 
+                  vibeTags={vibeTags} 
+                  setVibeTags={setVibeTags} 
+                  onOpenPartnerModal={() => setIsPartnerModalOpen(true)}
+                />
+              )}
               
               {view === 'fun' && (
                 <div className="space-y-12 animate-fade w-full">
@@ -1013,28 +1371,13 @@ export default function App() {
                                  <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
                                    {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
                                  </span>
-                               </div>
+                                </div>
                              </div>
                            ))}
                          </div>
                        </div>
                      );
                    })()}
-
-                   {/* --- URBAN AND FUN TOOLS GRID --- */}
-                   <section className="space-y-5 px-1 w-full">
-                     <div className="flex items-center gap-2"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
-                     <div className="grid grid-cols-2 gap-3">
-                       {[
-                         {id:'community',icon:MessageSquare,label:'Local Gems',color:'#38bdf8'},
-                         {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
-                         {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'},
-                         {id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},
-                         {id:'randomizer',icon:Dice5,label:'Weekend Pitcher',color:'#f97316'},
-                         {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'}
-                       ].map(t=>(<button key={t.id} onClick={()=>setActiveTool(t.id)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}><div className="p-2 rounded-lg" style={{backgroundColor: t.color+'15', color: t.color}}><t.icon size={18}/></div><span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span></button>))}
-                     </div>
-                   </section>
 
                    <div className="text-center px-4">
                      <div className="flex overflow-x-auto gap-3 mt-6 mb-2 no-scrollbar px-1">
