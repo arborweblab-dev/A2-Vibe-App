@@ -1,4 +1,3 @@
-// src/App.jsx
 import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { 
   getFirestore, doc, setDoc, getDoc, collection, 
@@ -1456,14 +1455,8 @@ const HubView = ({
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
 
-  const eatsFavs = userFavorites.filter(f => f.type === 'dining' || Boolean(f.cuisine));
-  const parksFavs = userFavorites.filter(f => {
-    if (f.type === 'park') return true;
-    const catStr = Array.isArray(f.category)
-      ? f.category.join(' ')
-      : (typeof f.category === 'string' ? f.category : '');
-    return catStr.toLowerCase().includes('preserve') || catStr.toLowerCase().includes('arb') || f.id?.startsWith('park-');
-  });
+  const parksFavs = userFavorites.filter(f => f.type === 'park' || f.id?.startsWith('park-'));
+  const eatsFavs = userFavorites.filter(f => (f.type === 'dining' || Boolean(f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-'));
   const happeningsFavs = userFavorites.filter(f => 
     (f.type === 'experience' || (f.name && !f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-')
   );
@@ -2118,7 +2111,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
           ))}
         </div>
       </div>
-       
+        
       <div className="relative max-w-md mx-auto w-full px-4">
         <Search size={18} className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-400" />
         <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search restaurants, cuisine, or neighborhood..." className={`w-full pl-12 pr-4 py-3.5 rounded-2xl ${theme.card} border ${theme.border} ${theme.text} text-xs font-bold outline-none focus:border-[#ffcb05] shadow-inner`} />
@@ -2329,9 +2322,10 @@ export default function App() {
     if (isAlreadyFavorited) { 
       setFavorites(favorites.filter(f => f.id !== item.id)); 
     } else { 
+      const isPark = PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-');
       const itemToSave = { 
         ...item, 
-        type: item.type || (PARKS_DATA.some(p => p.id === item.id) ? 'park' : item.type),
+        type: isPark ? 'park' : (item.type || 'experience'),
         savedAt: Date.now() 
       };
       setFavorites([...favorites, itemToSave]); 
