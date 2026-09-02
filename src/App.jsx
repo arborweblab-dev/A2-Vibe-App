@@ -12,7 +12,8 @@ import {
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
-  Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud
+  Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
+  PenTool, ShieldCheck, MessageCircle, Send
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -39,6 +40,7 @@ const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture
 const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
 const MONTHS_EXP = ['All Months', 'October', 'November', 'December'];
 const AVAILABLE_TAGS = ['Foodie', 'U-M Alum', 'Townie', 'Student', 'Trail Runner', 'Night Owl', 'Art Lover', 'Coffee Snob'];
+const FORUM_CHANNELS = ['All', 'Announcements', 'Local News', 'Events & Meetups', 'Food & Dining', 'Community Chat'];
 
 const SLIDE_IMAGES = [
   "/images/1.png", 
@@ -89,8 +91,8 @@ const Watermark = () => (
 
 // --- Components ---
 const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = 'restaurant' }) => {
-  const [listingCategory, setListingCategory] = useState(initialCategory); // 'restaurant' or 'general'
-  const [bizType, setBizType] = useState('free'); // 'free' or 'boosted'
+  const [listingCategory, setListingCategory] = useState(initialCategory);
+  const [bizType, setBizType] = useState('free');
   const [bizName, setBizName] = useState('');
   const [bizContact, setBizContact] = useState('');
   const [bizAddress, setBizAddress] = useState('');
@@ -431,6 +433,169 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
   );
 };
 
+// --- COMMUNITY CONTRIBUTOR STORY SUBMISSION MODAL ---
+const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSuccess }) => {
+  const [title, setTitle] = useState('');
+  const [channel, setChannel] = useState('Local News');
+  const [content, setContent] = useState('');
+  const [authorName, setAuthorName] = useState(user?.displayName || '');
+  const [authorContact, setAuthorContact] = useState(user?.email || '');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setAuthorName(user.displayName || '');
+      setAuthorContact(user.email || '');
+    }
+  }, [user]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) return alert('Please enter a headline and story content.');
+    setSubmitting(true);
+    try {
+      await addDoc(collection(db, 'community_stories'), {
+        title: title.trim(),
+        channel,
+        content: content.trim(),
+        author: authorName.trim() || 'A2 Resident',
+        contact: authorContact.trim() || 'Unlisted',
+        userId: user?.uid || null,
+        likes: 0,
+        timestamp: Date.now()
+      });
+      setSubmitted(true);
+      if (onPostSuccess) onPostSuccess();
+    } catch (err) {
+      console.error('Error submitting community post:', err);
+      alert('Could not submit. Please check your network connection.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div>
+            <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Community Voice</span>
+            <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Submit Local Story</h3>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          {submitted ? (
+            <div className="text-center py-8 space-y-4 animate-fade">
+              <div className="w-16 h-16 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 size={36} />
+              </div>
+              <h4 className={`text-lg font-black uppercase ${theme.text}`}>Story Published To Community</h4>
+              <p className={`text-xs ${theme.secondaryText} leading-relaxed max-w-sm mx-auto`}>
+                Your post is now live on the A2 Vibe community board. Thanks for keeping Tree Town informed and connected.
+              </p>
+              <button onClick={onClose} className="mt-4 px-6 py-3 bg-[#ffcb05] text-black rounded-xl font-black uppercase text-xs shadow-md">
+                Done
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} space-y-2 border`}>
+                <div className="flex items-center gap-2 text-[#a855f7]">
+                  <PenTool size={16} />
+                  <h4 className="text-xs font-black uppercase tracking-wider">A2 Local Contributor Board</h4>
+                </div>
+                <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
+                  Share news, stories, townie tips, club announcements, or independent journalism. Free, zero tracking, and closed within the Tree Town community.
+                </p>
+              </div>
+
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Channel / Topic</label>
+                <div className="flex flex-wrap gap-2">
+                  {FORUM_CHANNELS.filter(c => c !== 'All').map(c => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setChannel(c)}
+                      className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${channel === c ? 'bg-[#a855f7] text-white border-[#a855f7]' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Headline</label>
+                <input
+                  type="text"
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Free Saturday Solar Eclipse Viewing at Nichols Arb"
+                  className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                />
+              </div>
+
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Story / Announcement Details</label>
+                <textarea
+                  required
+                  rows={5}
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="What's happening? Who is invited? Where, when, and why does it matter to Ann Arbor?"
+                  className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs leading-relaxed outline-none focus:border-[#ffcb05]`}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Author / Group Name</label>
+                  <input
+                    type="text"
+                    value={authorName}
+                    onChange={(e) => setAuthorName(e.target.value)}
+                    placeholder="e.g. Kerrytown Resident"
+                    className={`w-full p-3 rounded-xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none`}
+                  />
+                </div>
+                <div>
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Contact / Email (Optional)</label>
+                  <input
+                    type="text"
+                    value={authorContact}
+                    onChange={(e) => setAuthorContact(e.target.value)}
+                    placeholder="contact@email.com"
+                    className={`w-full p-3 rounded-xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none`}
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-4 bg-[#a855f7] text-white rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Send size={14} />
+                <span>{submitting ? 'Publishing...' : 'Publish to Community Board'}</span>
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
@@ -536,7 +701,6 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   // Leaderboard State
   const [leaderboard, setLeaderboard] = useState([]);
 
-  // Fetch Community Data and Leaderboards when tool opens
   useEffect(() => {
     if (type === 'community') {
       const q = query(collection(db, "community_gems"), orderBy("timestamp", "desc"), limit(20));
@@ -699,7 +863,6 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
              </div>
              <button onClick={() => setStats({...stats, water: 0, drinks: 0})} className={`w-full py-3 ${theme.isDark ? 'bg-white/5 text-slate-400 border-white/5' : 'bg-slate-200 text-slate-600 border-slate-300'} rounded-2xl font-black uppercase text-[10px] tracking-widest border active:scale-95 transition-all`}>Reset Hydration</button>
 
-             {/* Global Leaderboard Section */}
              <div className={`mt-8 p-5 rounded-[24px] border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'}`}>
                 <h3 className="text-xs font-black uppercase text-[#b45309] dark:text-[#ffcb05] tracking-widest mb-4">Global A2 Hydration</h3>
                 <div className="space-y-3">
@@ -831,7 +994,11 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   );
 };
 
-const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, setView, dining, setActiveTool, user, handleLogin, handleLogout, vibeTags, setVibeTags, onOpenPartnerModal }) => {
+const HubView = ({ 
+  theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
+  setView, dining, setActiveTool, user, handleLogin, handleLogout, 
+  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal 
+}) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
@@ -839,6 +1006,51 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
   const eatsFavs = userFavorites.filter(f => f.type === 'dining' || f.cuisine);
   const happeningsFavs = userFavorites.filter(f => f.type === 'experience' || (f.name && !f.cuisine));
   const journalFavs = userFavorites.filter(f => f.type === 'journal' || f.excerpt || (f.title && !f.cuisine));
+
+  // Community Forum State
+  const [selectedForumChannel, setSelectedForumChannel] = useState('All');
+  const [forumStories, setForumStories] = useState([]);
+  const [forumPostTitle, setForumPostTitle] = useState('');
+  const [forumPostContent, setForumPostContent] = useState('');
+  const [forumPostChannel, setForumPostChannel] = useState('Community Chat');
+  const [isPostingForum, setIsPostingForum] = useState(false);
+
+  useEffect(() => {
+    const q = query(collection(db, 'community_stories'), orderBy('timestamp', 'desc'), limit(30));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setForumStories(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleCreateForumPost = async (e) => {
+    e.preventDefault();
+    if (!forumPostTitle.trim() || !forumPostContent.trim()) return alert('Please enter both a title and message.');
+    setIsPostingForum(true);
+    try {
+      await addDoc(collection(db, 'community_stories'), {
+        title: forumPostTitle.trim(),
+        channel: forumPostChannel,
+        content: forumPostContent.trim(),
+        author: user?.displayName || 'A2 Neighbor',
+        userId: user?.uid || null,
+        likes: 0,
+        timestamp: Date.now()
+      });
+      setForumPostTitle('');
+      setForumPostContent('');
+    } catch (err) {
+      console.error('Error posting to forum:', err);
+      alert('Could not publish. Please check your connection.');
+    } finally {
+      setIsPostingForum(false);
+    }
+  };
+
+  const filteredStories = useMemo(() => {
+    if (selectedForumChannel === 'All') return forumStories;
+    return forumStories.filter(s => s.channel === selectedForumChannel);
+  }, [forumStories, selectedForumChannel]);
 
   const toggleTag = (tag) => {
     if (vibeTags.includes(tag)) setVibeTags(vibeTags.filter(t => t !== tag));
@@ -1002,7 +1214,7 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           </div>
         </section>
 
-        {/* BOTTOM OF MY VIBE SECTION CTA (HAPPENINGS, FLAVORS, EXPERIENCES) */}
+        {/* BOTTOM OF MY VIBE SECTION: PROMOTION CTA */}
         <div className="pt-2">
           <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
             <div className="space-y-1 text-left">
@@ -1019,6 +1231,123 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
             </button>
           </div>
         </div>
+
+        {/* --- EXPANDED A2 VIBE COMMUNITY FORUM & DISCUSSION BOARD --- */}
+        <section className={`space-y-6 w-full pt-8 border-t ${theme.border}`}>
+          <div className="px-1 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Users size={18} className="text-[#a855f7]" />
+                <h3 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Community Forum</h3>
+              </div>
+              <div className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                <ShieldCheck size={12} />
+                <span>Zero Ads • Private</span>
+              </div>
+            </div>
+            <p className={`text-xs ${theme.secondaryText} leading-relaxed`}>
+              A closed, community-powered bulletin board for Tree Town. Share upcoming projects, local news, townie meetups, announcements, and independent questions without tracking algorithms or corporate ads.
+            </p>
+          </div>
+
+          {/* CHANNEL SELECTOR */}
+          <div className="flex overflow-x-auto gap-2 no-scrollbar px-1">
+            {FORUM_CHANNELS.map(ch => (
+              <button
+                key={ch}
+                onClick={() => setSelectedForumChannel(ch)}
+                className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${selectedForumChannel === ch ? 'bg-[#a855f7] text-white border-[#a855f7] shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
+              >
+                {ch}
+              </button>
+            ))}
+          </div>
+
+          {/* INLINE FORUM POST BOX */}
+          <div className={`${theme.card} p-4 rounded-3xl border ${theme.border} shadow-sm space-y-3`}>
+            <div className="flex items-center justify-between">
+              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Post to the Community</span>
+              <button 
+                onClick={onOpenContributorModal}
+                className="text-[10px] font-bold text-[#a855f7] hover:underline"
+              >
+                Full Story Mode →
+              </button>
+            </div>
+            <form onSubmit={handleCreateForumPost} className="space-y-2.5">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  required
+                  value={forumPostTitle}
+                  onChange={(e) => setForumPostTitle(e.target.value)}
+                  placeholder="Topic or announcement headline..."
+                  className={`flex-1 p-3 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#a855f7]`}
+                />
+                <select
+                  value={forumPostChannel}
+                  onChange={(e) => setForumPostChannel(e.target.value)}
+                  className={`p-3 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-700'} border text-[10px] font-black uppercase outline-none`}
+                >
+                  {FORUM_CHANNELS.filter(c => c !== 'All').map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <textarea
+                required
+                rows={3}
+                value={forumPostContent}
+                onChange={(e) => setForumPostContent(e.target.value)}
+                placeholder="Share your message, project boost, meetup, or question with Ann Arbor neighbors..."
+                className={`w-full p-3 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs leading-relaxed outline-none focus:border-[#a855f7]`}
+              />
+              <div className="flex justify-between items-center pt-1">
+                <span className={`text-[9px] font-medium ${theme.secondaryText}`}>
+                  Posting as <strong>{user?.displayName || 'A2 Neighbor'}</strong>
+                </span>
+                <button
+                  type="submit"
+                  disabled={isPostingForum}
+                  className="px-4 py-2.5 bg-[#a855f7] text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <Send size={12} />
+                  <span>{isPostingForum ? 'Sharing...' : 'Share Post'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* FORUM FEED */}
+          <div className="space-y-3 px-1">
+            {filteredStories.length > 0 ? (
+              filteredStories.map((post) => (
+                <div key={post.id} className={`${theme.card} p-4 rounded-3xl border ${theme.border} space-y-2 shadow-sm`}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 px-2.5 py-0.5 rounded-md">
+                      {post.channel || 'Community Chat'}
+                    </span>
+                    <span className={`text-[10px] font-medium ${theme.secondaryText}`}>
+                      {post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Recent'}
+                    </span>
+                  </div>
+                  <h4 className={`font-bold text-sm uppercase tracking-tight ${theme.text}`}>{post.title}</h4>
+                  <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{post.content}</p>
+                  <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[10px]">
+                    <span className={`font-bold ${theme.secondaryText}`}>Spotted by {post.author}</span>
+                    {post.contact && post.contact !== 'Unlisted' && (
+                      <span className="text-[#38bdf8] font-bold truncate max-w-[180px]">{post.contact}</span>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                No community discussions in this channel yet. Be the first to share!
+              </div>
+            )}
+          </div>
+        </section>
 
       </div>
     </div>
@@ -1254,7 +1583,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
   );
 };
 
-const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts }) => {
+const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, onOpenPartnerModal, onOpenContributorModal }) => {
   const [activeCat, setActiveCat] = useState('All');
 
   const filteredPosts = useMemo(() => {
@@ -1273,6 +1602,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts 
           ))}
         </div>
       </div>
+
       <div className="px-1 grid grid-cols-2 gap-x-5 gap-y-12 w-full">
         {filteredPosts.map((art, idx) => {
           const isFeatured = idx === 0;
@@ -1288,6 +1618,45 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts 
           );
         })}
       </div>
+
+      {/* --- TWO SIDE-BY-SIDE SQUARE CTAS AT BOTTOM OF JOURNAL --- */}
+      <div className="grid grid-cols-2 gap-3.5 px-1 pt-6">
+        {/* CARD 1: LIST EVENT */}
+        <div 
+          onClick={() => onOpenPartnerModal('general')}
+          className="aspect-square rounded-[32px] p-5 flex flex-col justify-between cursor-pointer border border-[#38bdf8]/30 bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] shadow-xl group hover:border-[#38bdf8] active:scale-[0.98] transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div className="p-3 bg-[#38bdf8]/15 text-[#38bdf8] rounded-2xl">
+              <Calendar size={22} />
+            </div>
+            <ArrowRight size={18} className="text-[#38bdf8] opacity-70 group-hover:translate-x-1 transition-transform" />
+          </div>
+          <div className="space-y-1">
+            <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">City Schedule</span>
+            <h4 className="text-base font-header font-black uppercase text-white leading-tight">List Your Event</h4>
+            <p className="text-[10px] text-slate-300 leading-snug line-clamp-2">Feature your show, workshop, festival, or club meetup on A2 Vibe.</p>
+          </div>
+        </div>
+
+        {/* CARD 2: SUBMIT LOCAL STORY / NEWS */}
+        <div 
+          onClick={onOpenContributorModal}
+          className="aspect-square rounded-[32px] p-5 flex flex-col justify-between cursor-pointer border border-[#a855f7]/30 bg-gradient-to-br from-[#00274c] via-[#1a0f30] to-[#0a121e] shadow-xl group hover:border-[#a855f7] active:scale-[0.98] transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div className="p-3 bg-[#a855f7]/15 text-[#a855f7] rounded-2xl">
+              <PenTool size={22} />
+            </div>
+            <ArrowRight size={18} className="text-[#a855f7] opacity-70 group-hover:translate-x-1 transition-transform" />
+          </div>
+          <div className="space-y-1">
+            <span className="text-[9px] font-black uppercase text-[#a855f7] tracking-widest block">Contributor Desk</span>
+            <h4 className="text-base font-header font-black uppercase text-white leading-tight">Submit A Story</h4>
+            <p className="text-[10px] text-slate-300 leading-snug line-clamp-2">Local news, announcements, reviews, or Tree Town reporting.</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -1300,6 +1669,7 @@ export default function App() {
   const [activeTool, setActiveTool] = useState(null);
   const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
   const [partnerModalCategory, setPartnerModalCategory] = useState('restaurant');
+  const [isContributorModalOpen, setIsContributorModalOpen] = useState(false);
   
   const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
   const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
@@ -1319,6 +1689,10 @@ export default function App() {
   const openPartnerModal = (category = 'restaurant') => {
     setPartnerModalCategory(category);
     setIsPartnerModalOpen(true);
+  };
+
+  const openContributorModal = () => {
+    setIsContributorModalOpen(true);
   };
 
   // --- Auth Handlers ---
@@ -1407,6 +1781,14 @@ export default function App() {
             initialCategory={partnerModalCategory}
           />
 
+          <ContributorSubmissionModal
+            isOpen={isContributorModalOpen}
+            onClose={() => setIsContributorModalOpen(false)}
+            theme={theme}
+            user={user}
+            onPostSuccess={() => {}}
+          />
+
           {activeTool ? (
             <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} setBucketList={setBucketList} user={user} />
           ) : (
@@ -1424,7 +1806,17 @@ export default function App() {
                   onOpenPartnerModal={openPartnerModal}
                 />
               )}
-              {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} posts={posts} />}
+              {view === 'journal' && (
+                <JournalView 
+                  theme={theme} 
+                  setSelectedItem={setSelectedItem} 
+                  toggleFavorite={toggleFavorite} 
+                  favorites={favorites} 
+                  posts={posts} 
+                  onOpenPartnerModal={openPartnerModal}
+                  onOpenContributorModal={openContributorModal}
+                />
+              )}
               {view === 'flavors' && (
                 <FlavorsView 
                   theme={theme} 
@@ -1452,6 +1844,7 @@ export default function App() {
                   vibeTags={vibeTags} 
                   setVibeTags={setVibeTags} 
                   onOpenPartnerModal={openPartnerModal}
+                  onOpenContributorModal={openContributorModal}
                 />
               )}
               
