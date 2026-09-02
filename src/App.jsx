@@ -12,7 +12,7 @@ import {
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
-  Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store
+  Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -21,10 +21,10 @@ import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
 
 // --- STRIPE PAYMENT LINKS CONFIGURATION ---
-// Replace these placeholder links with your live Stripe Payment Links from the Dashboard
 const STRIPE_LINKS = {
   boostedAnnual: 'https://buy.stripe.com/test_boosted_annual_300',
   boostedMonthly: 'https://buy.stripe.com/test_boosted_monthly_35',
+  restaurantFeaturedPickAddon: 'https://buy.stripe.com/test_restaurant_featured_pick_50',
   promoJournal: 'https://buy.stripe.com/test_addon_journal_45',
   promoSMSocial: 'https://buy.stripe.com/test_addon_social_25',
   promoWeekend: 'https://buy.stripe.com/test_addon_weekend_35'
@@ -75,7 +75,7 @@ const handleShare = async (item, e) => {
   } else {
     try {
       await navigator.clipboard.writeText(shareData.url);
-      alert("Event link copied to clipboard!");
+      alert("Link copied to clipboard!");
     } catch (err) {
       console.error("Failed to copy link", err);
     }
@@ -90,10 +90,13 @@ const Watermark = () => (
 
 // --- Components ---
 const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
-  const [bizType, setBizType] = useState('free');
+  const [listingCategory, setListingCategory] = useState('restaurant'); // 'restaurant' or 'general'
+  const [bizType, setBizType] = useState('free'); // 'free' or 'boosted'
   const [bizName, setBizName] = useState('');
   const [bizContact, setBizContact] = useState('');
   const [bizAddress, setBizAddress] = useState('');
+  const [cuisine, setCuisine] = useState('');
+  const [menuUrl, setMenuUrl] = useState('');
   const [agreedQR, setAgreedQR] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -102,13 +105,22 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
 
   const handleFreeSubmit = async (e) => {
     e.preventDefault();
-    if (!agreedQR) return alert("Please confirm you will display the A2 Vibe QR placard.");
+    if (!agreedQR) {
+      return alert(
+        listingCategory === 'restaurant'
+          ? "Please confirm you will display the A2 Vibe QR placard at your host stand / counter and front window."
+          : "Please confirm you will display the A2 Vibe QR placard at your checkout counter or front entrance."
+      );
+    }
     setSubmitting(true);
     try {
       await addDoc(collection(db, 'partner_submissions'), {
+        listingCategory,
         bizName,
         bizContact,
         bizAddress,
+        cuisine: listingCategory === 'restaurant' ? cuisine : null,
+        menuUrl: listingCategory === 'restaurant' ? menuUrl : null,
         type: 'free_qr_partner',
         userEmail: user?.email || 'unauthenticated',
         userId: user?.uid || null,
@@ -135,7 +147,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
         <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div>
             <span className="text-[10px] font-black uppercase text-[#38bdf8] tracking-[0.2em] block">Partner With A2 Vibe</span>
-            <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: '#ffcb05' }}>Add Your Business</h3>
+            <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: '#ffcb05' }}>Add Your Listing</h3>
           </div>
           <button onClick={onClose} className={`p-2.5 rounded-full bg-white/10 backdrop-blur-sm transition-all active:scale-90 ${theme.isDark ? 'text-white' : 'text-black'}`}>
             <X size={20} />
@@ -143,19 +155,37 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
         </div>
 
         <div className="p-6 space-y-6">
-          {/* TIER TABS */}
+          {/* CATEGORY SELECTOR */}
           <div className="grid grid-cols-2 p-1 rounded-2xl bg-black/30 border border-white/10 text-center">
             <button
-              onClick={() => setBizType('free')}
-              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'free' ? 'bg-[#ffcb05] text-black shadow-md' : 'text-slate-400'}`}
+              onClick={() => { setListingCategory('restaurant'); setSubmitted(false); }}
+              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'restaurant' ? 'bg-[#f97316] text-white shadow-md' : 'text-slate-400'}`}
             >
-              Free Partner Listing
+              <Utensils size={14} />
+              <span>Restaurant / Bar</span>
+            </button>
+            <button
+              onClick={() => { setListingCategory('general'); setSubmitted(false); }}
+              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'general' ? 'bg-[#38bdf8] text-black shadow-md' : 'text-slate-400'}`}
+            >
+              <Store size={14} />
+              <span>Shop / Experience</span>
+            </button>
+          </div>
+
+          {/* TIER TABS */}
+          <div className="grid grid-cols-2 p-1 rounded-2xl bg-black/20 border border-white/5 text-center">
+            <button
+              onClick={() => setBizType('free')}
+              className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'free' ? 'bg-[#ffcb05] text-black shadow-md' : 'text-slate-400'}`}
+            >
+              Free QR Partner
             </button>
             <button
               onClick={() => setBizType('boosted')}
-              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'boosted' ? 'bg-[#38bdf8] text-black shadow-md' : 'text-slate-400'}`}
+              className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'boosted' ? 'bg-white/15 text-white shadow-md' : 'text-slate-400'}`}
             >
-              Boosted & Promos
+              Boosted Showcase
             </button>
           </div>
 
@@ -168,7 +198,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
                   </div>
                   <h4 className={`text-lg font-black uppercase ${theme.text}`}>Listing Request Received</h4>
                   <p className={`text-xs ${theme.secondaryText} leading-relaxed max-w-sm mx-auto`}>
-                    We will review your submission and email your physical or digital printable A2 Vibe QR counter badge within 24-48 hours.
+                    We will review your submission and email your physical or printable A2 Vibe QR badge for your checkout counter, host stand, and front door/window within 24-48 hours.
                   </p>
                   <button onClick={onClose} className="mt-4 px-6 py-3 bg-[#ffcb05] text-black rounded-xl font-black uppercase text-xs">
                     Done
@@ -179,24 +209,44 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
                   <div className="p-4 rounded-2xl bg-black/20 border border-white/5 space-y-2">
                     <div className="flex items-center gap-2 text-[#ffcb05]">
                       <QrCode size={18} />
-                      <h4 className="text-xs font-black uppercase tracking-wider">Free Counter Partner Placement</h4>
+                      <h4 className="text-xs font-black uppercase tracking-wider">
+                        {listingCategory === 'restaurant' ? 'Restaurant & Bar QR Placement' : 'Free Counter Partner Placement'}
+                      </h4>
                     </div>
                     <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
-                      Get a free verified listing in the Ann Arbor city database in exchange for placing a small A2 Vibe QR code sticker or standee on your checkout counter or storefront window.
+                      {listingCategory === 'restaurant'
+                        ? 'Get a verified listing in Ann Arbor Flavors in exchange for placing our compact A2 Vibe QR code badge at your host stand or checkout counter, and on your entry door or front window.'
+                        : 'Get a free verified listing in the Ann Arbor city database in exchange for placing an A2 Vibe QR code badge on your checkout counter or storefront window.'}
                     </p>
                   </div>
 
                   <div>
-                    <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Business / Venue Name</label>
+                    <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>
+                      {listingCategory === 'restaurant' ? 'Restaurant / Bar Name' : 'Business / Venue Name'}
+                    </label>
                     <input
                       type="text"
                       required
                       value={bizName}
                       onChange={(e) => setBizName(e.target.value)}
-                      placeholder="e.g. Kerrytown Artisan Sweets"
+                      placeholder={listingCategory === 'restaurant' ? 'e.g. Tree Town Smokehouse' : 'e.g. Kerrytown Artisan Sweets'}
                       className="w-full p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]"
                     />
                   </div>
+
+                  {listingCategory === 'restaurant' && (
+                    <div>
+                      <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Cuisine Type</label>
+                      <input
+                        type="text"
+                        required
+                        value={cuisine}
+                        onChange={(e) => setCuisine(e.target.value)}
+                        placeholder="e.g. Korean Street Food, Craft Cocktails, Neapolitan Pizza"
+                        className="w-full p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]"
+                      />
+                    </div>
+                  )}
 
                   <div>
                     <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Contact Email or Phone</label>
@@ -205,7 +255,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
                       required
                       value={bizContact}
                       onChange={(e) => setBizContact(e.target.value)}
-                      placeholder="e.g. hello@annarborsweets.com"
+                      placeholder="e.g. manager@dininga2.com"
                       className="w-full p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]"
                     />
                   </div>
@@ -217,7 +267,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
                       required
                       value={bizAddress}
                       onChange={(e) => setBizAddress(e.target.value)}
-                      placeholder="e.g. 407 N 5th Ave, Ann Arbor, MI"
+                      placeholder="e.g. 209 S 4th Ave, Ann Arbor, MI"
                       className="w-full p-3.5 rounded-2xl bg-black/20 border border-white/10 text-xs font-bold text-white outline-none focus:border-[#ffcb05]"
                     />
                   </div>
@@ -230,7 +280,9 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
                       className="mt-0.5 rounded accent-[#ffcb05]"
                     />
                     <span className="text-[11px] text-slate-300 leading-snug">
-                      I agree to display the small A2 Vibe community QR placard at our checkout counter or front entrance.
+                      {listingCategory === 'restaurant'
+                        ? 'I agree to display the small A2 Vibe QR code badge at our counter or host stand and on our front door/window.'
+                        : 'I agree to display the small A2 Vibe community QR placard at our checkout counter or front entrance.'}
                     </span>
                   </label>
 
@@ -247,16 +299,55 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
           ) : (
             <div className="space-y-6">
               {/* BOOSTED OVERVIEW */}
-              <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#38bdf8]/30 text-white space-y-3">
-                <span className="bg-[#38bdf8] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest inline-block">Full Visibility</span>
-                <h4 className="text-xl font-header font-black uppercase italic">Boosted A2 Showcase</h4>
+              <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/30 text-white space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                    {listingCategory === 'restaurant' ? 'Dining Premiere' : 'Full Visibility'}
+                  </span>
+                  {listingCategory === 'restaurant' && (
+                    <span className="text-[10px] font-bold text-[#38bdf8] flex items-center gap-1">
+                      <FileText size={12} /> Menu Upload Enabled
+                    </span>
+                  )}
+                </div>
+
+                <h4 className="text-xl font-header font-black uppercase italic">
+                  {listingCategory === 'restaurant' ? 'Boosted Eatery & Bar Showcase' : 'Boosted A2 Showcase'}
+                </h4>
+
                 <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
-                  <li className="flex items-center gap-2">✓ <strong>Expanded Photo Gallery</strong> (Up to 20 HD images)</li>
-                  <li className="flex items-center gap-2">✓ <strong>Full Editorial Description</strong> & menu/booking links</li>
-                  <li className="flex items-center gap-2">✓ <strong>Dedicated Feature Article</strong> in the City Journal</li>
-                  <li className="flex items-center gap-2">✓ <strong>Social Media Spotlight Posts</strong> across A2 Vibe feeds</li>
+                  <li className="flex items-center gap-2">✓ <strong>Up to 20 HD Photos</strong> (Dishes, interior, drinks)</li>
+                  <li className="flex items-center gap-2">✓ <strong>Longer Description & Story</strong> with reservation links</li>
+                  {listingCategory === 'restaurant' && (
+                    <li className="flex items-center gap-2">✓ <strong>Optional Menu Upload / PDF Link</strong> on profile</li>
+                  )}
+                  <li className="flex items-center gap-2">✓ <strong>Dedicated Feature Article</strong> in City Journal</li>
+                  <li className="flex items-center gap-2">✓ <strong>Social Media Post Promos</strong> across our channels</li>
                 </ul>
               </div>
+
+              {/* DISCOUNTED FEATURED PICK UPGRADE FOR RESTAURANTS */}
+              {listingCategory === 'restaurant' && (
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-[#f97316]/20 via-[#f97316]/10 to-transparent border border-[#f97316]/30 flex items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <Zap size={14} className="text-[#ffcb05]" />
+                      <span className="text-xs font-black uppercase text-white">Discounted Featured Pick</span>
+                      <span className="bg-[#f97316] text-black text-[8px] font-black px-1.5 py-0.5 rounded">SAVE $40</span>
+                    </div>
+                    <p className="text-[11px] text-slate-300 mt-1">
+                      Top-of-app billboard spot on Home & Flavors. <strong className="text-[#ffcb05]">$50</strong> <span className="line-through text-slate-500 text-[10px]">(Normally $90)</span>
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => openStripeCheckout(STRIPE_LINKS.restaurantFeaturedPickAddon)}
+                    className="px-3.5 py-2 bg-[#f97316] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
+                  >
+                    <span>$50 Pick</span>
+                    <ExternalLink size={12} />
+                  </button>
+                </div>
+              )}
 
               {/* ANNUAL & MONTHLY OPTIONS */}
               <div className="space-y-3">
@@ -295,15 +386,14 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
                 </div>
               </div>
 
-              {/* A LA CARTE ADD-ONS */}
+              {/* STANDALONE ADD-ONS */}
               <div className="space-y-3 pt-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Standalone & Add-On Promos</p>
-                
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Standalone Promos</p>
                 <div className="grid grid-cols-1 gap-2.5">
                   <div className={`p-3.5 rounded-2xl border ${theme.border} bg-black/10 flex items-center justify-between`}>
                     <div>
-                      <p className="text-xs font-bold text-white">Dedicated City Journal Article</p>
-                      <p className="text-[10px] text-slate-400">Permanent published feature on web & app</p>
+                      <p className="text-xs font-bold text-white">City Journal Feature Story</p>
+                      <p className="text-[10px] text-slate-400">Permanent published culinary or brand editorial</p>
                     </div>
                     <button
                       onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
@@ -316,26 +406,13 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user }) => {
                   <div className={`p-3.5 rounded-2xl border ${theme.border} bg-black/10 flex items-center justify-between`}>
                     <div>
                       <p className="text-xs font-bold text-white">Social Media Blast</p>
-                      <p className="text-[10px] text-slate-400">Spotlight story & grid post to local audience</p>
+                      <p className="text-[10px] text-slate-400">Spotlight story & grid post to local foodies</p>
                     </div>
                     <button
                       onClick={() => openStripeCheckout(STRIPE_LINKS.promoSMSocial)}
                       className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-[#38bdf8] text-[11px] font-black rounded-lg border border-white/10"
                     >
                       $25
-                    </button>
-                  </div>
-
-                  <div className={`p-3.5 rounded-2xl border ${theme.border} bg-black/10 flex items-center justify-between`}>
-                    <div>
-                      <p className="text-xs font-bold text-white">Weekend Pulse Push Feature</p>
-                      <p className="text-[10px] text-slate-400">Top hero billboard on Home & Happenings tab</p>
-                    </div>
-                    <button
-                      onClick={() => openStripeCheckout(STRIPE_LINKS.promoWeekend)}
-                      className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-emerald-400 text-[11px] font-black rounded-lg border border-white/10"
-                    >
-                      $35
                     </button>
                   </div>
                 </div>
@@ -808,19 +885,19 @@ const HubView = ({ theme, favorites, toggleFavorite, stats, setStats, setSelecte
           )}
         </div>
 
-        {/* BUSINESS / PARTNER CTA CARD */}
+        {/* RESTAURANT / BUSINESS PARTNER CALLOUT */}
         <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
           <div className="space-y-1">
-            <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest">Local Businesses & Organizers</span>
-            <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Spot To A2 Vibe</h4>
-            <p className="text-[11px] text-slate-300">Free counter QR placement or boosted promotion tiers.</p>
+            <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest">Restaurants, Bars & Shops</span>
+            <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Eatery Or Business</h4>
+            <p className="text-[11px] text-slate-300">Free counter/door QR badge or boosted showcase with $50 featured pick.</p>
           </div>
           <button
             onClick={onOpenPartnerModal}
             className="p-3 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0"
-            title="List your business"
+            title="List your restaurant or business"
           >
-            <Store size={18} />
+            <Utensils size={18} />
           </button>
         </div>
 
@@ -1075,7 +1152,7 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
   );
 };
 
-const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining }) => {
+const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining, onOpenPartnerModal }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredDining = useMemo(() => {
@@ -1097,6 +1174,21 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
       <div className="text-center px-4 w-full space-y-4">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
+        
+        {/* RESTAURANT LISTING CALLOUT BANNER */}
+        <div className="max-w-md mx-auto p-4 rounded-2xl bg-gradient-to-r from-[#f97316]/20 via-[#f97316]/10 to-transparent border border-[#f97316]/30 flex items-center justify-between gap-3 text-left">
+          <div className="space-y-0.5">
+            <p className="text-xs font-black uppercase text-white">Own or manage a local eatery?</p>
+            <p className="text-[10px] text-slate-300">Free host stand QR placement or boosted showcase.</p>
+          </div>
+          <button
+            onClick={onOpenPartnerModal}
+            className="px-3.5 py-2 bg-[#f97316] text-black text-[10px] font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
+          >
+            <span>List Eatery</span>
+            <ArrowRight size={12} />
+          </button>
+        </div>
       </div>
 
       <div className="px-1 w-full">
@@ -1322,7 +1414,16 @@ export default function App() {
                 />
               )}
               {view === 'journal' && <JournalView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} posts={posts} />}
-              {view === 'flavors' && <FlavorsView theme={theme} setSelectedItem={setSelectedItem} toggleFavorite={toggleFavorite} favorites={favorites} dining={dining} />}
+              {view === 'flavors' && (
+                <FlavorsView 
+                  theme={theme} 
+                  setSelectedItem={setSelectedItem} 
+                  toggleFavorite={toggleFavorite} 
+                  favorites={favorites} 
+                  dining={dining}
+                  onOpenPartnerModal={() => setIsPartnerModalOpen(true)}
+                />
+              )}
               {view === 'profile' && (
                 <HubView 
                   theme={theme} 
@@ -1371,7 +1472,7 @@ export default function App() {
                                  <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
                                    {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
                                  </span>
-                                </div>
+                               </div>
                              </div>
                            ))}
                          </div>
