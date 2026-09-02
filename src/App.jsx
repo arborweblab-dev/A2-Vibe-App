@@ -199,8 +199,8 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
   return (
     <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border${theme.border} animate-slide flex flex-col`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
           <div>
             <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Discussion Thread</span>
             <h3 className="text-lg font-header font-black uppercase italic tracking-tight truncate max-w-[320px]" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
@@ -223,7 +223,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
             
             {comments.length > 0 ? (
               comments.map(c => (
-                <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
+                <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
                   <div className="flex justify-between items-center text-[10px]">
                     <span className={`font-black uppercase tracking-wider text-[#a855f7]`}>{c.author}</span>
                     <span className={theme.secondaryText}>{c.timestamp ? new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Just now'}</span>
@@ -239,7 +239,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
           </div>
         </div>
 
-        <div className={`sticky bottom-0 p-4 ${theme.appBg} border-t ${theme.border}`}>
+        <div className={`sticky bottom-0 p-4 ${theme.appBg} border-t${theme.border}`}>
           <form onSubmit={handleAddComment} className="flex gap-2">
             <input 
               type="text" 
@@ -363,8 +363,8 @@ const CreateItineraryModal = ({ isOpen, onClose, favorites, user, theme }) => {
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-[#ffcb05]/10 text-[#ffcb05]">
               <Route size={20} />
@@ -484,8 +484,8 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, setSelectedItem, toggleFa
   return (
     <div className="fixed inset-0 z-[105] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
               <Trees size={20} />
@@ -507,12 +507,12 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, setSelectedItem, toggleFa
 
           <div className="grid grid-cols-1 gap-4 pt-1">
             {PARKS_DATA.map((park) => {
-              const isFavorited = (favorites || []).some(f => f.id === park.id && f.type === 'park');
+              const isFavorited = (favorites || []).some(f => f.id === park.id);
               return (
                 <div 
                   key={park.id}
                   onClick={() => { onClose(); setSelectedItem(park); }}
-                  className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/40 active:scale-[0.99] transition-all`}
+                  className={`${theme.card} p-4 rounded-3xl border${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/40 active:scale-[0.99] transition-all`}
                 >
                   <img src={park.img} alt={park.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
                   <div className="flex-1 min-w-0 pr-1">
@@ -607,8 +607,8 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
           <div>
             <span className="text-[10px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] block">Partner With A2 Vibe</span>
             <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Add Your Listing</h3>
@@ -810,7 +810,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
               )}
 
               <div className="space-y-3">
-                <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div className={`p-4 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
                   <div>
                     <div className="flex items-center gap-2">
                       <span className={`text-xs font-black uppercase ${theme.text}`}>Annual Membership</span>
@@ -827,7 +827,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                   </button>
                 </div>
 
-                <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div className={`p-4 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
                   <div>
                     <div className="flex items-center gap-2">
                       <span className={`text-xs font-black uppercase ${theme.text}`}>Intro Monthly Plan</span>
@@ -848,7 +848,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
               <div className="space-y-3 pt-2">
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Standalone Promos</p>
                 <div className="grid grid-cols-1 gap-2.5">
-                  <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
+                  <div className={`p-3.5 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
                     <div>
                       <p className={`text-xs font-bold ${theme.text}`}>City Journal Feature Story</p>
                       <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published culinary, brand, or event editorial</p>
@@ -861,7 +861,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                     </button>
                   </div>
 
-                  <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
+                  <div className={`p-3.5 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
                     <div>
                       <p className={`text-xs font-bold ${theme.text}`}>Social Media Blast</p>
                       <p className={`text-[10px] ${theme.secondaryText}`}>Spotlight story & grid post to local audience</p>
@@ -931,8 +931,8 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
           <div>
             <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Community Voice</span>
             <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Submit Local Story</h3>
@@ -1050,13 +1050,13 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
 // --- SPOTLIGHT DETAIL MODAL ---
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
-  const isFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
+  const isFavorited = (favorites || []).some(f => f.id === item.id);
   
   return (
     <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
           <h3 className={`text-lg font-header font-black uppercase italic tracking-tight pr-4 truncate`} style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
             {item.name || item.title || 'Spotlight'}
           </h3>
@@ -1084,7 +1084,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
             {item.month && (
                <div className="bg-[#a855f7]/20 text-purple-700 dark:text-[#a855f7] px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest">
                  {item.month}
-               </div>
+              </div>
             )}
           </div>
 
@@ -1921,14 +1921,13 @@ const HubView = ({
                   </div>
                 );
               })
-            ) : (
-              <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
-                No community discussions in this channel yet. Be the first to share!
-              </div>
-            )}
-          </div>
-        </section>
-      </div>
+          ) : (
+            <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+              No community discussions in this channel yet. Be the first to share!
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 };
@@ -2102,548 +2101,4 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
       <div className="px-1 w-full">
         <div className="flex items-center gap-2 mb-4 px-2">
           <Sparkles size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
-          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Flavors</h2>
-        </div>
-        <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
-          {featuredDining.map(res => (
-            <div key={`feat-${res.id}`} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`min-w-[280px] h-48 ${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg snap-center relative group cursor-pointer flex-shrink-0`}>
-              {res.img ? <img src={res.img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" /> : <div className={`absolute inset-0 ${theme.isDark ? 'bg-[#00274c]/20' : 'bg-slate-100'} flex items-center justify-center`}><Building size={32} className="text-[#ffcb05]/40" /></div>}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <span className="bg-[#ffcb05] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Spotlight</span>
-                <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{res.title}</h3>
-                <p className="text-[10px] font-black text-[#ffcb05] uppercase tracking-wider mt-1">{res.cuisine || 'Gourmet A2'}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      <div className="relative max-w-md mx-auto w-full px-4">
-        <Search size={18} className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-400" />
-        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search restaurants, cuisine, or neighborhood..." className={`w-full pl-12 pr-4 py-3.5 rounded-2xl ${theme.card} border ${theme.border} ${theme.text} text-xs font-bold outline-none focus:border-[#ffcb05] shadow-inner`} />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 px-1 w-full">
-        {filteredDining.length > 0 ? (
-          filteredDining.map(res => {
-            const isFavorited = (favorites || []).some(f => f.id === res.id && f.type === 'dining');
-            return (
-              <div key={res.id} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex gap-4 cursor-pointer shadow-md items-center group active:scale-[0.99] transition-transform`}>
-                <img src={res.img} className="w-24 h-24 rounded-2xl object-cover shadow-inner flex-shrink-0" alt={res.title} />
-                <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{res.title}</h3>
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
-                    <span className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md inline-block whitespace-nowrap">{res.cuisine || 'Eats'}</span>
-                    {res.neighborhood && <span className="text-[10px] font-bold text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-wider truncate">{res.neighborhood}</span>}
-                  </div>
-                  <p className={`text-xs mt-1 line-clamp-1 ${theme.secondaryText}`}>{res.shortDesc}</p>
-                </div>
-                <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`p-3 rounded-full backdrop-blur-md flex-shrink-0 transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/10 text-slate-400' : 'bg-black/5 text-slate-600')}`}><Heart size={18} fill={isFavorited ? "currentColor" : "none"} /></button>
-              </div>
-            );
-          })
-        ) : (
-          <div className={`py-20 text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.secondaryText}`}>No restaurants found matching your search.</div>
-        )}
-      </div>
-
-      <div className="pt-4">
-        <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#f97316]/30 flex items-center justify-between shadow-xl">
-          <div className="space-y-1 text-left">
-            <span className="text-[9px] font-black uppercase text-[#f97316] tracking-widest block">Local Food & Drinks</span>
-            <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Eatery or Bar</h4>
-            <p className="text-[11px] text-slate-300">Free counter QR placement or a boosted culinary showcase with full menu upload.</p>
-          </div>
-          <button
-            onClick={() => onOpenPartnerModal('restaurant')}
-            className="p-3.5 bg-[#f97316] text-white rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
-            title="List your eatery"
-          >
-            <Utensils size={18} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// --- JOURNAL VIEW ---
-const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, onOpenPartnerModal, onOpenContributorModal }) => {
-  const [activeCat, setActiveCat] = useState('All');
-
-  const filteredPosts = useMemo(() => {
-    if (activeCat === 'All') return posts || [];
-    if (activeCat === 'Meetups') return (posts || []).filter(p => p.category === 'Meetups' || p.allCategories?.includes('Meetups'));
-    return (posts || []).filter(p => (p.allCategories || []).some(cat => cat.toLowerCase().includes(activeCat.toLowerCase())));
-  }, [posts, activeCat]);
-
-  return (
-    <div className="animate-fade space-y-10 text-left relative z-10 pb-20 w-full flex flex-col">
-      <div className="text-center px-4 w-full">
-        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>City Journal</h1>
-        <div className="flex overflow-x-auto gap-3 mt-6 no-scrollbar">
-          {CATEGORIES_JOURNAL.map(cat => (
-            <button key={cat} onClick={() => setActiveCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all ${activeCat === cat ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg' : (theme.isDark ? 'text-slate-400 bg-white/5 border-white/5' : 'text-slate-700 bg-slate-100 border-slate-200')}`}>{cat}</button>
-          ))}
-        </div>
-      </div>
-
-      <div className="px-1 grid grid-cols-2 gap-x-5 gap-y-12 w-full">
-        {filteredPosts.map((art, idx) => {
-          const isFeatured = idx === 0;
-          return (
-            <div key={art.id} onClick={() => setSelectedItem(art)} className={`space-y-4 cursor-pointer group ${isFeatured ? 'col-span-2' : 'col-span-1'}`}>
-              <div className={`relative ${isFeatured ? 'h-80' : 'aspect-[4/5]'} rounded-[40px] overflow-hidden shadow-lg ${theme.isDark ? 'bg-slate-800/20 border-white/5' : 'bg-slate-100 border-slate-200'} border`}>
-                {art.img ? <img src={art.img} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000" alt="" /> : <div className="w-full h-full flex items-center justify-center opacity-10"><Building size={48} /></div>}
-                <div className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full text-[9px] font-black text-white uppercase tracking-widest">{art.category}</div>
-                <button onClick={(e) => { e.stopPropagation(); toggleFavorite(art); }} className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === art.id) ? "bg-[#ffcb05]/20 text-[#ffcb05]" : "bg-black/20 text-white"}`}><Heart size={16} fill={(favorites || []).some(f => f.id === art.id) ? "currentColor" : "none"} /></button>
-              </div>
-              <div className="px-1"><h4 className={`${isFeatured ? 'text-2xl tracking-tighter' : 'text-sm tracking-tight'} font-header font-black uppercase italic leading-tight ${theme.text}`}>{art.title}</h4>{isFeatured && <p className={`text-base mt-3 line-clamp-2 leading-relaxed italic ${theme.secondaryText}`}>{art.excerpt}</p>}</div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="grid grid-cols-2 gap-3.5 px-1 pt-6">
-        <div 
-          onClick={() => onOpenPartnerModal('general')}
-          className="aspect-square rounded-[32px] p-5 flex flex-col justify-between cursor-pointer border border-[#38bdf8]/30 bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] shadow-xl group hover:border-[#38bdf8] active:scale-[0.98] transition-all"
-        >
-          <div className="flex items-center justify-between">
-            <div className="p-3 bg-[#38bdf8]/15 text-[#38bdf8] rounded-2xl">
-              <Calendar size={22} />
-            </div>
-            <ArrowRight size={18} className="text-[#38bdf8] opacity-70 group-hover:translate-x-1 transition-transform" />
-          </div>
-          <div className="space-y-1">
-            <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">City Schedule</span>
-            <h4 className="text-base font-header font-black uppercase text-white leading-tight">List Your Event</h4>
-            <p className="text-[10px] text-slate-300 leading-snug line-clamp-2">Feature your show, workshop, festival, or club meetup on A2 Vibe.</p>
-          </div>
-        </div>
-
-        <div 
-          onClick={onOpenContributorModal}
-          className="aspect-square rounded-[32px] p-5 flex flex-col justify-between cursor-pointer border border-[#a855f7]/30 bg-gradient-to-br from-[#00274c] via-[#1a0f30] to-[#0a121e] shadow-xl group hover:border-[#a855f7] active:scale-[0.98] transition-all"
-        >
-          <div className="flex items-center justify-between">
-            <div className="p-3 bg-[#a855f7]/15 text-[#a855f7] rounded-2xl">
-              <PenTool size={22} />
-            </div>
-            <ArrowRight size={18} className="text-[#a855f7] opacity-70 group-hover:translate-x-1 transition-transform" />
-          </div>
-          <div className="space-y-1">
-            <span className="text-[9px] font-black uppercase text-[#a855f7] tracking-widest block">Contributor Desk</span>
-            <h4 className="text-base font-header font-black uppercase text-white leading-tight">Submit A Story</h4>
-            <p className="text-[10px] text-slate-300 leading-snug line-clamp-2">Local news, announcements, reviews, or Tree Town reporting.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default function App() {
-  const [user, setUser] = useState(null);
-  const [view, setView] = useState('home');
-  const [themeKey, setThemeKey] = useState('dark');
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [activeTool, setActiveTool] = useState(null);
-  const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
-  const [partnerModalCategory, setPartnerModalCategory] = useState('restaurant');
-  const [isContributorModalOpen, setIsContributorModalOpen] = useState(false);
-  const [isParksModalOpen, setIsParksModalOpen] = useState(false);
-  const [isItineraryModalOpen, setIsItineraryModalOpen] = useState(false);
-  
-  const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
-  const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
-  const [bucketList, setBucketList] = useState(() => { const s = localStorage.getItem('a2v_bucketlist'); return s ? JSON.parse(s) : DEFAULT_BUCKET_ITEMS; });
-  const [vibeTags, setVibeTags] = useState(() => { const s = localStorage.getItem('a2v_vibetags'); return s ? JSON.parse(s) : []; });
-
-  const [itineraries, setItineraries] = useState(happeningsData);
-  const [dining, setDining] = useState(eatsData);
-  const [posts, setPosts] = useState(journalData);
-  const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
-  
-  const [activeExpCat, setActiveExpCat] = useState('All');
-  const [activeMonth, setActiveMonth] = useState('All Months');
-  const [visibleCount, setVisibleCount] = useState(6);
-  const theme = THEMES[themeKey] || THEMES.dark;
-
-  const openPartnerModal = (category = 'restaurant') => {
-    setPartnerModalCategory(category);
-    setIsPartnerModalOpen(true);
-  };
-
-  const openContributorModal = () => {
-    setIsContributorModalOpen(true);
-  };
-
-  const openParksModal = () => {
-    setIsParksModalOpen(true);
-  };
-
-  const openItineraryModal = () => {
-    if (!favorites.length) return alert('Add items to your favorites first to assemble a custom itinerary!');
-    setIsItineraryModalOpen(true);
-  };
-
-  // --- Auth Handlers ---
-  const handleLogin = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (error) { console.error("Login Error:", error); } };
-  const handleLogout = async () => { try { await signOut(auth); } catch (error) { console.error("Logout Error:", error); } };
-
-  // Firebase Auth Listener
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        const docSnap = await getDoc(doc(db, 'users', currentUser.uid));
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setFavorites(data.favorites || []);
-          setStats(data.stats || { water: 0, drinks: 0 });
-          setBucketList(data.bucketList || DEFAULT_BUCKET_ITEMS);
-          setVibeTags(data.vibeTags || []);
-        }
-      } else {
-        const sf = localStorage.getItem('a2v_favorites'); setFavorites(sf ? JSON.parse(sf) : []);
-        const ss = localStorage.getItem('a2v_stats'); setStats(ss ? JSON.parse(ss) : { water: 0, drinks: 0 });
-        const st = localStorage.getItem('a2v_vibetags'); setVibeTags(st ? JSON.parse(st) : []);
-        const sb = localStorage.getItem('a2v_bucketlist'); setBucketList(sb ? JSON.parse(sb) : DEFAULT_BUCKET_ITEMS);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  // Sync Hooks
-  useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { favorites }, { merge: true }); else localStorage.setItem('a2v_favorites', JSON.stringify(favorites)); }, [favorites, user]);
-  useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { stats }, { merge: true }); else localStorage.setItem('a2v_stats', JSON.stringify(stats)); }, [stats, user]);
-  useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { vibeTags }, { merge: true }); else localStorage.setItem('a2v_vibetags', JSON.stringify(vibeTags)); }, [vibeTags, user]);
-  useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { bucketList }, { merge: true }); else localStorage.setItem('a2v_bucketlist', JSON.stringify(bucketList)); }, [bucketList, user]);
-
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view, activeTool]);
-
-  const toggleFavorite = (item) => {
-    const isAlreadyFavorited = (favorites || []).some(f => f.id === item.id && f.type === item.type);
-    if (isAlreadyFavorited) { setFavorites(favorites.filter(f => !(f.id === item.id && f.type === item.type))); } 
-    else { setFavorites([...favorites, { ...item, savedAt: Date.now() }]); }
-  };
-
-  const shuffledExp = useMemo(() => {
-    let list = itineraries || [];
-    if (activeMonth !== 'All Months') list = list.filter(i => i.month === activeMonth);
-    if (activeExpCat !== 'All') {
-      list = list.filter(i => {
-        let itemCats = Array.isArray(i.category) ? i.category : (Array.isArray(i.categories) ? i.categories : (typeof i.category === 'string' ? i.category.split(',').map(c => c.trim()) : []));
-        const filterVal = activeExpCat.toLowerCase();
-        return itemCats.some(c => c.toLowerCase().includes(filterVal)) || (filterVal === 'museums' && (i.name?.toLowerCase().includes('museum') || i.shortDesc?.toLowerCase().includes('museum')));
-      });
-    }
-    return list;
-  }, [itineraries, activeExpCat, activeMonth]);
-
-  return (
-    <div className={`min-h-screen ${theme.windowBg} font-sans transition-colors duration-500 flex flex-col items-center overflow-x-hidden`}>
-      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      <div className={`w-full max-w-xl min-h-screen ${theme.appBg} relative shadow-2xl flex flex-col items-center border-x border-white/5`}>
-        
-        <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/90 backdrop-blur-xl border-b ${theme.border} px-5 py-5 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
-          <div className="flex items-center gap-4 cursor-pointer" onClick={() => { setActiveTool(null); setView('home'); }}>
-            <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black"><Building size={20}/></div>
-            <div className="flex flex-col leading-none text-left">
-              <span className={`text-[11px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span>
-              <span className={`text-[9px] font-header font-bold uppercase tracking-widest ${theme.secondaryText}`}>Vibe</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => { setActiveTool(null); setView('profile'); }} className={`w-10 h-10 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'} flex items-center justify-center overflow-hidden border ${theme.text}`}>
-              {user && user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <User size={18}/>}
-            </button>
-            <button onClick={() => setThemeKey(theme.isDark ? 'light' : 'dark')} className={`p-3 rounded-2xl bg-[#00274c] hover:bg-[#ffcb05] transition-colors border border-white/10 ${theme.text}`}>{theme.isDark ? <Sun size={20} className="text-[#ffcb05]" /> : <Moon size={20} className="text-white" />}</button>
-          </div>
-        </header>
-
-        <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
-          <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
-          
-          <ParksDirectoryModal
-            isOpen={isParksModalOpen}
-            onClose={() => setIsParksModalOpen(false)}
-            theme={theme}
-            setSelectedItem={setSelectedItem}
-            toggleFavorite={toggleFavorite}
-            favorites={favorites}
-          />
-
-          <PartnerListingModal 
-            isOpen={isPartnerModalOpen} 
-            onClose={() => setIsPartnerModalOpen(false)} 
-            theme={theme} 
-            user={user} 
-            initialCategory={partnerModalCategory}
-          />
-
-          <ContributorSubmissionModal
-            isOpen={isContributorModalOpen}
-            onClose={() => setIsContributorModalOpen(false)}
-            theme={theme}
-            user={user}
-            onPostSuccess={() => {}}
-          />
-
-          <CreateItineraryModal
-            isOpen={isItineraryModalOpen}
-            onClose={() => setIsItineraryModalOpen(false)}
-            favorites={favorites}
-            user={user}
-            theme={theme}
-          />
-
-          {activeTool ? (
-            <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} setBucketList={setBucketList} user={user} />
-          ) : (
-            <>
-              {view === 'home' && (
-                <HomeView 
-                  theme={theme} 
-                  setView={setView} 
-                  setSelectedItem={setSelectedItem} 
-                  itineraries={itineraries} 
-                  dining={dining} 
-                  featuredPosts={featuredPosts} 
-                  favorites={favorites} 
-                  toggleFavorite={toggleFavorite} 
-                  onOpenPartnerModal={openPartnerModal}
-                  onOpenParksModal={openParksModal}
-                />
-              )}
-              {view === 'journal' && (
-                <JournalView 
-                  theme={theme} 
-                  setSelectedItem={setSelectedItem} 
-                  toggleFavorite={toggleFavorite} 
-                  favorites={favorites} 
-                  posts={posts} 
-                  onOpenPartnerModal={openPartnerModal} 
-                  onOpenContributorModal={openContributorModal}
-                />
-              )}
-              {view === 'flavors' && (
-                <FlavorsView 
-                  theme={theme} 
-                  setSelectedItem={setSelectedItem} 
-                  toggleFavorite={toggleFavorite} 
-                  favorites={favorites} 
-                  dining={dining}
-                  onOpenPartnerModal={openPartnerModal}
-                />
-              )}
-              {view === 'profile' && (
-                <HubView 
-                  theme={theme} 
-                  favorites={favorites} 
-                  toggleFavorite={toggleFavorite} 
-                  stats={stats} 
-                  setStats={setStats} 
-                  setSelectedItem={setSelectedItem} 
-                  setView={setView} 
-                  dining={dining} 
-                  setActiveTool={setActiveTool} 
-                  user={user} 
-                  handleLogin={handleLogin} 
-                  handleLogout={handleLogout} 
-                  vibeTags={vibeTags} 
-                  setVibeTags={setVibeTags} 
-                  onOpenPartnerModal={openPartnerModal}
-                  onOpenContributorModal={openContributorModal}
-                  onOpenParksModal={openParksModal}
-                  onOpenItineraryModal={openItineraryModal}
-                />
-              )}
-              
-              {view === 'fun' && (
-                <div className="space-y-12 animate-fade w-full">
-                   <div className="text-center px-4">
-                     <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Happenings</h1>
-                   </div>
-
-                   {/* FEATURED CTA CARDS SECTION */}
-                   {(() => {
-                     const featuredHappenings = (itineraries || []).filter(e => e.isFeatured);
-                     const displayFeatured = featuredHappenings.length > 0 ? featuredHappenings.slice(0, 5) : (itineraries || []).slice(0, 5);
-                     return (
-                       <div className="px-1 w-full">
-                         <div className="flex items-center gap-2 mb-4 px-2">
-                           <Zap size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
-                           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Events</h2>
-                         </div>
-                         <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
-                           {displayFeatured.map(exp => (
-                             <div key={`feat-${exp.id}`} onClick={()=>setSelectedItem(exp)} className={`min-w-[280px] h-48 ${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg snap-center relative group cursor-pointer flex-shrink-0`}>
-                               {exp.img && <img src={exp.img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />}
-                               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                               <div className="absolute bottom-4 left-4 right-4 text-white">
-                                 <span className="bg-[#38bdf8] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Top Pick</span>
-                                 <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{exp.name}</h3>
-                                 {exp.date && <p className="text-[10px] font-bold text-[#ffcb05] mt-0.5 truncate">{exp.date}</p>}
-                                 <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
-                                   {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
-                                 </span>
-                               </div>
-                             </div>
-                           ))}
-                         </div>
-                       </div>
-                     );
-                   })()}
-
-                   <div className="text-center px-4">
-                     <div className="flex overflow-x-auto gap-3 mt-6 mb-2 no-scrollbar px-1">
-                        {MONTHS_EXP.map((m) => (
-                           <button key={m} onClick={() => setActiveMonth(m)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeMonth === m ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{m}</button>
-                        ))}
-                     </div>
-                     <div className="flex overflow-x-auto gap-3 mb-2 no-scrollbar px-1">
-                       {CATEGORIES_EXP.map((cat) => (
-                         <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#38bdf8] border-[#38bdf8] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{cat}</button>
-                       ))}
-                     </div>
-                   </div>
-                   
-                   <div className="space-y-4 px-1 pt-4 w-full">
-                      {shuffledExp && shuffledExp.length > 0 ? (
-                        <>
-                          {shuffledExp.slice(0, activeExpCat === 'All' && activeMonth === 'All Months' ? visibleCount : shuffledExp.length).map(exp => (
-                            <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex flex-col sm:flex-row rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group active:scale-[0.99] transition-transform`}>
-                                <div className="sm:w-36 h-40 sm:h-auto relative flex-shrink-0">
-                                  {exp.img ? <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" /> : <div className={`w-full h-full ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={28} className="opacity-30" /></div>}
-                                  {exp.price && <span className="absolute bottom-3 left-3 sm:hidden bg-black/70 backdrop-blur-md text-[#ffcb05] text-[10px] font-black px-2.5 py-1 rounded-lg uppercase">{exp.price}</span>}
-                                </div>
-                                
-                                <div className="flex-1 p-5 flex flex-col justify-between text-left space-y-3">
-                                   <div>
-                                     <div className="flex justify-between items-start gap-2">
-                                       <h4 className={`font-bold uppercase text-sm leading-tight ${theme.text} line-clamp-1 tracking-tight`}>{exp.name}</h4>
-                                       <div className="flex items-center gap-1">
-                                         <button onClick={(e) => handleShare(exp, e)} className={`p-2 rounded-full transition-colors ${theme.secondaryText} hover:text-[#ffcb05]`} title="Share event">
-                                           <Share2 size={16} />
-                                         </button>
-                                         <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : theme.secondaryText}`}>
-                                           <Heart size={16} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} />
-                                         </button>
-                                       </div>
-                                     </div>
-
-                                     {exp.date && (
-                                       <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">
-                                         <Calendar size={13} />
-                                         <span>{exp.date}</span>
-                                       </div>
-                                     )}
-
-                                     {exp.time && (
-                                       <div className={`flex items-center gap-1.5 text-[10px] font-medium ${theme.secondaryText} mt-0.5`}>
-                                         <Clock size={12} />
-                                         <span>{exp.time}</span>
-                                       </div>
-                                     )}
-
-                                     {exp.address && (
-                                       <div className={`flex items-center gap-1.5 text-[10px] ${theme.secondaryText} mt-0.5 truncate`}>
-                                         <MapPin size={12} className="flex-shrink-0" />
-                                         <span className="truncate">{exp.address}</span>
-                                       </div>
-                                     )}
-                                   </div>
-
-                                   <div className={`flex items-center justify-between pt-2 border-t ${theme.border}`}>
-                                     <span className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] hidden sm:inline-block">{exp.price || 'Free'}</span>
-                                     <span className="text-[9px] font-black text-[#0284c7] dark:text-[#34a4b8] uppercase tracking-[0.2em]">
-                                       {Array.isArray(exp.category) ? exp.category[0] : exp.category}
-                                     </span>
-                                     <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-4 py-2 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
-                                   </div>
-                                </div>
-                            </div>
-                          ))}
-                          {activeExpCat === 'All' && activeMonth === 'All Months' && visibleCount < (shuffledExp.length || 0) && (
-                            <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
-                          )}
-
-                          <div className="pt-6">
-                            <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
-                              <div className="space-y-1 text-left">
-                                <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Live Events & Gatherings</span>
-                                <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Happening or Event</h4>
-                                <p className="text-[11px] text-slate-300">Submit your concert, workshop, meetup, or festival to the community schedule.</p>
-                              </div>
-                              <button
-                                onClick={() => openPartnerModal('general')}
-                                className="p-3.5 bg-[#38bdf8] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
-                                title="Add your event"
-                              >
-                                <Calendar size={18} />
-                              </button>
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
-                          <div className="pt-4">
-                            <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
-                              <div className="space-y-1 text-left">
-                                <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Live Events & Gatherings</span>
-                                <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Happening or Event</h4>
-                                <p className="text-[11px] text-slate-300">Submit your concert, workshop, meetup, or festival to the community schedule.</p>
-                              </div>
-                              <button
-                                onClick={() => openPartnerModal('general')}
-                                className="p-3.5 bg-[#38bdf8] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
-                                title="Add your event"
-                              >
-                                <Calendar size={18} />
-                              </button>
-                            </div>
-                          </div>
-                        </>
-                      )}
-                   </div>
-                </div>
-              )}
-            </>
-          )}
-        </main>
-
-        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
-          {[
-            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
-            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-            { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
-            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
-            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
-          ].map(v => {
-            const isActive = !activeTool && view === v.id;
-            return (
-              <button key={v.id} onClick={() => { setActiveTool(null); setView(v.id); }} className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-60 hover:opacity-100'}`} style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}>
-                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
-                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .font-header { font-family: 'Outfit', sans-serif; }
-        .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
-        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
-        .wp-content strong { color: #ffcb05; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
-        .bg-\\[\\#0a121e\\] .wp-content, .bg-\\[\\#0a121e\\] .wp-content p { color: #f1f5f9 !important; }
-      `}} />
-    </div>
-  );
-}
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${themeI encountered an error doing what you asked. Could you try again?
