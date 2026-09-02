@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signO
 import { 
   getFirestore, doc, setDoc, getDoc, collection, 
   addDoc, updateDoc, arrayUnion, arrayRemove, 
-  onSnapshot, query, orderBy, limit 
+  onSnapshot, query, orderBy, limit, increment 
 } from 'firebase/firestore';
 import { app } from './firebase'; // Adjust path if needed
 
@@ -17,7 +17,7 @@ import {
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
   Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
-  PenTool, ShieldCheck, MessageCircle, Send, Trees, Route, ThumbsUp, CheckSquare, Square, Copy
+  PenTool, ShieldCheck, MessageCircle, Send, Trees, Route, ThumbsUp, CheckSquare, Square, Copy, MessageCircleCode
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -157,6 +157,113 @@ const handleShare = async (item, e) => {
   }
 };
 
+// --- THREADED COMMENTS MODAL / DRAWER COMPONENT ---
+const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
+  const [comments, setComments] = useState([]);
+  const [replyText, setReplyText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen || !story) return;
+    const q = query(collection(db, 'community_stories', story.id, 'comments'), orderBy('timestamp', 'asc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setComments(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+    return () => unsubscribe();
+  }, [isOpen, story]);
+
+  if (!isOpen || !story) return null;
+
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    if (!user) return alert('Please sign in to join the discussion!');
+    if (!replyText.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      await addDoc(collection(db, 'community_stories', story.id, 'comments'), {
+        text: replyText.trim(),
+        author: user.displayName || 'A2 Neighbor',
+        userId: user.uid,
+        timestamp: Date.now()
+      });
+      setReplyText('');
+    } catch (err) {
+      console.error('Error posting comment:', err);
+      alert('Could not post comment. Please check your connection.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div>
+            <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Discussion Thread</span>
+            <h3 className="text-lg font-header font-black uppercase italic tracking-tight truncate max-w-[320px]" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+              {story.title}
+            </h3>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+          <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} border space-y-1`}>
+            <p className={`text-xs font-bold ${theme.text}`}>Original Post by {story.author}</p>
+            <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{story.content}</p>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <h4 className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Comments ({comments.length})</h4>
+            
+            {comments.length > 0 ? (
+              comments.map(c => (
+                <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
+                  <div className="flex justify-between items-center text-[10px]">
+                    <span className={`font-black uppercase tracking-wider text-[#a855f7]`}>{c.author}</span>
+                    <span className={theme.secondaryText}>{c.timestamp ? new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Just now'}</span>
+                  </div>
+                  <p className={`text-xs leading-relaxed ${theme.text}`}>{c.text}</p>
+                </div>
+              ))
+            ) : (
+              <div className={`p-8 border-2 border-dashed rounded-2xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                No comments yet. Start the conversation below!
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={`sticky bottom-0 p-4 ${theme.appBg} border-t ${theme.border}`}>
+          <form onSubmit={handleAddComment} className="flex gap-2">
+            <input 
+              type="text" 
+              required 
+              value={replyText} 
+              onChange={e => setReplyText(e.target.value)}
+              placeholder={user ? "Write a reply or tip..." : "Sign in to comment..."}
+              disabled={!user}
+              className={`flex-1 p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#a855f7]`}
+            />
+            <button 
+              type="submit" 
+              disabled={isSubmitting || !user}
+              className="px-5 py-3.5 bg-[#a855f7] text-white rounded-2xl font-black uppercase text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1"
+            >
+              <Send size={14} />
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- SHAREABLE ITINERARY BUILDER MODAL ---
 const CreateItineraryModal = ({ isOpen, onClose, favorites, user, theme }) => {
   const [title, setTitle] = useState('');
@@ -186,7 +293,6 @@ const CreateItineraryModal = ({ isOpen, onClose, favorites, user, theme }) => {
     if (!selectedIds.length) return alert('Select at least one spot to include in your itinerary.');
     setIsSaving(true);
 
-    // Sanitize items: Firestore rejects objects with undefined properties
     const chosenItems = favorites
       .filter(f => selectedIds.includes(f.id))
       .map(item => {
@@ -229,11 +335,7 @@ const CreateItineraryModal = ({ isOpen, onClose, favorites, user, theme }) => {
       }
     } catch (err) {
       console.error('Detailed Error saving itinerary:', err.code, err.message, err);
-      if (err.code === 'permission-denied') {
-        alert('Permission Denied: Please check your Firestore security rules for "shared_itineraries".');
-      } else {
-        alert(`Could not create itinerary: ${err.message || 'Please check your connection.'}`);
-      }
+      alert(`Could not create itinerary: ${err.message || 'Please check your connection.'}`);
     } finally {
       setIsSaving(false);
     }
@@ -1348,7 +1450,7 @@ const HubView = ({
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
   vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
-  onOpenItineraryModal
+  onOpenItineraryModal 
 }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
@@ -1376,6 +1478,7 @@ const HubView = ({
   const [forumPostContent, setForumPostContent] = useState('');
   const [forumPostChannel, setForumPostChannel] = useState('Community Chat');
   const [isPostingForum, setIsPostingForum] = useState(false);
+  const [activeCommentStory, setActiveCommentStory] = useState(null);
 
   useEffect(() => {
     const q = query(collection(db, 'community_stories'), orderBy('timestamp', 'desc'), limit(30));
@@ -1445,6 +1548,14 @@ const HubView = ({
 
   return (
     <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
+      <ForumCommentsModal 
+        isOpen={!!activeCommentStory} 
+        onClose={() => setActiveCommentStory(null)} 
+        story={activeCommentStory} 
+        user={user} 
+        theme={theme} 
+      />
+
       <div className="space-y-10 px-2 w-full">
         <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
@@ -1676,7 +1787,7 @@ const HubView = ({
           </div>
         </div>
 
-        {/* COMMUNITY FORUM WITH VOTING */}
+        {/* COMMUNITY FORUM WITH THREADED COMMENTS */}
         <section className={`space-y-6 w-full pt-8 border-t ${theme.border}`}>
           <div className="px-1 space-y-2">
             <div className="flex items-center justify-between">
@@ -1785,15 +1896,27 @@ const HubView = ({
                         )}
                       </div>
 
-                      {/* COMMUNITY FORUM VOTING BUTTON */}
-                      <button
-                        onClick={(e) => handleVotePost(post, e)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all active:scale-90 ${userVoted ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}
-                        title={user ? (userVoted ? 'Remove Vote' : 'Upvote post') : 'Sign in to vote'}
-                      >
-                        <ThumbsUp size={12} className={userVoted ? 'fill-black' : ''} />
-                        <span>{post.likes || 0}</span>
-                      </button>
+                      <div className="flex items-center gap-2">
+                        {/* THREADED COMMENTS BUTTON */}
+                        <button
+                          onClick={() => setActiveCommentStory(post)}
+                          className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all active:scale-90 ${theme.border} ${theme.secondaryText} hover:text-white hover:border-[#a855f7]`}
+                          title="Open discussion thread"
+                        >
+                          <MessageCircle size={13} className="text-[#a855f7]" />
+                          <span>Comments</span>
+                        </button>
+
+                        {/* COMMUNITY FORUM VOTING BUTTON */}
+                        <button
+                          onClick={(e) => handleVotePost(post, e)}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all active:scale-90 ${userVoted ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}
+                          title={user ? (userVoted ? 'Remove Vote' : 'Upvote post') : 'Sign in to vote'}
+                        >
+                          <ThumbsUp size={12} className={userVoted ? 'fill-black' : ''} />
+                          <span>{post.likes || 0}</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
@@ -1932,7 +2055,7 @@ const HomeView = ({
               <img src={featuredPosts[highlightIdx]?.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-110" alt="" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               <div className="absolute bottom-12 left-8 right-8 text-white space-y-3">
-                <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block">Trending Now</span>
+                <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block mb-2">Trending Now</span>
                 <h4 className="text-2xl font-header font-black uppercase italic leading-tight drop-shadow-md tracking-tighter">{featuredPosts[highlightIdx]?.title || ''}</h4>
                 <p className="text-sm font-medium opacity-80 line-clamp-2 leading-relaxed italic">{featuredPosts[highlightIdx]?.excerpt || ''}</p>
               </div>
