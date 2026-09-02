@@ -1462,13 +1462,13 @@ const HubView = ({
     const catStr = Array.isArray(f.category)
       ? f.category.join(' ')
       : (typeof f.category === 'string' ? f.category : '');
-    return catStr.toLowerCase().includes('preserve') || catStr.toLowerCase().includes('arb');
+    return catStr.toLowerCase().includes('preserve') || catStr.toLowerCase().includes('arb') || f.id?.startsWith('park-');
   });
   const happeningsFavs = userFavorites.filter(f => 
-    (f.type === 'experience' || (f.name && !f.cuisine)) && f.type !== 'park'
+    (f.type === 'experience' || (f.name && !f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-')
   );
   const journalFavs = userFavorites.filter(f => 
-    (f.type === 'journal' || f.excerpt || (f.title && !f.cuisine && !f.name)) && f.type !== 'park'
+    (f.type === 'journal' || f.excerpt || (f.title && !f.cuisine && !f.name)) && f.type !== 'park' && !f.id?.startsWith('park-')
   );
 
   // Community Forum State
@@ -2224,7 +2224,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts,
         </div>
 
         <div 
-          onClick={openContributorModal}
+          onClick={onOpenContributorModal}
           className="aspect-square rounded-[32px] p-5 flex flex-col justify-between cursor-pointer border border-[#a855f7]/30 bg-gradient-to-br from-[#00274c] via-[#1a0f30] to-[#0a121e] shadow-xl group hover:border-[#a855f7] active:scale-[0.98] transition-all"
         >
           <div className="flex items-center justify-between">
