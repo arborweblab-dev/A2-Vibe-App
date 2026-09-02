@@ -22,12 +22,11 @@ import { happeningsData } from './data/happeningsData';
 
 // --- STRIPE PAYMENT LINKS CONFIGURATION ---
 const STRIPE_LINKS = {
-  boostedAnnual: 'https://buy.stripe.com/test_boosted_annual_300',
-  boostedMonthly: 'https://buy.stripe.com/test_boosted_monthly_35',
-  restaurantFeaturedPickAddon: 'https://buy.stripe.com/test_restaurant_featured_pick_50',
-  promoJournal: 'https://buy.stripe.com/test_addon_journal_45',
-  promoSMSocial: 'https://buy.stripe.com/test_addon_social_25',
-  promoWeekend: 'https://buy.stripe.com/test_addon_weekend_35'
+  boostedAnnual: 'https://buy.stripe.com/5kQ6oH3POdsjgNX30YeME02',
+  boostedMonthly: 'https://buy.stripe.com/bJe9ATbigag769j30YeME03',
+  restaurantFeaturedPickAddon: 'https://buy.stripe.com/3cI4gz1HGgEv69j0SQeME04',
+  promoJournal: 'https://buy.stripe.com/28EeVd1HG4VNdBL8lieME05',
+  promoSMSocial: 'https://buy.stripe.com/28E8wP9a85ZR7dn8lieME06'
 };
 
 // --- 2. CONFIGURATION ---
