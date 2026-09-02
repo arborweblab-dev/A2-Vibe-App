@@ -11,7 +11,8 @@ import {
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
-  Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare
+  Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
+  Share2, Calendar
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -47,6 +48,30 @@ const DEFAULT_BUCKET_ITEMS = [
 ];
 
 // --- Helpers ---
+const handleShare = async (item, e) => {
+  if (e) e.stopPropagation();
+  const shareData = item.share || {
+    title: `${item.name || item.title} on A2 Vibe`,
+    text: `Check out ${item.name || item.title} on A2 Vibe!`,
+    url: window.location.href
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+    } catch (err) {
+      // User cancelled share dialog
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(shareData.url);
+      alert("Event link copied to clipboard!");
+    } catch (err) {
+      console.error("Failed to copy link", err);
+    }
+  }
+};
+
 const Watermark = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.02] flex items-center justify-center">
     <Building size={500} strokeWidth={0.5} className="rotate-12" />
@@ -63,10 +88,13 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
       <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
         <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
-          <h3 className={`text-lg font-header font-black uppercase italic tracking-tight pr-4`} style={{ color: '#ffcb05' }}>
+          <h3 className={`text-lg font-header font-black uppercase italic tracking-tight pr-4 truncate`} style={{ color: '#ffcb05' }}>
             {item.name || item.title || 'Spotlight'}
           </h3>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <button onClick={(e) => handleShare(item, e)} className="p-2.5 rounded-full transition-all duration-300 bg-white/5 active:scale-90 text-slate-300 hover:text-white" title="Share">
+              <Share2 size={20} />
+            </button>
             <button onClick={() => toggleFavorite(item)} className="p-2.5 rounded-full transition-all duration-300 bg-white/5 active:scale-90">
               <Heart size={22} className="text-[#ffcb05] drop-shadow-[0_0_8px_rgba(255,203,5,0.5)]" fill={isFavorited ? "#ffcb05" : "none"} strokeWidth={2.5}/>
             </button>
@@ -78,33 +106,61 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
         <div className="p-8 space-y-6">
           {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
 
-          <div className="flex items-center gap-4 flex-wrap">
-            {item.price && <div className="bg-[#ffcb05]/20 text-[#ffcb05] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
-            {item.cuisine && <div className="bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide">{item.cuisine}</div>}
-            <div className="bg-[#00274c]/40 text-[#34a4b8] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
+          <div className="flex items-center gap-2 flex-wrap">
+            {item.price && <div className="bg-[#ffcb05]/20 text-[#ffcb05] px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
+            {item.cuisine && <div className="bg-emerald-500/20 text-emerald-400 px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wide">{item.cuisine}</div>}
+            <div className="bg-[#00274c]/40 text-[#34a4b8] px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest">
               {Array.isArray(item.category) ? item.category.join(' • ') : (item.category || item.neighborhood || 'City Guide')}
             </div>
             {item.month && (
-               <div className="bg-[#a855f7]/20 text-[#a855f7] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
+               <div className="bg-[#a855f7]/20 text-[#a855f7] px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest">
                  {item.month}
                </div>
             )}
           </div>
-          {item.address && (
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 bg-black/20 p-3 rounded-xl border border-white/5">
-              <MapPin size={16} className="text-[#ffcb05]" />
-              <span>{item.address}</span>
+
+          {(item.date || item.time) && (
+            <div className="space-y-2 bg-black/20 p-4 rounded-2xl border border-white/5">
+              {item.date && (
+                <div className="flex items-center gap-2.5 text-xs font-bold text-slate-300">
+                  <Calendar size={16} className="text-[#38bdf8] flex-shrink-0" />
+                  <span>{item.date}</span>
+                </div>
+              )}
+              {item.time && (
+                <div className="flex items-center gap-2.5 text-xs font-bold text-slate-300">
+                  <Clock size={16} className="text-[#ffcb05] flex-shrink-0" />
+                  <span>{item.time}</span>
+                </div>
+              )}
             </div>
           )}
+
+          {item.address && (
+            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-400 bg-black/20 p-4 rounded-2xl border border-white/5">
+              <MapPin size={16} className="text-[#ffcb05] flex-shrink-0" />
+              <span className="leading-snug">{item.address}</span>
+            </div>
+          )}
+
           <div className={`text-base leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`} 
             dangerouslySetInnerHTML={{ __html: item.longDesc || item.desc || item.excerpt || 'Accessing city database...' }} 
           />
-          {item.url && (
-            <button onClick={() => { window.open(item.url, '_blank'); }} className="w-full bg-[#ffcb05] text-black font-black uppercase text-base py-5 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
-              <span>Visit Official Website</span>
-              <Navigation size={18} />
-            </button>
-          )}
+
+          <div className="flex gap-3 pt-2">
+            {item.share && (
+              <button onClick={(e) => handleShare(item, e)} className="flex-1 bg-white/10 hover:bg-white/20 text-white font-black uppercase text-sm py-4 rounded-2xl border border-white/10 active:scale-95 transition-all flex items-center justify-center gap-2">
+                <Share2 size={16} />
+                <span>Share</span>
+              </button>
+            )}
+            {item.url && (
+              <button onClick={() => { window.open(item.url, '_blank'); }} className="flex-[2] bg-[#ffcb05] text-black font-black uppercase text-sm py-4 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
+                <span>Visit Official Site</span>
+                <Navigation size={16} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
   </div>
@@ -618,7 +674,10 @@ const HomeView = ({ theme, setSelectedItem, itineraries, dining, featuredPosts, 
             <div key={item.id} onClick={() => setSelectedItem(item)} className={`min-w-[300px] h-36 ${theme.card} border ${theme.border} rounded-[24px] overflow-hidden flex cursor-pointer shadow-md snap-center relative group`}>
               {item.img && <img src={item.img} className="w-24 h-full object-cover" alt="" />}
               <div className="flex-1 p-4 flex flex-col justify-between">
-                <h4 className={`font-bold text-xs ${theme.text} line-clamp-2 leading-tight uppercase tracking-tight`}>{item.name}</h4>
+                <div>
+                  <h4 className={`font-bold text-xs ${theme.text} line-clamp-2 leading-tight uppercase tracking-tight`}>{item.name}</h4>
+                  {item.date && <p className="text-[9px] font-bold text-slate-400 mt-1 truncate">{item.date}</p>}
+                </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-black text-[#34a4b8]">{item.price}</span>
                   <button onClick={(e) => { e.stopPropagation(); setSelectedItem(item); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">Details</button>
@@ -950,6 +1009,7 @@ export default function App() {
                                <div className="absolute bottom-4 left-4 right-4 text-white">
                                  <span className="bg-[#38bdf8] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Top Pick</span>
                                  <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{exp.name}</h3>
+                                 {exp.date && <p className="text-[10px] font-bold text-[#ffcb05] mt-0.5 truncate">{exp.date}</p>}
                                  <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
                                    {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
                                  </span>
@@ -961,7 +1021,7 @@ export default function App() {
                      );
                    })()}
 
-                   {/* --- MISSING TOOL GRID RESTORED HERE --- */}
+                   {/* --- URBAN AND FUN TOOLS GRID --- */}
                    <section className="space-y-5 px-1 w-full">
                      <div className="flex items-center gap-2"><Sparkles size={18} className="text-[#34a4b8]" /><h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4></div>
                      <div className="grid grid-cols-2 gap-3">
@@ -989,25 +1049,60 @@ export default function App() {
                      </div>
                    </div>
                    
-                   <div className="space-y-5 px-1 pt-4 w-full">
+                   {/* HAPPENINGS LIST WITH DATE, TIME & SHARE */}
+                   <div className="space-y-4 px-1 pt-4 w-full">
                       {shuffledExp && shuffledExp.length > 0 ? (
                         <>
                           {shuffledExp.slice(0, activeExpCat === 'All' && activeMonth === 'All Months' ? visibleCount : shuffledExp.length).map(exp => (
-                            <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex h-36 rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group`}>
-                                {exp.img && <img src={exp.img} className="w-28 h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" />}
-                                <div className="flex-1 p-5 flex flex-col justify-between text-left">
-                                   <div className="flex justify-between items-start">
-                                     <div className="max-w-[85%]">
-                                       <h4 className={`font-bold uppercase text-xs leading-tight ${theme.text} line-clamp-2 tracking-tight`}>{exp.name}</h4>
-                                       <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em] mt-2 block">
-                                         {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
-                                       </span>
+                            <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex flex-col sm:flex-row rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group active:scale-[0.99] transition-transform`}>
+                                <div className="sm:w-36 h-40 sm:h-auto relative flex-shrink-0">
+                                  {exp.img ? <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" /> : <div className="w-full h-full bg-black/10 flex items-center justify-center"><Building size={28} className="opacity-30" /></div>}
+                                  {exp.price && <span className="absolute bottom-3 left-3 sm:hidden bg-black/70 backdrop-blur-md text-[#ffcb05] text-[10px] font-black px-2.5 py-1 rounded-lg uppercase">{exp.price}</span>}
+                                </div>
+                                
+                                <div className="flex-1 p-5 flex flex-col justify-between text-left space-y-3">
+                                   <div>
+                                     <div className="flex justify-between items-start gap-2">
+                                       <h4 className={`font-bold uppercase text-sm leading-tight ${theme.text} line-clamp-1 tracking-tight`}>{exp.name}</h4>
+                                       <div className="flex items-center gap-1">
+                                         <button onClick={(e) => handleShare(exp, e)} className="p-2 rounded-full transition-colors text-slate-400 hover:text-white" title="Share event">
+                                           <Share2 size={16} />
+                                         </button>
+                                         <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'text-slate-400'}`}>
+                                           <Heart size={16} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} />
+                                         </button>
+                                       </div>
                                      </div>
-                                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : ''}`}><Heart size={18} className={(favorites || []).some(f => f.id === exp.id) ? 'text-[#ffcb05]' : 'text-slate-300'} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} /></button>
+
+                                     {/* EVENT DATE & TIME BADGE */}
+                                     {exp.date && (
+                                       <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#38bdf8] mt-1">
+                                         <Calendar size={13} />
+                                         <span>{exp.date}</span>
+                                       </div>
+                                     )}
+
+                                     {exp.time && (
+                                       <div className="flex items-center gap-1.5 text-[10px] font-medium text-slate-400 mt-0.5">
+                                         <Clock size={12} />
+                                         <span>{exp.time}</span>
+                                       </div>
+                                     )}
+
+                                     {exp.address && (
+                                       <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-0.5 truncate">
+                                         <MapPin size={12} className="flex-shrink-0" />
+                                         <span className="truncate">{exp.address}</span>
+                                       </div>
+                                     )}
                                    </div>
-                                   <div className="flex items-center justify-between">
-                                     <span className={`text-[10px] font-black uppercase text-slate-500`}>{exp.price || 'A2 LOCAL'}</span>
-                                     <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-5 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+
+                                   <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                                     <span className="text-[10px] font-black uppercase text-[#ffcb05] hidden sm:inline-block">{exp.price || 'Free'}</span>
+                                     <span className="text-[9px] font-black text-[#34a4b8] uppercase tracking-[0.2em]">
+                                       {Array.isArray(exp.category) ? exp.category[0] : exp.category}
+                                     </span>
+                                     <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-4 py-2 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
                                    </div>
                                 </div>
                             </div>
