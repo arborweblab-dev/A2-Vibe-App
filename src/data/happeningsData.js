@@ -1015,26 +1015,5 @@ export const happeningsData = [
       text: "Ring in the New Year at The Ark on A2 Vibe!",
       url: `${BASE_SHARE_URL}#dec-14`
     }
-  },
-  {
-    id: "dec-15",
-    name: "Saline Holiday Craft Show",
-    month: "December",
-    date: "November 14, 2026",
-    time: "9:30 AM - 4:00 PM",
-    address: "1300 Campus Pkwy, Saline, MI 48176 (Saline High School)",
-    category: ["Shopping", "Family Friendly"],
-    price: "$5",
-    neighborhood: "Saline",
-    img: "/images/dec-salinecraft.jpg",
-    shortDesc: "Massive juried craft show just south of Ann Arbor.",
-    longDesc: "<p>Featuring hundreds of crafters from across the Midwest, this massive event is perfect for finding detailed woodwork, custom ornaments, and unique textiles.</p>",
-    url: "https://salineschools.org",
-    type: "experience",
-    share: {
-      title: "Saline Holiday Craft Show on A2 Vibe",
-      text: "Check out Saline Holiday Craft Show on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#dec-15`
-    }
   }
 ];
