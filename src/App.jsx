@@ -2280,7 +2280,7 @@ const HomeView = ({
               {res.img ? <img src={res.img} className="w-full h-28 object-cover" alt="" /> : <div className={`w-full h-28 ${theme.isDark ? 'bg-[#00274c]/20' : 'bg-slate-100'} flex items-center justify-center`}><Building size={24} className="text-[#ffcb05]/40" /></div>}
               <div className="p-4">
                 <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title}</h4>
-                <p className="text-[8px] font-black text-[#0284c7] dark:text-[#34a4b8] uppercase tracking-[0.2em] mt-1">{res.cuisine || 'Gourmet A2'}</p>
+                <p className="text-[8px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em] mt-1">{res.cuisine || 'Gourmet A2'}</p>
               </div>
               <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/20 text-white' : 'bg-black/5 text-slate-600')}`}><Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} /></button>
             </div>
@@ -2300,7 +2300,7 @@ const HomeView = ({
               <img src={featuredPosts[highlightIdx]?.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-110" alt="" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               <div className="absolute bottom-12 left-8 right-8 text-white space-y-3">
-                <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block mb-2">Trending Now</span>
+                <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Trending Now</span>
                 <h4 className="text-2xl font-header font-black uppercase italic leading-tight drop-shadow-md tracking-tighter">{featuredPosts[highlightIdx]?.title || ''}</h4>
                 <p className="text-sm font-medium opacity-80 line-clamp-2 leading-relaxed italic">{featuredPosts[highlightIdx]?.excerpt || ''}</p>
               </div>
@@ -2842,7 +2842,23 @@ export default function App() {
                             <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
                           )}
 
-                          <div className="pt-6">
+                          <div className="pt-6 space-y-3.5">
+                            {/* ANN ARBOR PARK FINDER CTA BANNER */}
+                            <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#064e3b] via-[#043e2e] to-[#022c22] border border-emerald-500/30 flex items-center justify-between shadow-xl">
+                              <div className="space-y-1 text-left">
+                                <span className="text-[9px] font-black uppercase text-emerald-400 tracking-widest block">Explore Tree Town</span>
+                                <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Ann Arbor Park Finder</h4>
+                                <p className="text-[11px] text-emerald-100/80">Explore riverfront preserves, nature trails, dog-friendly paths, and playgrounds.</p>
+                              </div>
+                              <button
+                                onClick={openParksModal}
+                                className="p-3.5 bg-emerald-400 text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
+                                title="Open Park Finder"
+                              >
+                                <Trees size={18} />
+                              </button>
+                            </div>
+
                             <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
                               <div className="space-y-1 text-left">
                                 <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Live Events & Gatherings</span>
@@ -2862,7 +2878,23 @@ export default function App() {
                       ) : (
                         <>
                           <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
-                          <div className="pt-4">
+                          <div className="pt-4 space-y-3.5">
+                            {/* ANN ARBOR PARK FINDER CTA BANNER */}
+                            <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#064e3b] via-[#043e2e] to-[#022c22] border border-emerald-500/30 flex items-center justify-between shadow-xl">
+                              <div className="space-y-1 text-left">
+                                <span className="text-[9px] font-black uppercase text-emerald-400 tracking-widest block">Explore Tree Town</span>
+                                <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Ann Arbor Park Finder</h4>
+                                <p className="text-[11px] text-emerald-100/80">Explore riverfront preserves, nature trails, dog-friendly paths, and playgrounds.</p>
+                              </div>
+                              <button
+                                onClick={openParksModal}
+                                className="p-3.5 bg-emerald-400 text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
+                                title="Open Park Finder"
+                              >
+                                <Trees size={18} />
+                              </button>
+                            </div>
+
                             <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
                               <div className="space-y-1 text-left">
                                 <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Live Events & Gatherings</span>
