@@ -55,7 +55,7 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Riverfront & Trails',
     address: '3000 Fuller Rd, Ann Arbor, MI',
-    img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+    img: 'https://a2vibe.com/images/Gallup_Park.jpg',
     shortDesc: 'Scenic 69-acre park winding along the Huron River with pedestrian bridges, boat launches, and trails.',
     longDesc: '<p>Gallup Park is Ann Arbor’s premier riverfront escape. Features 3 miles of paved trails traversing small islands, wooden footbridges, picnic pavilions, wildlife viewing spots, and seasonal kayak and canoe rentals.</p>',
     dogFriendly: true,
