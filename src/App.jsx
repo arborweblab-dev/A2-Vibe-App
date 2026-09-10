@@ -34,7 +34,7 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Nature & Arb',
     address: '1610 Washington Hts, Ann Arbor, MI',
-    img: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
+    img: 'https://a2vibe.com/images/UofM_Nichols_Arboretum.jpg',
     shortDesc: 'Iconic 123-acre river valley featuring the Peony Garden, river trails, and historic tree collections.',
     longDesc: '<p>Beloved by locals as "The Arb," this historic reserve along the Huron River offers miles of gravel pathways, panoramic hillside vistas, glacial topography, and the world-renowned Nichols Arboretum Peony Garden.</p>',
     dogFriendly: true,
