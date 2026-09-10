@@ -170,7 +170,7 @@ const THEMES = {
   dark: { primary: '#ffcb05', windowBg: 'bg-[#050b14]', appBg: 'bg-[#0a121e]', card: 'bg-[#151f2e]', text: 'text-slate-100', secondaryText: 'text-slate-400', border: 'border-slate-800', isDark: true }
 };
 
-const CATEGORIES_JOURNAL = ['All', 'City Life', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
+const CATEGORIES_JOURNAL = ['All', 'City Life', 'Parks', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
 const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
 const MONTHS_EXP = ['All Months', 'October', 'November', 'December'];
 const AVAILABLE_TAGS = ['Foodie', 'U-M Alum', 'Townie', 'Student', 'Trail Runner', 'Night Owl', 'Art Lover', 'Coffee Snob'];
@@ -1990,6 +1990,7 @@ const HubView = ({
           </div>
           <div className="grid grid-cols-2 gap-3">
             {[
+              {id:'parkfinder',icon:Trees,label:'A2 Park Finder',color:'#10b981',action:onOpenParksModal},
               {id:'community',icon:MessageSquare,label:'Local Gems',color:'#38bdf8'},
               {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
               {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'},
@@ -2000,7 +2001,10 @@ const HubView = ({
             ].map(t => (
               <button
                 key={t.id}
-                onClick={() => setActiveTool(t.id)}
+                onClick={() => {
+                  if (t.action) t.action();
+                  else setActiveTool(t.id);
+                }}
                 className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}
               >
                 <div className="p-2 rounded-lg" style={{backgroundColor: t.color+'20', color: t.color}}>
@@ -2222,7 +2226,7 @@ const HomeView = ({
                   {item.date && <p className={`text-[9px] font-bold ${theme.secondaryText} mt-1 truncate`}>{item.date}</p>}
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black text-[#0284c7] dark:text-[#34a4b8]">{item.price}</span>
+                  <span className="text-[10px] font-black text-[#0284c7] dark:text-[#38bdf8]">{item.price}</span>
                   <button onClick={(e) => { e.stopPropagation(); setSelectedItem(item); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">Details</button>
                 </div>
               </div>
@@ -2235,7 +2239,7 @@ const HomeView = ({
       {/* QUICK LAUNCH GRID WITH PARKS FINDER BUTTON INCLUDED */}
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
-          <Ticket size={18} className="text-[#0284c7] dark:text-[#34a4b8]" />
+          <Ticket size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Quick Launch</h2>
         </div>
         <div className="grid grid-cols-5 gap-2.5 px-1">
@@ -2265,7 +2269,7 @@ const HomeView = ({
       <section id="island-flavors">
         <div className="flex items-center justify-between mb-4 px-2">
           <div className="flex items-center gap-2">
-            <Utensils size={18} className="text-[#0284c7] dark:text-[#34a4b8]" />
+            <Utensils size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
             <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Eats</h2>
           </div>
           <button onClick={() => setView('flavors')} className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] tracking-widest">View All ({dining.length})</button>
