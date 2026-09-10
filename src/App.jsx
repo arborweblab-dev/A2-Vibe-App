@@ -76,7 +76,7 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Woodland Preserve',
     address: 'Newport Rd & Bird Rd, Ann Arbor, MI',
-    img: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80',
+    img: 'https://a2vibe.com/images/birds-hill.jpg',
     shortDesc: 'Ann Arbor’s largest city nature park with 146 acres of quiet dirt trails under dense hardwood canopy.',
     longDesc: '<p>A sanctuary for trail runners and bird watchers, Bird Hills is an untouched forested refuge featuring rugged terrain, deep ravines, and native oak and maple groves without bikes or motorized access.</p>',
     dogFriendly: true,
