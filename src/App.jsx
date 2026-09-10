@@ -16,7 +16,8 @@ import {
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
   Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
-  PenTool, ShieldCheck, MessageCircle, Send, Trees, Route, ThumbsUp, CheckSquare, Square, Copy, MessageCircleCode
+  PenTool, ShieldCheck, MessageCircle, Send, Trees, Route, ThumbsUp, CheckSquare, Square, Copy, MessageCircleCode,
+  Dog, Accessibility, Bike, Baby, Bath, Check
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -24,7 +25,7 @@ import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
 
-// --- CURATED PARKS & NATURE PRESERVES DATA ---
+// --- CURATED PARKS & NATURE PRESERVES DATA WITH AMENITIES ---
 const PARKS_DATA = [
   {
     id: 'park-arb',
@@ -35,7 +36,17 @@ const PARKS_DATA = [
     address: '1610 Washington Hts, Ann Arbor, MI',
     img: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'Iconic 123-acre river valley featuring the Peony Garden, river trails, and historic tree collections.',
-    longDesc: '<p>Beloved by locals as "The Arb," this historic reserve along the Huron River offers miles of gravel pathways, panoramic hillside vistas, glacial topography, and the world-renowned Nichols Arboretum Peony Garden.</p>'
+    longDesc: '<p>Beloved by locals as "The Arb," this historic reserve along the Huron River offers miles of gravel pathways, panoramic hillside vistas, glacial topography, and the world-renowned Nichols Arboretum Peony Garden.</p>',
+    dogFriendly: true,
+    dogNotes: 'Leashed dogs welcome throughout trails.',
+    accessibleTrails: false,
+    accessibilityNotes: 'Steep natural dirt hills and stone stairways; limited wheelchair access.',
+    restrooms: true,
+    restroomNotes: 'Seasonal portalets and Reader Center restrooms during open hours.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: false,
+    features: ['River Access', 'Peony Garden', 'Scenic Overlooks', 'Bird Watching']
   },
   {
     id: 'park-gallup',
@@ -46,7 +57,17 @@ const PARKS_DATA = [
     address: '3000 Fuller Rd, Ann Arbor, MI',
     img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'Scenic 69-acre park winding along the Huron River with pedestrian bridges, boat launches, and trails.',
-    longDesc: '<p>Gallup Park is Ann Arbor’s premier riverfront escape. Features 3 miles of paved trails traversing small islands, wooden footbridges, picnic pavilions, wildlife viewing spots, and seasonal kayak and canoe rentals.</p>'
+    longDesc: '<p>Gallup Park is Ann Arbor’s premier riverfront escape. Features 3 miles of paved trails traversing small islands, wooden footbridges, picnic pavilions, wildlife viewing spots, and seasonal kayak and canoe rentals.</p>',
+    dogFriendly: true,
+    dogNotes: 'Dog-friendly on leash with waste bag stations.',
+    accessibleTrails: true,
+    accessibilityNotes: 'Fully paved, flat walkways and ADA-compliant bridge ramps.',
+    restrooms: true,
+    restroomNotes: 'Permanent year-round ADA restrooms located at the Canoe Livery.',
+    playground: true,
+    familyFriendly: true,
+    bikeFriendly: true,
+    features: ['Canoe & Kayak Livery', 'Playground', 'Paved Trails', 'Picnic Shelters']
   },
   {
     id: 'park-bird-hills',
@@ -57,7 +78,17 @@ const PARKS_DATA = [
     address: 'Newport Rd & Bird Rd, Ann Arbor, MI',
     img: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'Ann Arbor’s largest city nature park with 146 acres of quiet dirt trails under dense hardwood canopy.',
-    longDesc: '<p>A sanctuary for trail runners and bird watchers, Bird Hills is an untouched forested refuge featuring rugged terrain, deep ravines, and native oak and maple groves without bikes or motorized access.</p>'
+    longDesc: '<p>A sanctuary for trail runners and bird watchers, Bird Hills is an untouched forested refuge featuring rugged terrain, deep ravines, and native oak and maple groves without bikes or motorized access.</p>',
+    dogFriendly: true,
+    dogNotes: 'Leashed dogs permitted; must stay on trails.',
+    accessibleTrails: false,
+    accessibilityNotes: 'Rugged dirt paths, exposed roots, and steep grades.',
+    restrooms: false,
+    restroomNotes: 'No public restrooms on-site.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: false,
+    features: ['Deep Woodland Trails', 'Ravine Overlooks', 'Wildlife & Birding']
   },
   {
     id: 'park-matthaei',
@@ -68,7 +99,17 @@ const PARKS_DATA = [
     address: '1800 N Dixboro Rd, Ann Arbor, MI',
     img: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'Sprawling conservatories, display gardens, wetlands, and peaceful nature loops on Dixboro Road.',
-    longDesc: '<p>Features a 10,000+ square foot tropical and desert conservatory surrounded by outdoor display beds, bonsai gardens, boardwalk trails over Fleming Creek, and sweeping wildflower habitats.</p>'
+    longDesc: '<p>Features a 10,000+ square foot tropical and desert conservatory surrounded by outdoor display beds, bonsai gardens, boardwalk trails over Fleming Creek, and sweeping wildflower habitats.</p>',
+    dogFriendly: false,
+    dogNotes: 'Service animals only. Pets not permitted in gardens or conservatory.',
+    accessibleTrails: true,
+    accessibilityNotes: 'Paved paths and level boardwalks through the central gardens.',
+    restrooms: true,
+    restroomNotes: 'Full modern ADA restrooms in visitor center.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: true,
+    features: ['Tropical Conservatory', 'Boardwalks', 'Display Gardens', 'Bonsai Collection']
   },
   {
     id: 'park-barton',
@@ -79,7 +120,17 @@ const PARKS_DATA = [
     address: 'Huron River Dr, Ann Arbor, MI',
     img: 'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'Quiet 102-acre natural area bordered by Barton Pond and the Huron River with boardwalk passages.',
-    longDesc: '<p>Located just northwest of downtown, Barton Nature Area features scenic river overlooks, rich marshlands, and walking connections through foot bridges to Huron River Drive and Foster Bridge.</p>'
+    longDesc: '<p>Located just northwest of downtown, Barton Nature Area features scenic river overlooks, rich marshlands, and walking connections through foot bridges to Huron River Drive and Foster Bridge.</p>',
+    dogFriendly: true,
+    dogNotes: 'Leashed dogs allowed on marked footpaths.',
+    accessibleTrails: false,
+    accessibilityNotes: 'Mostly unpaved nature paths, earthen trails, and boardwalks.',
+    restrooms: false,
+    restroomNotes: 'No restroom facilities available.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: false,
+    features: ['Barton Dam Overlooks', 'Footbridges', 'Wetland Trails']
   },
   {
     id: 'park-bandemer',
@@ -90,7 +141,17 @@ const PARKS_DATA = [
     address: '1352 Lakeshore Dr, Ann Arbor, MI',
     img: 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'Waterfront park featuring boardwalks along Argo Pond, a 9-hole disc golf course, and dirt bike jumps.',
-    longDesc: '<p>Bordering the west side of Argo Pond, Bandemer offers docks for crew shells and canoes, a shaded disc golf run, accessibility to the B2B Trail, and panoramic views of the water.</p>'
+    longDesc: '<p>Bordering the west side of Argo Pond, Bandemer offers docks for crew shells and canoes, a shaded disc golf run, accessibility to the B2B Trail, and panoramic views of the water.</p>',
+    dogFriendly: true,
+    dogNotes: 'Leashed dogs allowed along paths and open spaces.',
+    accessibleTrails: true,
+    accessibilityNotes: 'Accessible paved path connecting to the Border-to-Border (B2B) Trail.',
+    restrooms: true,
+    restroomNotes: 'Seasonal portable restrooms.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: true,
+    features: ['B2B Trail Connection', 'Disc Golf Course', 'Dirt Bike Jumps', 'Canoe Launch']
   }
 ];
 
@@ -143,9 +204,7 @@ const handleShare = async (item, e) => {
   if (navigator.share) {
     try {
       await navigator.share(shareData);
-    } catch (err) {
-      // User cancelled share dialog
-    }
+    } catch (err) {}
   } else {
     try {
       await navigator.clipboard.writeText(shareData.url);
@@ -154,6 +213,294 @@ const handleShare = async (item, e) => {
       console.error("Failed to copy link", err);
     }
   }
+};
+
+// --- DEDICATED PARK DETAIL MODAL ---
+const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
+  if (!isOpen || !park) return null;
+
+  return (
+    <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex items-center gap-2.5 min-w-0 pr-3">
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 flex-shrink-0">
+              <Trees size={20} />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">
+                {park.category || 'Nature Preserve'}
+              </span>
+              <h3 className="text-xl font-header font-black uppercase italic tracking-tight truncate" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+                {park.name}
+              </h3>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button onClick={(e) => handleShare(park, e)} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/5 text-slate-300' : 'bg-black/5 text-slate-700'} active:scale-90`} title="Share">
+              <Share2 size={18} />
+            </button>
+            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {park.img && (
+            <div className="relative rounded-[32px] overflow-hidden shadow-lg h-60">
+              <img src={park.img} className="w-full h-full object-cover" alt={park.name} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <span className="absolute bottom-4 left-4 bg-emerald-600/90 text-white text-[9px] font-black uppercase px-3 py-1 rounded-full backdrop-blur-sm tracking-wider">
+                Ann Arbor Green Space
+              </span>
+            </div>
+          )}
+
+          {park.address && (
+            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
+              <MapPin size={18} className="text-[#b45309] dark:text-[#ffcb05] flex-shrink-0 mt-0.5" />
+              <div className="text-xs">
+                <span className={`font-black uppercase tracking-wider block ${theme.text}`}>Location Address</span>
+                <span className={`${theme.secondaryText} leading-relaxed`}>{park.address}</span>
+              </div>
+            </div>
+          )}
+
+          {/* PARK AMENITIES / SPECS GRID */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                <Dog size={16} />
+                <span>Dog Friendly</span>
+              </div>
+              <p className={`text-[11px] font-medium ${theme.text}`}>
+                {park.dogFriendly ? 'Yes (Leashed)' : 'No Dogs Allowed'}
+              </p>
+              {park.dogNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.dogNotes}</p>}
+            </div>
+
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#0284c7] dark:text-[#38bdf8]">
+                <Accessibility size={16} />
+                <span>Accessibility</span>
+              </div>
+              <p className={`text-[11px] font-medium ${theme.text}`}>
+                {park.accessibleTrails ? 'Paved / ADA Accessible' : 'Natural / Rugged Paths'}
+              </p>
+              {park.accessibilityNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.accessibilityNotes}</p>}
+            </div>
+
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400">
+                <Bath size={16} />
+                <span>Restrooms</span>
+              </div>
+              <p className={`text-[11px] font-medium ${theme.text}`}>
+                {park.restrooms ? 'Restrooms On-Site' : 'No Public Restrooms'}
+              </p>
+              {park.restroomNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.restroomNotes}</p>}
+            </div>
+
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#b45309] dark:text-[#ffcb05]">
+                <Bike size={16} />
+                <span>Biking</span>
+              </div>
+              <p className={`text-[11px] font-medium ${theme.text}`}>
+                {park.bikeFriendly ? 'Bikes Permitted / Trails' : 'Foot Traffic Only (No Bikes)'}
+              </p>
+            </div>
+          </div>
+
+          {park.features && park.features.length > 0 && (
+            <div className="space-y-2">
+              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Features & Highlights</span>
+              <div className="flex flex-wrap gap-2">
+                {park.features.map(f => (
+                  <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border} ${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
+                    ✓ {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>About this Park</span>
+            <div className={`text-sm leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`}
+              dangerouslySetInnerHTML={{ __html: park.longDesc || park.shortDesc }}
+            />
+          </div>
+
+          <div className="pt-2">
+            <button
+              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(park.name + ' ' + park.address)}`, '_blank')}
+              className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <Navigation size={16} />
+              <span>Get Directions in Google Maps</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- PARK FINDER TOOL MODAL ---
+const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('all');
+
+  const filterOptions = [
+    { id: 'all', label: 'All Parks' },
+    { id: 'dogFriendly', label: 'Dog Friendly', icon: Dog },
+    { id: 'accessibleTrails', label: 'Accessible / Wheelchair', icon: Accessibility },
+    { id: 'playground', label: 'Playground', icon: Baby },
+    { id: 'familyFriendly', label: 'Family Friendly' },
+    { id: 'bikeFriendly', label: 'Bike Paths', icon: Bike },
+    { id: 'restrooms', label: 'Restrooms', icon: Bath }
+  ];
+
+  const filteredParks = useMemo(() => {
+    return PARKS_DATA.filter(park => {
+      const matchesSearch = !searchQuery || 
+        park.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        park.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        park.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (park.features || []).some(f => f.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      let matchesFilter = true;
+      if (selectedFilter !== 'all') {
+        matchesFilter = Boolean(park[selectedFilter]);
+      }
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [searchQuery, selectedFilter]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        
+        {/* HEADER */}
+        <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
+                <Trees size={22} />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">Interactive Directory</span>
+                <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+                  Ann Arbor Park Finder
+                </h3>
+              </div>
+            </div>
+            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+              <X size={20} />
+            </button>
+          </div>
+
+          {/* SEARCH BAR */}
+          <div className="relative w-full">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search parks, river trails, peony gardens..."
+              className={`w-full pl-10 pr-4 py-3 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-emerald-500 transition-all`}
+            />
+          </div>
+
+          {/* FILTER CHIPS */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pt-3">
+            {filterOptions.map(f => {
+              const Icon = f.icon;
+              const isActive = selectedFilter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => setSelectedFilter(f.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 border ${isActive ? 'bg-emerald-600 text-white border-emerald-500 shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
+                >
+                  {Icon && <Icon size={12} />}
+                  <span>{f.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* PARKS LIST CONTENT */}
+        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">
+            <span>Showing {filteredParks.length} of {PARKS_DATA.length} Parks</span>
+            {selectedFilter !== 'all' && (
+              <button onClick={() => setSelectedFilter('all')} className="text-emerald-500 hover:underline">
+                Clear Filters
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 gap-3.5">
+            {filteredParks.length > 0 ? (
+              filteredParks.map((park) => (
+                <div 
+                  key={park.id}
+                  onClick={() => onSelectPark(park)}
+                  className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/50 active:scale-[0.99] transition-all`}
+                >
+                  <img src={park.img} alt={park.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
+                  <div className="flex-1 min-w-0 pr-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md truncate">
+                        {park.category}
+                      </span>
+                    </div>
+                    <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>{park.name}</h4>
+                    <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>{park.shortDesc}</p>
+                    
+                    {/* QUICK AMENITY BADGES */}
+                    <div className="flex items-center gap-2 mt-2 flex-wrap text-[10px]">
+                      {park.dogFriendly && (
+                        <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
+                          <Dog size={11} /> Dogs
+                        </span>
+                      )}
+                      {park.accessibleTrails && (
+                        <span className="flex items-center gap-1 text-[#0284c7] dark:text-[#38bdf8] bg-sky-500/10 px-2 py-0.5 rounded-md">
+                          <Accessibility size={11} /> ADA
+                        </span>
+                      )}
+                      {park.restrooms && (
+                        <span className="flex items-center gap-1 text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-md">
+                          <Bath size={11} /> Restrooms
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-2 rounded-full text-slate-400 hover:text-emerald-500 flex-shrink-0">
+                    <ArrowRight size={18} />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                No parks match your selected criteria.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 // --- THREADED COMMENTS MODAL / DRAWER COMPONENT ---
@@ -244,14 +591,14 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
               type="text" 
               required 
               value={replyText} 
-              onChange={e => setReplyText(e.target.value)}
-              placeholder={user ? "Write a reply or tip..." : "Sign in to comment..."}
-              disabled={!user}
-              className={`flex-1 p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#a855f7]`}
+              onChange={e => setReplyText(e.target.value)} 
+              placeholder={user ? "Write a reply or tip..." : "Sign in to comment..."} 
+              disabled={!user} 
+              className={`flex-1 p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#a855f7]`} 
             />
             <button 
               type="submit" 
-              disabled={isSubmitting || !user}
+              disabled={isSubmitting || !user} 
               className="px-5 py-3.5 bg-[#a855f7] text-white rounded-2xl font-black uppercase text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1"
             >
               <Send size={14} />
@@ -470,74 +817,6 @@ const CreateItineraryModal = ({ isOpen, onClose, favorites, user, theme }) => {
               </button>
             </form>
           )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// --- PARKS & NATURE PRESERVES MODAL ---
-const ParksDirectoryModal = ({ isOpen, onClose, theme, setSelectedItem, toggleFavorite, favorites }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-[105] flex items-center justify-center p-4 animate-fade text-left font-sans">
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
-              <Trees size={20} />
-            </div>
-            <div>
-              <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">Green Spaces</span>
-              <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Parks & Preserves</h3>
-            </div>
-          </div>
-          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-4">
-          <p className={`text-xs ${theme.secondaryText} leading-relaxed`}>
-            Escape into Tree Town’s pristine river valleys, nature preserves, and wooded canopies. Save spots directly to your Vibe profile.
-          </p>
-
-          <div className="grid grid-cols-1 gap-4 pt-1">
-            {PARKS_DATA.map((park) => {
-              const isFavorited = (favorites || []).some(f => f.id === park.id);
-              return (
-                <div 
-                  key={park.id}
-                  onClick={() => { onClose(); setSelectedItem(park); }}
-                  className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/40 active:scale-[0.99] transition-all`}
-                >
-                  <img src={park.img} alt={park.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
-                  <div className="flex-1 min-w-0 pr-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md truncate">
-                        {park.category}
-                      </span>
-                    </div>
-                    <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>{park.name}</h4>
-                    <p className={`text-xs mt-1 line-clamp-1 ${theme.secondaryText}`}>{park.shortDesc}</p>
-                    <div className={`flex items-center gap-1.5 text-[10px] mt-1.5 ${theme.secondaryText} truncate`}>
-                      <MapPin size={11} className="flex-shrink-0 text-[#b45309] dark:text-[#ffcb05]" />
-                      <span className="truncate">{park.address}</span>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); toggleFavorite(park); }}
-                    className={`p-2.5 rounded-full flex-shrink-0 backdrop-blur-md transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/20 text-slate-400' : 'bg-black/5 text-slate-600')}`}
-                    title="Add to My Vibe"
-                  >
-                    <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </div>
     </div>
@@ -1455,7 +1734,7 @@ const HubView = ({
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
 
-  const parksFavs = userFavorites.filter(f => f.type === 'park' || f.id?.startsWith('park-'));
+  // Parks are excluded from favorites entirely
   const eatsFavs = userFavorites.filter(f => (f.type === 'dining' || Boolean(f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-'));
   const happeningsFavs = userFavorites.filter(f => 
     (f.type === 'experience' || (f.name && !f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-')
@@ -1616,35 +1895,6 @@ const HubView = ({
               </button>
             </div>
           )}
-
-          {/* GREEN SPACES & PARKS FAVORITES */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-2">
-                <Trees size={16} className="text-emerald-500" />
-                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Green Spaces & Parks ({parksFavs.length})</h4>
-              </div>
-              <button onClick={onOpenParksModal} className="text-[9px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] hover:underline">Explore Parks →</button>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {!parksFavs.length ? (
-                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No nature spots saved yet</div>
-              ) : (
-                parksFavs.map(fav => (
-                  <div key={`park-${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
-                    {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Trees size={20} className="text-emerald-500 opacity-60"/></div>}
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-bold leading-tight truncate ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-emerald-600 dark:text-emerald-400 mt-1 tracking-widest truncate">
-                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'Nature Preserve')}
-                      </p>
-                    </div>
-                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
 
           {/* EATS FAVORITES */}
           <div className="space-y-4">
@@ -1890,7 +2140,6 @@ const HubView = ({
                       </div>
 
                       <div className="flex items-center gap-2">
-                        {/* THREADED COMMENTS BUTTON */}
                         <button
                           onClick={() => setActiveCommentStory(post)}
                           className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all active:scale-90 ${theme.border} ${theme.secondaryText} hover:text-white hover:border-[#a855f7]`}
@@ -1900,7 +2149,6 @@ const HubView = ({
                           <span>Comments</span>
                         </button>
 
-                        {/* COMMUNITY FORUM VOTING BUTTON */}
                         <button
                           onClick={(e) => handleVotePost(post, e)}
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all active:scale-90 ${userVoted ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}
@@ -1984,7 +2232,7 @@ const HomeView = ({
         </div>
       </section>
 
-      {/* QUICK LAUNCH GRID WITH PARKS BUTTON INCLUDED */}
+      {/* QUICK LAUNCH GRID WITH PARKS FINDER BUTTON INCLUDED */}
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
           <Ticket size={18} className="text-[#0284c7] dark:text-[#34a4b8]" />
@@ -2041,7 +2289,7 @@ const HomeView = ({
           <Sparkles size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
         </div>
-          
+         
         {featuredPosts && featuredPosts.length > 0 && (
           <div className="px-1 relative">
             <div onClick={() => setSelectedItem(featuredPosts[highlightIdx])} className="relative h-[420px] rounded-[48px] overflow-hidden shadow-2xl cursor-pointer group border border-white/10">
@@ -2242,6 +2490,7 @@ export default function App() {
   const [view, setView] = useState('home');
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedPark, setSelectedPark] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
   const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
   const [partnerModalCategory, setPartnerModalCategory] = useState('restaurant');
@@ -2277,6 +2526,10 @@ export default function App() {
     setIsParksModalOpen(true);
   };
 
+  const handleParkSelect = (park) => {
+    setSelectedPark(park);
+  };
+
   const openItineraryModal = () => {
     if (!favorites.length) return alert('Add items to your favorites first to assemble a custom itinerary!');
     setIsItineraryModalOpen(true);
@@ -2294,13 +2547,15 @@ export default function App() {
         const docSnap = await getDoc(doc(db, 'users', currentUser.uid));
         if (docSnap.exists()) {
           const data = docSnap.data();
-          setFavorites(data.favorites || []);
+          setFavorites((data.favorites || []).filter(f => f.type !== 'park' && !f.id?.startsWith('park-')));
           setStats(data.stats || { water: 0, drinks: 0 });
           setBucketList(data.bucketList || DEFAULT_BUCKET_ITEMS);
           setVibeTags(data.vibeTags || []);
         }
       } else {
-        const sf = localStorage.getItem('a2v_favorites'); setFavorites(sf ? JSON.parse(sf) : []);
+        const sf = localStorage.getItem('a2v_favorites'); 
+        const parsed = sf ? JSON.parse(sf) : [];
+        setFavorites(parsed.filter(f => f.type !== 'park' && !f.id?.startsWith('park-')));
         const ss = localStorage.getItem('a2v_stats'); setStats(ss ? JSON.parse(ss) : { water: 0, drinks: 0 });
         const st = localStorage.getItem('a2v_vibetags'); setVibeTags(st ? JSON.parse(st) : []);
         const sb = localStorage.getItem('a2v_bucketlist'); setBucketList(sb ? JSON.parse(sb) : DEFAULT_BUCKET_ITEMS);
@@ -2318,14 +2573,17 @@ export default function App() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view, activeTool]);
 
   const toggleFavorite = (item) => {
+    // Parks do not have favorite option
+    if (item.type === 'park' || PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-')) {
+      return;
+    }
     const isAlreadyFavorited = (favorites || []).some(f => f.id === item.id);
     if (isAlreadyFavorited) { 
       setFavorites(favorites.filter(f => f.id !== item.id)); 
     } else { 
-      const isPark = PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-');
       const itemToSave = { 
         ...item, 
-        type: isPark ? 'park' : (item.type || 'experience'),
+        type: item.type || 'experience',
         savedAt: Date.now() 
       };
       setFavorites([...favorites, itemToSave]); 
@@ -2369,13 +2627,20 @@ export default function App() {
         <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
            
+          {/* DEDICATED PARK DETAIL POPUP */}
+          <ParkDetailModal
+            isOpen={!!selectedPark}
+            onClose={() => setSelectedPark(null)}
+            park={selectedPark}
+            theme={theme}
+          />
+
+          {/* PARKS FINDER TOOL MODAL */}
           <ParksDirectoryModal
             isOpen={isParksModalOpen}
             onClose={() => setIsParksModalOpen(false)}
             theme={theme}
-            setSelectedItem={setSelectedItem}
-            toggleFavorite={toggleFavorite}
-            favorites={favorites}
+            onSelectPark={handleParkSelect}
           />
 
           <PartnerListingModal 
