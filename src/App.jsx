@@ -97,7 +97,7 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Botanic Garden',
     address: '1800 N Dixboro Rd, Ann Arbor, MI',
-    img: 'https://a2vibe.com/immages/matthaei.jpg',
+    img: 'https://a2vibe.com/immages/Matthaei.jpg',
     shortDesc: 'Sprawling conservatories, display gardens, wetlands, and peaceful nature loops on Dixboro Road.',
     longDesc: '<p>Features a 10,000+ square foot tropical and desert conservatory surrounded by outdoor display beds, bonsai gardens, boardwalk trails over Fleming Creek, and sweeping wildflower habitats.</p>',
     dogFriendly: false,
