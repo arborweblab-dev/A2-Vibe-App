@@ -139,7 +139,7 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Waterfront & Disc Golf',
     address: '1352 Lakeshore Dr, Ann Arbor, MI',
-    img: 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=800&q=80',
+    img: 'https://a2vibe.com/images/bandemer.jpg',
     shortDesc: 'Waterfront park featuring boardwalks along Argo Pond, a 9-hole disc golf course, and dirt bike jumps.',
     longDesc: '<p>Bordering the west side of Argo Pond, Bandemer offers docks for crew shells and canoes, a shaded disc golf run, accessibility to the B2B Trail, and panoramic views of the water.</p>',
     dogFriendly: true,
