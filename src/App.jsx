@@ -2240,7 +2240,7 @@ const HomeView = ({
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
           <Ticket size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
-          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Quick Launch</h2>
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Explore Ann Arbor Vibes</h2>
         </div>
         <div className="grid grid-cols-5 gap-2.5 px-1">
           {[
