@@ -15,7 +15,7 @@ import {
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
-  Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
+  Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
   PenTool, ShieldCheck, MessageCircle, Send, Trees, ThumbsUp, MessageCircleCode,
   Dog, Accessibility, Bike, Baby, Bath, Check
 } from 'lucide-react';
@@ -194,29 +194,6 @@ const DEFAULT_BUCKET_ITEMS = [
   { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
 ];
 
-// --- Helpers ---
-const handleShare = async (item, e) => {
-  if (e) e.stopPropagation();
-  const shareData = item.share || {
-    title: `${item.name || item.title} on A2 Vibe`,
-    text: `Check out ${item.name || item.title} on A2 Vibe!`,
-    url: window.location.href
-  };
-
-  if (navigator.share) {
-    try {
-      await navigator.share(shareData);
-    } catch (err) {}
-  } else {
-    try {
-      await navigator.clipboard.writeText(shareData.url);
-      alert("Link copied to clipboard!");
-    } catch (err) {
-      console.error("Failed to copy link", err);
-    }
-  }
-};
-
 // --- DEDICATED PARK DETAIL MODAL ---
 const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
   if (!isOpen || !park) return null;
@@ -240,9 +217,6 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button onClick={(e) => handleShare(park, e)} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/5 text-slate-300' : 'bg-black/5 text-slate-700'} active:scale-90`} title="Share">
-              <Share2 size={18} />
-            </button>
             <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
               <X size={20} />
             </button>
@@ -1208,9 +1182,6 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
             {item.name || item.title || 'Spotlight'}
           </h3>
           <div className="flex items-center gap-2">
-            <button onClick={(e) => handleShare(item, e)} className={`p-2.5 rounded-full transition-all duration-300 ${theme.isDark ? 'bg-white/5 text-slate-300 hover:text-white' : 'bg-black/5 text-slate-700 hover:text-black'} active:scale-90`} title="Share">
-              <Share2 size={20} />
-            </button>
             <button onClick={() => toggleFavorite(item)} className={`p-2.5 rounded-full transition-all duration-300 ${theme.isDark ? 'bg-white/5' : 'bg-black/5'} active:scale-90`}>
               <Heart size={22} className="text-[#ffcb05] drop-shadow-[0_0_8px_rgba(255,203,5,0.5)]" fill={isFavorited ? "#ffcb05" : "none"} strokeWidth={2.5}/>
             </button>
@@ -1264,14 +1235,8 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           />
 
           <div className="flex gap-3 pt-2">
-            {item.share && (
-              <button onClick={(e) => handleShare(item, e)} className={`flex-1 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-white border-white/10' : 'bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200'} font-black uppercase text-sm py-4 rounded-2xl border active:scale-95 transition-all flex items-center justify-center gap-2`}>
-                <Share2 size={16} />
-                <span>Share</span>
-              </button>
-            )}
             {item.url && (
-              <button onClick={() => { window.open(item.url, '_blank'); }} className="flex-[2] bg-[#ffcb05] text-black font-black uppercase text-sm py-4 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
+              <button onClick={() => { window.open(item.url, '_blank'); }} className="w-full bg-[#ffcb05] text-black font-black uppercase text-sm py-4 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
                 <span>Visit Official Site</span>
                 <Navigation size={16} />
               </button>
@@ -2628,9 +2593,6 @@ export default function App() {
                                      <div className="flex justify-between items-start gap-2">
                                        <h4 className={`font-bold uppercase text-sm leading-tight ${theme.text} line-clamp-1 tracking-tight`}>{exp.name}</h4>
                                        <div className="flex items-center gap-1">
-                                         <button onClick={(e) => handleShare(exp, e)} className={`p-2 rounded-full transition-colors ${theme.secondaryText} hover:text-[#ffcb05]`} title="Share event">
-                                           <Share2 size={16} />
-                                         </button>
                                          <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : theme.secondaryText}`}>
                                            <Heart size={16} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} />
                                          </button>
