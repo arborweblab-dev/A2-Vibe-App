@@ -15,8 +15,8 @@ import {
   ChevronLeft, ChevronRight, BookText, User, Heart, 
   Calculator, Thermometer, MapPin, Camera, Navigation, Sun, Moon,
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
-  Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
-  PenTool, ShieldCheck, MessageCircle, Send, Trees, Route, ThumbsUp, CheckSquare, Square, Copy, MessageCircleCode,
+  Share2, Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
+  PenTool, ShieldCheck, MessageCircle, Send, Trees, ThumbsUp, MessageCircleCode,
   Dog, Accessibility, Bike, Baby, Bath, Check
 } from 'lucide-react';
 
@@ -161,7 +161,9 @@ const STRIPE_LINKS = {
   boostedMonthly: 'https://buy.stripe.com/bJe9ATbigag769j30YeME03',
   restaurantFeaturedPickAddon: 'https://buy.stripe.com/3cI4gz1HGgEv69j0SQeME04',
   promoJournal: 'https://buy.stripe.com/28EeVd1HG4VNdBL8lieME05',
-  promoSMSocial: 'https://buy.stripe.com/28E8wP9a85ZR7dn8lieME06'
+  promoSMSocial: 'https://buy.stripe.com/28E8wP9a85ZR7dn8lieME06',
+  eventStandard: 'https://buy.stripe.com/aFabJ13PO1JB8hrgROeME08',
+  eventFeatured: 'https://buy.stripe.com/3cI00jcmkag7btDbxueME07'
 };
 
 // --- 2. CONFIGURATION ---
@@ -192,89 +194,27 @@ const DEFAULT_BUCKET_ITEMS = [
   { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
 ];
 
-// --- TRANSIT OPTIONS MODAL ---
-const TransitModal = ({ isOpen, onClose, theme }) => {
-  if (!isOpen) return null;
+// --- Helpers ---
+const handleShare = async (item, e) => {
+  if (e) e.stopPropagation();
+  const shareData = item.share || {
+    title: `${item.name || item.title} on A2 Vibe`,
+    text: `Check out ${item.name || item.title} on A2 Vibe!`,
+    url: window.location.href
+  };
 
-  const transitOptions = [
-    {
-      name: 'The Ride (AAATA)',
-      category: 'Public Bus System',
-      desc: 'Ann Arbor’s primary fixed-route public bus transit network across the city and Ypsilanti.',
-      url: 'https://www.theride.org/'
-    },
-    {
-      name: 'The Ride Trip Planner',
-      category: 'Trip Planner & Schedules',
-      desc: 'Plan real-time bus routes, arrival estimates, and point-to-point trip itineraries.',
-      url: 'https://www.theride.org/maps-schedules/trip-planner'
-    },
-    {
-      name: 'FlexRide (Via)',
-      category: 'On-Demand Microtransit',
-      desc: 'Affordable, shared on-demand rides connecting designated Ann Arbor service zones.',
-      url: 'https://city.ridewithvia.com/ann-arbor#:~:text=Getting%20around%20Ann%20Arbor%20has,work%2C%20school%2C%20errands%2C%20and%20more.'
-    },
-    {
-      name: 'Ann Arbor Taxi',
-      category: 'Local Taxi Service',
-      desc: 'Online cab and local ride reservations for rides around Ann Arbor and regional airports.',
-      url: 'https://book.mylimobiz.com/v4/(S(hw3ly3p54pivsjs4qkne2pwr))/annarbortaxi'
-    },
-    {
-      name: 'Arbor Taxi',
-      category: 'Local Taxi Service',
-      desc: 'Reliable local 24/7 taxi transportation service serving Tree Town and metro Detroit.',
-      url: 'https://arbortaxi.com/'
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+    } catch (err) {}
+  } else {
+    try {
+      await navigator.clipboard.writeText(shareData.url);
+      alert("Link copied to clipboard!");
+    } catch (err) {
+      console.error("Failed to copy link", err);
     }
-  ];
-
-  return (
-    <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
-          <div className="flex items-center gap-2.5 min-w-0 pr-3">
-            <div className="p-2 rounded-xl bg-[#00274c] text-[#ffcb05] flex-shrink-0">
-              <Navigation size={20} />
-            </div>
-            <div className="min-w-0">
-              <span className="text-[10px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] block">
-                Getting Around
-              </span>
-              <h3 className="text-xl font-header font-black uppercase italic tracking-tight truncate" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
-                Ann Arbor Transit
-              </h3>
-            </div>
-          </div>
-          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-3.5">
-          {transitOptions.map((opt) => (
-            <div
-              key={opt.name}
-              onClick={() => window.open(opt.url, '_blank', 'noopener,noreferrer')}
-              className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center justify-between gap-4 cursor-pointer shadow-sm hover:border-[#ffcb05]/60 active:scale-[0.99] transition-all`}
-            >
-              <div className="min-w-0 flex-1">
-                <span className="text-[9px] font-black uppercase tracking-widest text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md inline-block mb-1">
-                  {opt.category}
-                </span>
-                <h4 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{opt.name}</h4>
-                <p className={`text-xs mt-0.5 line-clamp-2 leading-relaxed ${theme.secondaryText}`}>{opt.desc}</p>
-              </div>
-              <div className="p-3 bg-[#00274c] text-[#ffcb05] rounded-2xl flex-shrink-0">
-                <ExternalLink size={16} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  }
 };
 
 // --- DEDICATED PARK DETAIL MODAL ---
@@ -300,6 +240,9 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
+            <button onClick={(e) => handleShare(park, e)} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/5 text-slate-300' : 'bg-black/5 text-slate-700'} active:scale-90`} title="Share">
+              <Share2 size={18} />
+            </button>
             <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
               <X size={20} />
             </button>
@@ -408,6 +351,849 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
   );
 };
 
+// --- PARK FINDER TOOL MODAL ---
+const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('all');
+
+  const filterOptions = [
+    { id: 'all', label: 'All Parks' },
+    { id: 'dogFriendly', label: 'Dog Friendly', icon: Dog },
+    { id: 'accessibleTrails', label: 'Accessible / Wheelchair', icon: Accessibility },
+    { id: 'playground', label: 'Playground', icon: Baby },
+    { id: 'familyFriendly', label: 'Family Friendly' },
+    { id: 'bikeFriendly', label: 'Bike Paths', icon: Bike },
+    { id: 'restrooms', label: 'Restrooms', icon: Bath }
+  ];
+
+  const filteredParks = useMemo(() => {
+    return PARKS_DATA.filter(park => {
+      const matchesSearch = !searchQuery || 
+        park.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        park.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        park.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (park.features || []).some(f => f.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      let matchesFilter = true;
+      if (selectedFilter !== 'all') {
+        matchesFilter = Boolean(park[selectedFilter]);
+      }
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [searchQuery, selectedFilter]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        
+        {/* HEADER */}
+        <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
+                <Trees size={22} />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">Interactive Directory</span>
+                <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+                  Ann Arbor Park Finder
+                </h3>
+              </div>
+            </div>
+            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+              <X size={20} />
+            </button>
+          </div>
+
+          {/* SEARCH BAR */}
+          <div className="relative w-full">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search parks, river trails, peony gardens..."
+              className={`w-full pl-10 pr-4 py-3 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-emerald-500 transition-all`}
+            />
+          </div>
+
+          {/* FILTER CHIPS */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pt-3">
+            {filterOptions.map(f => {
+              const Icon = f.icon;
+              const isActive = selectedFilter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => setSelectedFilter(f.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 border ${isActive ? 'bg-emerald-600 text-white border-emerald-500 shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
+                >
+                  {Icon && <Icon size={12} />}
+                  <span>{f.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* PARKS LIST CONTENT */}
+        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">
+            <span>Showing {filteredParks.length} of {PARKS_DATA.length} Parks</span>
+            {selectedFilter !== 'all' && (
+              <button onClick={() => setSelectedFilter('all')} className="text-emerald-500 hover:underline">
+                Clear Filters
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 gap-3.5">
+            {filteredParks.length > 0 ? (
+              filteredParks.map((park) => (
+                <div 
+                  key={park.id}
+                  onClick={() => onSelectPark(park)}
+                  className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/50 active:scale-[0.99] transition-all`}
+                >
+                  <img src={park.img} alt={park.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
+                  <div className="flex-1 min-w-0 pr-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md truncate">
+                        {park.category}
+                      </span>
+                    </div>
+                    <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>{park.name}</h4>
+                    <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>{park.shortDesc}</p>
+                    
+                    {/* QUICK AMENITY BADGES */}
+                    <div className="flex items-center gap-2 mt-2 flex-wrap text-[10px]">
+                      {park.dogFriendly && (
+                        <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
+                          <Dog size={11} /> Dogs
+                        </span>
+                      )}
+                      {park.accessibleTrails && (
+                        <span className="flex items-center gap-1 text-[#0284c7] dark:text-[#38bdf8] bg-sky-500/10 px-2 py-0.5 rounded-md">
+                          <Accessibility size={11} /> ADA
+                        </span>
+                      )}
+                      {park.restrooms && (
+                        <span className="flex items-center gap-1 text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-md">
+                          <Bath size={11} /> Restrooms
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-2 rounded-full text-slate-400 hover:text-emerald-500 flex-shrink-0">
+                    <ArrowRight size={18} />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                No parks match your selected criteria.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- THREADED COMMENTS MODAL / DRAWER COMPONENT ---
+const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
+  const [comments, setComments] = useState([]);
+  const [replyText, setReplyText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen || !story) return;
+    const q = query(collection(db, 'community_stories', story.id, 'comments'), orderBy('timestamp', 'asc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setComments(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+    return () => unsubscribe();
+  }, [isOpen, story]);
+
+  if (!isOpen || !story) return null;
+
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    if (!user) return alert('Please sign in to join the discussion!');
+    if (!replyText.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      await addDoc(collection(db, 'community_stories', story.id, 'comments'), {
+        text: replyText.trim(),
+        author: user.displayName || 'A2 Neighbor',
+        userId: user.uid,
+        timestamp: Date.now()
+      });
+      setReplyText('');
+    } catch (err) {
+      console.error('Error posting comment:', err);
+      alert('Could not post comment. Please check your connection.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div>
+            <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Discussion Thread</span>
+            <h3 className="text-lg font-header font-black uppercase italic tracking-tight truncate max-w-[320px]" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+              {story.title}
+            </h3>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+          <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} border space-y-1`}>
+            <p className={`text-xs font-bold ${theme.text}`}>Original Post by {story.author}</p>
+            <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{story.content}</p>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <h4 className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Comments ({comments.length})</h4>
+             
+            {comments.length > 0 ? (
+              comments.map(c => (
+                <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
+                  <div className="flex justify-between items-center text-[10px]">
+                    <span className={`font-black uppercase tracking-wider text-[#a855f7]`}>{c.author}</span>
+                    <span className={theme.secondaryText}>{c.timestamp ? new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Just now'}</span>
+                  </div>
+                  <p className={`text-xs leading-relaxed ${theme.text}`}>{c.text}</p>
+                </div>
+              ))
+            ) : (
+              <div className={`p-8 border-2 border-dashed rounded-2xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                No comments yet. Start the conversation below!
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={`sticky bottom-0 p-4 ${theme.appBg} border-t ${theme.border}`}>
+          <form onSubmit={handleAddComment} className="flex gap-2">
+            <input 
+              type="text" 
+              required 
+              value={replyText} 
+              onChange={e => setReplyText(e.target.value)} 
+              placeholder={user ? "Write a reply or tip..." : "Sign in to comment..."} 
+              disabled={!user} 
+              className={`flex-1 p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#a855f7]`} 
+            />
+            <button 
+              type="submit" 
+              disabled={isSubmitting || !user} 
+              className="px-5 py-3.5 bg-[#a855f7] text-white rounded-2xl font-black uppercase text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1"
+            >
+              <Send size={14} />
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- PARTNER LISTING MODAL ---
+const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = 'restaurant' }) => {
+  const [listingCategory, setListingCategory] = useState(initialCategory);
+  const [bizType, setBizType] = useState('free');
+  const [bizName, setBizName] = useState('');
+  const [bizContact, setBizContact] = useState('');
+  const [bizAddress, setBizAddress] = useState('');
+  const [cuisine, setCuisine] = useState('');
+  const [menuUrl, setMenuUrl] = useState('');
+  const [agreedQR, setAgreedQR] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setListingCategory(initialCategory);
+      setSubmitted(false);
+    }
+  }, [isOpen, initialCategory]);
+
+  if (!isOpen) return null;
+
+  const handleFreeSubmit = async (e) => {
+    e.preventDefault();
+    if (!agreedQR) {
+      return alert("Please confirm you will display the A2 Vibe QR placard at your host stand / counter and front window.");
+    }
+    setSubmitting(true);
+    try {
+      await addDoc(collection(db, 'partner_submissions'), {
+        listingCategory: 'restaurant',
+        bizName,
+        bizContact,
+        bizAddress,
+        cuisine,
+        menuUrl: menuUrl || null,
+        type: 'free_qr_partner',
+        userEmail: user?.email || 'unauthenticated',
+        userId: user?.uid || null,
+        status: 'pending_review',
+        timestamp: Date.now()
+      });
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Error saving listing submission:", err);
+      alert("Could not submit. Please check your network connection.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const openStripeCheckout = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div>
+            <span className="text-[10px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] block">Partner With A2 Vibe</span>
+            <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Add Your Listing</h3>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'} text-center`}>
+            <button
+              onClick={() => { setListingCategory('restaurant'); setSubmitted(false); }}
+              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'restaurant' ? 'bg-[#f97316] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+            >
+              <Utensils size={14} />
+              <span>Restaurant / Bar</span>
+            </button>
+            <button
+              onClick={() => { setListingCategory('general'); setSubmitted(false); }}
+              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'general' ? 'bg-[#38bdf8] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+            >
+              <Calendar size={14} />
+              <span>Event / Experience</span>
+            </button>
+          </div>
+
+          {/* RESTAURANT / BAR FLOW (FREE QR OR BOOSTED MEMBERSHIP) */}
+          {listingCategory === 'restaurant' ? (
+            <>
+              <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} text-center`}>
+                <button
+                  onClick={() => setBizType('free')}
+                  className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'free' ? 'bg-[#ffcb05] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+                >
+                  Free QR Partner
+                </button>
+                <button
+                  onClick={() => setBizType('boosted')}
+                  className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'boosted' ? (theme.isDark ? 'bg-white/15 text-white shadow-md' : 'bg-slate-800 text-white shadow-md') : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+                >
+                  Boosted Showcase
+                </button>
+              </div>
+
+              {bizType === 'free' ? (
+                <div>
+                  {submitted ? (
+                    <div className="text-center py-8 space-y-4 animate-fade">
+                      <div className="w-16 h-16 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                        <CheckCircle2 size={36} />
+                      </div>
+                      <h4 className={`text-lg font-black uppercase ${theme.text}`}>Listing Request Received</h4>
+                      <p className={`text-xs ${theme.secondaryText} leading-relaxed max-w-sm mx-auto`}>
+                        We will review your submission and email your physical or printable A2 Vibe QR badge for your checkout counter, host stand, and front door/window within 24-48 hours.
+                      </p>
+                      <button onClick={onClose} className="mt-4 px-6 py-3 bg-[#ffcb05] text-black rounded-xl font-black uppercase text-xs">
+                        Done
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleFreeSubmit} className="space-y-4">
+                      <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} space-y-2`}>
+                        <div className="flex items-center gap-2 text-[#b45309] dark:text-[#ffcb05]">
+                          <QrCode size={18} />
+                          <h4 className="text-xs font-black uppercase tracking-wider">Restaurant & Bar QR Placement</h4>
+                        </div>
+                        <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
+                          Get a verified listing in Ann Arbor Flavors in exchange for placing our compact A2 Vibe QR code badge at your host stand or checkout counter, and on your entry door or front window.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Restaurant / Bar Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={bizName}
+                          onChange={(e) => setBizName(e.target.value)}
+                          placeholder="e.g. Tree Town Smokehouse"
+                          className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                        />
+                      </div>
+
+                      <div>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Cuisine Type</label>
+                        <input
+                          type="text"
+                          required
+                          value={cuisine}
+                          onChange={(e) => setCuisine(e.target.value)}
+                          placeholder="e.g. Korean Street Food, Craft Cocktails, Neapolitan Pizza"
+                          className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                        />
+                      </div>
+
+                      <div>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Contact Email or Phone</label>
+                        <input
+                          type="text"
+                          required
+                          value={bizContact}
+                          onChange={(e) => setBizContact(e.target.value)}
+                          placeholder="e.g. manager@restaurant.com"
+                          className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                        />
+                      </div>
+
+                      <div>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Location / Venue Address</label>
+                        <input
+                          type="text"
+                          required
+                          value={bizAddress}
+                          onChange={(e) => setBizAddress(e.target.value)}
+                          placeholder="e.g. 209 S 4th Ave, Ann Arbor, MI"
+                          className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                        />
+                      </div>
+
+                      <label className={`flex items-start gap-3 p-3 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} border cursor-pointer`}>
+                        <input
+                          type="checkbox"
+                          checked={agreedQR}
+                          onChange={(e) => setAgreedQR(e.target.checked)}
+                          className="mt-0.5 rounded accent-[#ffcb05]"
+                        />
+                        <span className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-700'} leading-snug`}>
+                          I agree to display the small A2 Vibe QR code badge at our counter or host stand and on our front door/window.
+                        </span>
+                      </label>
+
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all"
+                      >
+                        {submitting ? 'Submitting...' : 'Claim Free Partner Listing'}
+                      </button>
+                    </form>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/30 text-white space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                        Dining Premiere
+                      </span>
+                      <span className="text-[10px] font-bold text-[#38bdf8] flex items-center gap-1">
+                        <FileText size={12} /> Menu Upload Enabled
+                      </span>
+                    </div>
+
+                    <h4 className="text-xl font-header font-black uppercase italic">
+                      Boosted Eatery & Bar Showcase
+                    </h4>
+
+                    <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
+                      <li className="flex items-center gap-2">✓ <strong>Up to 20 HD Photos</strong> (Dishes, venue, crowd)</li>
+                      <li className="flex items-center gap-2">✓ <strong>Longer Description & Story</strong> with direct ticket or reservation links</li>
+                      <li className="flex items-center gap-2">✓ <strong>Optional Menu Upload / PDF Link</strong> on profile</li>
+                      <li className="flex items-center gap-2">✓ <strong>Dedicated Feature Article</strong> in City Journal</li>
+                      <li className="flex items-center gap-2">✓ <strong>Social Media Post Promos</strong> across our channels</li>
+                    </ul>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-[#f97316]/20 via-[#f97316]/10 to-transparent border border-[#f97316]/30 flex items-center justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <Zap size={14} className="text-[#b45309] dark:text-[#ffcb05]" />
+                        <span className={`text-xs font-black uppercase ${theme.isDark ? 'text-white' : 'text-slate-900'}`}>Discounted Featured Pick</span>
+                        <span className="bg-[#f97316] text-white dark:text-black text-[8px] font-black px-1.5 py-0.5 rounded">SAVE $40</span>
+                      </div>
+                      <p className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-600'} mt-1`}>
+                        Top-of-app billboard spot on Home & Flavors. <strong className="text-[#b45309] dark:text-[#ffcb05]">$50</strong> <span className={`line-through ${theme.isDark ? 'text-slate-500' : 'text-slate-400'} text-[10px]` }>(Normally $90)</span>
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => openStripeCheckout(STRIPE_LINKS.restaurantFeaturedPickAddon)}
+                      className="px-3.5 py-2 bg-[#f97316] text-white dark:text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
+                    >
+                      <span>$50 Pick</span>
+                      <ExternalLink size={12} />
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-black uppercase ${theme.text}`}>Annual Membership</span>
+                          <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[8px] font-black px-2 py-0.5 rounded">SAVE $120</span>
+                        </div>
+                        <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-1">$25 / mo <span className={`${theme.secondaryText} font-normal`}>($300 billed yearly)</span></p>
+                      </div>
+                      <button
+                        onClick={() => openStripeCheckout(STRIPE_LINKS.boostedAnnual)}
+                        className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                      >
+                        <span>Select</span>
+                        <ExternalLink size={14} />
+                      </button>
+                    </div>
+
+                    <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-black uppercase ${theme.text}`}>Intro Monthly Plan</span>
+                          <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[8px] font-black px-2 py-0.5 rounded">SAVE $300 Y1</span>
+                        </div>
+                        <p className="text-xs font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">$35 / mo <span className={`${theme.secondaryText} font-normal`}>first 12 mos, then $60/mo</span></p>
+                      </div>
+                      <button
+                        onClick={() => openStripeCheckout(STRIPE_LINKS.boostedMonthly)}
+                        className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                      >
+                        <span>Select</span>
+                        <ExternalLink size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 pt-2">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Standalone Promos</p>
+                    <div className="grid grid-cols-1 gap-2.5">
+                      <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
+                        <div>
+                          <p className={`text-xs font-bold ${theme.text}`}>City Journal Feature Story</p>
+                          <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published culinary, brand, or event editorial</p>
+                        </div>
+                        <button
+                          onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
+                          className={`px-3 py-1.5 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-[#ffcb05] border-white/10' : 'bg-white hover:bg-slate-200 text-[#b45309] border-slate-300'} text-[11px] font-black rounded-lg border`}
+                        >
+                          $45
+                        </button>
+                      </div>
+
+                      <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
+                        <div>
+                          <p className={`text-xs font-bold ${theme.text}`}>Social Media Blast</p>
+                          <p className={`text-[10px] ${theme.secondaryText}`}>Spotlight story & grid post to local audience</p>
+                        </div>
+                        <button
+                          onClick={() => openStripeCheckout(STRIPE_LINKS.promoSMSocial)}
+                          className={`px-3 py-1.5 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-[#38bdf8] border-white/10' : 'bg-white hover:bg-slate-200 text-[#0284c7] border-slate-300'} text-[11px] font-black rounded-lg border`}
+                        >
+                          $25
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            /* EVENT / EXPERIENCE FLOW: PAID ONLY ($25 STANDARD & $45 FEATURED) */
+            <div className="space-y-4">
+              <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} space-y-1.5`}>
+                <div className="flex items-center gap-2 text-[#0284c7] dark:text-[#38bdf8]">
+                  <Calendar size={18} />
+                  <h4 className="text-xs font-black uppercase tracking-wider">List on A2 Happenings</h4>
+                </div>
+                <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
+                  Reach thousands of Ann Arbor locals, students, and visitors. Select your listing option below to activate your event in the city schedule.
+                </p>
+              </div>
+
+              {/* TIER 1: REGULAR EVENT LISTING ($25) */}
+              <div className={`p-5 rounded-3xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-3`}>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-[#0284c7] dark:text-[#38bdf8] bg-sky-500/10 px-2.5 py-0.5 rounded-md inline-block mb-1">
+                      Calendar Placement
+                    </span>
+                    <h4 className={`text-base font-header font-black uppercase tracking-tight ${theme.text}`}>
+                      Standard Event Listing
+                    </h4>
+                    <p className="text-lg font-black text-[#0284c7] dark:text-[#38bdf8] mt-0.5">
+                      $25 <span className={`text-[11px] font-normal ${theme.secondaryText}`}>one-time</span>
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => openStripeCheckout(STRIPE_LINKS.eventStandard)}
+                    className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 mt-1"
+                  >
+                    <span>List ($25)</span>
+                    <ExternalLink size={13} />
+                  </button>
+                </div>
+
+                <ul className="text-xs text-slate-400 space-y-1 pt-1 border-t border-white/5">
+                  <li className="flex items-center gap-2">✓ Verified placement in A2 Happenings calendar & monthly filter</li>
+                  <li className="flex items-center gap-2">✓ Date, time, venue address, and Google Maps pin</li>
+                  <li className="flex items-center gap-2">✓ Direct ticket / RSVP registration URL</li>
+                  <li className="flex items-center gap-2">✓ Event cover photo and description</li>
+                </ul>
+              </div>
+
+              {/* TIER 2: FEATURED EVENT SHOWCASE ($45) */}
+              <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/40 text-white space-y-3 shadow-xl">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="bg-[#ffcb05] text-black px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest">
+                        Top Visibility
+                      </span>
+                      <span className="bg-[#38bdf8] text-black text-[8px] font-black px-1.5 py-0.5 rounded">
+                        TOP PICK
+                      </span>
+                    </div>
+                    <h4 className="text-base font-header font-black uppercase italic tracking-tight mt-1.5 text-white">
+                      Featured Event Showcase
+                    </h4>
+                    <p className="text-lg font-black text-[#ffcb05] mt-0.5">
+                      $45 <span className="text-[11px] font-normal text-slate-300">one-time</span>
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => openStripeCheckout(STRIPE_LINKS.eventFeatured)}
+                    className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 mt-1"
+                  >
+                    <span>Feature ($45)</span>
+                    <ExternalLink size={13} />
+                  </button>
+                </div>
+
+                <ul className="text-xs text-slate-300 space-y-1 pt-1 border-t border-white/10">
+                  <li className="flex items-center gap-2">✓ <strong>Top-of-App Carousel Billboard</strong> placement on Happenings</li>
+                  <li className="flex items-center gap-2">✓ <strong>"Top Pick" badge</strong> on event cards and search results</li>
+                  <li className="flex items-center gap-2">✓ Priority listing over standard events all month</li>
+                  <li className="flex items-center gap-2">✓ Multi-photo gallery & extended event narrative</li>
+                  <li className="flex items-center gap-2">✓ <strong>Social media promotion blast</strong> across our local channels</li>
+                </ul>
+              </div>
+
+              <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
+                <div>
+                  <p className={`text-xs font-bold ${theme.text}`}>Need a Dedicated Editorial Story?</p>
+                  <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published feature story in the City Journal</p>
+                </div>
+                <button
+                  onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
+                  className={`px-3 py-1.5 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-[#ffcb05] border-white/10' : 'bg-white hover:bg-slate-200 text-[#b45309] border-slate-300'} text-[11px] font-black rounded-lg border flex items-center gap-1`}
+                >
+                  <span>$45</span>
+                  <ExternalLink size={11} />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- COMMUNITY CONTRIBUTOR STORY SUBMISSION MODAL ---
+const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSuccess }) => {
+  const [title, setTitle] = useState('');
+  const [channel, setChannel] = useState('Local News');
+  const [content, setContent] = useState('');
+  const [authorName, setAuthorName] = useState(user?.displayName || '');
+  const [authorContact, setAuthorContact] = useState(user?.email || '');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setAuthorName(user.displayName || '');
+      setAuthorContact(user.email || '');
+    }
+  }, [user]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) return alert('Please enter a headline and story content.');
+    setSubmitting(true);
+    try {
+      await addDoc(collection(db, 'community_stories'), {
+        title: title.trim(),
+        channel,
+        content: content.trim(),
+        author: authorName.trim() || 'A2 Resident',
+        contact: authorContact.trim() || 'Unlisted',
+        userId: user?.uid || null,
+        likes: 0,
+        voters: [],
+        timestamp: Date.now()
+      });
+      setSubmitted(true);
+      if (onPostSuccess) onPostSuccess();
+    } catch (err) {
+      console.error('Error submitting community post:', err);
+      alert('Could not submit. Please check your network connection.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div>
+            <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Community Voice</span>
+            <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Submit Local Story</h3>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          {submitted ? (
+            <div className="text-center py-8 space-y-4 animate-fade">
+              <div className="w-16 h-16 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 size={36} />
+              </div>
+              <h4 className={`text-lg font-black uppercase ${theme.text}`}>Story Published To Community</h4>
+              <p className={`text-xs ${theme.secondaryText} leading-relaxed max-w-sm mx-auto`}>
+                Your post is now live on the A2 Vibe community board. Thanks for keeping Tree Town informed and connected.
+              </p>
+              <button onClick={onClose} className="mt-4 px-6 py-3 bg-[#ffcb05] text-black rounded-xl font-black uppercase text-xs shadow-md">
+                Done
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} space-y-2 border`}>
+                <div className="flex items-center gap-2 text-[#a855f7]">
+                  <PenTool size={16} />
+                  <h4 className="text-xs font-black uppercase tracking-wider">A2 Local Contributor Board</h4>
+                </div>
+                <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
+                  Share news, stories, townie tips, club announcements, or independent journalism. Free, zero tracking, and closed within the Tree Town community.
+                </p>
+              </div>
+
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Channel / Topic</label>
+                <div className="flex flex-wrap gap-2">
+                  {FORUM_CHANNELS.filter(c => c !== 'All').map(c => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setChannel(c)}
+                      className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${channel === c ? 'bg-[#a855f7] text-white border-[#a855f7]' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Headline</label>
+                <input
+                  type="text"
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Free Saturday Solar Eclipse Viewing at Nichols Arb"
+                  className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                />
+              </div>
+
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Story / Announcement Details</label>
+                <textarea
+                  required
+                  rows={5}
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="What's happening? Who is invited? Where, when, and why does it matter to Ann Arbor?"
+                  className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs leading-relaxed outline-none focus:border-[#ffcb05]`}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Author / Group Name</label>
+                  <input
+                    type="text"
+                    value={authorName}
+                    onChange={(e) => setAuthorName(e.target.value)}
+                    placeholder="e.g. Kerrytown Resident"
+                    className={`w-full p-3 rounded-xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none`}
+                  />
+                </div>
+                <div>
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Contact / Email (Optional)</label>
+                  <input
+                    type="text"
+                    value={authorContact}
+                    onChange={(e) => setAuthorContact(e.target.value)}
+                    placeholder="contact@email.com"
+                    className={`w-full p-3 rounded-xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none`}
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-4 bg-[#a855f7] text-white rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Send size={14} />
+                <span>{submitting ? 'Publishing...' : 'Publish to Community Board'}</span>
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- SPOTLIGHT DETAIL MODAL ---
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
@@ -422,6 +1208,9 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
             {item.name || item.title || 'Spotlight'}
           </h3>
           <div className="flex items-center gap-2">
+            <button onClick={(e) => handleShare(item, e)} className={`p-2.5 rounded-full transition-all duration-300 ${theme.isDark ? 'bg-white/5 text-slate-300 hover:text-white' : 'bg-black/5 text-slate-700 hover:text-black'} active:scale-90`} title="Share">
+              <Share2 size={20} />
+            </button>
             <button onClick={() => toggleFavorite(item)} className={`p-2.5 rounded-full transition-all duration-300 ${theme.isDark ? 'bg-white/5' : 'bg-black/5'} active:scale-90`}>
               <Heart size={22} className="text-[#ffcb05] drop-shadow-[0_0_8px_rgba(255,203,5,0.5)]" fill={isFavorited ? "#ffcb05" : "none"} strokeWidth={2.5}/>
             </button>
@@ -475,8 +1264,14 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           />
 
           <div className="flex gap-3 pt-2">
+            {item.share && (
+              <button onClick={(e) => handleShare(item, e)} className={`flex-1 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-white border-white/10' : 'bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200'} font-black uppercase text-sm py-4 rounded-2xl border active:scale-95 transition-all flex items-center justify-center gap-2`}>
+                <Share2 size={16} />
+                <span>Share</span>
+              </button>
+            )}
             {item.url && (
-              <button onClick={() => { window.open(item.url, '_blank'); }} className="w-full bg-[#ffcb05] text-black font-black uppercase text-sm py-4 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
+              <button onClick={() => { window.open(item.url, '_blank'); }} className="flex-[2] bg-[#ffcb05] text-black font-black uppercase text-sm py-4 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
                 <span>Visit Official Site</span>
                 <Navigation size={16} />
               </button>
@@ -801,8 +1596,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
 const HubView = ({ 
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
-  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
-  onOpenItineraryModal 
+  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal
 }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
@@ -948,28 +1742,6 @@ const HubView = ({
 
         {/* SAVED FAVORITES SECTIONS */}
         <div className="space-y-8">
-          {/* ITINERARY LAUNCH BANNER */}
-          {userFavorites.length > 0 && (
-            <div className={`p-4 rounded-3xl border border-[#ffcb05]/30 bg-gradient-to-r from-[#ffcb05]/15 via-transparent to-transparent flex items-center justify-between gap-4 shadow-md`}>
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-2xl bg-[#ffcb05] text-black shadow-md flex-shrink-0">
-                  <Route size={20} />
-                </div>
-                <div>
-                  <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>Create Shareable Itinerary</h4>
-                  <p className={`text-[10px] ${theme.secondaryText}`}>Bundle your {userFavorites.length} saved spots into a custom route and share with friends.</p>
-                </div>
-              </div>
-              <button
-                onClick={onOpenItineraryModal}
-                className="px-4 py-2.5 bg-[#ffcb05] text-black rounded-xl text-xs font-black uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0"
-              >
-                <span>Build Route</span>
-                <ArrowRight size={14} />
-              </button>
-            </div>
-          )}
-
           {/* EATS FAVORITES */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
@@ -1122,7 +1894,7 @@ const HubView = ({
               </div>
             </div>
             <p className={`text-xs ${theme.secondaryText} leading-relaxed`}>
-              A closed, community-powered bulletin board for Tree Town. Share upcoming projects, local itineraries, townie meetups, and independent questions without tracking algorithms or corporate ads.
+              A closed, community-powered bulletin board for Tree Town. Share upcoming projects, local recommendations, townie meetups, and independent questions without tracking algorithms or corporate ads.
             </p>
           </div>
 
@@ -1255,7 +2027,7 @@ const HubView = ({
 // --- INSIDER / HOME VIEW ---
 const HomeView = ({ 
   theme, setSelectedItem, itineraries, dining, featuredPosts, favorites, 
-  toggleFavorite, setView, onOpenPartnerModal, onOpenParksModal, onOpenTransitModal 
+  toggleFavorite, setView, onOpenPartnerModal, onOpenParksModal 
 }) => {
   const [heroIdx, setHeroIdx] = useState(0);
   const [highlightIdx, setHighlightIdx] = useState(0);
@@ -1310,7 +2082,7 @@ const HomeView = ({
         </div>
       </section>
 
-      {/* QUICK LAUNCH GRID WITH PARKS FINDER AND TRANSIT MODAL BUTTON */}
+      {/* QUICK LAUNCH GRID WITH PARKS FINDER BUTTON INCLUDED */}
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
           <Ticket size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
@@ -1322,7 +2094,7 @@ const HomeView = ({
             { label: 'Events', icon: <Zap size={20}/>, path: 'fun' },
             { label: 'Parks', icon: <Trees size={20} className="text-emerald-400"/>, action: onOpenParksModal },
             { label: 'List Biz', icon: <Store size={20}/>, action: () => onOpenPartnerModal('restaurant') },
-            { label: 'Transit', icon: <Navigation size={20}/>, action: onOpenTransitModal }
+            { label: 'Transit', icon: <Navigation size={20}/>, link: 'https://www.theride.org/' }
           ].map(item => (
             <button 
               key={item.label} 
@@ -1574,8 +2346,6 @@ export default function App() {
   const [partnerModalCategory, setPartnerModalCategory] = useState('restaurant');
   const [isContributorModalOpen, setIsContributorModalOpen] = useState(false);
   const [isParksModalOpen, setIsParksModalOpen] = useState(false);
-  const [isTransitModalOpen, setIsTransitModalOpen] = useState(false);
-  const [isItineraryModalOpen, setIsItineraryModalOpen] = useState(false);
    
   const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
   const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
@@ -1605,17 +2375,8 @@ export default function App() {
     setIsParksModalOpen(true);
   };
 
-  const openTransitModal = () => {
-    setIsTransitModalOpen(true);
-  };
-
   const handleParkSelect = (park) => {
     setSelectedPark(park);
-  };
-
-  const openItineraryModal = () => {
-    if (!favorites.length) return alert('Add items to your favorites first to assemble a custom itinerary!');
-    setIsItineraryModalOpen(true);
   };
 
   // --- Auth Handlers ---
@@ -1726,13 +2487,6 @@ export default function App() {
             onSelectPark={handleParkSelect}
           />
 
-          {/* TRANSIT OPTIONS MODAL */}
-          <TransitModal
-            isOpen={isTransitModalOpen}
-            onClose={() => setIsTransitModalOpen(false)}
-            theme={theme}
-          />
-
           <PartnerListingModal 
             isOpen={isPartnerModalOpen} 
             onClose={() => setIsPartnerModalOpen(false)} 
@@ -1747,14 +2501,6 @@ export default function App() {
             theme={theme}
             user={user}
             onPostSuccess={() => {}}
-          />
-
-          <CreateItineraryModal
-            isOpen={isItineraryModalOpen}
-            onClose={() => setIsItineraryModalOpen(false)}
-            favorites={favorites}
-            user={user}
-            theme={theme}
           />
 
           {activeTool ? (
@@ -1773,7 +2519,6 @@ export default function App() {
                   toggleFavorite={toggleFavorite} 
                   onOpenPartnerModal={openPartnerModal}
                   onOpenParksModal={openParksModal}
-                  onOpenTransitModal={openTransitModal}
                 />
               )}
               {view === 'journal' && (
@@ -1816,7 +2561,6 @@ export default function App() {
                   onOpenPartnerModal={openPartnerModal}
                   onOpenContributorModal={openContributorModal}
                   onOpenParksModal={openParksModal}
-                  onOpenItineraryModal={openItineraryModal}
                 />
               )}
                
@@ -1884,6 +2628,9 @@ export default function App() {
                                      <div className="flex justify-between items-start gap-2">
                                        <h4 className={`font-bold uppercase text-sm leading-tight ${theme.text} line-clamp-1 tracking-tight`}>{exp.name}</h4>
                                        <div className="flex items-center gap-1">
+                                         <button onClick={(e) => handleShare(exp, e)} className={`p-2 rounded-full transition-colors ${theme.secondaryText} hover:text-[#ffcb05]`} title="Share event">
+                                           <Share2 size={16} />
+                                         </button>
                                          <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : theme.secondaryText}`}>
                                            <Heart size={16} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} />
                                          </button>
