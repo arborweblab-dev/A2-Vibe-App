@@ -25,6 +25,91 @@ import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
 
+// --- TRANSIT OPTIONS MODAL ---
+const TransitModal = ({ isOpen, onClose, theme }) => {
+  if (!isOpen) return null;
+
+  const transitOptions = [
+    {
+      name: 'The Ride (AAATA)',
+      category: 'Public Bus System',
+      desc: 'Ann Arbor’s primary fixed-route public bus transit network across the city and Ypsilanti.',
+      url: 'https://www.theride.org/'
+    },
+    {
+      name: 'The Ride Trip Planner',
+      category: 'Trip Planner & Schedules',
+      desc: 'Plan real-time bus routes, arrival estimates, and point-to-point trip itineraries.',
+      url: 'https://www.theride.org/maps-schedules/trip-planner'
+    },
+    {
+      name: 'FlexRide (Via)',
+      category: 'On-Demand Microtransit',
+      desc: 'Affordable, shared on-demand rides connecting designated Ann Arbor service zones.',
+      url: 'https://city.ridewithvia.com/ann-arbor#:~:text=Getting%20around%20Ann%20Arbor%20has,work%2C%20school%2C%20errands%2C%20and%20more.'
+    },
+    {
+      name: 'Ann Arbor Taxi',
+      category: 'Local Taxi Service',
+      desc: 'Online cab and local ride reservations for rides around Ann Arbor and regional airports.',
+      url: 'https://book.mylimobiz.com/v4/(S(hw3ly3p54pivsjs4qkne2pwr))/annarbortaxi'
+    },
+    {
+      name: 'Arbor Taxi',
+      category: 'Local Taxi Service',
+      desc: 'Reliable local 24/7 taxi transportation service serving Tree Town and metro Detroit.',
+      url: 'https://arbortaxi.com/'
+    }
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex items-center gap-2.5 min-w-0 pr-3">
+            <div className="p-2 rounded-xl bg-[#00274c] text-[#ffcb05] flex-shrink-0">
+              <Navigation size={20} />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] block">
+                Getting Around
+              </span>
+              <h3 className="text-xl font-header font-black uppercase italic tracking-tight truncate" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+                Ann Arbor Transit
+              </h3>
+            </div>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-3.5">
+          {transitOptions.map((opt) => (
+            <div
+              key={opt.name}
+              onClick={() => window.open(opt.url, '_blank', 'noopener,noreferrer')}
+              className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center justify-between gap-4 cursor-pointer shadow-sm hover:border-[#ffcb05]/60 active:scale-[0.99] transition-all`}
+            >
+              <div className="min-w-0 flex-1">
+                <span className="text-[9px] font-black uppercase tracking-widest text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md inline-block mb-1">
+                  {opt.category}
+                </span>
+                <h4 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{opt.name}</h4>
+                <p className={`text-xs mt-0.5 line-clamp-2 leading-relaxed ${theme.secondaryText}`}>{opt.desc}</p>
+              </div>
+              <div className="p-3 bg-[#00274c] text-[#ffcb05] rounded-2xl flex-shrink-0">
+                <ExternalLink size={16} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- CURATED PARKS & NATURE PRESERVES DATA WITH AMENITIES ---
 const PARKS_DATA = [
   {
@@ -244,7 +329,6 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
             </div>
           )}
 
-          {/* PARK AMENITIES / SPECS GRID */}
           <div className="grid grid-cols-2 gap-3">
             <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
               <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
@@ -364,7 +448,6 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
       <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
         
-        {/* HEADER */}
         <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2.5">
@@ -383,7 +466,6 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
             </button>
           </div>
 
-          {/* SEARCH BAR */}
           <div className="relative w-full">
             <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -395,7 +477,6 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
             />
           </div>
 
-          {/* FILTER CHIPS */}
           <div className="flex gap-2 overflow-x-auto no-scrollbar pt-3">
             {filterOptions.map(f => {
               const Icon = f.icon;
@@ -414,7 +495,6 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
           </div>
         </div>
 
-        {/* PARKS LIST CONTENT */}
         <div className="p-6 space-y-4 flex-1 overflow-y-auto">
           <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">
             <span>Showing {filteredParks.length} of {PARKS_DATA.length} Parks</span>
@@ -443,7 +523,6 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
                     <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>{park.name}</h4>
                     <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>{park.shortDesc}</p>
                     
-                    {/* QUICK AMENITY BADGES */}
                     <div className="flex items-center gap-2 mt-2 flex-wrap text-[10px]">
                       {park.dogFriendly && (
                         <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
@@ -673,7 +752,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
             </button>
           </div>
 
-          {/* RESTAURANT / BAR FLOW (FREE QR OR BOOSTED MEMBERSHIP) */}
           {listingCategory === 'restaurant' ? (
             <>
               <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} text-center`}>
@@ -903,7 +981,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
               )}
             </>
           ) : (
-            /* EVENT / EXPERIENCE FLOW: PAID ONLY ($25 STANDARD & $45 FEATURED) */
             <div className="space-y-4">
               <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} space-y-1.5`}>
                 <div className="flex items-center gap-2 text-[#0284c7] dark:text-[#38bdf8]">
@@ -915,7 +992,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                 </p>
               </div>
 
-              {/* TIER 1: REGULAR EVENT LISTING ($25) */}
               <div className={`p-5 rounded-3xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-3`}>
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -946,7 +1022,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                 </ul>
               </div>
 
-              {/* TIER 2: FEATURED EVENT SHOWCASE ($45) */}
               <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/40 text-white space-y-3 shadow-xl">
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -1681,7 +1756,6 @@ const HubView = ({
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
 
-        {/* PROFILE CARD */}
         <div className={`${theme.card} p-5 rounded-[32px] border ${theme.border} flex flex-col gap-4 text-center shadow-lg mx-1`}>
           {user ? (
             <>
@@ -1705,9 +1779,7 @@ const HubView = ({
           )}
         </div>
 
-        {/* SAVED FAVORITES SECTIONS */}
         <div className="space-y-8">
-          {/* EATS FAVORITES */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -1734,7 +1806,6 @@ const HubView = ({
             </div>
           </div>
 
-          {/* HAPPENINGS FAVORITES */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -1763,7 +1834,6 @@ const HubView = ({
             </div>
           </div>
 
-          {/* JOURNAL FAVORITES */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -1793,7 +1863,7 @@ const HubView = ({
           </div>
         </div>
 
-        {/* --- URBAN AND FUN TOOLS --- */}
+        {/* URBAN AND FUN TOOLS */}
         <section className={`space-y-5 w-full pt-4 border-t ${theme.border}`}>
           <div className="flex items-center gap-2 px-1">
             <Sparkles size={18} className="text-[#0284c7] dark:text-[#34a4b8]" />
@@ -1845,7 +1915,7 @@ const HubView = ({
           </div>
         </div>
 
-        {/* COMMUNITY FORUM WITH THREADED COMMENTS */}
+        {/* COMMUNITY FORUM */}
         <section className={`space-y-6 w-full pt-8 border-t ${theme.border}`}>
           <div className="px-1 space-y-2">
             <div className="flex items-center justify-between">
@@ -1868,7 +1938,7 @@ const HubView = ({
               <button
                 key={ch}
                 onClick={() => setSelectedForumChannel(ch)}
-                className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${selectedForumChannel === ch ? 'bg-[#a855f7] text-white border-[#a855f7] shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
+                className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${selectedForumChannel === ch ? 'bg-[#a855f7] text-white border-[#a855f7] shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
               >
                 {ch}
               </button>
@@ -1992,7 +2062,7 @@ const HubView = ({
 // --- INSIDER / HOME VIEW ---
 const HomeView = ({ 
   theme, setSelectedItem, itineraries, dining, featuredPosts, favorites, 
-  toggleFavorite, setView, onOpenPartnerModal, onOpenParksModal 
+  toggleFavorite, setView, onOpenPartnerModal, onOpenParksModal, onOpenTransitModal 
 }) => {
   const [heroIdx, setHeroIdx] = useState(0);
   const [highlightIdx, setHighlightIdx] = useState(0);
@@ -2047,7 +2117,7 @@ const HomeView = ({
         </div>
       </section>
 
-      {/* QUICK LAUNCH GRID WITH PARKS FINDER BUTTON INCLUDED */}
+      {/* QUICK LAUNCH GRID WITH PARKS & TRANSIT MODALS */}
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
           <Ticket size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
@@ -2059,7 +2129,7 @@ const HomeView = ({
             { label: 'Events', icon: <Zap size={20}/>, path: 'fun' },
             { label: 'Parks', icon: <Trees size={20} className="text-emerald-400"/>, action: onOpenParksModal },
             { label: 'List Biz', icon: <Store size={20}/>, action: () => onOpenPartnerModal('restaurant') },
-            { label: 'Transit', icon: <Navigation size={20}/>, link: 'https://www.theride.org/' }
+            { label: 'Transit', icon: <Navigation size={20}/>, action: onOpenTransitModal }
           ].map(item => (
             <button 
               key={item.label} 
@@ -2311,6 +2381,7 @@ export default function App() {
   const [partnerModalCategory, setPartnerModalCategory] = useState('restaurant');
   const [isContributorModalOpen, setIsContributorModalOpen] = useState(false);
   const [isParksModalOpen, setIsParksModalOpen] = useState(false);
+  const [isTransitModalOpen, setIsTransitModalOpen] = useState(false);
    
   const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
   const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
@@ -2338,6 +2409,10 @@ export default function App() {
 
   const openParksModal = () => {
     setIsParksModalOpen(true);
+  };
+
+  const openTransitModal = () => {
+    setIsTransitModalOpen(true);
   };
 
   const handleParkSelect = (park) => {
@@ -2382,7 +2457,6 @@ export default function App() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view, activeTool]);
 
   const toggleFavorite = (item) => {
-    // Parks do not have favorite option
     if (item.type === 'park' || PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-')) {
       return;
     }
@@ -2452,6 +2526,13 @@ export default function App() {
             onSelectPark={handleParkSelect}
           />
 
+          {/* TRANSIT MODAL */}
+          <TransitModal
+            isOpen={isTransitModalOpen}
+            onClose={() => setIsTransitModalOpen(false)}
+            theme={theme}
+          />
+
           <PartnerListingModal 
             isOpen={isPartnerModalOpen} 
             onClose={() => setIsPartnerModalOpen(false)} 
@@ -2484,6 +2565,7 @@ export default function App() {
                   toggleFavorite={toggleFavorite} 
                   onOpenPartnerModal={openPartnerModal}
                   onOpenParksModal={openParksModal}
+                  onOpenTransitModal={openTransitModal}
                 />
               )}
               {view === 'journal' && (
@@ -2535,7 +2617,6 @@ export default function App() {
                      <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Happenings</h1>
                    </div>
 
-                   {/* FEATURED CTA CARDS SECTION */}
                    {(() => {
                      const featuredHappenings = (itineraries || []).filter(e => e.isFeatured);
                      const displayFeatured = featuredHappenings.length > 0 ? featuredHappenings.slice(0, 5) : (itineraries || []).slice(0, 5);
@@ -2636,7 +2717,6 @@ export default function App() {
                           )}
 
                           <div className="pt-6 space-y-3.5">
-                            {/* ANN ARBOR PARK FINDER CTA BANNER */}
                             <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#064e3b] via-[#043e2e] to-[#022c22] border border-emerald-500/30 flex items-center justify-between shadow-xl">
                               <div className="space-y-1 text-left">
                                 <span className="text-[9px] font-black uppercase text-emerald-400 tracking-widest block">Explore Tree Town</span>
@@ -2672,7 +2752,6 @@ export default function App() {
                         <>
                           <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
                           <div className="pt-4 space-y-3.5">
-                            {/* ANN ARBOR PARK FINDER CTA BANNER */}
                             <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#064e3b] via-[#043e2e] to-[#022c22] border border-emerald-500/30 flex items-center justify-between shadow-xl">
                               <div className="space-y-1 text-left">
                                 <span className="text-[9px] font-black uppercase text-emerald-400 tracking-widest block">Explore Tree Town</span>
