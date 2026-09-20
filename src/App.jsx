@@ -17,7 +17,7 @@ import {
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
   Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
   PenTool, ShieldCheck, MessageCircle, Send, Trees, ThumbsUp, MessageCircleCode,
-  Dog, Accessibility, Bike, Baby, Bath, Check, Bookmark, Compass as GuideCompass
+  Dog, Accessibility, Bike, Baby, Bath, Check
 } from 'lucide-react';
 
 // --- 1. IMPORT LOCAL DATA ---
@@ -1812,7 +1812,7 @@ const HubView = ({
                 <Sparkles size={16} className="text-[#0284c7] dark:text-[#38bdf8]" />
                 <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Happenings Favs ({happeningsFavs.length})</h4>
               </div>
-              <button onClick={() => setView('fun')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#34a4b8] tracking-[0.2em] hover:underline">View All Happenings →</button>
+              <button onClick={() => setView('fun')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] hover:underline">View All Happenings →</button>
             </div>
             <div className="grid grid-cols-1 gap-4">
               {!happeningsFavs.length ? (
@@ -1838,9 +1838,9 @@ const HubView = ({
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
                 <BookText size={16} className="text-[#a855f7]" />
-                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Field Guide Favs ({journalFavs.length})</h4>
+                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Journal Favs ({journalFavs.length})</h4>
               </div>
-              <button onClick={() => setView('journal')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#34a4b8] tracking-[0.2em] hover:underline">View Field Guide →</button>
+              <button onClick={() => setView('journal')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#34a4b8] tracking-[0.2em] hover:underline">View All Stories →</button>
             </div>
             <div className="grid grid-cols-1 gap-4">
               {!journalFavs.length ? (
@@ -1852,7 +1852,7 @@ const HubView = ({
                     <div className="flex-1">
                       <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
                       <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest">
-                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'A2 Field Guide')}
+                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'City Journal')}
                       </p>
                     </div>
                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
@@ -2294,18 +2294,13 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
   );
 };
 
-// --- A2 FIELD GUIDE VIEW (COMPREHENSIVE LOCAL GUIDE & WEEKLY HIGHLIGHT) ---
+// --- REDESIGNED CITY JOURNAL VIEW (CLEAN MASTHEAD, FEATURED SPOTLIGHT & FULL 2-COLUMN GRID) ---
 const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, onOpenPartnerModal, onOpenContributorModal }) => {
   const [activeCat, setActiveCat] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // 1. Featured weekly story pick
-  const weeklyFeatureStory = useMemo(() => {
-    return (posts || []).find(p => p.isHighlight) || (posts || [])[0];
-  }, [posts]);
-
-  // 2. Comprehensive local guide items (all posts preserved)
-  const filteredGuideItems = useMemo(() => {
+  // Filtered stories preserving all posts
+  const filteredPosts = useMemo(() => {
     let list = posts || [];
     if (activeCat !== 'All') {
       if (activeCat === 'Meetups') {
@@ -2321,208 +2316,170 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts,
     return list;
   }, [posts, activeCat, searchQuery]);
 
+  // Featured story (prefers highlight or first in filtered list)
+  const featuredStory = useMemo(() => {
+    return filteredPosts.find(p => p.isHighlight) || filteredPosts[0];
+  }, [filteredPosts]);
+
+  // Remaining articles for the large grid
+  const remainingStories = useMemo(() => {
+    if (!featuredStory) return filteredPosts;
+    return filteredPosts.filter(p => p.id !== featuredStory.id);
+  }, [filteredPosts, featuredStory]);
+
   return (
-    <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
+    <div className="animate-fade space-y-7 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
       
-      {/* 1. COMPENDIUM & FIELD GUIDE MASTHEAD */}
-      <div className="px-2 w-full space-y-4">
-        <div className={`flex justify-between items-center py-2 border-b ${theme.border} text-[10px] font-black uppercase tracking-[0.25em] ${theme.secondaryText}`}>
-          <span className="flex items-center gap-1.5">
-            <GuideCompass size={12} className="text-[#0284c7] dark:text-[#38bdf8]" />
-            A2 Field Guide
-          </span>
-          <span className="text-[#0284c7] dark:text-[#38bdf8]">Tree Town Compendium</span>
-          <span>Archive & Stories</span>
-        </div>
+      {/* 1. CLEAN HEADER & SUBTITLE */}
+      <div className="text-center px-4 w-full space-y-2">
+        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>
+          City Journal
+        </h1>
+        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#b45309] dark:text-[#ffcb05]">
+          The A2 Field Guide
+        </p>
 
-        <div className="pt-1 text-center space-y-1.5">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#b45309] dark:text-[#ffcb05] block">
-            Ann Arbor Living Guide & City Journal
-          </span>
-          <h1 className={`text-4xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>
-            The A2 Field Guide
-          </h1>
-          <p className={`text-xs ${theme.secondaryText} max-w-sm mx-auto leading-relaxed`}>
-            Stories, local secrets, dining notes, nature guides, and townie dispatches from across Ann Arbor.
-          </p>
-        </div>
-
-        {/* SEARCH & DESK ACTION BAR */}
-        <div className="flex items-center gap-2 pt-1">
+        {/* SEARCH BAR & CONTRIBUTOR BUTTON */}
+        <div className="flex items-center gap-2 pt-3">
           <div className="relative flex-1">
             <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search guides, secrets, dining, local history..."
+              placeholder="Search stories, articles, reviews..."
               className={`w-full pl-9 pr-3 py-2.5 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-medium outline-none focus:border-[#ffcb05] transition-all`}
             />
           </div>
           <button
             onClick={onOpenContributorModal}
             className="px-4 py-2.5 bg-[#a855f7] text-white rounded-2xl text-[10px] font-black uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0"
-            title="Contribute a story or guide"
+            title="Submit a local story"
           >
             <PenTool size={13} />
-            <span>Add Story</span>
+            <span>Submit</span>
           </button>
+        </div>
+
+        {/* CATEGORY FILTER CHIPS */}
+        <div className="flex overflow-x-auto gap-2 pt-2 no-scrollbar">
+          {CATEGORIES_JOURNAL.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCat(cat)}
+              className={`px-4 py-2 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all ${
+                activeCat === cat
+                  ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-md'
+                  : (theme.isDark ? 'text-slate-400 bg-white/5 border-white/5 hover:bg-white/10' : 'text-slate-700 bg-slate-100 border-slate-200 hover:bg-slate-200')
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* 2. WEEKLY FEATURED STORY SECTION */}
-      {weeklyFeatureStory && !searchQuery && activeCat === 'All' && (
-        <div className="px-1 w-full space-y-2.5">
-          <div className="flex items-center justify-between px-2">
-            <div className="flex items-center gap-2">
-              <Sparkles size={15} className="text-[#ffcb05]" />
-              <span className={`text-[10px] font-header font-black uppercase tracking-widest ${theme.text}`}>
-                Featured Weekly Story
-              </span>
-            </div>
-            <span className="text-[9px] font-black uppercase tracking-wider text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md">
-              Fresh Read
-            </span>
-          </div>
-
-          <div
-            onClick={() => setSelectedItem(weeklyFeatureStory)}
-            className={`${theme.card} rounded-[36px] border ${theme.border} overflow-hidden shadow-xl cursor-pointer group transition-all duration-300 active:scale-[0.99]`}
-          >
-            <div className="relative h-64 w-full overflow-hidden">
-              {weeklyFeatureStory.img ? (
-                <img
-                  src={weeklyFeatureStory.img}
-                  alt={weeklyFeatureStory.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-              ) : (
-                <div className={`w-full h-full ${theme.isDark ? 'bg-slate-800' : 'bg-slate-200'} flex items-center justify-center`}>
-                  <Building size={48} className="opacity-20" />
-                </div>
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-              <span className="absolute top-4 left-4 bg-[#ffcb05] text-black text-[9px] font-black uppercase px-3 py-1 rounded-full shadow-md tracking-wider">
-                Weekly Spotlight
-              </span>
-              <span className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-2.5 py-0.5 rounded-md">
-                {weeklyFeatureStory.category}
-              </span>
-              <button
-                onClick={(e) => { e.stopPropagation(); toggleFavorite(weeklyFeatureStory); }}
-                className={`absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === weeklyFeatureStory.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/30 text-white'}`}
-              >
-                <Heart size={16} fill={(favorites || []).some(f => f.id === weeklyFeatureStory.id) ? "currentColor" : "none"} />
-              </button>
-            </div>
-
-            <div className="p-5 space-y-2">
-              <h2 className={`text-xl font-header font-black uppercase italic tracking-tight leading-tight group-hover:text-[#ffcb05] transition-colors ${theme.text}`}>
-                {weeklyFeatureStory.title}
-              </h2>
-              {weeklyFeatureStory.excerpt && (
-                <p className={`text-xs leading-relaxed line-clamp-2 ${theme.secondaryText}`}>
-                  {weeklyFeatureStory.excerpt}
-                </p>
-              )}
-              <span className="text-[10px] font-bold text-[#0284c7] dark:text-[#38bdf8] block pt-1">
-                Read Full Field Story →
-              </span>
-            </div>
-          </div>
+      {filteredPosts.length === 0 ? (
+        <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border} mx-2`}>
+          No stories match your search.
         </div>
-      )}
-
-      {/* 3. GUIDEBOOK CATEGORY SELECTOR & ARTICLES FEED */}
-      <div className="px-1 space-y-4 w-full">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between px-1">
-            <div className="flex items-center gap-2">
-              <Bookmark size={16} className="text-[#a855f7]" />
-              <h3 className={`text-xs font-header font-black uppercase tracking-widest ${theme.text}`}>
-                City Compendium & Stories ({filteredGuideItems.length})
-              </h3>
-            </div>
-            {activeCat !== 'All' && (
-              <button onClick={() => setActiveCat('All')} className="text-[9px] font-bold text-[#38bdf8] hover:underline">
-                View All Topics
-              </button>
-            )}
-          </div>
-
-          {/* Understated Guidebook Filter Badges */}
-          <div className="flex overflow-x-auto gap-2 no-scrollbar px-1">
-            {CATEGORIES_JOURNAL.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCat(cat)}
-                className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap text-[10px] font-black uppercase tracking-wider transition-all border ${
-                  activeCat === cat
-                    ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-sm'
-                    : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-600')
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* FEED FORMAT FOR STORIES & GUIDES */}
-        <div className="space-y-3">
-          {filteredGuideItems.length > 0 ? (
-            filteredGuideItems.map(art => {
-              const isFavorited = (favorites || []).some(f => f.id === art.id);
-              return (
-                <div
-                  key={art.id}
-                  onClick={() => setSelectedItem(art)}
-                  className={`${theme.card} p-3.5 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer shadow-sm group hover:border-[#ffcb05]/40 active:scale-[0.99] transition-all`}
+      ) : (
+        <div className="px-1 space-y-6 w-full">
+          
+          {/* 2. FEATURED LEAD STORY (FULL WIDTH) */}
+          {featuredStory && (
+            <div
+              onClick={() => setSelectedItem(featuredStory)}
+              className={`${theme.card} rounded-[36px] border ${theme.border} overflow-hidden shadow-xl cursor-pointer group transition-all duration-300 active:scale-[0.99]`}
+            >
+              <div className="relative h-72 w-full overflow-hidden">
+                {featuredStory.img ? (
+                  <img
+                    src={featuredStory.img}
+                    alt={featuredStory.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className={`w-full h-full ${theme.isDark ? 'bg-slate-800' : 'bg-slate-200'} flex items-center justify-center`}>
+                    <Building size={48} className="opacity-20" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                <span className="absolute top-4 left-4 bg-[#ffcb05] text-black text-[9px] font-black uppercase px-3 py-1 rounded-full shadow-md tracking-wider">
+                  Featured Story
+                </span>
+                <span className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-2.5 py-0.5 rounded-md">
+                  {featuredStory.category}
+                </span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); toggleFavorite(featuredStory); }}
+                  className={`absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === featuredStory.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/30 text-white'}`}
                 >
-                  <div className="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 relative">
-                    {art.img ? (
-                      <img src={art.img} alt={art.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    ) : (
-                      <div className={`w-full h-full ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-center`}>
-                        <Building size={20} className="opacity-20" />
-                      </div>
-                    )}
-                  </div>
+                  <Heart size={16} fill={(favorites || []).some(f => f.id === featuredStory.id) ? "currentColor" : "none"} />
+                </button>
+              </div>
 
-                  <div className="flex-1 min-w-0 pr-1 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[8px] font-black uppercase tracking-wider text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded">
-                        {art.category || 'Field Note'}
-                      </span>
-                    </div>
-                    <h4 className={`text-xs font-bold leading-tight uppercase tracking-tight truncate ${theme.text} group-hover:text-[#ffcb05] transition-colors`}>
-                      {art.title}
-                    </h4>
-                    {art.excerpt && (
-                      <p className={`text-[11px] line-clamp-1 ${theme.secondaryText}`}>
-                        {art.excerpt}
-                      </p>
-                    )}
-                  </div>
+              <div className="p-5 space-y-2">
+                <h2 className={`text-xl font-header font-black uppercase italic tracking-tight leading-tight group-hover:text-[#ffcb05] transition-colors ${theme.text}`}>
+                  {featuredStory.title}
+                </h2>
+                {featuredStory.excerpt && (
+                  <p className={`text-xs leading-relaxed line-clamp-2 ${theme.secondaryText}`}>
+                    {featuredStory.excerpt}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
 
-                  <button
-                    onClick={(e) => { e.stopPropagation(); toggleFavorite(art); }}
-                    className="p-2 text-slate-400 hover:text-[#ffcb05] flex-shrink-0"
+          {/* 3. PROMINENT 2-COLUMN STORY GRID */}
+          {remainingStories.length > 0 && (
+            <div className="grid grid-cols-2 gap-x-4 gap-y-7 w-full pt-1">
+              {remainingStories.map(art => {
+                const isFavorited = (favorites || []).some(f => f.id === art.id);
+                return (
+                  <div
+                    key={art.id}
+                    onClick={() => setSelectedItem(art)}
+                    className="space-y-3 cursor-pointer group"
                   >
-                    <Heart size={16} fill={isFavorited ? "#ffcb05" : "none"} className={isFavorited ? "text-[#ffcb05]" : ""} />
-                  </button>
-                </div>
-              );
-            })
-          ) : (
-            <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
-              No stories or guides match your selected filter.
+                    <div className={`relative aspect-[4/5] rounded-[30px] overflow-hidden shadow-md ${theme.isDark ? 'bg-slate-800/20 border-white/5' : 'bg-slate-100 border-slate-200'} border`}>
+                      {art.img ? (
+                        <img
+                          src={art.img}
+                          alt={art.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center opacity-10">
+                          <Building size={36} />
+                        </div>
+                      )}
+                      <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full text-[8px] font-black text-white uppercase tracking-wider">
+                        {art.category}
+                      </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); toggleFavorite(art); }}
+                        className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${isFavorited ? "bg-[#ffcb05]/20 text-[#ffcb05]" : "bg-black/20 text-white"}`}
+                      >
+                        <Heart size={14} fill={isFavorited ? "currentColor" : "none"} />
+                      </button>
+                    </div>
+
+                    <div className="px-1">
+                      <h4 className={`text-xs font-header font-black uppercase italic leading-tight tracking-tight line-clamp-2 ${theme.text} group-hover:text-[#ffcb05] transition-colors`}>
+                        {art.title}
+                      </h4>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
-      </div>
+      )}
 
-      {/* 4. GUIDEBOOK CONTRIBUTIONS & DIRECTORY LISTING */}
+      {/* 4. ACTIONS */}
       <div className="grid grid-cols-2 gap-3.5 px-1 pt-4">
         <div 
           onClick={() => onOpenPartnerModal('general')}
@@ -2987,7 +2944,7 @@ export default function App() {
           {[
             { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
             { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-            { id: 'journal', icon: BookText, label: 'Guide', color: '#a855f7' }, 
+            { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
             { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
             { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
           ].map(v => {
