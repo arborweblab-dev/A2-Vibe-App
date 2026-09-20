@@ -158,5 +158,22 @@ export const journalData = [
       <p>Ann Arbor's bakery scene punches way above its weight. Cannelle is a true hidden gem—a French pastry shop serving incredible treats that even some locals haven't discovered yet.</p>
       <p>If you are walking near State Street, check out Bakehouse 46 for cupcakes, or head to Avalon downtown. And if you want the absolute best ice cream to pair with those baked goods, hit Milk and Froth for their super unique flavors.</p>
     `
+  },
+  {
+    id: "post-11",
+    title: "Tending to the Cascades: Volunteer Cleanup at Argo",
+    excerpt: "Give back to one of Ann Arbor's favorite riverfront spots with a one-hour morning cleanup.",
+    author: "A2 Vibe Team",
+    img: "/images/argo-cleanup.jpg",
+    category: "Community Reports",
+    allCategories: ["Community Reports", "Parks", "Events"],
+    isHighlight: true,
+    type: "article",
+    longDesc: `
+      <h3>Showing Love to Our Favorite Waterway</h3>
+      <p>If you spent any part of your summer floating, paddling, or lounging along the Argo Cascades, you know how essential this stretch of the Huron River is to Tree Town life. But welcoming thousands of paddlers and tubers every season means the banks take on some serious wear and tear.</p>
+      <p>On Monday, September 21 from 10:00 to 11:00 AM, the Ann Arbor Parks Volunteer Program is hosting a one-hour cleanup workday to restore the shoreline. Grabbers and collection bags are provided—just show up ready to pitch in.</p>
+      <p>Wear long pants, tall socks, and sturdy closed-toe shoes to handle riverbank brush and poison ivy. Minors are welcome with a digital waiver on file (under 14 must be accompanied by an adult). Because parking at the livery fills up fast, hopping on the B2B Trail by bike or walking over is strongly encouraged!</p>
+    `
   }
 ];
