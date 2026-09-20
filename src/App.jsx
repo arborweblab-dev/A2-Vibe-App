@@ -257,7 +257,7 @@ const THEMES = {
   dark: { primary: '#ffcb05', windowBg: 'bg-[#050b14]', appBg: 'bg-[#0a121e]', card: 'bg-[#151f2e]', text: 'text-slate-100', secondaryText: 'text-slate-400', border: 'border-slate-800', isDark: true }
 };
 
-const CATEGORIES_JOURNAL = ['All', 'City Life', 'Parks', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
+const CATEGORIES_GUIDE = ['All', 'City Life', 'Parks', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
 const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
 const MONTHS_EXP = ['All Months', 'October', 'November', 'December'];
 const AVAILABLE_TAGS = ['Foodie', 'U-M Alum', 'Townie', 'Student', 'Trail Runner', 'Night Owl', 'Art Lover', 'Coffee Snob'];
@@ -886,7 +886,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                       <li className="flex items-center gap-2">✓ <strong>Up to 20 HD Photos</strong> (Dishes, venue, crowd)</li>
                       <li className="flex items-center gap-2">✓ <strong>Longer Description & Story</strong> with direct ticket or reservation links</li>
                       <li className="flex items-center gap-2">✓ <strong>Optional Menu Upload / PDF Link</strong> on profile</li>
-                      <li className="flex items-center gap-2">✓ <strong>Dedicated Feature Article</strong> in City Journal</li>
+                      <li className="flex items-center gap-2">✓ <strong>Dedicated Feature Article</strong> in A2 Guide</li>
                       <li className="flex items-center gap-2">✓ <strong>Social Media Post Promos</strong> across our channels</li>
                     </ul>
                   </div>
@@ -952,7 +952,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                     <div className="grid grid-cols-1 gap-2.5">
                       <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
                         <div>
-                          <p className={`text-xs font-bold ${theme.text}`}>City Journal Feature Story</p>
+                          <p className={`text-xs font-bold ${theme.text}`}>A2 Guide Feature Story</p>
                           <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published culinary, brand, or event editorial</p>
                         </div>
                         <button
@@ -1061,7 +1061,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
               <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
                 <div>
                   <p className={`text-xs font-bold ${theme.text}`}>Need a Dedicated Editorial Story?</p>
-                  <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published feature story in the City Journal</p>
+                  <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published feature story in the A2 Guide</p>
                 </div>
                 <button
                   onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
@@ -1431,7 +1431,9 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
     <div className="animate-fade space-y-6 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
       <div className={`sticky top-0 z-40 flex justify-between items-center py-4 px-4 ${theme.appBg} border-b ${theme.border} shadow-sm -mx-5 w-[calc(100%+40px)] mb-4`}>
         <h1 className={`text-xl font-header font-black uppercase italic tracking-tighter`} style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>{toolTitles[type] || 'City Tool'}</h1>
-        <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}><X size={22}/></button>
+        <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+          <X size={22}/>
+        </button>
       </div>
 
       <div className="px-1 space-y-6 w-full pt-2">
@@ -1647,8 +1649,8 @@ const HubView = ({
   const happeningsFavs = userFavorites.filter(f => 
     (f.type === 'experience' || (f.name && !f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-')
   );
-  const journalFavs = userFavorites.filter(f => 
-    (f.type === 'journal' || f.excerpt || (f.title && !f.cuisine && !f.name)) && f.type !== 'park' && !f.id?.startsWith('park-')
+  const guideFavs = userFavorites.filter(f => 
+    (f.type === 'journal' || f.type === 'guide' || f.excerpt || (f.title && !f.cuisine && !f.name)) && f.type !== 'park' && !f.id?.startsWith('park-')
   );
 
   // Community Forum State
@@ -1838,21 +1840,21 @@ const HubView = ({
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
                 <BookText size={16} className="text-[#a855f7]" />
-                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Journal Favs ({journalFavs.length})</h4>
+                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Guide Favs ({guideFavs.length})</h4>
               </div>
-              <button onClick={() => setView('journal')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#34a4b8] tracking-[0.2em] hover:underline">View All Stories →</button>
+              <button onClick={() => setView('journal')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] hover:underline">View All Guide Stories →</button>
             </div>
             <div className="grid grid-cols-1 gap-4">
-              {!journalFavs.length ? (
-                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No stories saved yet</div>
+              {!guideFavs.length ? (
+                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No guide stories saved yet</div>
               ) : (
-                journalFavs.map(fav => (
-                  <div key={`journal-${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
+                guideFavs.map(fav => (
+                  <div key={`guide-${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
                     {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={20} className="opacity-40"/></div>}
                     <div className="flex-1">
                       <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
                       <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest">
-                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'City Journal')}
+                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'A2 Guide')}
                       </p>
                     </div>
                     <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
@@ -2294,8 +2296,8 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
   );
 };
 
-// --- REDESIGNED CITY JOURNAL VIEW (CLEAN MASTHEAD, FEATURED SPOTLIGHT & FULL 2-COLUMN GRID) ---
-const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, onOpenPartnerModal, onOpenContributorModal }) => {
+// --- A2 GUIDE VIEW (CLEAN HEADER, FEATURED SPOTLIGHT & FULL 2-COLUMN GRID) ---
+const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, onOpenPartnerModal, onOpenContributorModal }) => {
   const [activeCat, setActiveCat] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -2333,10 +2335,10 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts,
       {/* 1. CLEAN HEADER & SUBTITLE */}
       <div className="text-center px-4 w-full space-y-2">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>
-          City Journal
+          A2 Guide
         </h1>
         <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#b45309] dark:text-[#ffcb05]">
-          The A2 Field Guide
+          Stories, Tips & Field Notes
         </p>
 
         {/* SEARCH BAR & CONTRIBUTOR BUTTON */}
@@ -2363,7 +2365,7 @@ const JournalView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts,
 
         {/* CATEGORY FILTER CHIPS */}
         <div className="flex overflow-x-auto gap-2 pt-2 no-scrollbar">
-          {CATEGORIES_JOURNAL.map(cat => (
+          {CATEGORIES_GUIDE.map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCat(cat)}
@@ -2718,7 +2720,7 @@ export default function App() {
                 />
               )}
               {view === 'journal' && (
-                <JournalView 
+                <GuideView 
                   theme={theme} 
                   setSelectedItem={setSelectedItem} 
                   toggleFavorite={toggleFavorite} 
@@ -2853,7 +2855,7 @@ export default function App() {
 
                                    <div className={`flex items-center justify-between pt-2 border-t ${theme.border}`}>
                                      <span className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] hidden sm:inline-block">{exp.price || 'Free'}</span>
-                                     <span className="text-[9px] font-black text-[#0284c7] dark:text-[#34a4b8] uppercase tracking-[0.2em]">
+                                     <span className="text-[9px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em]">
                                        {Array.isArray(exp.category) ? exp.category[0] : exp.category}
                                      </span>
                                      <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-4 py-2 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
@@ -2944,7 +2946,7 @@ export default function App() {
           {[
             { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
             { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-            { id: 'journal', icon: BookText, label: 'Journal', color: '#a855f7' }, 
+            { id: 'journal', icon: BookText, label: 'Guide', color: '#a855f7' }, 
             { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
             { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
           ].map(v => {
