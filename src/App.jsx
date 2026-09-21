@@ -206,43 +206,6 @@ const SHOP_CATEGORIES = [
   'Specialty Markets'
 ];
 
-const STRIPE_LINKS = {
-  boostedAnnual: 'https://buy.stripe.com/5kQ6oH3POdsjgNX30YeME02',
-  boostedMonthly: 'https://buy.stripe.com/bJe9ATbigag769j30YeME03',
-  restaurantFeaturedPickAddon: 'https://buy.stripe.com/3cI4gz1HGgEv69j0SQeME04',
-  promoJournal: 'https://buy.stripe.com/28EeVd1HG4VNdBL8lieME05',
-  promoSMSocial: 'https://buy.stripe.com/28E8wP9a85ZR7dn8lieME06',
-  eventStandard: 'https://buy.stripe.com/aFabJ13PO1JB8hrgROeME08',
-  eventFeatured: 'https://buy.stripe.com/3cI00jcmkag7btDbxueME07'
-};
-
-const THEMES = {
-  light: { primary: '#00274c', windowBg: 'bg-slate-200', appBg: 'bg-slate-50', card: 'bg-white', text: 'text-slate-900', secondaryText: 'text-slate-600', border: 'border-slate-200', isDark: false },
-  dark: { primary: '#ffcb05', windowBg: 'bg-[#050b14]', appBg: 'bg-[#0a121e]', card: 'bg-[#151f2e]', text: 'text-slate-100', secondaryText: 'text-slate-400', border: 'border-slate-800', isDark: true }
-};
-
-const CATEGORIES_GUIDE = ['All', 'City Life', 'Parks', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
-const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
-const MONTHS_EXP = ['All Months', 'October', 'November', 'December'];
-const AVAILABLE_TAGS = ['Foodie', 'U-M Alum', 'Townie', 'Student', 'Trail Runner', 'Night Owl', 'Art Lover', 'Coffee Snob'];
-const FORUM_CHANNELS = ['All', 'Announcements', 'Local News', 'Events & Meetups', 'Food & Dining', 'Community Chat'];
-
-const SLIDE_IMAGES = [
-  "/images/1.png", 
-  "/images/4.png", 
-  "/images/10.png", 
-  "/images/5.png", 
-  "/images/3.png", 
-  "/images/2.png"
-];
-
-const DEFAULT_BUCKET_ITEMS = [
-  { id: 1, text: "Catch a game at the Big House", done: false },
-  { id: 2, text: "Walk through the Nichols Arboretum", done: false },
-  { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
-  { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
-];
-
 const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !shop) return null;
   const isFeatured = shop.tier === 'featured';
@@ -378,7 +341,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
   );
 };
 
-const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavorite, favorites, onOpenPartnerModal }) => {
+const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavorite, favorites }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCat, setSelectedCat] = useState('All');
 
@@ -420,19 +383,9 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
                 </h3>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              {onOpenPartnerModal && (
-                <button
-                  onClick={() => { onClose(); onOpenPartnerModal('restaurant'); }}
-                  className="px-3 py-1.5 bg-[#ffcb05] text-black rounded-xl text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-95 transition-all"
-                >
-                  List Shop +
-                </button>
-              )}
-              <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
-                <X size={20} />
-              </button>
-            </div>
+            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+              <X size={20} />
+            </button>
           </div>
 
           <div className="relative w-full">
@@ -673,6 +626,555 @@ const TransitModal = ({ isOpen, onClose, theme }) => {
   );
 };
 
+const PARKS_DATA = [
+  {
+    id: 'park-arb',
+    name: 'Nichols Arboretum',
+    title: 'Nichols Arboretum',
+    type: 'park',
+    category: 'Nature & Arb',
+    address: '1610 Washington Hts, Ann Arbor, MI',
+    img: 'https://a2vibe.com/images/UofM_Nichols_Arboretum.jpg',
+    shortDesc: 'Iconic 123-acre river valley featuring the Peony Garden, river trails, and historic tree collections.',
+    longDesc: '<p>Beloved by locals as "The Arb," this historic reserve along the Huron River offers miles of gravel pathways, panoramic hillside vistas, glacial topography, and the world-renowned Nichols Arboretum Peony Garden.</p>',
+    dogFriendly: true,
+    dogNotes: 'Leashed dogs welcome throughout trails.',
+    accessibleTrails: false,
+    accessibilityNotes: 'Steep natural dirt hills and stone stairways; limited wheelchair access.',
+    restrooms: true,
+    restroomNotes: 'Seasonal portalets and Reader Center restrooms during open hours.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: false,
+    features: ['River Access', 'Peony Garden', 'Scenic Overlooks', 'Bird Watching']
+  },
+  {
+    id: 'park-gallup',
+    name: 'Gallup Park & Canoe Livery',
+    title: 'Gallup Park & Canoe Livery',
+    type: 'park',
+    category: 'Riverfront & Trails',
+    address: '3000 Fuller Rd, Ann Arbor, MI',
+    img: 'https://a2vibe.com/images/Gallup_Park.jpg',
+    shortDesc: 'Scenic 69-acre park winding along the Huron River with pedestrian bridges, boat launches, and trails.',
+    longDesc: '<p>Gallup Park is Ann Arbor’s premier riverfront escape. Features 3 miles of paved trails traversing small islands, wooden footbridges, picnic pavilions, wildlife viewing spots, and seasonal kayak and canoe rentals.</p>',
+    dogFriendly: true,
+    dogNotes: 'Dog-friendly on leash with waste bag stations.',
+    accessibleTrails: true,
+    accessibilityNotes: 'Fully paved, flat walkways and ADA-compliant bridge ramps.',
+    restrooms: true,
+    restroomNotes: 'Permanent year-round ADA restrooms located at the Canoe Livery.',
+    playground: true,
+    familyFriendly: true,
+    bikeFriendly: true,
+    features: ['Canoe & Kayak Livery', 'Playground', 'Paved Trails', 'Picnic Shelters']
+  },
+  {
+    id: 'park-bird-hills',
+    name: 'Bird Hills Nature Area',
+    title: 'Bird Hills Nature Area',
+    type: 'park',
+    category: 'Woodland Preserve',
+    address: 'Newport Rd & Bird Rd, Ann Arbor, MI',
+    img: 'https://a2vibe.com/images/birds-hill.jpg',
+    shortDesc: 'Ann Arbor’s largest city nature park with 146 acres of quiet dirt trails under dense hardwood canopy.',
+    longDesc: '<p>A sanctuary for trail runners and bird watchers, Bird Hills is an untouched forested refuge featuring rugged terrain, deep ravines, and native oak and maple groves without bikes or motorized access.</p>',
+    dogFriendly: true,
+    dogNotes: 'Leashed dogs permitted; must stay on trails.',
+    accessibleTrails: false,
+    accessibilityNotes: 'Rugged dirt paths, exposed roots, and steep grades.',
+    restrooms: false,
+    restroomNotes: 'No public restrooms on-site.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: false,
+    features: ['Deep Woodland Trails', 'Ravine Overlooks', 'Wildlife & Birding']
+  },
+  {
+    id: 'park-matthaei',
+    name: 'Matthaei Botanical Gardens',
+    title: 'Matthaei Botanical Gardens',
+    type: 'park',
+    category: 'Botanic Garden',
+    address: '1800 N Dixboro Rd, Ann Arbor, MI',
+    img: 'https://a2vibe.com/images/matt.png',
+    shortDesc: 'Sprawling conservatories, display gardens, wetlands, and peaceful nature loops on Dixboro Road.',
+    longDesc: '<p>Features a 10,000+ square foot tropical and desert conservatory surrounded by outdoor display beds, bonsai gardens, boardwalk trails over Fleming Creek, and sweeping wildflower habitats.</p>',
+    dogFriendly: false,
+    dogNotes: 'Service animals only. Pets not permitted in gardens or conservatory.',
+    accessibleTrails: true,
+    accessibilityNotes: 'Paved paths and level boardwalks through the central gardens.',
+    restrooms: true,
+    restroomNotes: 'Full modern ADA restrooms in visitor center.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: true,
+    features: ['Tropical Conservatory', 'Boardwalks', 'Display Gardens', 'Bonsai Collection']
+  },
+  {
+    id: 'park-barton',
+    name: 'Barton Nature Area',
+    title: 'Barton Nature Area',
+    type: 'park',
+    category: 'Wetland & River',
+    address: 'Huron River Dr, Ann Arbor, MI',
+    img: 'https://a2vibe.com/images/barton.jpg',
+    shortDesc: 'Quiet 102-acre natural area bordered by Barton Pond and the Huron River with boardwalk passages.',
+    longDesc: '<p>Located just northwest of downtown, Barton Nature Area features scenic river overlooks, rich marshlands, and walking connections through foot bridges to Huron River Drive and Foster Bridge.</p>',
+    dogFriendly: true,
+    dogNotes: 'Leashed dogs allowed on marked footpaths.',
+    accessibleTrails: false,
+    accessibilityNotes: 'Mostly unpaved nature paths, earthen trails, and boardwalks.',
+    restrooms: false,
+    restroomNotes: 'No restroom facilities available.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: false,
+    features: ['Barton Dam Overlooks', 'Footbridges', 'Wetland Trails']
+  },
+  {
+    id: 'park-bandemer',
+    name: 'Bandemer Park',
+    title: 'Bandemer Park',
+    type: 'park',
+    category: 'Waterfront & Disc Golf',
+    address: '1352 Lakeshore Dr, Ann Arbor, MI',
+    img: 'https://a2vibe.com/images/bandemer.jpg',
+    shortDesc: 'Waterfront park featuring boardwalks along Argo Pond, a 9-hole disc golf course, and dirt bike jumps.',
+    longDesc: '<p>Bordering the west side of Argo Pond, Bandemer offers docks for crew shells and canoes, a shaded disc golf run, accessibility to the B2B Trail, and panoramic views of the water.</p>',
+    dogFriendly: true,
+    dogNotes: 'Leashed dogs allowed along paths and open spaces.',
+    accessibleTrails: true,
+    accessibilityNotes: 'Accessible paved path connecting to the Border-to-Border (B2B) Trail.',
+    restrooms: true,
+    restroomNotes: 'Seasonal portable restrooms.',
+    playground: false,
+    familyFriendly: true,
+    bikeFriendly: true,
+    features: ['B2B Trail Connection', 'Disc Golf Course', 'Dirt Bike Jumps', 'Canoe Launch']
+  }
+];
+
+const STRIPE_LINKS = {
+  boostedAnnual: 'https://buy.stripe.com/5kQ6oH3POdsjgNX30YeME02',
+  boostedMonthly: 'https://buy.stripe.com/bJe9ATbigag769j30YeME03',
+  restaurantFeaturedPickAddon: 'https://buy.stripe.com/3cI4gz1HGgEv69j0SQeME04',
+  promoJournal: 'https://buy.stripe.com/28EeVd1HG4VNdBL8lieME05',
+  promoSMSocial: 'https://buy.stripe.com/28E8wP9a85ZR7dn8lieME06',
+  eventStandard: 'https://buy.stripe.com/aFabJ13PO1JB8hrgROeME08',
+  eventFeatured: 'https://buy.stripe.com/3cI00jcmkag7btDbxueME07'
+};
+
+const THEMES = {
+  light: { primary: '#00274c', windowBg: 'bg-slate-200', appBg: 'bg-slate-50', card: 'bg-white', text: 'text-slate-900', secondaryText: 'text-slate-600', border: 'border-slate-200', isDark: false },
+  dark: { primary: '#ffcb05', windowBg: 'bg-[#050b14]', appBg: 'bg-[#0a121e]', card: 'bg-[#151f2e]', text: 'text-slate-100', secondaryText: 'text-slate-400', border: 'border-slate-800', isDark: true }
+};
+
+const CATEGORIES_GUIDE = ['All', 'City Life', 'Parks', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
+const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
+const MONTHS_EXP = ['All Months', 'October', 'November', 'December'];
+const AVAILABLE_TAGS = ['Foodie', 'U-M Alum', 'Townie', 'Student', 'Trail Runner', 'Night Owl', 'Art Lover', 'Coffee Snob'];
+const FORUM_CHANNELS = ['All', 'Announcements', 'Local News', 'Events & Meetups', 'Food & Dining', 'Community Chat'];
+
+const SLIDE_IMAGES = [
+  "/images/1.png", 
+  "/images/4.png", 
+  "/images/10.png", 
+  "/images/5.png", 
+  "/images/3.png", 
+  "/images/2.png"
+];
+
+const DEFAULT_BUCKET_ITEMS = [
+  { id: 1, text: "Catch a game at the Big House", done: false },
+  { id: 2, text: "Walk through the Nichols Arboretum", done: false },
+  { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
+  { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
+];
+
+const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
+  if (!isOpen || !park) return null;
+
+  return (
+    <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex items-center gap-2.5 min-w-0 pr-3">
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 flex-shrink-0">
+              <Trees size={20} />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">
+                {park.category || 'Nature Preserve'}
+              </span>
+              <h3 className="text-xl font-header font-black uppercase italic tracking-tight truncate" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+                {park.name}
+              </h3>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {park.img && (
+            <div className="relative rounded-[32px] overflow-hidden shadow-lg h-60">
+              <img src={park.img} className="w-full h-full object-cover" alt={park.name} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <span className="absolute bottom-4 left-4 bg-emerald-600/90 text-white text-[9px] font-black uppercase px-3 py-1 rounded-full backdrop-blur-sm tracking-wider">
+                Ann Arbor Green Space
+              </span>
+            </div>
+          )}
+
+          {park.address && (
+            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
+              <MapPin size={18} className="text-[#b45309] dark:text-[#ffcb05] flex-shrink-0 mt-0.5" />
+              <div className="text-xs">
+                <span className={`font-black uppercase tracking-wider block ${theme.text}`}>Location Address</span>
+                <span className={`${theme.secondaryText} leading-relaxed`}>{park.address}</span>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                <Dog size={16} />
+                <span>Dog Friendly</span>
+              </div>
+              <p className={`text-[11px] font-medium ${theme.text}`}>
+                {park.dogFriendly ? 'Yes (Leashed)' : 'No Dogs Allowed'}
+              </p>
+              {park.dogNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.dogNotes}</p>}
+            </div>
+
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#0284c7] dark:text-[#38bdf8]">
+                <Accessibility size={16} />
+                <span>Accessibility</span>
+              </div>
+              <p className={`text-[11px] font-medium ${theme.text}`}>
+                {park.accessibleTrails ? 'Paved / ADA Accessible' : 'Natural / Rugged Paths'}
+              </p>
+              {park.accessibilityNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.accessibilityNotes}</p>}
+            </div>
+
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400">
+                <Bath size={16} />
+                <span>Restrooms</span>
+              </div>
+              <p className={`text-[11px] font-medium ${theme.text}`}>
+                {park.restrooms ? 'Restrooms On-Site' : 'No Public Restrooms'}
+              </p>
+              {park.restroomNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.restroomNotes}</p>}
+            </div>
+
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#b45309] dark:text-[#ffcb05]">
+                <Bike size={16} />
+                <span>Biking</span>
+              </div>
+              <p className={`text-[11px] font-medium ${theme.text}`}>
+                {park.bikeFriendly ? 'Bikes Permitted / Trails' : 'Foot Traffic Only (No Bikes)'}
+              </p>
+            </div>
+          </div>
+
+          {park.features && park.features.length > 0 && (
+            <div className="space-y-2">
+              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Features & Highlights</span>
+              <div className="flex flex-wrap gap-2">
+                {park.features.map(f => (
+                  <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border} ${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
+                    ✓ {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>About this Park</span>
+            <div className={`text-sm leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`}
+              dangerouslySetInnerHTML={{ __html: park.longDesc || park.shortDesc }}
+            />
+          </div>
+
+          <div className="pt-2">
+            <button
+              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(park.name + ' ' + park.address)}`, '_blank')}
+              className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <Navigation size={16} />
+              <span>Get Directions in Google Maps</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('all');
+
+  const filterOptions = [
+    { id: 'all', label: 'All Parks' },
+    { id: 'dogFriendly', label: 'Dog Friendly', icon: Dog },
+    { id: 'accessibleTrails', label: 'Accessible / Wheelchair', icon: Accessibility },
+    { id: 'playground', label: 'Playground', icon: Baby },
+    { id: 'familyFriendly', label: 'Family Friendly' },
+    { id: 'bikeFriendly', label: 'Bike Paths', icon: Bike },
+    { id: 'restrooms', label: 'Restrooms', icon: Bath }
+  ];
+
+  const filteredParks = useMemo(() => {
+    return PARKS_DATA.filter(park => {
+      const matchesSearch = !searchQuery || 
+        park.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        park.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        park.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (park.features || []).some(f => f.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      let matchesFilter = true;
+      if (selectedFilter !== 'all') {
+        matchesFilter = Boolean(park[selectedFilter]);
+      }
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [searchQuery, selectedFilter]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        
+        <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
+                <Trees size={22} />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">Interactive Directory</span>
+                <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+                  Ann Arbor Park Finder
+                </h3>
+              </div>
+            </div>
+            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+              <X size={20} />
+            </button>
+          </div>
+
+          <div className="relative w-full">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search parks, river trails, peony gardens..."
+              className={`w-full pl-10 pr-4 py-3 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-emerald-500 transition-all`}
+            />
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pt-3">
+            {filterOptions.map(f => {
+              const Icon = f.icon;
+              const isActive = selectedFilter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => setSelectedFilter(f.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 border ${isActive ? 'bg-emerald-600 text-white border-emerald-500 shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
+                >
+                  {Icon && <Icon size={12} />}
+                  <span>{f.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">
+            <span>Showing {filteredParks.length} of {PARKS_DATA.length} Parks</span>
+            {selectedFilter !== 'all' && (
+              <button onClick={() => setSelectedFilter('all')} className="text-emerald-500 hover:underline">
+                Clear Filters
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 gap-3.5">
+            {filteredParks.length > 0 ? (
+              filteredParks.map((park) => (
+                <div 
+                  key={park.id}
+                  onClick={() => onSelectPark(park)}
+                  className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/50 active:scale-[0.99] transition-all`}
+                >
+                  <img src={park.img} alt={park.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
+                  <div className="flex-1 min-w-0 pr-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md truncate">
+                        {park.category}
+                      </span>
+                    </div>
+                    <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>{park.name}</h4>
+                    <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>{park.shortDesc}</p>
+                    
+                    <div className="flex items-center gap-2 mt-2 flex-wrap text-[10px]">
+                      {park.dogFriendly && (
+                        <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
+                          <Dog size={11} /> Dogs
+                        </span>
+                      )}
+                      {park.accessibleTrails && (
+                        <span className="flex items-center gap-1 text-[#0284c7] dark:text-[#38bdf8] bg-sky-500/10 px-2 py-0.5 rounded-md">
+                          <Accessibility size={11} /> ADA
+                        </span>
+                      )}
+                      {park.restrooms && (
+                        <span className="flex items-center gap-1 text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-md">
+                          <Bath size={11} /> Restrooms
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-2 rounded-full text-slate-400 hover:text-emerald-500 flex-shrink-0">
+                    <ArrowRight size={18} />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                No parks match your selected criteria.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
+  const [comments, setComments] = useState([]);
+  const [replyText, setReplyText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen || !story) return;
+    const q = query(collection(db, 'community_stories', story.id, 'comments'), orderBy('timestamp', 'asc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setComments(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+    return () => unsubscribe();
+  }, [isOpen, story]);
+
+  if (!isOpen || !story) return null;
+
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    if (!user) return alert('Please sign in to join the discussion!');
+    if (!replyText.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      await addDoc(collection(db, 'community_stories', story.id, 'comments'), {
+        text: replyText.trim(),
+        author: user.displayName || 'A2 Neighbor',
+        userId: user.uid,
+        timestamp: Date.now()
+      });
+      setReplyText('');
+    } catch (err) {
+      console.error('Error posting comment:', err);
+      alert('Could not post comment. Please check your connection.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div>
+            <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Discussion Thread</span>
+            <h3 className="text-lg font-header font-black uppercase italic tracking-tight truncate max-w-[320px]" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+              {story.title}
+            </h3>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+          <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} border space-y-1`}>
+            <p className={`text-xs font-bold ${theme.text}`}>Original Post by {story.author}</p>
+            <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{story.content}</p>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <h4 className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Comments ({comments.length})</h4>
+              
+            {comments.length > 0 ? (
+              comments.map(c => (
+                <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
+                  <div className="flex justify-between items-center text-[10px]">
+                    <span className={`font-black uppercase tracking-wider text-[#a855f7]`}>{c.author}</span>
+                    <span className={theme.secondaryText}>{c.timestamp ? new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Just now'}</span>
+                  </div>
+                  <p className={`text-xs leading-relaxed ${theme.text}`}>{c.text}</p>
+                </div>
+              ))
+            ) : (
+              <div className={`p-8 border-2 border-dashed rounded-2xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                No comments yet. Start the conversation below!
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={`sticky bottom-0 p-4 ${theme.appBg} border-t ${theme.border}`}>
+          <form onSubmit={handleAddComment} className="flex gap-2">
+            <input 
+              type="text" 
+              required 
+              value={replyText} 
+              onChange={e => setReplyText(e.target.value)} 
+              placeholder={user ? "Write a reply or tip..." : "Sign in to comment..."} 
+              disabled={!user} 
+              className={`flex-1 p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#a855f7]`} 
+            />
+            <button 
+              type="submit" 
+              disabled={isSubmitting || !user} 
+              className="px-5 py-3.5 bg-[#a855f7] text-white rounded-2xl font-black uppercase text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1"
+            >
+              <Send size={14} />
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = 'restaurant' }) => {
   const [listingCategory, setListingCategory] = useState(initialCategory);
   const [bizType, setBizType] = useState('free');
@@ -748,7 +1250,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
               className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'restaurant' ? 'bg-[#f97316] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
             >
               <Utensils size={14} />
-              <span>Business / Shop / Eatery</span>
+              <span>Restaurant / Bar</span>
             </button>
             <button
               onClick={() => { setListingCategory('general'); setSubmitted(false); }}
@@ -796,33 +1298,33 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                       <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} space-y-2`}>
                         <div className="flex items-center gap-2 text-[#b45309] dark:text-[#ffcb05]">
                           <QrCode size={18} />
-                          <h4 className="text-xs font-black uppercase tracking-wider">Business & Shop QR Placement</h4>
+                          <h4 className="text-xs font-black uppercase tracking-wider">Restaurant & Bar QR Placement</h4>
                         </div>
                         <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
-                          Get a verified listing across A2 Vibe in exchange for placing our compact A2 Vibe QR code badge at your host stand or checkout counter, and on your entry door or front window.
+                          Get a verified listing in Ann Arbor Flavors in exchange for placing our compact A2 Vibe QR code badge at your host stand or checkout counter, and on your entry door or front window.
                         </p>
                       </div>
 
                       <div>
-                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Business / Shop Name</label>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Restaurant / Bar Name</label>
                         <input
                           type="text"
                           required
                           value={bizName}
                           onChange={(e) => setBizName(e.target.value)}
-                          placeholder="e.g. Tree Town Goods / Dispensary / Cafe"
+                          placeholder="e.g. Tree Town Smokehouse"
                           className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
                         />
                       </div>
 
                       <div>
-                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Category / Specialty</label>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Cuisine Type</label>
                         <input
                           type="text"
                           required
                           value={cuisine}
                           onChange={(e) => setCuisine(e.target.value)}
-                          placeholder="e.g. Marijuana Dispensary, Vinyl Records, Street Food, Boutique"
+                          placeholder="e.g. Korean Street Food, Craft Cocktails, Neapolitan Pizza"
                           className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
                         />
                       </div>
@@ -834,7 +1336,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                           required
                           value={bizContact}
                           onChange={(e) => setBizContact(e.target.value)}
-                          placeholder="e.g. manager@store.com"
+                          placeholder="e.g. manager@restaurant.com"
                           className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
                         />
                       </div>
@@ -846,7 +1348,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                           required
                           value={bizAddress}
                           onChange={(e) => setBizAddress(e.target.value)}
-                          placeholder="e.g. 407 N 5th Ave, Ann Arbor, MI"
+                          placeholder="e.g. 209 S 4th Ave, Ann Arbor, MI"
                           className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
                         />
                       </div>
@@ -878,21 +1380,21 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                   <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/30 text-white space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-                        Local Premiere
+                        Dining Premiere
                       </span>
                       <span className="text-[10px] font-bold text-[#38bdf8] flex items-center gap-1">
-                        <FileText size={12} /> Menu & Web Link Enabled
+                        <FileText size={12} /> Menu Upload Enabled
                       </span>
                     </div>
 
                     <h4 className="text-xl font-header font-black uppercase italic">
-                      Boosted Business & Retail Showcase
+                      Boosted Eatery & Bar Showcase
                     </h4>
 
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
-                      <li className="flex items-center gap-2">✓ <strong>Up to 20 HD Photos</strong> (Showroom, strains, dishes, products)</li>
-                      <li className="flex items-center gap-2">✓ <strong>Longer Description & Story</strong> with direct order / reservation links</li>
-                      <li className="flex items-center gap-2">✓ <strong>Promotional Specials & Discount Highlights</strong> pinned on profile</li>
+                      <li className="flex items-center gap-2">✓ <strong>Up to 20 HD Photos</strong> (Dishes, venue, crowd)</li>
+                      <li className="flex items-center gap-2">✓ <strong>Longer Description & Story</strong> with direct ticket or reservation links</li>
+                      <li className="flex items-center gap-2">✓ <strong>Optional Menu Upload / PDF Link</strong> on profile</li>
                       <li className="flex items-center gap-2">✓ <strong>Dedicated Feature Article</strong> in A2 Guide</li>
                       <li className="flex items-center gap-2">✓ <strong>Social Media Post Promos</strong> across our channels</li>
                     </ul>
@@ -902,18 +1404,18 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                     <div>
                       <div className="flex items-center gap-1.5">
                         <Zap size={14} className="text-[#b45309] dark:text-[#ffcb05]" />
-                        <span className={`text-xs font-black uppercase ${theme.isDark ? 'text-white' : 'text-slate-900'}`}>Competitive Featured Spotlight</span>
-                        <span className="bg-[#f97316] text-white dark:text-black text-[8px] font-black px-1.5 py-0.5 rounded">SAVE $50</span>
+                        <span className={`text-xs font-black uppercase ${theme.isDark ? 'text-white' : 'text-slate-900'}`}>Discounted Featured Pick</span>
+                        <span className="bg-[#f97316] text-white dark:text-black text-[8px] font-black px-1.5 py-0.5 rounded">SAVE $40</span>
                       </div>
                       <p className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-600'} mt-1`}>
-                        Top-of-app billboard spot on Home & Directory. <strong className="text-[#b45309] dark:text-[#ffcb05]">$40</strong> <span className={`line-through ${theme.isDark ? 'text-slate-500' : 'text-slate-400'} text-[10px]` }>(Normally $90)</span>
+                        Top-of-app billboard spot on Home & Flavors. <strong className="text-[#b45309] dark:text-[#ffcb05]">$50</strong> <span className={`line-through ${theme.isDark ? 'text-slate-500' : 'text-slate-400'} text-[10px]` }>(Normally $90)</span>
                       </p>
                     </div>
                     <button
                       onClick={() => openStripeCheckout(STRIPE_LINKS.restaurantFeaturedPickAddon)}
                       className="px-3.5 py-2 bg-[#f97316] text-white dark:text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
                     >
-                      <span>$40 Pick</span>
+                      <span>$50 Pick</span>
                       <ExternalLink size={12} />
                     </button>
                   </div>
@@ -960,7 +1462,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                       <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
                         <div>
                           <p className={`text-xs font-bold ${theme.text}`}>A2 Guide Feature Story</p>
-                          <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published culinary, brand, or retail editorial</p>
+                          <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published culinary, brand, or event editorial</p>
                         </div>
                         <button
                           onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
@@ -1957,8 +2459,8 @@ const HubView = ({
           <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
             <div className="space-y-1 text-left">
               <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest block">Promote In Ann Arbor</span>
-              <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Flavor, Shop, Or Event</h4>
-              <p className="text-[11px] text-slate-300">Feature your eatery, dispensary, shop, or gathering across A2 Vibe.</p>
+              <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Flavor, Happening, Or Event</h4>
+              <p className="text-[11px] text-slate-300">Feature your eatery, pop-up, workshop, or community gathering across A2 Vibe.</p>
             </div>
             <button
               onClick={() => onOpenPartnerModal('restaurant')}
@@ -2845,7 +3347,6 @@ export default function App() {
             onSelectShop={handleShopSelect}
             toggleFavorite={toggleFavorite}
             favorites={favorites}
-            onOpenPartnerModal={openPartnerModal}
           />
 
           {/* SHOP DETAIL MODAL */}
