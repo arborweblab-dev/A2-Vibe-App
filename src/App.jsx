@@ -206,6 +206,46 @@ const SHOP_CATEGORIES = [
   'Specialty Markets'
 ];
 
+const STRIPE_LINKS = {
+  boostedAnnual: 'https://buy.stripe.com/5kQ6oH3POdsjgNX30YeME02',
+  boostedMonthly: 'https://buy.stripe.com/bJe9ATbigag769j30YeME03',
+  restaurantFeaturedPickAddon: 'https://buy.stripe.com/3cI4gz1HGgEv69j0SQeME04',
+  promoJournal: 'https://buy.stripe.com/28EeVd1HG4VNdBL8lieME05',
+  promoSMSocial: 'https://buy.stripe.com/28E8wP9a85ZR7dn8lieME06',
+  eventStandard: 'https://buy.stripe.com/aFabJ13PO1JB8hrgROeME08',
+  eventFeatured: 'https://buy.stripe.com/3cI00jcmkag7btDbxueME07',
+  shopAnnual: 'https://buy.stripe.com/test_shop_annual_placeholder',
+  shopMonthly: 'https://buy.stripe.com/test_shop_monthly_placeholder',
+  shopFeaturedPickAddon: 'https://buy.stripe.com/test_shop_featured_addon_placeholder'
+};
+
+const THEMES = {
+  light: { primary: '#00274c', windowBg: 'bg-slate-200', appBg: 'bg-slate-50', card: 'bg-white', text: 'text-slate-900', secondaryText: 'text-slate-600', border: 'border-slate-200', isDark: false },
+  dark: { primary: '#ffcb05', windowBg: 'bg-[#050b14]', appBg: 'bg-[#0a121e]', card: 'bg-[#151f2e]', text: 'text-slate-100', secondaryText: 'text-slate-400', border: 'border-slate-800', isDark: true }
+};
+
+const CATEGORIES_GUIDE = ['All', 'City Life', 'Parks', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
+const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
+const MONTHS_EXP = ['All Months', 'October', 'November', 'December'];
+const AVAILABLE_TAGS = ['Foodie', 'U-M Alum', 'Townie', 'Student', 'Trail Runner', 'Night Owl', 'Art Lover', 'Coffee Snob'];
+const FORUM_CHANNELS = ['All', 'Announcements', 'Local News', 'Events & Meetups', 'Food & Dining', 'Community Chat'];
+
+const SLIDE_IMAGES = [
+  "/images/1.png", 
+  "/images/4.png", 
+  "/images/10.png", 
+  "/images/5.png", 
+  "/images/3.png", 
+  "/images/2.png"
+];
+
+const DEFAULT_BUCKET_ITEMS = [
+  { id: 1, text: "Catch a game at the Big House", done: false },
+  { id: 2, text: "Walk through the Nichols Arboretum", done: false },
+  { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
+  { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
+];
+
 const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !shop) return null;
   const isFeatured = shop.tier === 'featured';
@@ -341,7 +381,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
   );
 };
 
-const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavorite, favorites }) => {
+const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavorite, favorites, onOpenPartnerModal }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCat, setSelectedCat] = useState('All');
 
@@ -383,9 +423,19 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
                 </h3>
               </div>
             </div>
-            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
-              <X size={20} />
-            </button>
+            <div className="flex items-center gap-2">
+              {onOpenPartnerModal && (
+                <button
+                  onClick={() => { onClose(); onOpenPartnerModal('shop'); }}
+                  className="px-3 py-1.5 bg-[#ffcb05] text-black rounded-xl text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-95 transition-all"
+                >
+                  List Shop +
+                </button>
+              )}
+              <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+                <X size={20} />
+              </button>
+            </div>
           </div>
 
           <div className="relative w-full">
@@ -755,426 +805,7 @@ const PARKS_DATA = [
   }
 ];
 
-const STRIPE_LINKS = {
-  boostedAnnual: 'https://buy.stripe.com/5kQ6oH3POdsjgNX30YeME02',
-  boostedMonthly: 'https://buy.stripe.com/bJe9ATbigag769j30YeME03',
-  restaurantFeaturedPickAddon: 'https://buy.stripe.com/3cI4gz1HGgEv69j0SQeME04',
-  promoJournal: 'https://buy.stripe.com/28EeVd1HG4VNdBL8lieME05',
-  promoSMSocial: 'https://buy.stripe.com/28E8wP9a85ZR7dn8lieME06',
-  eventStandard: 'https://buy.stripe.com/aFabJ13PO1JB8hrgROeME08',
-  eventFeatured: 'https://buy.stripe.com/3cI00jcmkag7btDbxueME07'
-};
-
-const THEMES = {
-  light: { primary: '#00274c', windowBg: 'bg-slate-200', appBg: 'bg-slate-50', card: 'bg-white', text: 'text-slate-900', secondaryText: 'text-slate-600', border: 'border-slate-200', isDark: false },
-  dark: { primary: '#ffcb05', windowBg: 'bg-[#050b14]', appBg: 'bg-[#0a121e]', card: 'bg-[#151f2e]', text: 'text-slate-100', secondaryText: 'text-slate-400', border: 'border-slate-800', isDark: true }
-};
-
-const CATEGORIES_GUIDE = ['All', 'City Life', 'Parks', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
-const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
-const MONTHS_EXP = ['All Months', 'October', 'November', 'December'];
-const AVAILABLE_TAGS = ['Foodie', 'U-M Alum', 'Townie', 'Student', 'Trail Runner', 'Night Owl', 'Art Lover', 'Coffee Snob'];
-const FORUM_CHANNELS = ['All', 'Announcements', 'Local News', 'Events & Meetups', 'Food & Dining', 'Community Chat'];
-
-const SLIDE_IMAGES = [
-  "/images/1.png", 
-  "/images/4.png", 
-  "/images/10.png", 
-  "/images/5.png", 
-  "/images/3.png", 
-  "/images/2.png"
-];
-
-const DEFAULT_BUCKET_ITEMS = [
-  { id: 1, text: "Catch a game at the Big House", done: false },
-  { id: 2, text: "Walk through the Nichols Arboretum", done: false },
-  { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
-  { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
-];
-
-const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
-  if (!isOpen || !park) return null;
-
-  return (
-    <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
-          <div className="flex items-center gap-2.5 min-w-0 pr-3">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 flex-shrink-0">
-              <Trees size={20} />
-            </div>
-            <div className="min-w-0">
-              <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">
-                {park.category || 'Nature Preserve'}
-              </span>
-              <h3 className="text-xl font-header font-black uppercase italic tracking-tight truncate" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
-                {park.name}
-              </h3>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
-              <X size={20} />
-            </button>
-          </div>
-        </div>
-
-        <div className="p-6 space-y-6">
-          {park.img && (
-            <div className="relative rounded-[32px] overflow-hidden shadow-lg h-60">
-              <img src={park.img} className="w-full h-full object-cover" alt={park.name} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <span className="absolute bottom-4 left-4 bg-emerald-600/90 text-white text-[9px] font-black uppercase px-3 py-1 rounded-full backdrop-blur-sm tracking-wider">
-                Ann Arbor Green Space
-              </span>
-            </div>
-          )}
-
-          {park.address && (
-            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
-              <MapPin size={18} className="text-[#b45309] dark:text-[#ffcb05] flex-shrink-0 mt-0.5" />
-              <div className="text-xs">
-                <span className={`font-black uppercase tracking-wider block ${theme.text}`}>Location Address</span>
-                <span className={`${theme.secondaryText} leading-relaxed`}>{park.address}</span>
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                <Dog size={16} />
-                <span>Dog Friendly</span>
-              </div>
-              <p className={`text-[11px] font-medium ${theme.text}`}>
-                {park.dogFriendly ? 'Yes (Leashed)' : 'No Dogs Allowed'}
-              </p>
-              {park.dogNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.dogNotes}</p>}
-            </div>
-
-            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#0284c7] dark:text-[#38bdf8]">
-                <Accessibility size={16} />
-                <span>Accessibility</span>
-              </div>
-              <p className={`text-[11px] font-medium ${theme.text}`}>
-                {park.accessibleTrails ? 'Paved / ADA Accessible' : 'Natural / Rugged Paths'}
-              </p>
-              {park.accessibilityNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.accessibilityNotes}</p>}
-            </div>
-
-            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400">
-                <Bath size={16} />
-                <span>Restrooms</span>
-              </div>
-              <p className={`text-[11px] font-medium ${theme.text}`}>
-                {park.restrooms ? 'Restrooms On-Site' : 'No Public Restrooms'}
-              </p>
-              {park.restroomNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.restroomNotes}</p>}
-            </div>
-
-            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#b45309] dark:text-[#ffcb05]">
-                <Bike size={16} />
-                <span>Biking</span>
-              </div>
-              <p className={`text-[11px] font-medium ${theme.text}`}>
-                {park.bikeFriendly ? 'Bikes Permitted / Trails' : 'Foot Traffic Only (No Bikes)'}
-              </p>
-            </div>
-          </div>
-
-          {park.features && park.features.length > 0 && (
-            <div className="space-y-2">
-              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Features & Highlights</span>
-              <div className="flex flex-wrap gap-2">
-                {park.features.map(f => (
-                  <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border} ${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
-                    ✓ {f}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="space-y-2">
-            <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>About this Park</span>
-            <div className={`text-sm leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`}
-              dangerouslySetInnerHTML={{ __html: park.longDesc || park.shortDesc }}
-            />
-          </div>
-
-          <div className="pt-2">
-            <button
-              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(park.name + ' ' + park.address)}`, '_blank')}
-              className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              <Navigation size={16} />
-              <span>Get Directions in Google Maps</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('all');
-
-  const filterOptions = [
-    { id: 'all', label: 'All Parks' },
-    { id: 'dogFriendly', label: 'Dog Friendly', icon: Dog },
-    { id: 'accessibleTrails', label: 'Accessible / Wheelchair', icon: Accessibility },
-    { id: 'playground', label: 'Playground', icon: Baby },
-    { id: 'familyFriendly', label: 'Family Friendly' },
-    { id: 'bikeFriendly', label: 'Bike Paths', icon: Bike },
-    { id: 'restrooms', label: 'Restrooms', icon: Bath }
-  ];
-
-  const filteredParks = useMemo(() => {
-    return PARKS_DATA.filter(park => {
-      const matchesSearch = !searchQuery || 
-        park.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        park.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        park.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (park.features || []).some(f => f.toLowerCase().includes(searchQuery.toLowerCase()));
-
-      let matchesFilter = true;
-      if (selectedFilter !== 'all') {
-        matchesFilter = Boolean(park[selectedFilter]);
-      }
-
-      return matchesSearch && matchesFilter;
-    });
-  }, [searchQuery, selectedFilter]);
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
-        
-        <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
-                <Trees size={22} />
-              </div>
-              <div>
-                <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">Interactive Directory</span>
-                <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
-                  Ann Arbor Park Finder
-                </h3>
-              </div>
-            </div>
-            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
-              <X size={20} />
-            </button>
-          </div>
-
-          <div className="relative w-full">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search parks, river trails, peony gardens..."
-              className={`w-full pl-10 pr-4 py-3 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-emerald-500 transition-all`}
-            />
-          </div>
-
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pt-3">
-            {filterOptions.map(f => {
-              const Icon = f.icon;
-              const isActive = selectedFilter === f.id;
-              return (
-                <button
-                  key={f.id}
-                  onClick={() => setSelectedFilter(f.id)}
-                  className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 border ${isActive ? 'bg-emerald-600 text-white border-emerald-500 shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
-                >
-                  {Icon && <Icon size={12} />}
-                  <span>{f.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
-          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">
-            <span>Showing {filteredParks.length} of {PARKS_DATA.length} Parks</span>
-            {selectedFilter !== 'all' && (
-              <button onClick={() => setSelectedFilter('all')} className="text-emerald-500 hover:underline">
-                Clear Filters
-              </button>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 gap-3.5">
-            {filteredParks.length > 0 ? (
-              filteredParks.map((park) => (
-                <div 
-                  key={park.id}
-                  onClick={() => onSelectPark(park)}
-                  className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/50 active:scale-[0.99] transition-all`}
-                >
-                  <img src={park.img} alt={park.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
-                  <div className="flex-1 min-w-0 pr-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md truncate">
-                        {park.category}
-                      </span>
-                    </div>
-                    <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>{park.name}</h4>
-                    <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>{park.shortDesc}</p>
-                    
-                    <div className="flex items-center gap-2 mt-2 flex-wrap text-[10px]">
-                      {park.dogFriendly && (
-                        <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
-                          <Dog size={11} /> Dogs
-                        </span>
-                      )}
-                      {park.accessibleTrails && (
-                        <span className="flex items-center gap-1 text-[#0284c7] dark:text-[#38bdf8] bg-sky-500/10 px-2 py-0.5 rounded-md">
-                          <Accessibility size={11} /> ADA
-                        </span>
-                      )}
-                      {park.restrooms && (
-                        <span className="flex items-center gap-1 text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-md">
-                          <Bath size={11} /> Restrooms
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="p-2 rounded-full text-slate-400 hover:text-emerald-500 flex-shrink-0">
-                    <ArrowRight size={18} />
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
-                No parks match your selected criteria.
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
-  const [comments, setComments] = useState([]);
-  const [replyText, setReplyText] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (!isOpen || !story) return;
-    const q = query(collection(db, 'community_stories', story.id, 'comments'), orderBy('timestamp', 'asc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setComments(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    });
-    return () => unsubscribe();
-  }, [isOpen, story]);
-
-  if (!isOpen || !story) return null;
-
-  const handleAddComment = async (e) => {
-    e.preventDefault();
-    if (!user) return alert('Please sign in to join the discussion!');
-    if (!replyText.trim()) return;
-
-    setIsSubmitting(true);
-    try {
-      await addDoc(collection(db, 'community_stories', story.id, 'comments'), {
-        text: replyText.trim(),
-        author: user.displayName || 'A2 Neighbor',
-        userId: user.uid,
-        timestamp: Date.now()
-      });
-      setReplyText('');
-    } catch (err) {
-      console.error('Error posting comment:', err);
-      alert('Could not post comment. Please check your connection.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 animate-fade text-left font-sans">
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
-          <div>
-            <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Discussion Thread</span>
-            <h3 className="text-lg font-header font-black uppercase italic tracking-tight truncate max-w-[320px]" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
-              {story.title}
-            </h3>
-          </div>
-          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
-          <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} border space-y-1`}>
-            <p className={`text-xs font-bold ${theme.text}`}>Original Post by {story.author}</p>
-            <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{story.content}</p>
-          </div>
-
-          <div className="space-y-3 pt-2">
-            <h4 className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Comments ({comments.length})</h4>
-              
-            {comments.length > 0 ? (
-              comments.map(c => (
-                <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
-                  <div className="flex justify-between items-center text-[10px]">
-                    <span className={`font-black uppercase tracking-wider text-[#a855f7]`}>{c.author}</span>
-                    <span className={theme.secondaryText}>{c.timestamp ? new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Just now'}</span>
-                  </div>
-                  <p className={`text-xs leading-relaxed ${theme.text}`}>{c.text}</p>
-                </div>
-              ))
-            ) : (
-              <div className={`p-8 border-2 border-dashed rounded-2xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
-                No comments yet. Start the conversation below!
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className={`sticky bottom-0 p-4 ${theme.appBg} border-t ${theme.border}`}>
-          <form onSubmit={handleAddComment} className="flex gap-2">
-            <input 
-              type="text" 
-              required 
-              value={replyText} 
-              onChange={e => setReplyText(e.target.value)} 
-              placeholder={user ? "Write a reply or tip..." : "Sign in to comment..."} 
-              disabled={!user} 
-              className={`flex-1 p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#a855f7]`} 
-            />
-            <button 
-              type="submit" 
-              disabled={isSubmitting || !user} 
-              className="px-5 py-3.5 bg-[#a855f7] text-white rounded-2xl font-black uppercase text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1"
-            >
-              <Send size={14} />
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
+// --- PARTNER LISTING MODAL WITH DEDICATED SHOPS SUPPORT ---
 const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = 'restaurant' }) => {
   const [listingCategory, setListingCategory] = useState(initialCategory);
   const [bizType, setBizType] = useState('free');
@@ -1182,6 +813,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
   const [bizContact, setBizContact] = useState('');
   const [bizAddress, setBizAddress] = useState('');
   const [cuisine, setCuisine] = useState('');
+  const [shopCategoryType, setShopCategoryType] = useState('Marijuana Dispensaries');
   const [menuUrl, setMenuUrl] = useState('');
   const [agreedQR, setAgreedQR] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -1190,6 +822,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
   useEffect(() => {
     if (isOpen) {
       setListingCategory(initialCategory);
+      setBizType('free');
       setSubmitted(false);
     }
   }, [isOpen, initialCategory]);
@@ -1199,16 +832,17 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
   const handleFreeSubmit = async (e) => {
     e.preventDefault();
     if (!agreedQR) {
-      return alert("Please confirm you will display the A2 Vibe QR placard at your host stand / counter and front window.");
+      return alert("Please confirm you will display the A2 Vibe QR placard at your register or checkout counter, and front window.");
     }
     setSubmitting(true);
     try {
       await addDoc(collection(db, 'partner_submissions'), {
-        listingCategory: 'restaurant',
+        listingCategory,
         bizName,
         bizContact,
         bizAddress,
-        cuisine,
+        cuisine: listingCategory === 'restaurant' ? cuisine : null,
+        shopCategory: listingCategory === 'shop' ? shopCategoryType : null,
         menuUrl: menuUrl || null,
         type: 'free_qr_partner',
         userEmail: user?.email || 'unauthenticated',
@@ -1244,24 +878,33 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
         </div>
 
         <div className="p-6 space-y-6">
-          <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'} text-center`}>
+          {/* THREE-WAY CATEGORY SWITCHER */}
+          <div className={`grid grid-cols-3 p-1 rounded-2xl ${theme.isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'} text-center gap-1`}>
             <button
-              onClick={() => { setListingCategory('restaurant'); setSubmitted(false); }}
-              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'restaurant' ? 'bg-[#f97316] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+              onClick={() => { setListingCategory('restaurant'); setBizType('free'); setSubmitted(false); }}
+              className={`py-2.5 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${listingCategory === 'restaurant' ? 'bg-[#f97316] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
             >
-              <Utensils size={14} />
-              <span>Restaurant / Bar</span>
+              <Utensils size={13} />
+              <span>Eats</span>
             </button>
             <button
-              onClick={() => { setListingCategory('general'); setSubmitted(false); }}
-              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'general' ? 'bg-[#38bdf8] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+              onClick={() => { setListingCategory('shop'); setBizType('free'); setSubmitted(false); }}
+              className={`py-2.5 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${listingCategory === 'shop' ? 'bg-[#ffcb05] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
             >
-              <Calendar size={14} />
-              <span>Event / Experience</span>
+              <Store size={13} />
+              <span>Shop</span>
+            </button>
+            <button
+              onClick={() => { setListingCategory('general'); setBizType('free'); setSubmitted(false); }}
+              className={`py-2.5 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${listingCategory === 'general' ? 'bg-[#38bdf8] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+            >
+              <Calendar size={13} />
+              <span>Event</span>
             </button>
           </div>
 
-          {listingCategory === 'restaurant' ? (
+          {/* 1. RESTAURANTS / BARS */}
+          {listingCategory === 'restaurant' && (
             <>
               <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} text-center`}>
                 <button
@@ -1489,7 +1132,246 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                 </div>
               )}
             </>
-          ) : (
+          )}
+
+          {/* 2. SHOPS & MARIJUANA DISPENSARIES */}
+          {listingCategory === 'shop' && (
+            <>
+              <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} text-center`}>
+                <button
+                  onClick={() => setBizType('free')}
+                  className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'free' ? 'bg-[#ffcb05] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+                >
+                  Free QR Partner
+                </button>
+                <button
+                  onClick={() => setBizType('boosted')}
+                  className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${bizType === 'boosted' ? (theme.isDark ? 'bg-white/15 text-white shadow-md' : 'bg-slate-800 text-white shadow-md') : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+                >
+                  Boosted Retail
+                </button>
+              </div>
+
+              {bizType === 'free' ? (
+                <div>
+                  {submitted ? (
+                    <div className="text-center py-8 space-y-4 animate-fade">
+                      <div className="w-16 h-16 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                        <CheckCircle2 size={36} />
+                      </div>
+                      <h4 className={`text-lg font-black uppercase ${theme.text}`}>Shop Request Received</h4>
+                      <p className={`text-xs ${theme.secondaryText} leading-relaxed max-w-sm mx-auto`}>
+                        We will review your retail submission and email your physical or printable A2 Vibe QR badge for your checkout counter, display stand, and storefront window within 24-48 hours.
+                      </p>
+                      <button onClick={onClose} className="mt-4 px-6 py-3 bg-[#ffcb05] text-black rounded-xl font-black uppercase text-xs">
+                        Done
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleFreeSubmit} className="space-y-4">
+                      <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} space-y-2`}>
+                        <div className="flex items-center gap-2 text-[#b45309] dark:text-[#ffcb05]">
+                          <QrCode size={18} />
+                          <h4 className="text-xs font-black uppercase tracking-wider">Storefront & Register QR Placement</h4>
+                        </div>
+                        <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
+                          Get a verified standard listing in Ann Arbor Shops in exchange for placing our compact A2 Vibe QR code badge at your register or checkout counter, and on your front entry door or window.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Shop / Dispensary Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={bizName}
+                          onChange={(e) => setBizName(e.target.value)}
+                          placeholder="e.g. Vibe Ann Arbor, Literati, Bivouac"
+                          className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                        />
+                      </div>
+
+                      <div>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Shop Category</label>
+                        <select
+                          value={shopCategoryType}
+                          onChange={(e) => setShopCategoryType(e.target.value)}
+                          className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                        >
+                          {SHOP_CATEGORIES.filter(c => c !== 'All').map(c => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Contact Email or Phone</label>
+                        <input
+                          type="text"
+                          required
+                          value={bizContact}
+                          onChange={(e) => setBizContact(e.target.value)}
+                          placeholder="e.g. manager@shop.com"
+                          className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                        />
+                      </div>
+
+                      <div>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Storefront Address</label>
+                        <input
+                          type="text"
+                          required
+                          value={bizAddress}
+                          onChange={(e) => setBizAddress(e.target.value)}
+                          placeholder="e.g. 407 N 5th Ave, Ann Arbor, MI"
+                          className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                        />
+                      </div>
+
+                      <label className={`flex items-start gap-3 p-3 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} border cursor-pointer`}>
+                        <input
+                          type="checkbox"
+                          checked={agreedQR}
+                          onChange={(e) => setAgreedQR(e.target.checked)}
+                          className="mt-0.5 rounded accent-[#ffcb05]"
+                        />
+                        <span className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-700'} leading-snug`}>
+                          I agree to display the small A2 Vibe QR badge at our checkout counter or register, and on our front door/window.
+                        </span>
+                      </label>
+
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all"
+                      >
+                        {submitting ? 'Submitting...' : 'Claim Free Partner Listing'}
+                      </button>
+                    </form>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {/* Retail Premiere Banner */}
+                  <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/30 text-white space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                        Retail Premiere
+                      </span>
+                      <span className="text-[10px] font-bold text-[#38bdf8] flex items-center gap-1">
+                        <ShoppingBag size={12} /> Direct Ordering & Web Link
+                      </span>
+                    </div>
+
+                    <h4 className="text-xl font-header font-black uppercase italic">
+                      Boosted Shop & Dispensary Showcase
+                    </h4>
+
+                    <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
+                      <li className="flex items-center gap-2">✓ <strong>Multi-Photo HD Gallery</strong> (Storefront, top strains, products)</li>
+                      <li className="flex items-center gap-2">✓ <strong>Featured Specials & Deals Box</strong> pinned to your card</li>
+                      <li className="flex items-center gap-2">✓ <strong>Direct Online Ordering / Website Link</strong> button</li>
+                      <li className="flex items-center gap-2">✓ <strong>Permanent Feature Article</strong> in A2 Guide</li>
+                      <li className="flex items-center gap-2">✓ <strong>Social Media Spotlight Promos</strong> across our channels</li>
+                    </ul>
+                  </div>
+
+                  {/* Competitive Featured Pick Addon */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-[#ffcb05]/20 via-[#ffcb05]/10 to-transparent border border-[#ffcb05]/30 flex items-center justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <Zap size={14} className="text-[#b45309] dark:text-[#ffcb05]" />
+                        <span className={`text-xs font-black uppercase ${theme.isDark ? 'text-white' : 'text-slate-900'}`}>Featured Shop Spotlight</span>
+                        <span className="bg-[#ffcb05] text-black text-[8px] font-black px-1.5 py-0.5 rounded">SAVE $50</span>
+                      </div>
+                      <p className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-600'} mt-1`}>
+                        Top billboard placement in Shops and Home featured shelf. <strong className="text-[#b45309] dark:text-[#ffcb05]">$40</strong> <span className={`line-through ${theme.isDark ? 'text-slate-500' : 'text-slate-400'} text-[10px]` }>(Normally $90)</span>
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => openStripeCheckout(STRIPE_LINKS.shopFeaturedPickAddon)}
+                      className="px-3.5 py-2 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
+                    >
+                      <span>$40 Pick</span>
+                      <ExternalLink size={12} />
+                    </button>
+                  </div>
+
+                  {/* Subscriptions: Annual & Monthly */}
+                  <div className="space-y-3">
+                    <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-black uppercase ${theme.text}`}>Annual Membership</span>
+                          <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[8px] font-black px-2 py-0.5 rounded">SAVE $120</span>
+                        </div>
+                        <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-1">$25 / mo <span className={`${theme.secondaryText} font-normal`}>($300 billed yearly)</span></p>
+                      </div>
+                      <button
+                        onClick={() => openStripeCheckout(STRIPE_LINKS.shopAnnual)}
+                        className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                      >
+                        <span>Select</span>
+                        <ExternalLink size={14} />
+                      </button>
+                    </div>
+
+                    <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-black uppercase ${theme.text}`}>Intro Monthly Plan</span>
+                          <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[8px] font-black px-2 py-0.5 rounded">SAVE $300 Y1</span>
+                        </div>
+                        <p className="text-xs font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">$35 / mo <span className={`${theme.secondaryText} font-normal`}>first 12 mos, then $60/mo</span></p>
+                      </div>
+                      <button
+                        onClick={() => openStripeCheckout(STRIPE_LINKS.shopMonthly)}
+                        className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                      >
+                        <span>Select</span>
+                        <ExternalLink size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Standalone promos */}
+                  <div className="space-y-3 pt-2">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Standalone Promos</p>
+                    <div className="grid grid-cols-1 gap-2.5">
+                      <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
+                        <div>
+                          <p className={`text-xs font-bold ${theme.text}`}>A2 Guide Feature Story</p>
+                          <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published retail editorial feature story</p>
+                        </div>
+                        <button
+                          onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
+                          className={`px-3 py-1.5 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-[#ffcb05] border-white/10' : 'bg-white hover:bg-slate-200 text-[#b45309] border-slate-300'} text-[11px] font-black rounded-lg border`}
+                        >
+                          $45
+                        </button>
+                      </div>
+
+                      <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
+                        <div>
+                          <p className={`text-xs font-bold ${theme.text}`}>Social Media Blast</p>
+                          <p className={`text-[10px] ${theme.secondaryText}`}>Spotlight story & grid post to local audience</p>
+                        </div>
+                        <button
+                          onClick={() => openStripeCheckout(STRIPE_LINKS.promoSMSocial)}
+                          className={`px-3 py-1.5 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-[#38bdf8] border-white/10' : 'bg-white hover:bg-slate-200 text-[#0284c7] border-slate-300'} text-[11px] font-black rounded-lg border`}
+                        >
+                          $25
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* 3. EVENT / EXPERIENCE */}
+          {listingCategory === 'general' && (
             <div className="space-y-4">
               <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} space-y-1.5`}>
                 <div className="flex items-center gap-2 text-[#0284c7] dark:text-[#38bdf8]">
@@ -2459,11 +2341,11 @@ const HubView = ({
           <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
             <div className="space-y-1 text-left">
               <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest block">Promote In Ann Arbor</span>
-              <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Flavor, Happening, Or Event</h4>
-              <p className="text-[11px] text-slate-300">Feature your eatery, pop-up, workshop, or community gathering across A2 Vibe.</p>
+              <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Flavor, Shop, Or Event</h4>
+              <p className="text-[11px] text-slate-300">Feature your storefront, dispensary, eatery, or gathering across A2 Vibe.</p>
             </div>
             <button
-              onClick={() => onOpenPartnerModal('restaurant')}
+              onClick={() => onOpenPartnerModal('shop')}
               className="p-3.5 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
               title="Add your listing"
             >
@@ -2690,7 +2572,7 @@ const HomeView = ({
             { label: 'Events', icon: <Zap size={19}/>, path: 'fun' },
             { label: 'Shops', icon: <ShoppingBag size={19} className="text-[#ffcb05]"/>, action: onOpenShopsModal },
             { label: 'Parks', icon: <Trees size={19} className="text-emerald-400"/>, action: onOpenParksModal },
-            { label: 'List Biz', icon: <Store size={19}/>, action: () => onOpenPartnerModal('restaurant') },
+            { label: 'List Biz', icon: <Store size={19}/>, action: () => onOpenPartnerModal('shop') },
             { label: 'Transit', icon: <Navigation size={19}/>, action: onOpenTransitModal }
           ].map(item => (
             <button 
@@ -2776,13 +2658,21 @@ const HomeView = ({
               From top dispensary strains at Vibe Ann Arbor to rare vintage vinyl, indie bookstores, and Michigan gear. Discover local tree town retail.
             </p>
           </div>
-          <button
-            onClick={onOpenShopsModal}
-            className="px-6 py-3.5 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-xl active:scale-95 transition-all flex items-center gap-2 flex-shrink-0"
-          >
-            <ShoppingBag size={16} />
-            <span>Browse All Shops</span>
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={() => onOpenPartnerModal('shop')}
+              className="px-4 py-3.5 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-black text-xs uppercase shadow-md active:scale-95 transition-all flex items-center gap-1.5 border border-white/10"
+            >
+              <span>List Your Shop</span>
+            </button>
+            <button
+              onClick={onOpenShopsModal}
+              className="px-5 py-3.5 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-xl active:scale-95 transition-all flex items-center gap-2"
+            >
+              <ShoppingBag size={16} />
+              <span>Browse Shops</span>
+            </button>
+          </div>
         </div>
 
         {/* FEATURED SHOPS CARDS UNDER CTA */}
@@ -3347,6 +3237,7 @@ export default function App() {
             onSelectShop={handleShopSelect}
             toggleFavorite={toggleFavorite}
             favorites={favorites}
+            onOpenPartnerModal={openPartnerModal}
           />
 
           {/* SHOP DETAIL MODAL */}
