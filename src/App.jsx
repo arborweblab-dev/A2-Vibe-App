@@ -776,8 +776,10 @@ const PARKS_DATA = [
 ];
 
 const STRIPE_LINKS = {
-  boostedAnnual: 'https://buy.stripe.com/5kQ6oH3POdsjgNX30YeME02',
-  boostedMonthly: 'https://buy.stripe.com/bJe9ATbigag769j30YeME03',
+  restaurantBoostedAnnual: 'https://buy.stripe.com/8x2aEX8640Fx0OZ596eME0b',
+  restaurantBoostedMonthly: 'https://buy.stripe.com/9B6bJ1864dsj2X78lieME0a',
+  shopBoostedAnnual: 'https://buy.stripe.com/fZu14nbigdsjeFPfNKeME0c',
+  shopBoostedMonthly: 'https://buy.stripe.com/fZudR9aec4VNgNX6daeME0d',
   restaurantFeaturedPickAddon: 'https://buy.stripe.com/3cI4gz1HGgEv69j0SQeME04',
   promoJournal: 'https://buy.stripe.com/28EeVd1HG4VNdBL8lieME05',
   promoSMSocial: 'https://buy.stripe.com/28E8wP9a85ZR7dn8lieME06',
@@ -1197,7 +1199,6 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
 
 const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = 'restaurant' }) => {
   const [listingCategory, setListingCategory] = useState(initialCategory);
-  const [openStripeCheckout] = useState(() => (url) => window.open(url, '_blank', 'noopener,noreferrer'));
 
   useEffect(() => {
     if (isOpen) {
@@ -1206,6 +1207,10 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
   }, [isOpen, initialCategory]);
 
   if (!isOpen) return null;
+
+  const openStripeCheckout = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade text-left font-sans">
@@ -1301,7 +1306,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                     <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-1">$25 / mo <span className={`${theme.secondaryText} font-normal`}>($300 billed yearly - Save $10/mo vs monthly)</span></p>
                   </div>
                   <button
-                    onClick={() => openStripeCheckout(STRIPE_LINKS.boostedAnnual)}
+                    onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopBoostedAnnual : STRIPE_LINKS.restaurantBoostedAnnual)}
                     className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
                   >
                     <span>Select</span>
@@ -1317,7 +1322,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                     <p className="text-xs font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">$35 / mo <span className={`${theme.secondaryText} font-normal`}>billed monthly</span></p>
                   </div>
                   <button
-                    onClick={() => openStripeCheckout(STRIPE_LINKS.boostedMonthly)}
+                    onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopBoostedMonthly : STRIPE_LINKS.restaurantBoostedMonthly)}
                     className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
                   >
                     <span>Select</span>
@@ -1494,7 +1499,7 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
       if (onPostSuccess) onPostSuccess();
     } catch (err) {
       console.error('Error submitting community post:', err);
-      alert('Could not submit. Please check your network connection.');
+      alert('Could not submit. Please check your connection.');
     } finally {
       setSubmitting(false);
     }
@@ -3516,7 +3521,7 @@ export default function App() {
         .wp-content strong { color: #ffcb05; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
-        .bg-\\[\\#0a121e\\] .wp-content, .bg-\\[\\#0a121e\\] .wp-content p { color: #f1f5f9 !important; }
+        .bg-\\[\\#0a121e\\] .wp-content, .wp-content p { color: #f1f5f9 !important; }
       `}} />
     </div>
   );
