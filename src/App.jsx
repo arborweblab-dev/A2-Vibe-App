@@ -206,9 +206,10 @@ const SHOP_CATEGORIES = [
   'Specialty Markets'
 ];
 
-const ShopDetailModal = ({ isOpen, onClose, shop, theme }) => {
+const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !shop) return null;
   const isFeatured = shop.tier === 'featured';
+  const isFavorited = (favorites || []).some(f => f.id === shop.id);
 
   return (
     <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
@@ -228,9 +229,17 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme }) => {
               </h3>
             </div>
           </div>
-          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
-            <X size={20} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => toggleFavorite({ ...shop, type: 'shop' })}
+              className={`p-2.5 rounded-full transition-all duration-300 ${theme.isDark ? 'bg-white/5' : 'bg-black/5'} active:scale-90`}
+            >
+              <Heart size={20} className="text-[#ffcb05]" fill={isFavorited ? "#ffcb05" : "none"} strokeWidth={2.5} />
+            </button>
+            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         <div className="p-6 space-y-6">
@@ -332,7 +341,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme }) => {
   );
 };
 
-const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop }) => {
+const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavorite, favorites }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCat, setSelectedCat] = useState('All');
 
@@ -416,32 +425,41 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop }) => {
                 <h4 className={`text-xs font-black uppercase tracking-widest ${theme.text}`}>Featured Local Spots</h4>
               </div>
               <div className="flex overflow-x-auto gap-3.5 pb-2 no-scrollbar snap-x snap-mandatory">
-                {featuredShops.map(shop => (
-                  <div
-                    key={shop.id}
-                    onClick={() => onSelectShop(shop)}
-                    className={`min-w-[240px] max-w-[240px] ${theme.card} rounded-3xl border ${theme.border} overflow-hidden shadow-md cursor-pointer snap-center group flex-shrink-0 hover:border-[#ffcb05]/60 transition-all`}
-                  >
-                    <div className="h-32 relative overflow-hidden">
-                      <img src={shop.img} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                      <span className="absolute bottom-2 left-2 bg-[#ffcb05] text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-md">
-                        Featured
-                      </span>
+                {featuredShops.map(shop => {
+                  const isFavorited = (favorites || []).some(f => f.id === shop.id);
+                  return (
+                    <div
+                      key={shop.id}
+                      onClick={() => onSelectShop(shop)}
+                      className={`min-w-[240px] max-w-[240px] ${theme.card} rounded-3xl border ${theme.border} overflow-hidden shadow-md cursor-pointer snap-center group flex-shrink-0 hover:border-[#ffcb05]/60 transition-all relative`}
+                    >
+                      <div className="h-32 relative overflow-hidden">
+                        <img src={shop.img} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                        <span className="absolute bottom-2 left-2 bg-[#ffcb05] text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-md">
+                          Featured
+                        </span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleFavorite({ ...shop, type: 'shop' }); }}
+                          className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/40 text-white'}`}
+                        >
+                          <Heart size={14} fill={isFavorited ? "currentColor" : "none"} />
+                        </button>
+                      </div>
+                      <div className="p-3.5 space-y-1">
+                        <span className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] block truncate">
+                          {shop.category}
+                        </span>
+                        <h5 className={`font-bold text-xs uppercase tracking-tight truncate ${theme.text}`}>
+                          {shop.name}
+                        </h5>
+                        <p className={`text-[11px] line-clamp-2 ${theme.secondaryText}`}>
+                          {shop.shortDesc}
+                        </p>
+                      </div>
                     </div>
-                    <div className="p-3.5 space-y-1">
-                      <span className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] block truncate">
-                        {shop.category}
-                      </span>
-                      <h5 className={`font-bold text-xs uppercase tracking-tight truncate ${theme.text}`}>
-                        {shop.name}
-                      </h5>
-                      <p className={`text-[11px] line-clamp-2 ${theme.secondaryText}`}>
-                        {shop.shortDesc}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -458,47 +476,58 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop }) => {
 
             <div className="grid grid-cols-1 gap-3.5">
               {filteredShops.length > 0 ? (
-                filteredShops.map(shop => (
-                  <div
-                    key={shop.id}
-                    onClick={() => onSelectShop(shop)}
-                    className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-[#ffcb05]/50 active:scale-[0.99] transition-all`}
-                  >
-                    {shop.img ? (
-                      <img src={shop.img} alt={shop.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
-                    ) : (
-                      <div className={`w-20 h-20 rounded-2xl ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-center flex-shrink-0 text-slate-400`}>
-                        <Store size={26} />
-                      </div>
-                    )}
+                filteredShops.map(shop => {
+                  const isFavorited = (favorites || []).some(f => f.id === shop.id);
+                  return (
+                    <div
+                      key={shop.id}
+                      onClick={() => onSelectShop(shop)}
+                      className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-[#ffcb05]/50 active:scale-[0.99] transition-all`}
+                    >
+                      {shop.img ? (
+                        <img src={shop.img} alt={shop.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
+                      ) : (
+                        <div className={`w-20 h-20 rounded-2xl ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-center flex-shrink-0 text-slate-400`}>
+                          <Store size={26} />
+                        </div>
+                      )}
 
-                    <div className="flex-1 min-w-0 pr-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-wider text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md truncate">
-                          {shop.category}
-                        </span>
-                        {shop.tier === 'featured' && (
-                          <span className="bg-[#ffcb05] text-black text-[8px] font-black uppercase px-1.5 py-0.5 rounded">
-                            Featured
+                      <div className="flex-1 min-w-0 pr-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-black uppercase tracking-wider text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md truncate">
+                            {shop.category}
                           </span>
-                        )}
+                          {shop.tier === 'featured' && (
+                            <span className="bg-[#ffcb05] text-black text-[8px] font-black uppercase px-1.5 py-0.5 rounded">
+                              Featured
+                            </span>
+                          )}
+                        </div>
+                        <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>
+                          {shop.name}
+                        </h4>
+                        <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>
+                          {shop.shortDesc}
+                        </p>
+                        <p className={`text-[10px] mt-1 truncate ${theme.secondaryText}`}>
+                          📍 {shop.address}
+                        </p>
                       </div>
-                      <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>
-                        {shop.name}
-                      </h4>
-                      <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>
-                        {shop.shortDesc}
-                      </p>
-                      <p className={`text-[10px] mt-1 truncate ${theme.secondaryText}`}>
-                        📍 {shop.address}
-                      </p>
-                    </div>
 
-                    <div className="p-2 rounded-full text-slate-400 hover:text-[#ffcb05] flex-shrink-0">
-                      <ArrowRight size={18} />
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleFavorite({ ...shop, type: 'shop' }); }}
+                          className={`p-2 rounded-full transition-transform active:scale-90 ${isFavorited ? 'text-[#ffcb05]' : 'text-slate-400 hover:text-white'}`}
+                        >
+                          <Heart size={16} fill={isFavorited ? "currentColor" : "none"} />
+                        </button>
+                        <div className="p-2 rounded-full text-slate-400 hover:text-[#ffcb05] flex-shrink-0">
+                          <ArrowRight size={18} />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
                   No shops found matching your search.
@@ -1651,7 +1680,7 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
                       key={c}
                       type="button"
                       onClick={() => setChannel(c)}
-                      className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${channel === c ? 'bg-[#a855f7] text-white border-[#a855f7]' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
+                      className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${channel === c ? 'bg-[#a855f7] text-white border-[#a855f7]' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
                     >
                       {c}
                     </button>
@@ -2114,7 +2143,8 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
 const HubView = ({ 
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
-  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal
+  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
+  onOpenShopsModal, onSelectShop
 }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
@@ -2122,10 +2152,13 @@ const HubView = ({
 
   const eatsFavs = userFavorites.filter(f => (f.type === 'dining' || Boolean(f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-'));
   const happeningsFavs = userFavorites.filter(f => 
-    (f.type === 'experience' || (f.name && !f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-')
+    (f.type === 'experience' || (f.name && !f.cuisine && f.type !== 'shop')) && f.type !== 'park' && !f.id?.startsWith('park-') && !f.id?.startsWith('shop-')
   );
   const guideFavs = userFavorites.filter(f => 
-    (f.type === 'journal' || f.type === 'guide' || f.excerpt || (f.title && !f.cuisine && !f.name)) && f.type !== 'park' && !f.id?.startsWith('park-')
+    (f.type === 'journal' || f.type === 'guide' || f.excerpt || (f.title && !f.cuisine && !f.name && f.type !== 'shop')) && f.type !== 'park' && !f.id?.startsWith('park-') && !f.id?.startsWith('shop-')
+  );
+  const shopFavs = userFavorites.filter(f => 
+    f.type === 'shop' || f.id?.startsWith('shop-')
   );
 
   const [selectedForumChannel, setSelectedForumChannel] = useState('All');
@@ -2256,6 +2289,7 @@ const HubView = ({
         </div>
 
         <div className="space-y-8">
+          {/* 1. EATS FAVS */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -2282,6 +2316,51 @@ const HubView = ({
             </div>
           </div>
 
+          {/* 2. SHOP FAVS */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-2">
+                <ShoppingBag size={16} className="text-[#ffcb05]" />
+                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Shop Favs ({shopFavs.length})</h4>
+              </div>
+              <button onClick={onOpenShopsModal} className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] hover:underline">Explore All Shops →</button>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              {!shopFavs.length ? (
+                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No shops saved yet</div>
+              ) : (
+                shopFavs.map(fav => (
+                  <div 
+                    key={`shop-${fav.id}`} 
+                    onClick={() => {
+                      if (onSelectShop) onSelectShop(fav);
+                    }} 
+                    className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}
+                  >
+                    {fav.img ? (
+                      <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner flex-shrink-0" alt="" />
+                    ) : (
+                      <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center flex-shrink-0`}>
+                        <Store size={20} className="text-[#ffcb05]" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0 pr-1">
+                      <p className={`text-sm font-bold leading-tight truncate ${theme.text}`}>{fav.name || fav.title}</p>
+                      <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest truncate">
+                        {fav.category || 'Retail Store'}
+                      </p>
+                      {fav.address && <p className={`text-[10px] truncate ${theme.secondaryText} mt-0.5`}>📍 {fav.address}</p>}
+                    </div>
+                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite({ ...fav, type: 'shop' });}} className="text-red-500 p-2 flex-shrink-0">
+                      <Heart size={18} fill="currentColor" />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* 3. HAPPENINGS FAVS */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -2310,6 +2389,7 @@ const HubView = ({
             </div>
           </div>
 
+          {/* 4. GUIDE FAVS */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -2339,6 +2419,7 @@ const HubView = ({
           </div>
         </div>
 
+        {/* URBAN AND FUN TOOLS WITH LOCAL SHOPS BUTTON */}
         <section className={`space-y-5 w-full pt-4 border-t ${theme.border}`}>
           <div className="flex items-center gap-2 px-1">
             <Sparkles size={18} className="text-[#0284c7] dark:text-[#34a4b8]" />
@@ -2346,14 +2427,15 @@ const HubView = ({
           </div>
           <div className="grid grid-cols-2 gap-3">
             {[
-              {id:'parkfinder',icon:Trees,label:'A2 Park Finder',color:'#10b981',action:onOpenParksModal},
-              {id:'community',icon:MessageSquare,label:'Local Gems',color:'#38bdf8'},
-              {id:'water',icon:Droplets,label:'Hydration',color:'#34a4b8'},
-              {id:'bucket',icon:Award,label:'Bucket List',color:'#ffcb05'},
-              {id:'hots',icon:MapPin,label:'Hot Spots',color:'#ffcb05'},
-              {id:'randomizer',icon:Dice5,label:'Weekend Pitcher',color:'#f97316'},
-              {id:'trivia',icon:HelpCircle,label:'A2 Trivia',color:'#a855f7'},
-              {id:'calc',icon:Calculator,label:'Tip Calc',color:'#10b981'},
+              { id: 'shops', icon: ShoppingBag, label: 'Local Shops', color: '#ffcb05', action: onOpenShopsModal },
+              { id: 'parkfinder', icon: Trees, label: 'A2 Park Finder', color: '#10b981', action: onOpenParksModal },
+              { id: 'community', icon: MessageSquare, label: 'Local Gems', color: '#38bdf8' },
+              { id: 'water', icon: Droplets, label: 'Hydration', color: '#34a4b8' },
+              { id: 'bucket', icon: Award, label: 'Bucket List', color: '#ffcb05' },
+              { id: 'hots', icon: MapPin, label: 'Hot Spots', color: '#ffcb05' },
+              { id: 'randomizer', icon: Dice5, label: 'Weekend Pitcher', color: '#f97316' },
+              { id: 'trivia', icon: HelpCircle, label: 'A2 Trivia', color: '#a855f7' },
+              { id: 'calc', icon: Calculator, label: 'Tip Calc', color: '#10b981' }
             ].map(t => (
               <button
                 key={t.id}
@@ -2372,6 +2454,7 @@ const HubView = ({
           </div>
         </section>
 
+        {/* BOTTOM PROMOTION CTA */}
         <div className="pt-2">
           <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
             <div className="space-y-1 text-left">
@@ -2389,6 +2472,7 @@ const HubView = ({
           </div>
         </div>
 
+        {/* COMMUNITY FORUM */}
         <section className={`space-y-6 w-full pt-8 border-t ${theme.border}`}>
           <div className="px-1 space-y-2">
             <div className="flex items-center justify-between">
@@ -2652,7 +2736,7 @@ const HomeView = ({
           <Sparkles size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
         </div>
-         
+          
         {featuredPosts && featuredPosts.length > 0 && (
           <div className="px-1 relative">
             <div onClick={() => setSelectedItem(featuredPosts[highlightIdx])} className="relative h-[420px] rounded-[48px] overflow-hidden shadow-2xl cursor-pointer group border border-white/10">
@@ -2675,7 +2759,7 @@ const HomeView = ({
         )}
       </section>
 
-      {/* NEW SHOPS CTA & FEATURED SHOPS SECTION AT BOTTOM OF HOME */}
+      {/* SHOPS CTA & FEATURED SHOPS SECTION AT BOTTOM OF HOME */}
       <section className="space-y-6 pt-2">
         <div className="mx-1 p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#081f38] to-[#122842] border border-[#ffcb05]/40 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-2xl gap-4">
           <div className="space-y-1.5 text-left">
@@ -2716,48 +2800,57 @@ const HomeView = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {featuredShopsList.map(shop => (
-              <div
-                key={shop.id}
-                onClick={() => onSelectShop(shop)}
-                className={`${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg cursor-pointer group hover:border-[#ffcb05]/60 active:scale-[0.99] transition-all flex flex-col`}
-              >
-                <div className="relative h-44 overflow-hidden">
-                  <img src={shop.img} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <span className="absolute top-3 left-3 bg-[#ffcb05] text-black text-[8px] font-black uppercase px-2.5 py-0.5 rounded-full shadow-md">
-                    Featured Spotlight
-                  </span>
-                  <span className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-md">
-                    {shop.category}
-                  </span>
-                </div>
-                <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
-                  <div>
-                    <h4 className={`text-base font-bold uppercase tracking-tight ${theme.text}`}>
-                      {shop.name}
-                    </h4>
-                    <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${theme.secondaryText}`}>
-                      {shop.shortDesc}
-                    </p>
+            {featuredShopsList.map(shop => {
+              const isFavorited = (favorites || []).some(f => f.id === shop.id);
+              return (
+                <div
+                  key={shop.id}
+                  onClick={() => onSelectShop(shop)}
+                  className={`${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg cursor-pointer group hover:border-[#ffcb05]/60 active:scale-[0.99] transition-all flex flex-col relative`}
+                >
+                  <div className="relative h-44 overflow-hidden">
+                    <img src={shop.img} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <span className="absolute top-3 left-3 bg-[#ffcb05] text-black text-[8px] font-black uppercase px-2.5 py-0.5 rounded-full shadow-md">
+                      Featured Spotlight
+                    </span>
+                    <span className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-md">
+                      {shop.category}
+                    </span>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleFavorite({ ...shop, type: 'shop' }); }}
+                      className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/40 text-white'}`}
+                    >
+                      <Heart size={16} fill={isFavorited ? "currentColor" : "none"} />
+                    </button>
                   </div>
-
-                  {shop.specials && shop.specials.length > 0 && (
-                    <div className="pt-2 border-t border-white/5">
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#b45309] dark:text-[#ffcb05]">
-                        <Tag size={12} />
-                        <span className="truncate">{shop.specials[0]}</span>
-                      </div>
+                  <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
+                    <div>
+                      <h4 className={`text-base font-bold uppercase tracking-tight ${theme.text}`}>
+                        {shop.name}
+                      </h4>
+                      <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${theme.secondaryText}`}>
+                        {shop.shortDesc}
+                      </p>
                     </div>
-                  )}
 
-                  <div className="pt-1 flex items-center justify-between text-[10px]">
-                    <span className={`${theme.secondaryText} truncate max-w-[170px]`}>📍 {shop.address}</span>
-                    <span className="text-[#0284c7] dark:text-[#38bdf8] font-black uppercase">Details & Deals →</span>
+                    {shop.specials && shop.specials.length > 0 && (
+                      <div className="pt-2 border-t border-white/5">
+                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#b45309] dark:text-[#ffcb05]">
+                          <Tag size={12} />
+                          <span className="truncate">{shop.specials[0]}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="pt-1 flex items-center justify-between text-[10px]">
+                      <span className={`${theme.secondaryText} truncate max-w-[170px]`}>📍 {shop.address}</span>
+                      <span className="text-[#0284c7] dark:text-[#38bdf8] font-black uppercase">Details & Deals →</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -3181,7 +3274,7 @@ export default function App() {
         ...item, 
         type: item.type || 'experience', 
         savedAt: Date.now() 
-      };
+      }; 
       setFavorites([...favorites, itemToSave]); 
     }
   };
@@ -3252,6 +3345,8 @@ export default function App() {
             onClose={() => setIsShopsModalOpen(false)}
             theme={theme}
             onSelectShop={handleShopSelect}
+            toggleFavorite={toggleFavorite}
+            favorites={favorites}
           />
 
           {/* SHOP DETAIL MODAL */}
@@ -3260,6 +3355,8 @@ export default function App() {
             onClose={() => setSelectedShop(null)}
             shop={selectedShop}
             theme={theme}
+            toggleFavorite={toggleFavorite}
+            favorites={favorites}
           />
 
           <PartnerListingModal 
@@ -3339,6 +3436,8 @@ export default function App() {
                   onOpenPartnerModal={openPartnerModal}
                   onOpenContributorModal={openContributorModal}
                   onOpenParksModal={openParksModal}
+                  onOpenShopsModal={openShopsModal}
+                  onSelectShop={handleShopSelect}
                 />
               )}
                
