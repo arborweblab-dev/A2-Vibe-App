@@ -781,6 +781,7 @@ const STRIPE_LINKS = {
   shopBoostedAnnual: 'https://buy.stripe.com/fZu14nbigdsjeFPfNKeME0c',
   shopBoostedMonthly: 'https://buy.stripe.com/fZudR9aec4VNgNX6daeME0d',
   restaurantFeaturedPickAddon: 'https://buy.stripe.com/3cI4gz1HGgEv69j0SQeME04',
+  shopFeaturedPickAddon: 'https://buy.stripe.com/9B628r2LKewn8hrbxueME0e',
   promoJournal: 'https://buy.stripe.com/28EeVd1HG4VNdBL8lieME05',
   promoSMSocial: 'https://buy.stripe.com/28E8wP9a85ZR7dn8lieME06',
   eventStandard: 'https://buy.stripe.com/aFabJ13PO1JB8hrgROeME08',
@@ -1288,7 +1289,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                   </p>
                 </div>
                 <button
-                  onClick={() => openStripeCheckout(STRIPE_LINKS.restaurantFeaturedPickAddon)}
+                  onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopFeaturedPickAddon : STRIPE_LINKS.restaurantFeaturedPickAddon)}
                   className="px-3.5 py-2 bg-[#f97316] text-white dark:text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
                 >
                   <span>$50 Pick</span>
@@ -1499,7 +1500,7 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
       if (onPostSuccess) onPostSuccess();
     } catch (err) {
       console.error('Error submitting community post:', err);
-      alert('Could not submit. Please check your connection.');
+      alert('Could not submit. Please check your network connection.');
     } finally {
       setSubmitting(false);
     }
