@@ -1131,7 +1131,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
 
           <div className="space-y-3 pt-2">
             <h4 className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Comments ({comments.length})</h4>
-              
+            
             {comments.length > 0 ? (
               comments.map(c => (
                 <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
@@ -1204,7 +1204,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
     setSubmitting(true);
     try {
       await addDoc(collection(db, 'partner_submissions'), {
-        listingCategory: 'restaurant',
+        listingCategory: listingCategory,
         bizName,
         bizContact,
         bizAddress,
@@ -1244,24 +1244,31 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
         </div>
 
         <div className="p-6 space-y-6">
-          <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'} text-center`}>
+          <div className={`grid grid-cols-3 p-1 rounded-2xl ${theme.isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'} text-center`}>
             <button
               onClick={() => { setListingCategory('restaurant'); setSubmitted(false); }}
               className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'restaurant' ? 'bg-[#f97316] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
             >
               <Utensils size={14} />
-              <span>Restaurant / Bar</span>
+              <span>Restaurant</span>
+            </button>
+            <button
+              onClick={() => { setListingCategory('shop'); setSubmitted(false); }}
+              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'shop' ? 'bg-[#ffcb05] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+            >
+              <Store size={14} />
+              <span>Shop</span>
             </button>
             <button
               onClick={() => { setListingCategory('general'); setSubmitted(false); }}
               className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'general' ? 'bg-[#38bdf8] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
             >
               <Calendar size={14} />
-              <span>Event / Experience</span>
+              <span>Event</span>
             </button>
           </div>
 
-          {listingCategory === 'restaurant' ? (
+          {(listingCategory === 'restaurant' || listingCategory === 'shop') ? (
             <>
               <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} text-center`}>
                 <button
@@ -1298,33 +1305,33 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                       <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} space-y-2`}>
                         <div className="flex items-center gap-2 text-[#b45309] dark:text-[#ffcb05]">
                           <QrCode size={18} />
-                          <h4 className="text-xs font-black uppercase tracking-wider">Restaurant & Bar QR Placement</h4>
+                          <h4 className="text-xs font-black uppercase tracking-wider">{listingCategory === 'shop' ? 'Shop QR Placement' : 'Restaurant & Bar QR Placement'}</h4>
                         </div>
                         <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
-                          Get a verified listing in Ann Arbor Flavors in exchange for placing our compact A2 Vibe QR code badge at your host stand or checkout counter, and on your entry door or front window.
+                          Get a verified listing in Ann Arbor {listingCategory === 'shop' ? 'Shops' : 'Flavors'} in exchange for placing our compact A2 Vibe QR code badge at your counter and on your entry door or front window.
                         </p>
                       </div>
 
                       <div>
-                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Restaurant / Bar Name</label>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>{listingCategory === 'shop' ? 'Shop Name' : 'Restaurant / Bar Name'}</label>
                         <input
                           type="text"
                           required
                           value={bizName}
                           onChange={(e) => setBizName(e.target.value)}
-                          placeholder="e.g. Tree Town Smokehouse"
+                          placeholder={listingCategory === 'shop' ? "e.g. Tree Town Books" : "e.g. Tree Town Smokehouse"}
                           className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
                         />
                       </div>
 
                       <div>
-                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Cuisine Type</label>
+                        <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>{listingCategory === 'shop' ? 'Retail Category' : 'Cuisine Type'}</label>
                         <input
                           type="text"
                           required
                           value={cuisine}
                           onChange={(e) => setCuisine(e.target.value)}
-                          placeholder="e.g. Korean Street Food, Craft Cocktails, Neapolitan Pizza"
+                          placeholder={listingCategory === 'shop' ? "e.g. Bookstores & Vinyl, Vintage, Dispensary" : "e.g. Korean Street Food, Craft Cocktails"}
                           className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
                         />
                       </div>
@@ -1336,7 +1343,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                           required
                           value={bizContact}
                           onChange={(e) => setBizContact(e.target.value)}
-                          placeholder="e.g. manager@restaurant.com"
+                          placeholder="e.g. manager@business.com"
                           className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
                         />
                       </div>
@@ -1361,7 +1368,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                           className="mt-0.5 rounded accent-[#ffcb05]"
                         />
                         <span className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-700'} leading-snug`}>
-                          I agree to display the small A2 Vibe QR code badge at our counter or host stand and on our front door/window.
+                          I agree to display the small A2 Vibe QR code badge at our counter and on our front door/window.
                         </span>
                       </label>
 
@@ -1380,21 +1387,21 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                   <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/30 text-white space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-                        Dining Premiere
+                        {listingCategory === 'shop' ? 'Retail Premiere' : 'Dining Premiere'}
                       </span>
                       <span className="text-[10px] font-bold text-[#38bdf8] flex items-center gap-1">
-                        <FileText size={12} /> Menu Upload Enabled
+                        <FileText size={12} /> Catalog Upload Enabled
                       </span>
                     </div>
 
                     <h4 className="text-xl font-header font-black uppercase italic">
-                      Boosted Eatery & Bar Showcase
+                      {listingCategory === 'shop' ? 'Boosted Retail Showcase' : 'Boosted Eatery & Bar Showcase'}
                     </h4>
 
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
-                      <li className="flex items-center gap-2">✓ <strong>Up to 20 HD Photos</strong> (Dishes, venue, crowd)</li>
-                      <li className="flex items-center gap-2">✓ <strong>Longer Description & Story</strong> with direct ticket or reservation links</li>
-                      <li className="flex items-center gap-2">✓ <strong>Optional Menu Upload / PDF Link</strong> on profile</li>
+                      <li className="flex items-center gap-2">✓ <strong>Up to 20 HD Photos</strong> (Products, venue, displays)</li>
+                      <li className="flex items-center gap-2">✓ <strong>Longer Description & Story</strong> with direct store links</li>
+                      <li className="flex items-center gap-2">✓ <strong>Optional Menu / Catalog PDF Link</strong> on profile</li>
                       <li className="flex items-center gap-2">✓ <strong>Dedicated Feature Article</strong> in A2 Guide</li>
                       <li className="flex items-center gap-2">✓ <strong>Social Media Post Promos</strong> across our channels</li>
                     </ul>
@@ -1408,7 +1415,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                         <span className="bg-[#f97316] text-white dark:text-black text-[8px] font-black px-1.5 py-0.5 rounded">SAVE $40</span>
                       </div>
                       <p className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-600'} mt-1`}>
-                        Top-of-app billboard spot on Home & Flavors. <strong className="text-[#b45309] dark:text-[#ffcb05]">$50</strong> <span className={`line-through ${theme.isDark ? 'text-slate-500' : 'text-slate-400'} text-[10px]` }>(Normally $90)</span>
+                        Top-of-app billboard spot. <strong className="text-[#b45309] dark:text-[#ffcb05]">$50</strong> <span className={`line-through ${theme.isDark ? 'text-slate-500' : 'text-slate-400'} text-[10px]` }>(Normally $90)</span>
                       </p>
                     </div>
                     <button
@@ -1462,7 +1469,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                       <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
                         <div>
                           <p className={`text-xs font-bold ${theme.text}`}>A2 Guide Feature Story</p>
-                          <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published culinary, brand, or event editorial</p>
+                          <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published editorial feature</p>
                         </div>
                         <button
                           onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
