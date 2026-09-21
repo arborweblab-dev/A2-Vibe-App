@@ -17,15 +17,502 @@ import {
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
   Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
   PenTool, ShieldCheck, MessageCircle, Send, Trees, ThumbsUp, MessageCircleCode,
-  Dog, Accessibility, Bike, Baby, Bath, Check
+  Dog, Accessibility, Bike, Baby, Bath, Check, ShoppingBag, Tag, Percent
 } from 'lucide-react';
 
-// --- 1. IMPORT LOCAL DATA ---
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
 
-// --- TRANSIT OPTIONS MODAL ---
+const SHOPS_DATA = [
+  {
+    id: 'shop-vibe-a2',
+    name: 'Vibe Ann Arbor',
+    type: 'shop',
+    category: 'Marijuana Dispensaries',
+    tier: 'featured',
+    rating: '4.9',
+    address: '407 N 5th Ave, Ann Arbor, MI 48104',
+    url: 'https://a2vibe.com',
+    img: 'https://a2vibe.com/images/vibe-weed.jpg',
+    shortDesc: 'Premier downtown cannabis dispensary offering elite strains, top-shelf edibles, concentrates, and knowledgeable budtenders.',
+    longDesc: '<p>Vibe Ann Arbor sets the benchmark for Tree Town recreational and medical cannabis. Conveniently located near Kerrytown, Vibe pairs a clean, welcoming retail showroom with curated terpene profiles, local craft flower, artisanal gummies, and high-potency concentrates. Staffed by friendly budtenders ready to walk you through cannabinoid balances and tailored experiences.</p>',
+    specials: [
+      'First-time visitor 20% discount on boutique flower',
+      'Daily Happy Hour specials on pre-rolls and live rosin concentrates',
+      'Student and veteran appreciation discounts with valid ID'
+    ],
+    features: ['Recreational 21+', 'Medical Validated', 'Curbside Pickup', 'ATM On-Site', 'Wheelchair Accessible'],
+    hours: 'Mon - Sun: 9:00 AM - 9:00 PM'
+  },
+  {
+    id: 'shop-information-entropy',
+    name: 'Information Entropy',
+    type: 'shop',
+    category: 'Marijuana Dispensaries',
+    tier: 'featured',
+    rating: '4.9',
+    address: '1115 Broadway St, Ann Arbor, MI 48105',
+    url: 'https://informationentropy.com',
+    img: 'https://placehold.co/800x600/00274c/ffcb05?text=Information+Entropy',
+    shortDesc: 'Locally grown craft cannabis dispensary acclaimed for in-house genetics and solventless rosin.',
+    longDesc: '<p>A beloved local staple with locations on Broadway and Downtown, Information Entropy is recognized statewide for its dedicated craft cultivation, award-winning rosin, and friendly service.</p>',
+    specials: [
+      'Weekly solventless concentrates specials',
+      'Mix-and-match premium 1/8ths bundling'
+    ],
+    features: ['In-House Cultivation', 'Solventless Rosin', 'Downtown & Broadway Locations', 'Curbside Pickup'],
+    hours: 'Mon - Sun: 9:00 AM - 9:00 PM'
+  },
+  {
+    id: 'shop-literati',
+    name: 'Literati Bookstore',
+    type: 'shop',
+    category: 'Bookstores & Vinyl',
+    tier: 'featured',
+    rating: '4.9',
+    address: '124 E Washington St, Ann Arbor, MI 48104',
+    url: 'https://literatibookstore.com',
+    img: 'https://placehold.co/800x600/1e293b/38bdf8?text=Literati+Bookstore',
+    shortDesc: 'Iconic independent bookstore featuring cozy curated shelves, author readings, and the famous public typewriter.',
+    longDesc: '<p>Literati is an essential downtown cultural beacon. Explore three floors of handpicked fiction, poetry, art monographs, and children’s literature, plus the downstairs public Oliver typewriter where visitors from around the world type anonymous notes.</p>',
+    specials: [
+      'Staff pick monthly book bundle 15% off',
+      'Signed first-edition author club'
+    ],
+    features: ['Independent Bookstore', 'Author Events', 'Historic Typewriter', 'In-Store Coffee Shop'],
+    hours: 'Mon - Sat: 10:00 AM - 8:00 PM | Sun: 12:00 PM - 6:00 PM'
+  },
+  {
+    id: 'shop-wazoo-records',
+    name: 'Wazoo Records',
+    type: 'shop',
+    category: 'Bookstores & Vinyl',
+    tier: 'standard',
+    address: '436 E Liberty St, Ann Arbor, MI 48104',
+    shortDesc: 'Legendary second-floor record haven packed with used and rare vinyl, CDs, and music memorabilia since 1974.',
+    features: ['Vintage Vinyl', 'Rare 45s', 'Used CDs & Cassettes'],
+    hours: 'Tue - Sun: 12:00 PM - 6:00 PM'
+  },
+  {
+    id: 'shop-encore-records',
+    name: 'Encore Records',
+    type: 'shop',
+    category: 'Bookstores & Vinyl',
+    tier: 'standard',
+    address: '208 N 4th Ave, Ann Arbor, MI 48104',
+    shortDesc: 'Vast Kerrytown audio institution with thousands of vintage LPs, jazz pressings, and classic stereo equipment.',
+    features: ['Extensive Vinyl Catalog', 'Turntables', 'Cassettes'],
+    hours: 'Wed - Sun: 11:00 AM - 7:00 PM'
+  },
+  {
+    id: 'shop-bivouac',
+    name: 'Bivouac Outdoor & Boutique',
+    type: 'shop',
+    category: 'Vintage & Boutiques',
+    tier: 'featured',
+    rating: '4.8',
+    address: '336 S State St, Ann Arbor, MI 48104',
+    url: 'https://bivouacannarbor.com',
+    img: 'https://placehold.co/800x600/0f172a/10b981?text=Bivouac+Ann+Arbor',
+    shortDesc: 'Pioneering State Street outfitter combining luxury mountain lifestyle apparel with technical camping and outdoor gear.',
+    longDesc: '<p>A State Street landmark since 1970 with the motto Where Outdoor Passion Meets Fashion. Carrying premier outdoor lifestyle labels alongside high-performance trekking equipment and stylish streetwear.</p>',
+    specials: [
+      'Seasonal outerwear promotion up to 25% off',
+      'Free backpack and boot custom fitting'
+    ],
+    features: ['Outdoor Gear', 'Designer Apparel', 'Camp Equipment', 'Expert Gear Fitting'],
+    hours: 'Mon - Sat: 10:00 AM - 7:00 PM | Sun: 12:00 PM - 5:00 PM'
+  },
+  {
+    id: 'shop-getup-vintage',
+    name: 'The Getup Vintage',
+    type: 'shop',
+    category: 'Vintage & Boutiques',
+    tier: 'standard',
+    address: '215 S State St, Ann Arbor, MI 48104',
+    shortDesc: 'Vibrant vintage shop offering genuine 1950s-90s vintage clothing, leather jackets, denim, and accessories.',
+    features: ['True Vintage', 'Hand-Picked Clothing', 'State Street'],
+    hours: 'Mon - Sun: 12:00 PM - 7:00 PM'
+  },
+  {
+    id: 'shop-rock-paper-scissors',
+    name: 'Rock Paper Scissors',
+    type: 'shop',
+    category: 'Specialty Markets',
+    tier: 'standard',
+    address: '216 S Main St, Ann Arbor, MI 48104',
+    shortDesc: 'Cheerful Main Street gift shop specializing in playful stationery, bespoke paper goods, quirky gifts, and local Michigan novelties.',
+    features: ['Custom Gifts', 'Michigan Memorabilia', 'Party Goods'],
+    hours: 'Mon - Sun: 10:00 AM - 8:00 PM'
+  },
+  {
+    id: 'shop-mden',
+    name: 'The M Den on State Street',
+    type: 'shop',
+    category: 'University Apparel',
+    tier: 'featured',
+    rating: '4.8',
+    address: '303 S State St, Ann Arbor, MI 48104',
+    url: 'https://www.mden.com',
+    img: 'https://placehold.co/800x600/00274c/ffcb05?text=The+M+Den+Ann+Arbor',
+    shortDesc: 'Official home of the Michigan Wolverines with head-to-toe official U-M jerseys, sideline gear, hats, and collectibles.',
+    longDesc: '<p>The ultimate headquarters for University of Michigan students, alumni, and passionate fans. Packed with licensed Nike sideline collections, historic Rose Bowl and Championship memorabilia, and classic Maize and Blue outerwear.</p>',
+    specials: [
+      'Gameday apparel discounts during selected weekends',
+      'Free souvenir sticker pack with in-store purchase'
+    ],
+    features: ['Official U-M Apparel', 'Nike Sideline Gear', 'Big House Souvenirs'],
+    hours: 'Mon - Sat: 9:00 AM - 8:00 PM | Sun: 10:00 AM - 6:00 PM'
+  },
+  {
+    id: 'shop-zingermans-deli-shop',
+    name: 'Zingerman’s Specialty Food Store',
+    type: 'shop',
+    category: 'Specialty Markets',
+    tier: 'featured',
+    rating: '4.9',
+    address: '422 Detroit St, Ann Arbor, MI 48104',
+    url: 'https://www.zingermansdeli.com',
+    img: 'https://placehold.co/800x600/78350f/fbbf24?text=Zingermans+Specialty+Store',
+    shortDesc: 'World-renowned artisan grocery offering small-batch olive oils, farmstead cheeses, vinegar pairings, and traditional bread.',
+    longDesc: '<p>Adjoining the legendary deli counter in historic Kerrytown, the Zingerman’s specialty market is a food lover paradise loaded with estate-bottled olive oils, cured meats, single-origin bean chocolates, and farmstead cheeses sampled generously by cheese mongers.</p>',
+    specials: [
+      'Complimentary estate olive oil and artisan vinegar tasting bar',
+      'Monthly Cheese Club discount subscriptions'
+    ],
+    features: ['Artisan Cheeses', 'Boutique Imports', 'Estate Olive Oils', 'Kerrytown Landmark'],
+    hours: 'Mon - Sun: 7:00 AM - 9:00 PM'
+  },
+  {
+    id: 'shop-kerrytown-market-shops',
+    name: 'Kerrytown Market & Shops',
+    type: 'shop',
+    category: 'Specialty Markets',
+    tier: 'standard',
+    address: '407 N 5th Ave, Ann Arbor, MI 48104',
+    shortDesc: 'Charming multi-level brick marketplace featuring local toy stores, spice shops, paper merchants, and tea emporiums.',
+    features: ['Multiple Boutiques', 'Chime Tower', 'Farmers Market Adjacent'],
+    hours: 'Mon - Sat: 8:00 AM - 7:00 PM | Sun: 10:00 AM - 5:00 PM'
+  }
+];
+
+const SHOP_CATEGORIES = [
+  'All',
+  'Marijuana Dispensaries',
+  'Bookstores & Vinyl',
+  'Vintage & Boutiques',
+  'University Apparel',
+  'Specialty Markets'
+];
+
+const ShopDetailModal = ({ isOpen, onClose, shop, theme }) => {
+  if (!isOpen || !shop) return null;
+  const isFeatured = shop.tier === 'featured';
+
+  return (
+    <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex items-center gap-2.5 min-w-0 pr-3">
+            <div className="p-2 rounded-xl bg-[#ffcb05]/15 text-[#b45309] dark:text-[#ffcb05] flex-shrink-0">
+              <Store size={20} />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[10px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] block">
+                {shop.category}
+              </span>
+              <h3 className="text-xl font-header font-black uppercase italic tracking-tight truncate" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+                {shop.name}
+              </h3>
+            </div>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {shop.img && (
+            <div className="relative rounded-[32px] overflow-hidden shadow-lg h-60">
+              <img src={shop.img} className="w-full h-full object-cover" alt={shop.name} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              {isFeatured && (
+                <span className="absolute top-4 left-4 bg-[#ffcb05] text-black text-[9px] font-black uppercase px-3 py-1 rounded-full tracking-wider shadow-md">
+                  ★ Featured Shop
+                </span>
+              )}
+              <span className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-3 py-1 rounded-full">
+                {shop.category}
+              </span>
+            </div>
+          )}
+
+          {shop.address && (
+            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
+              <MapPin size={18} className="text-[#b45309] dark:text-[#ffcb05] flex-shrink-0 mt-0.5" />
+              <div className="text-xs">
+                <span className={`font-black uppercase tracking-wider block ${theme.text}`}>Address</span>
+                <span className={`${theme.secondaryText} leading-relaxed`}>{shop.address}</span>
+              </div>
+            </div>
+          )}
+
+          {shop.hours && (
+            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
+              <Clock size={18} className="text-[#0284c7] dark:text-[#38bdf8] flex-shrink-0 mt-0.5" />
+              <div className="text-xs">
+                <span className={`font-black uppercase tracking-wider block ${theme.text}`}>Hours</span>
+                <span className={`${theme.secondaryText} leading-relaxed`}>{shop.hours}</span>
+              </div>
+            </div>
+          )}
+
+          {isFeatured && shop.specials && shop.specials.length > 0 && (
+            <div className="p-4 rounded-3xl bg-gradient-to-br from-[#ffcb05]/15 to-transparent border border-[#ffcb05]/30 space-y-2.5">
+              <div className="flex items-center gap-2 text-[#b45309] dark:text-[#ffcb05]">
+                <Percent size={18} />
+                <h4 className="text-xs font-black uppercase tracking-wider">Current Deals & Specials</h4>
+              </div>
+              <ul className="space-y-1.5 text-xs">
+                {shop.specials.map((spec, i) => (
+                  <li key={i} className={`flex items-start gap-2 ${theme.text}`}>
+                    <span className="text-[#b45309] dark:text-[#ffcb05] font-black">✦</span>
+                    <span>{spec}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {shop.features && shop.features.length > 0 && (
+            <div className="space-y-2">
+              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Amenities & Highlights</span>
+              <div className="flex flex-wrap gap-2">
+                {shop.features.map(f => (
+                  <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border} ${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
+                    ✓ {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>About this Shop</span>
+            <div className={`text-sm leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`}
+              dangerouslySetInnerHTML={{ __html: shop.longDesc || `<p>${shop.shortDesc}</p>` }}
+            />
+          </div>
+
+          <div className="space-y-2.5 pt-2">
+            {shop.url && (
+              <button
+                onClick={() => window.open(shop.url, '_blank', 'noopener,noreferrer')}
+                className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <ShoppingBag size={16} />
+                <span>Visit Official Website / Order Online</span>
+                <ExternalLink size={14} />
+              </button>
+            )}
+
+            <button
+              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.name + ' ' + shop.address)}`, '_blank')}
+              className={`w-full py-3.5 rounded-2xl font-black uppercase text-xs border ${theme.border} ${theme.isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-slate-100 text-slate-900 hover:bg-slate-200'} active:scale-95 transition-all flex items-center justify-center gap-2`}
+            >
+              <Navigation size={15} />
+              <span>Get Directions in Google Maps</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCat, setSelectedCat] = useState('All');
+
+  const featuredShops = useMemo(() => {
+    return SHOPS_DATA.filter(s => s.tier === 'featured');
+  }, []);
+
+  const filteredShops = useMemo(() => {
+    return SHOPS_DATA.filter(shop => {
+      const matchesCat = selectedCat === 'All' || shop.category === selectedCat;
+      const matchesSearch = !searchQuery ||
+        shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        shop.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        shop.shortDesc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        shop.address.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCat && matchesSearch;
+    });
+  }, [searchQuery, selectedCat]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        
+        <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-[#ffcb05]/15 text-[#b45309] dark:text-[#ffcb05]">
+                <Store size={22} />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] block">
+                  Local Retail Directory
+                </span>
+                <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+                  Ann Arbor Shops
+                </h3>
+              </div>
+            </div>
+            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+              <X size={20} />
+            </button>
+          </div>
+
+          <div className="relative w-full">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search dispensaries, vinyl, boutiques, books..."
+              className={`w-full pl-10 pr-4 py-3 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05] transition-all`}
+            />
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pt-3">
+            {SHOP_CATEGORIES.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCat(cat)}
+                className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap transition-all border ${
+                  selectedCat === cat
+                    ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md'
+                    : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-6 space-y-6 flex-1 overflow-y-auto">
+          
+          {selectedCat === 'All' && !searchQuery && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Sparkles size={16} className="text-[#b45309] dark:text-[#ffcb05]" />
+                <h4 className={`text-xs font-black uppercase tracking-widest ${theme.text}`}>Featured Local Spots</h4>
+              </div>
+              <div className="flex overflow-x-auto gap-3.5 pb-2 no-scrollbar snap-x snap-mandatory">
+                {featuredShops.map(shop => (
+                  <div
+                    key={shop.id}
+                    onClick={() => onSelectShop(shop)}
+                    className={`min-w-[240px] max-w-[240px] ${theme.card} rounded-3xl border ${theme.border} overflow-hidden shadow-md cursor-pointer snap-center group flex-shrink-0 hover:border-[#ffcb05]/60 transition-all`}
+                  >
+                    <div className="h-32 relative overflow-hidden">
+                      <img src={shop.img} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      <span className="absolute bottom-2 left-2 bg-[#ffcb05] text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-md">
+                        Featured
+                      </span>
+                    </div>
+                    <div className="p-3.5 space-y-1">
+                      <span className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] block truncate">
+                        {shop.category}
+                      </span>
+                      <h5 className={`font-bold text-xs uppercase tracking-tight truncate ${theme.text}`}>
+                        {shop.name}
+                      </h5>
+                      <p className={`text-[11px] line-clamp-2 ${theme.secondaryText}`}>
+                        {shop.shortDesc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-3">
+            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">
+              <span>All Listings ({filteredShops.length})</span>
+              {selectedCat !== 'All' && (
+                <button onClick={() => setSelectedCat('All')} className="text-[#ffcb05] hover:underline">
+                  Show All
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 gap-3.5">
+              {filteredShops.length > 0 ? (
+                filteredShops.map(shop => (
+                  <div
+                    key={shop.id}
+                    onClick={() => onSelectShop(shop)}
+                    className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-[#ffcb05]/50 active:scale-[0.99] transition-all`}
+                  >
+                    {shop.img ? (
+                      <img src={shop.img} alt={shop.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
+                    ) : (
+                      <div className={`w-20 h-20 rounded-2xl ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-center flex-shrink-0 text-slate-400`}>
+                        <Store size={26} />
+                      </div>
+                    )}
+
+                    <div className="flex-1 min-w-0 pr-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-wider text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md truncate">
+                          {shop.category}
+                        </span>
+                        {shop.tier === 'featured' && (
+                          <span className="bg-[#ffcb05] text-black text-[8px] font-black uppercase px-1.5 py-0.5 rounded">
+                            Featured
+                          </span>
+                        )}
+                      </div>
+                      <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>
+                        {shop.name}
+                      </h4>
+                      <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>
+                        {shop.shortDesc}
+                      </p>
+                      <p className={`text-[10px] mt-1 truncate ${theme.secondaryText}`}>
+                        📍 {shop.address}
+                      </p>
+                    </div>
+
+                    <div className="p-2 rounded-full text-slate-400 hover:text-[#ffcb05] flex-shrink-0">
+                      <ArrowRight size={18} />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                  No shops found matching your search.
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const TransitModal = ({ isOpen, onClose, theme }) => {
   if (!isOpen) return null;
 
@@ -110,7 +597,6 @@ const TransitModal = ({ isOpen, onClose, theme }) => {
   );
 };
 
-// --- CURATED PARKS & NATURE PRESERVES DATA WITH AMENITIES ---
 const PARKS_DATA = [
   {
     id: 'park-arb',
@@ -240,7 +726,6 @@ const PARKS_DATA = [
   }
 ];
 
-// --- STRIPE PAYMENT LINKS CONFIGURATION ---
 const STRIPE_LINKS = {
   boostedAnnual: 'https://buy.stripe.com/5kQ6oH3POdsjgNX30YeME02',
   boostedMonthly: 'https://buy.stripe.com/bJe9ATbigag769j30YeME03',
@@ -251,7 +736,6 @@ const STRIPE_LINKS = {
   eventFeatured: 'https://buy.stripe.com/3cI00jcmkag7btDbxueME07'
 };
 
-// --- 2. CONFIGURATION ---
 const THEMES = {
   light: { primary: '#00274c', windowBg: 'bg-slate-200', appBg: 'bg-slate-50', card: 'bg-white', text: 'text-slate-900', secondaryText: 'text-slate-600', border: 'border-slate-200', isDark: false },
   dark: { primary: '#ffcb05', windowBg: 'bg-[#050b14]', appBg: 'bg-[#0a121e]', card: 'bg-[#151f2e]', text: 'text-slate-100', secondaryText: 'text-slate-400', border: 'border-slate-800', isDark: true }
@@ -279,7 +763,6 @@ const DEFAULT_BUCKET_ITEMS = [
   { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
 ];
 
-// --- DEDICATED PARK DETAIL MODAL ---
 const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
   if (!isOpen || !park) return null;
 
@@ -409,7 +892,6 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
   );
 };
 
-// --- PARK FINDER TOOL MODAL ---
 const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -558,7 +1040,6 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
   );
 };
 
-// --- THREADED COMMENTS MODAL / DRAWER COMPONENT ---
 const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
   const [comments, setComments] = useState([]);
   const [replyText, setReplyText] = useState('');
@@ -665,7 +1146,6 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
   );
 };
 
-// --- PARTNER LISTING MODAL ---
 const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = 'restaurant' }) => {
   const [listingCategory, setListingCategory] = useState(initialCategory);
   const [bizType, setBizType] = useState('free');
@@ -1079,7 +1559,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
   );
 };
 
-// --- COMMUNITY CONTRIBUTOR STORY SUBMISSION MODAL ---
 const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSuccess }) => {
   const [title, setTitle] = useState('');
   const [channel, setChannel] = useState('Local News');
@@ -1243,7 +1722,6 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
   );
 };
 
-// --- SPOTLIGHT DETAIL MODAL ---
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id);
@@ -1323,7 +1801,6 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   );
 };
 
-// --- FULLSCREEN TOOLS ---
 const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, bucketList, setBucketList, user }) => {
   const [bill, setBill] = useState('');
   const [tipPerc, setTipPerc] = useState(20);
@@ -1634,7 +2111,6 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   );
 };
 
-// --- MY VIBE (HUB VIEW) ---
 const HubView = ({ 
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
@@ -1644,7 +2120,6 @@ const HubView = ({
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
 
-  // Parks are excluded from favorites entirely
   const eatsFavs = userFavorites.filter(f => (f.type === 'dining' || Boolean(f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-'));
   const happeningsFavs = userFavorites.filter(f => 
     (f.type === 'experience' || (f.name && !f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-')
@@ -1653,7 +2128,6 @@ const HubView = ({
     (f.type === 'journal' || f.type === 'guide' || f.excerpt || (f.title && !f.cuisine && !f.name)) && f.type !== 'park' && !f.id?.startsWith('park-')
   );
 
-  // Community Forum State
   const [selectedForumChannel, setSelectedForumChannel] = useState('All');
   const [forumStories, setForumStories] = useState([]);
   const [forumPostTitle, setForumPostTitle] = useState('');
@@ -1865,7 +2339,6 @@ const HubView = ({
           </div>
         </div>
 
-        {/* URBAN AND FUN TOOLS */}
         <section className={`space-y-5 w-full pt-4 border-t ${theme.border}`}>
           <div className="flex items-center gap-2 px-1">
             <Sparkles size={18} className="text-[#0284c7] dark:text-[#34a4b8]" />
@@ -1899,7 +2372,6 @@ const HubView = ({
           </div>
         </section>
 
-        {/* BOTTOM PROMOTION CTA */}
         <div className="pt-2">
           <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
             <div className="space-y-1 text-left">
@@ -1917,7 +2389,6 @@ const HubView = ({
           </div>
         </div>
 
-        {/* COMMUNITY FORUM */}
         <section className={`space-y-6 w-full pt-8 border-t ${theme.border}`}>
           <div className="px-1 space-y-2">
             <div className="flex items-center justify-between">
@@ -2061,10 +2532,10 @@ const HubView = ({
   );
 };
 
-// --- INSIDER / HOME VIEW ---
 const HomeView = ({ 
   theme, setSelectedItem, itineraries, dining, featuredPosts, favorites, 
-  toggleFavorite, setView, onOpenPartnerModal, onOpenParksModal, onOpenTransitModal 
+  toggleFavorite, setView, onOpenPartnerModal, onOpenParksModal, onOpenTransitModal,
+  onOpenShopsModal, onSelectShop
 }) => {
   const [heroIdx, setHeroIdx] = useState(0);
   const [highlightIdx, setHighlightIdx] = useState(0);
@@ -2082,6 +2553,10 @@ const HomeView = ({
 
   const nextHighlight = (e) => { e.stopPropagation(); setHighlightIdx(p => (p + 1) % featuredPosts.length); };
   const prevHighlight = (e) => { e.stopPropagation(); setHighlightIdx(p => (p - 1 + featuredPosts.length) % featuredPosts.length); };
+
+  const featuredShopsList = useMemo(() => {
+    return SHOPS_DATA.filter(s => s.tier === 'featured');
+  }, []);
 
   return (
     <div className="space-y-12 animate-fade text-left relative z-10 pb-16 font-sans w-full">
@@ -2119,19 +2594,20 @@ const HomeView = ({
         </div>
       </section>
 
-      {/* QUICK LAUNCH GRID WITH PARKS & TRANSIT MODALS */}
+      {/* QUICK LAUNCH GRID WITH SHOPS BUTTON INCLUDED */}
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
           <Ticket size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Explore Ann Arbor Vibes</h2>
         </div>
-        <div className="grid grid-cols-5 gap-2.5 px-1">
+        <div className="grid grid-cols-6 gap-2 px-1">
           {[
-            { label: 'Eats', icon: <Utensils size={20}/>, path: 'flavors' },
-            { label: 'Events', icon: <Zap size={20}/>, path: 'fun' },
-            { label: 'Parks', icon: <Trees size={20} className="text-emerald-400"/>, action: onOpenParksModal },
-            { label: 'List Biz', icon: <Store size={20}/>, action: () => onOpenPartnerModal('restaurant') },
-            { label: 'Transit', icon: <Navigation size={20}/>, action: onOpenTransitModal }
+            { label: 'Eats', icon: <Utensils size={19}/>, path: 'flavors' },
+            { label: 'Events', icon: <Zap size={19}/>, path: 'fun' },
+            { label: 'Shops', icon: <ShoppingBag size={19} className="text-[#ffcb05]"/>, action: onOpenShopsModal },
+            { label: 'Parks', icon: <Trees size={19} className="text-emerald-400"/>, action: onOpenParksModal },
+            { label: 'List Biz', icon: <Store size={19}/>, action: () => onOpenPartnerModal('restaurant') },
+            { label: 'Transit', icon: <Navigation size={19}/>, action: onOpenTransitModal }
           ].map(item => (
             <button 
               key={item.label} 
@@ -2142,8 +2618,8 @@ const HomeView = ({
               }} 
               className="flex flex-col items-center gap-1.5 active:scale-95 group"
             >
-              <div className="p-3.5 rounded-2xl text-white shadow-lg bg-[#00274c] group-hover:scale-105 transition-transform flex items-center justify-center">{item.icon}</div>
-              <span className={`text-[10px] font-black uppercase tracking-tighter text-center ${theme.isDark ? 'text-white' : 'text-slate-700'}`}>{item.label}</span>
+              <div className="p-3 sm:p-3.5 rounded-2xl text-white shadow-lg bg-[#00274c] group-hover:scale-105 transition-transform flex items-center justify-center">{item.icon}</div>
+              <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-tighter text-center ${theme.isDark ? 'text-white' : 'text-slate-700'}`}>{item.label}</span>
             </button>
           ))}
         </div>
@@ -2198,11 +2674,97 @@ const HomeView = ({
           </div>
         )}
       </section>
+
+      {/* NEW SHOPS CTA & FEATURED SHOPS SECTION AT BOTTOM OF HOME */}
+      <section className="space-y-6 pt-2">
+        <div className="mx-1 p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#081f38] to-[#122842] border border-[#ffcb05]/40 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-2xl gap-4">
+          <div className="space-y-1.5 text-left">
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-black uppercase text-[#ffcb05] bg-[#ffcb05]/20 px-2.5 py-0.5 rounded-full tracking-widest">
+                Retail & Cannabis Hub
+              </span>
+              <span className="text-[9px] font-bold text-emerald-400">Legal 21+ Dispensaries</span>
+            </div>
+            <h4 className="text-xl font-header font-black uppercase text-white tracking-tight italic">
+              Explore Local Shops & Dispensaries
+            </h4>
+            <p className="text-xs text-slate-300 leading-relaxed max-w-md">
+              From top dispensary strains at Vibe Ann Arbor to rare vintage vinyl, indie bookstores, and Michigan gear. Discover local tree town retail.
+            </p>
+          </div>
+          <button
+            onClick={onOpenShopsModal}
+            className="px-6 py-3.5 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-xl active:scale-95 transition-all flex items-center gap-2 flex-shrink-0"
+          >
+            <ShoppingBag size={16} />
+            <span>Browse All Shops</span>
+          </button>
+        </div>
+
+        {/* FEATURED SHOPS CARDS UNDER CTA */}
+        <div className="space-y-3 px-1">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-2">
+              <Sparkles size={16} className="text-[#ffcb05]" />
+              <h3 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>
+                Featured Local Shops
+              </h3>
+            </div>
+            <button onClick={onOpenShopsModal} className="text-[10px] font-black uppercase text-[#ffcb05] tracking-widest hover:underline">
+              View Directory →
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {featuredShopsList.map(shop => (
+              <div
+                key={shop.id}
+                onClick={() => onSelectShop(shop)}
+                className={`${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg cursor-pointer group hover:border-[#ffcb05]/60 active:scale-[0.99] transition-all flex flex-col`}
+              >
+                <div className="relative h-44 overflow-hidden">
+                  <img src={shop.img} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <span className="absolute top-3 left-3 bg-[#ffcb05] text-black text-[8px] font-black uppercase px-2.5 py-0.5 rounded-full shadow-md">
+                    Featured Spotlight
+                  </span>
+                  <span className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-md">
+                    {shop.category}
+                  </span>
+                </div>
+                <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
+                  <div>
+                    <h4 className={`text-base font-bold uppercase tracking-tight ${theme.text}`}>
+                      {shop.name}
+                    </h4>
+                    <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${theme.secondaryText}`}>
+                      {shop.shortDesc}
+                    </p>
+                  </div>
+
+                  {shop.specials && shop.specials.length > 0 && (
+                    <div className="pt-2 border-t border-white/5">
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#b45309] dark:text-[#ffcb05]">
+                        <Tag size={12} />
+                        <span className="truncate">{shop.specials[0]}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="pt-1 flex items-center justify-between text-[10px]">
+                    <span className={`${theme.secondaryText} truncate max-w-[170px]`}>📍 {shop.address}</span>
+                    <span className="text-[#0284c7] dark:text-[#38bdf8] font-black uppercase">Details & Deals →</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
 
-// --- FLAVORS VIEW ---
 const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining, onOpenPartnerModal }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -2296,12 +2858,10 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
   );
 };
 
-// --- A2 GUIDE VIEW (CLEAN HEADER, FEATURED SPOTLIGHT & FULL 2-COLUMN GRID) ---
 const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, onOpenPartnerModal, onOpenContributorModal }) => {
   const [activeCat, setActiveCat] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filtered stories preserving all posts
   const filteredPosts = useMemo(() => {
     let list = posts || [];
     if (activeCat !== 'All') {
@@ -2318,12 +2878,10 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
     return list;
   }, [posts, activeCat, searchQuery]);
 
-  // Featured story (prefers highlight or first in filtered list)
   const featuredStory = useMemo(() => {
     return filteredPosts.find(p => p.isHighlight) || filteredPosts[0];
   }, [filteredPosts]);
 
-  // Remaining articles for the large grid
   const remainingStories = useMemo(() => {
     if (!featuredStory) return filteredPosts;
     return filteredPosts.filter(p => p.id !== featuredStory.id);
@@ -2332,7 +2890,6 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
   return (
     <div className="animate-fade space-y-7 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
       
-      {/* 1. CLEAN HEADER & SUBTITLE */}
       <div className="text-center px-4 w-full space-y-2">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>
           A2 Guide
@@ -2341,7 +2898,6 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
           Stories, Tips & Field Notes
         </p>
 
-        {/* SEARCH BAR & CONTRIBUTOR BUTTON */}
         <div className="flex items-center gap-2 pt-3">
           <div className="relative flex-1">
             <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -2363,7 +2919,6 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
           </button>
         </div>
 
-        {/* CATEGORY FILTER CHIPS */}
         <div className="flex overflow-x-auto gap-2 pt-2 no-scrollbar">
           {CATEGORIES_GUIDE.map(cat => (
             <button
@@ -2388,7 +2943,6 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
       ) : (
         <div className="px-1 space-y-6 w-full">
           
-          {/* 2. FEATURED LEAD STORY (FULL WIDTH) */}
           {featuredStory && (
             <div
               onClick={() => setSelectedItem(featuredStory)}
@@ -2434,7 +2988,6 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
             </div>
           )}
 
-          {/* 3. PROMINENT 2-COLUMN STORY GRID */}
           {remainingStories.length > 0 && (
             <div className="grid grid-cols-2 gap-x-4 gap-y-7 w-full pt-1">
               {remainingStories.map(art => {
@@ -2481,7 +3034,6 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
         </div>
       )}
 
-      {/* 4. ACTIONS */}
       <div className="grid grid-cols-2 gap-3.5 px-1 pt-4">
         <div 
           onClick={() => onOpenPartnerModal('general')}
@@ -2527,12 +3079,14 @@ export default function App() {
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedPark, setSelectedPark] = useState(null);
+  const [selectedShop, setSelectedShop] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
   const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
   const [partnerModalCategory, setPartnerModalCategory] = useState('restaurant');
   const [isContributorModalOpen, setIsContributorModalOpen] = useState(false);
   const [isParksModalOpen, setIsParksModalOpen] = useState(false);
   const [isTransitModalOpen, setIsTransitModalOpen] = useState(false);
+  const [isShopsModalOpen, setIsShopsModalOpen] = useState(false);
    
   const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
   const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
@@ -2566,11 +3120,19 @@ export default function App() {
     setIsTransitModalOpen(true);
   };
 
+  const openShopsModal = () => {
+    setIsShopsModalOpen(true);
+  };
+
   const handleParkSelect = (park) => {
     setSelectedPark(park);
   };
 
-  // --- Auth Handlers ---
+  const handleShopSelect = (shop) => {
+    setSelectedShop(shop);
+  };
+
+  // Auth Handlers
   const handleLogin = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (error) { console.error("Login Error:", error); } };
   const handleLogout = async () => { try { await signOut(auth); } catch (error) { console.error("Logout Error:", error); } };
 
@@ -2684,6 +3246,22 @@ export default function App() {
             theme={theme}
           />
 
+          {/* SHOPS DIRECTORY MODAL */}
+          <ShopsDirectoryModal
+            isOpen={isShopsModalOpen}
+            onClose={() => setIsShopsModalOpen(false)}
+            theme={theme}
+            onSelectShop={handleShopSelect}
+          />
+
+          {/* SHOP DETAIL MODAL */}
+          <ShopDetailModal
+            isOpen={!!selectedShop}
+            onClose={() => setSelectedShop(null)}
+            shop={selectedShop}
+            theme={theme}
+          />
+
           <PartnerListingModal 
             isOpen={isPartnerModalOpen} 
             onClose={() => setIsPartnerModalOpen(false)} 
@@ -2717,6 +3295,8 @@ export default function App() {
                   onOpenPartnerModal={openPartnerModal}
                   onOpenParksModal={openParksModal}
                   onOpenTransitModal={openTransitModal}
+                  onOpenShopsModal={openShopsModal}
+                  onSelectShop={handleShopSelect}
                 />
               )}
               {view === 'journal' && (
