@@ -1056,7 +1056,7 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
                     </div>
                     <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>{park.name}</h4>
                     <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>{park.shortDesc}</p>
-                    
+                     
                     <div className="flex items-center gap-2 mt-2 flex-wrap text-[10px]">
                       {park.dogFriendly && (
                         <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
@@ -1154,7 +1154,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
 
           <div className="space-y-3 pt-2">
             <h4 className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Comments ({comments.length})</h4>
-            
+             
             {comments.length > 0 ? (
               comments.map(c => (
                 <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
@@ -1628,7 +1628,7 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id);
-   
+  
   return (
     <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
@@ -2610,7 +2610,7 @@ const HomeView = ({
           <Sparkles size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
         </div>
-          
+         
         {featuredPosts && featuredPosts.length > 0 && (
           <div className="px-1 relative">
             <div onClick={() => setSelectedItem(featuredPosts[highlightIdx])} className="relative h-[420px] rounded-[48px] overflow-hidden shadow-2xl cursor-pointer group border border-white/10">
@@ -2856,7 +2856,7 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
 
   return (
     <div className="animate-fade space-y-7 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
-      
+       
       <div className="text-center px-4 w-full space-y-2">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>
           A2 Guide
@@ -2909,7 +2909,7 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
         </div>
       ) : (
         <div className="px-1 space-y-6 w-full">
-          
+           
           {featuredStory && (
             <div
               onClick={() => setSelectedItem(featuredStory)}
@@ -3108,13 +3108,17 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        const docSnap = await getDoc(doc(db, 'users', currentUser.uid));
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setFavorites((data.favorites || []).filter(f => f.type !== 'park' && !f.id?.startsWith('park-')));
-          setStats(data.stats || { water: 0, drinks: 0 });
-          setBucketList(data.bucketList || DEFAULT_BUCKET_ITEMS);
-          setVibeTags(data.vibeTags || []);
+        try {
+          const docSnap = await getDoc(doc(db, 'users', currentUser.uid));
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setFavorites((data.favorites || []).filter(f => f.type !== 'park' && !f.id?.startsWith('park-')));
+            setStats(data.stats || { water: 0, drinks: 0 });
+            setBucketList(data.bucketList || DEFAULT_BUCKET_ITEMS);
+            setVibeTags(data.vibeTags || []);
+          }
+        } catch (err) {
+          console.error("Error fetching user profile:", err);
         }
       } else {
         const sf = localStorage.getItem('a2v_favorites'); 
@@ -3128,28 +3132,45 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Sync Hooks
-  useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { favorites }, { merge: true }); else localStorage.setItem('a2v_favorites', JSON.stringify(favorites)); }, [favorites, user]);
+  // Sync profile data hooks
   useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { stats }, { merge: true }); else localStorage.setItem('a2v_stats', JSON.stringify(stats)); }, [stats, user]);
   useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { vibeTags }, { merge: true }); else localStorage.setItem('a2v_vibetags', JSON.stringify(vibeTags)); }, [vibeTags, user]);
   useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { bucketList }, { merge: true }); else localStorage.setItem('a2v_bucketlist', JSON.stringify(bucketList)); }, [bucketList, user]);
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view, activeTool]);
 
-  const toggleFavorite = (item) => {
+  // Updated toggleFavorite to instantly write updates to Firestore when logged in
+  const toggleFavorite = async (item) => {
     if (item.type === 'park' || PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-')) {
       return;
     }
+    
     const isAlreadyFavorited = (favorites || []).some(f => f.id === item.id);
+    let updatedFavorites;
+
     if (isAlreadyFavorited) { 
-      setFavorites(favorites.filter(f => f.id !== item.id)); 
+      updatedFavorites = favorites.filter(f => f.id !== item.id); 
     } else { 
       const itemToSave = { 
         ...item, 
         type: item.type || 'experience', 
         savedAt: Date.now() 
       }; 
-      setFavorites([...favorites, itemToSave]); 
+      updatedFavorites = [...favorites, itemToSave]; 
+    }
+
+    // Update local state immediately
+    setFavorites(updatedFavorites);
+
+    // Sync to Firestore if authenticated, otherwise use localStorage
+    if (user) {
+      try {
+        await setDoc(doc(db, 'users', user.uid), { favorites: updatedFavorites }, { merge: true });
+      } catch (err) {
+        console.error("Error syncing favorite to Firestore:", err);
+      }
+    } else {
+      localStorage.setItem('a2v_favorites', JSON.stringify(updatedFavorites));
     }
   };
 
@@ -3363,7 +3384,7 @@ export default function App() {
                        ))}
                      </div>
                    </div>
-                   
+                    
                    <div className="space-y-4 px-1 pt-4 w-full">
                       {shuffledExp && shuffledExp.length > 0 ? (
                         <>
@@ -3506,7 +3527,7 @@ export default function App() {
           ].map(v => {
             const isActive = !activeTool && view === v.id;
             return (
-              <button key={v.id} onClick={() => { setActiveTool(null); setView(v.id); }} className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-60 hover:opacity-100'}`} style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}>
+              <button key={v.id} onClick={() => { setActiveTool(null); setView(v.id); }} className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-115 opacity-100' : 'opacity-60 hover:opacity-100'}`} style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}>
                 <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
                 <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
               </button>
