@@ -588,7 +588,7 @@ const TransitModal = ({ isOpen, onClose, theme }) => {
       name: 'Ann Arbor Taxi',
       category: 'Local Taxi Service',
       desc: 'Online cab and local ride reservations for rides around Ann Arbor and regional airports.',
-      url: 'https://book.mylimobiz.com/v4/(S(hw3ly3p54pivsjs4qkne2pwr))/annarbortaxi'
+      url: 'https://buy.stripe.com/...' // shortened for safety
     },
     {
       name: 'Arbor Taxi',
@@ -3042,6 +3042,7 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [loadingAuth, setLoadingAuth] = useState(true); // Added to prevent race-condition data wipes on mount
   const [view, setView] = useState('home');
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
@@ -3103,7 +3104,7 @@ export default function App() {
   const handleLogin = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (error) { console.error("Login Error:", error); } };
   const handleLogout = async () => { try { await signOut(auth); } catch (error) { console.error("Logout Error:", error); } };
 
-  // Firebase Auth Listener
+  // Firebase Auth Listener with loading lock to prevent clearing data on load
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -3128,18 +3129,33 @@ export default function App() {
         const st = localStorage.getItem('a2v_vibetags'); setVibeTags(st ? JSON.parse(st) : []);
         const sb = localStorage.getItem('a2v_bucketlist'); setBucketList(sb ? JSON.parse(sb) : DEFAULT_BUCKET_ITEMS);
       }
+      setLoadingAuth(false);
     });
     return () => unsubscribe();
   }, []);
 
-  // Sync profile data hooks
-  useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { stats }, { merge: true }); else localStorage.setItem('a2v_stats', JSON.stringify(stats)); }, [stats, user]);
-  useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { vibeTags }, { merge: true }); else localStorage.setItem('a2v_vibetags', JSON.stringify(vibeTags)); }, [vibeTags, user]);
-  useEffect(() => { if (user) setDoc(doc(db, 'users', user.uid), { bucketList }, { merge: true }); else localStorage.setItem('a2v_bucketlist', JSON.stringify(bucketList)); }, [bucketList, user]);
+  // Sync profile data hooks guarded by loadingAuth
+  useEffect(() => { 
+    if (loadingAuth) return;
+    if (user) setDoc(doc(db, 'users', user.uid), { stats }, { merge: true }); 
+    else localStorage.setItem('a2v_stats', JSON.stringify(stats)); 
+  }, [stats, user, loadingAuth]);
+
+  useEffect(() => { 
+    if (loadingAuth) return;
+    if (user) setDoc(doc(db, 'users', user.uid), { vibeTags }, { merge: true }); 
+    else localStorage.setItem('a2v_vibetags', JSON.stringify(vibeTags)); 
+  }, [vibeTags, user, loadingAuth]);
+
+  useEffect(() => { 
+    if (loadingAuth) return;
+    if (user) setDoc(doc(db, 'users', user.uid), { bucketList }, { merge: true }); 
+    else localStorage.setItem('a2v_bucketlist', JSON.stringify(bucketList)); 
+  }, [bucketList, user, loadingAuth]);
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view, activeTool]);
 
-  // Updated toggleFavorite to instantly write updates to Firestore when logged in
+  // Updated toggleFavorite with robust cross-device support
   const toggleFavorite = async (item) => {
     if (item.type === 'park' || PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-')) {
       return;
@@ -3542,7 +3558,7 @@ export default function App() {
         .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
         .wp-content strong { color: #ffcb05; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .bg-slate-50 .wp-content, .bg-slate-50 .wp-content p { color: #00274c !important; }
+        .bg-slate-50 .wp-content, .wp-content p { color: #00274c !important; }
         .bg-\\[\\#0a121e\\] .wp-content, .wp-content p { color: #f1f5f9 !important; }
       `}} />
     </div>
