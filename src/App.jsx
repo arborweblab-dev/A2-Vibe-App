@@ -24,24 +24,6 @@ import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
 
-const MISS_KIM_FALLBACK = {
-  id: 'miss-kim-korean',
-  title: 'Miss Kim',
-  name: 'Miss Kim',
-  cuisine: 'Korean / Local Sourced',
-  category: 'Korean',
-  tier: 'featured',
-  isFeatured: true,
-  lat: 42.28462,
-  lng: -83.746241,
-  address: '415 N 5th Ave, Ann Arbor, MI 48104',
-  url: 'https://misskimannarbor.com',
-  img: 'https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=800&q=80',
-  shortDesc: 'Traditional Korean dishes made with local Michigan farm ingredients led by Chef Ji Hye Kim.',
-  longDesc: '<p>Located in the heart of Kerrytown, Miss Kim serves authentic, seasonal Korean cuisine guided by Chef Ji Hye Kim. Grounded in regional Korean heritage recipes and made with ingredients direct from local Washtenaw county growers.</p>',
-  neighborhood: 'Kerrytown'
-};
-
 const SHOPS_DATA = [
   {
     id: 'shop-vibe-a2',
@@ -1545,10 +1527,10 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
             <div className={`${theme.isDark ? 'bg-[#00274c]/40 text-[#34a4b8]' : 'bg-sky-100 text-[#0284c7]'} px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest`}>
               {Array.isArray(item.category) ? item.category.join(' • ') : (item.category || item.neighborhood || 'City Guide')}
             </div>
-            {item.lat && item.lng && (
-              <div className="bg-slate-800 text-[#38bdf8] px-3 py-1 rounded-xl text-[10px] font-bold">
-                📍 {item.lat.toFixed(4)}, {item.lng.toFixed(4)}
-              </div>
+            {item.month && (
+               <div className="bg-[#a855f7]/20 text-purple-700 dark:text-[#a855f7] px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest">
+                 {item.month}
+               </div>
             )}
           </div>
 
@@ -2061,7 +2043,7 @@ const HubView = ({
               style={{ width: `${Math.min(100, (points % 100) || 10)}%` }} 
             />
           </div>
-          <p className="text-[10px] text-slate-400">Earn points by exploring local partners like Miss Kim, saving spots, and contributing stories.</p>
+          <p className="text-[10px] text-slate-400">Earn points by exploring local spots, saving favorites, and contributing community stories.</p>
         </div>
 
         <div className={`${theme.card} p-5 rounded-[32px] border ${theme.border} flex flex-col gap-4 text-center shadow-lg mx-1`}>
@@ -2503,7 +2485,7 @@ const HomeView = ({
             <div key={res.id} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`${theme.card} min-w-[220px] h-44 rounded-[24px] border ${theme.border} overflow-hidden shadow-sm active:scale-95 transition-transform cursor-pointer relative group`}>
               {res.img ? <img src={res.img} className="w-full h-28 object-cover" alt="" /> : <div className={`w-full h-28 ${theme.isDark ? 'bg-[#00274c]/20' : 'bg-slate-100'} flex items-center justify-center`}><Building size={24} className="text-[#ffcb05]/40" /></div>}
               <div className="p-4">
-                <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title}</h4>
+                <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title || res.name}</h4>
                 <p className="text-[8px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em] mt-1">{res.cuisine || 'Gourmet A2'}</p>
               </div>
               <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/20 text-white' : 'bg-black/5 text-slate-600')}`}><Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} /></button>
@@ -2931,7 +2913,7 @@ export default function App() {
   const [points, setPoints] = useState(() => { const s = localStorage.getItem('a2v_points'); return s ? parseInt(s, 10) : 50; });
 
   const [itineraries, setItineraries] = useState(happeningsData);
-  const [dining, setDining] = useState(() => [MISS_KIM_FALLBACK, ...eatsData]);
+  const [dining, setDining] = useState(eatsData);
   const [posts, setPosts] = useState(journalData);
   const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
    
@@ -2955,22 +2937,22 @@ export default function App() {
   const handleLogin = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (error) { console.error("Login Error:", error); } };
   const handleLogout = async () => { try { await signOut(auth); } catch (error) { console.error("Logout Error:", error); } };
 
-  // Listen for Miss Kim live collection in Firestore
+  // Listen for Miss Kim documents in Firestore and merge normally into dining without overriding featured spots
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'Miss Kim'), (snapshot) => {
       if (!snapshot.empty) {
         const firestoreSpots = snapshot.docs.map(doc => ({
           id: doc.id,
-          title: doc.data().title || doc.data().name || 'Miss Kim',
+          title: doc.data().title || doc.data().name || doc.id,
           ...doc.data()
         }));
         setDining(prev => {
-          const rest = prev.filter(d => d.id !== 'miss-kim-korean' && !firestoreSpots.some(fs => fs.id === d.id));
-          return [...firestoreSpots, ...rest];
+          const rest = prev.filter(d => !firestoreSpots.some(fs => fs.id === d.id));
+          return [...rest, ...firestoreSpots];
         });
       }
     }, (error) => {
-      console.warn("Miss Kim collection live fetch warning:", error);
+      console.warn("Miss Kim collection listener:", error);
     });
     return () => unsubscribe();
   }, []);
