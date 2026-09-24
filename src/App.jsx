@@ -4,7 +4,7 @@ import {
   addDoc, updateDoc, arrayUnion, arrayRemove, 
   onSnapshot, query, orderBy, limit, increment 
 } from 'firebase/firestore';
-import { app } from './firebase'; // Adjust path if needed
+import { app } from './firebase';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -23,6 +23,24 @@ import {
 import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
+
+const MISS_KIM_FALLBACK = {
+  id: 'miss-kim-korean',
+  title: 'Miss Kim',
+  name: 'Miss Kim',
+  cuisine: 'Korean / Local Sourced',
+  category: 'Korean',
+  tier: 'featured',
+  isFeatured: true,
+  lat: 42.28462,
+  lng: -83.746241,
+  address: '415 N 5th Ave, Ann Arbor, MI 48104',
+  url: 'https://misskimannarbor.com',
+  img: 'https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=800&q=80',
+  shortDesc: 'Traditional Korean dishes made with local Michigan farm ingredients led by Chef Ji Hye Kim.',
+  longDesc: '<p>Located in the heart of Kerrytown, Miss Kim serves authentic, seasonal Korean cuisine guided by Chef Ji Hye Kim. Grounded in regional Korean heritage recipes and made with ingredients direct from local Washtenaw county growers.</p>',
+  neighborhood: 'Kerrytown'
+};
 
 const SHOPS_DATA = [
   {
@@ -417,7 +435,6 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
         </div>
 
         <div className="p-6 space-y-6 flex-1 overflow-y-auto">
-          
           {selectedCat === 'All' && !searchQuery && (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
@@ -582,13 +599,7 @@ const TransitModal = ({ isOpen, onClose, theme }) => {
       name: 'FlexRide (Via)',
       category: 'On-Demand Microtransit',
       desc: 'Affordable, shared on-demand rides connecting designated Ann Arbor service zones.',
-      url: 'https://city.ridewithvia.com/ann-arbor#:~:text=Getting%20around%20Ann%20Arbor%20has,work%2C%20school%2C%20errands%2C%20and%20more.'
-    },
-    {
-      name: 'Ann Arbor Taxi',
-      category: 'Local Taxi Service',
-      desc: 'Online cab and local ride reservations for rides around Ann Arbor and regional airports.',
-      url: 'https://buy.stripe.com/...' // shortened for safety
+      url: 'https://city.ridewithvia.com/ann-arbor'
     },
     {
       name: 'Arbor Taxi',
@@ -1056,7 +1067,7 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
                     </div>
                     <h4 className={`font-bold text-sm uppercase tracking-tight truncate mt-1 ${theme.text}`}>{park.name}</h4>
                     <p className={`text-xs mt-0.5 line-clamp-1 ${theme.secondaryText}`}>{park.shortDesc}</p>
-                     
+                    
                     <div className="flex items-center gap-2 mt-2 flex-wrap text-[10px]">
                       {park.dogFriendly && (
                         <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
@@ -1154,7 +1165,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
 
           <div className="space-y-3 pt-2">
             <h4 className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Comments ({comments.length})</h4>
-             
+            
             {comments.length > 0 ? (
               comments.map(c => (
                 <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
@@ -1304,7 +1315,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                       <span className={`text-xs font-black uppercase ${theme.text}`}>Annual Membership</span>
                       <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[8px] font-black px-2 py-0.5 rounded">SAVE $120 / YR</span>
                     </div>
-                    <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-1">$25 / mo <span className={`${theme.secondaryText} font-normal`}>($300 billed yearly - Save $10/mo vs monthly)</span></p>
+                    <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-1">$25 / mo <span className={`${theme.secondaryText} font-normal`}>($300 billed yearly)</span></p>
                   </div>
                   <button
                     onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopBoostedAnnual : STRIPE_LINKS.restaurantBoostedAnnual)}
@@ -1329,37 +1340,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                     <span>Select</span>
                     <ExternalLink size={14} />
                   </button>
-                </div>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Standalone Promos</p>
-                <div className="grid grid-cols-1 gap-2.5">
-                  <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
-                    <div>
-                      <p className={`text-xs font-bold ${theme.text}`}>A2 Guide Feature Story</p>
-                      <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published editorial feature</p>
-                    </div>
-                    <button
-                      onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
-                      className={`px-3 py-1.5 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-[#ffcb05] border-white/10' : 'bg-white hover:bg-slate-200 text-[#b45309] border-slate-300'} text-[11px] font-black rounded-lg border`}
-                    >
-                      $45
-                    </button>
-                  </div>
-
-                  <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
-                    <div>
-                      <p className={`text-xs font-bold ${theme.text}`}>Social Media Blast</p>
-                      <p className={`text-[10px] ${theme.secondaryText}`}>Spotlight story & grid post to local audience</p>
-                    </div>
-                    <button
-                      onClick={() => openStripeCheckout(STRIPE_LINKS.promoSMSocial)}
-                      className={`px-3 py-1.5 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-[#38bdf8] border-white/10' : 'bg-white hover:bg-slate-200 text-[#0284c7] border-slate-300'} text-[11px] font-black rounded-lg border`}
-                    >
-                      $25
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -1396,63 +1376,6 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                     <ExternalLink size={13} />
                   </button>
                 </div>
-
-                <ul className="text-xs text-slate-400 space-y-1 pt-1 border-t border-white/5">
-                  <li className="flex items-center gap-2">✓ Verified placement in A2 Happenings calendar & monthly filter</li>
-                  <li className="flex items-center gap-2">✓ Date, time, venue address, and Google Maps pin</li>
-                  <li className="flex items-center gap-2">✓ Direct ticket / RSVP registration URL</li>
-                  <li className="flex items-center gap-2">✓ Event cover photo and description</li>
-                </ul>
-              </div>
-
-              <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/40 text-white space-y-3 shadow-xl">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="bg-[#ffcb05] text-black px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest">
-                        Top Visibility
-                      </span>
-                      <span className="bg-[#38bdf8] text-black text-[8px] font-black px-1.5 py-0.5 rounded">
-                        TOP PICK
-                      </span>
-                    </div>
-                    <h4 className="text-base font-header font-black uppercase italic tracking-tight mt-1.5 text-white">
-                      Featured Event Showcase
-                    </h4>
-                    <p className="text-lg font-black text-[#ffcb05] mt-0.5">
-                      $45 <span className="text-[11px] font-normal text-slate-300">one-time</span>
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => openStripeCheckout(STRIPE_LINKS.eventFeatured)}
-                    className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 mt-1"
-                  >
-                    <span>Feature ($45)</span>
-                    <ExternalLink size={13} />
-                  </button>
-                </div>
-
-                <ul className="text-xs text-slate-300 space-y-1 pt-1 border-t border-white/10">
-                  <li className="flex items-center gap-2">✓ <strong>Top-of-App Carousel Billboard</strong> placement on Happenings</li>
-                  <li className="flex items-center gap-2">✓ <strong>"Top Pick" badge</strong> on event cards and search results</li>
-                  <li className="flex items-center gap-2">✓ Priority listing over standard events all month</li>
-                  <li className="flex items-center gap-2">✓ Multi-photo gallery & extended event narrative</li>
-                  <li className="flex items-center gap-2">✓ <strong>Social media promotion blast</strong> across our local channels</li>
-                </ul>
-              </div>
-
-              <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-between`}>
-                <div>
-                  <p className={`text-xs font-bold ${theme.text}`}>Need a Dedicated Editorial Story?</p>
-                  <p className={`text-[10px] ${theme.secondaryText}`}>Permanent published feature story in the A2 Guide</p>
-                </div>
-                <button
-                  onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
-                  className={`px-3 py-1.5 ${theme.isDark ? 'bg-white/10 hover:bg-white/20 text-[#ffcb05] border-white/10' : 'bg-white hover:bg-slate-200 text-[#b45309] border-slate-300'} text-[11px] font-black rounded-lg border flex items-center gap-1`}
-                >
-                  <span>$45</span>
-                  <ExternalLink size={11} />
-                </button>
               </div>
             </div>
           )}
@@ -1536,16 +1459,6 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} space-y-2 border`}>
-                <div className="flex items-center gap-2 text-[#a855f7]">
-                  <PenTool size={16} />
-                  <h4 className="text-xs font-black uppercase tracking-wider">A2 Local Contributor Board</h4>
-                </div>
-                <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
-                  Share news, stories, townie tips, club announcements, or independent journalism. Free, zero tracking, and closed within the Tree Town community.
-                </p>
-              </div>
-
               <div>
                 <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Channel / Topic</label>
                 <div className="flex flex-wrap gap-2">
@@ -1569,44 +1482,21 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Free Saturday Solar Eclipse Viewing at Nichols Arb"
+                  placeholder="e.g. Saturday Pop-Up Market at Kerrytown"
                   className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
                 />
               </div>
 
               <div>
-                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Story / Announcement Details</label>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Details</label>
                 <textarea
                   required
                   rows={5}
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="What's happening? Who is invited? Where, when, and why does it matter to Ann Arbor?"
+                  placeholder="What's happening? Who is invited? Where, when, and why does it matter?"
                   className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs leading-relaxed outline-none focus:border-[#ffcb05]`}
                 />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Author / Group Name</label>
-                  <input
-                    type="text"
-                    value={authorName}
-                    onChange={(e) => setAuthorName(e.target.value)}
-                    placeholder="e.g. Kerrytown Resident"
-                    className={`w-full p-3 rounded-xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none`}
-                  />
-                </div>
-                <div>
-                  <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Contact / Email (Optional)</label>
-                  <input
-                    type="text"
-                    value={authorContact}
-                    onChange={(e) => setAuthorContact(e.target.value)}
-                    placeholder="contact@email.com"
-                    className={`w-full p-3 rounded-xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none`}
-                  />
-                </div>
               </div>
 
               <button
@@ -1639,7 +1529,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           </h3>
           <div className="flex items-center gap-2">
             <button onClick={() => toggleFavorite(item)} className={`p-2.5 rounded-full transition-all duration-300 ${theme.isDark ? 'bg-white/5' : 'bg-black/5'} active:scale-90`}>
-              <Heart size={22} className="text-[#ffcb05] drop-shadow-[0_0_8px_rgba(255,203,5,0.5)]" fill={isFavorited ? "#ffcb05" : "none"} strokeWidth={2.5}/>
+              <Heart size={22} className="text-[#ffcb05]" fill={isFavorited ? "#ffcb05" : "none"} strokeWidth={2.5}/>
             </button>
             <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
               <X size={22}/>
@@ -1655,10 +1545,10 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
             <div className={`${theme.isDark ? 'bg-[#00274c]/40 text-[#34a4b8]' : 'bg-sky-100 text-[#0284c7]'} px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest`}>
               {Array.isArray(item.category) ? item.category.join(' • ') : (item.category || item.neighborhood || 'City Guide')}
             </div>
-            {item.month && (
-               <div className="bg-[#a855f7]/20 text-purple-700 dark:text-[#a855f7] px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest">
-                 {item.month}
-               </div>
+            {item.lat && item.lng && (
+              <div className="bg-slate-800 text-[#38bdf8] px-3 py-1 rounded-xl text-[10px] font-bold">
+                📍 {item.lat.toFixed(4)}, {item.lng.toFixed(4)}
+              </div>
             )}
           </div>
 
@@ -2018,7 +1908,7 @@ const HubView = ({
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
   vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
-  onOpenShopsModal, onSelectShop
+  onOpenShopsModal, onSelectShop, points, onEarnPoints
 }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
@@ -2139,6 +2029,41 @@ const HubView = ({
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
 
+        {/* LOYALTY POINTS REWARDS PASSPORT */}
+        <div className="p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] border border-[#ffcb05]/40 shadow-2xl text-white space-y-4 mx-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Award className="text-[#ffcb05]" size={22} />
+              <span className="text-xs font-black uppercase tracking-[0.2em] text-[#ffcb05]">A2 Loyalty Passport</span>
+            </div>
+            <span className="bg-[#ffcb05]/20 text-[#ffcb05] text-[10px] font-black px-3 py-1 rounded-full uppercase">
+              {points >= 100 ? 'Townie Elite' : 'Vibe Explorer'}
+            </span>
+          </div>
+
+          <div className="flex items-end justify-between">
+            <div>
+              <p className="text-4xl font-header font-black text-white">{points}</p>
+              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Accumulated Vibe Points</p>
+            </div>
+            <button
+              onClick={onEarnPoints}
+              className="px-4 py-2.5 bg-[#ffcb05] text-black font-black uppercase text-xs rounded-xl shadow-lg active:scale-95 transition-all flex items-center gap-1.5"
+            >
+              <Sparkles size={14} />
+              <span>Check In (+10)</span>
+            </button>
+          </div>
+
+          <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+            <div 
+              className="bg-[#ffcb05] h-full rounded-full transition-all duration-500" 
+              style={{ width: `${Math.min(100, (points % 100) || 10)}%` }} 
+            />
+          </div>
+          <p className="text-[10px] text-slate-400">Earn points by exploring local partners like Miss Kim, saving spots, and contributing stories.</p>
+        </div>
+
         <div className={`${theme.card} p-5 rounded-[32px] border ${theme.border} flex flex-col gap-4 text-center shadow-lg mx-1`}>
           {user ? (
             <>
@@ -2163,7 +2088,7 @@ const HubView = ({
         </div>
 
         <div className="space-y-8">
-          {/* 1. EATS FAVS */}
+          {/* EATS FAVS */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -2190,7 +2115,7 @@ const HubView = ({
             </div>
           </div>
 
-          {/* 2. SHOP FAVS */}
+          {/* SHOP FAVS */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -2234,7 +2159,7 @@ const HubView = ({
             </div>
           </div>
 
-          {/* 3. HAPPENINGS FAVS */}
+          {/* HAPPENINGS FAVS */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -2263,7 +2188,7 @@ const HubView = ({
             </div>
           </div>
 
-          {/* 4. GUIDE FAVS */}
+          {/* GUIDE FAVS */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center gap-2">
@@ -2293,7 +2218,7 @@ const HubView = ({
           </div>
         </div>
 
-        {/* URBAN AND FUN TOOLS WITH LOCAL SHOPS BUTTON */}
+        {/* URBAN AND FUN TOOLS */}
         <section className={`space-y-5 w-full pt-4 border-t ${theme.border}`}>
           <div className="flex items-center gap-2 px-1">
             <Sparkles size={18} className="text-[#0284c7] dark:text-[#34a4b8]" />
@@ -2327,24 +2252,6 @@ const HubView = ({
             ))}
           </div>
         </section>
-
-        {/* BOTTOM PROMOTION CTA */}
-        <div className="pt-2">
-          <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/20 flex items-center justify-between shadow-xl">
-            <div className="space-y-1 text-left">
-              <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest block">Promote In Ann Arbor</span>
-              <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Shop, Flavor, Happening, Or Event</h4>
-              <p className="text-[11px] text-slate-300">Feature your shop, eatery, pop-up, workshop, or community gathering across A2 Vibe.</p>
-            </div>
-            <button
-              onClick={() => onOpenPartnerModal('restaurant')}
-              className="p-3.5 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
-              title="Add your listing"
-            >
-              <Plus size={18} />
-            </button>
-          </div>
-        </div>
 
         {/* COMMUNITY FORUM */}
         <section className={`space-y-6 w-full pt-8 border-t ${theme.border}`}>
@@ -2446,7 +2353,7 @@ const HubView = ({
                     </div>
                     <h4 className={`font-bold text-sm uppercase tracking-tight ${theme.text}`}>{post.title}</h4>
                     <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{post.content}</p>
-                     
+                    
                     <div className="flex items-center justify-between pt-2.5 border-t border-white/5 text-[10px]">
                       <div className="flex items-center gap-2">
                         <span className={`font-bold ${theme.secondaryText}`}>Spotted by {post.author}</span>
@@ -2552,7 +2459,7 @@ const HomeView = ({
         </div>
       </section>
 
-      {/* QUICK LAUNCH GRID WITH SHOPS BUTTON INCLUDED */}
+      {/* QUICK LAUNCH GRID */}
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
           <Ticket size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
@@ -2610,7 +2517,7 @@ const HomeView = ({
           <Sparkles size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
         </div>
-         
+        
         {featuredPosts && featuredPosts.length > 0 && (
           <div className="px-1 relative">
             <div onClick={() => setSelectedItem(featuredPosts[highlightIdx])} className="relative h-[420px] rounded-[48px] overflow-hidden shadow-2xl cursor-pointer group border border-white/10">
@@ -2633,7 +2540,7 @@ const HomeView = ({
         )}
       </section>
 
-      {/* SHOPS CTA & FEATURED SHOPS SECTION AT BOTTOM OF HOME */}
+      {/* FEATURED SHOPS */}
       <section className="space-y-6 pt-2">
         <div className="mx-1 p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#081f38] to-[#122842] border border-[#ffcb05]/40 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-2xl gap-4">
           <div className="space-y-1.5 text-left">
@@ -2659,7 +2566,6 @@ const HomeView = ({
           </button>
         </div>
 
-        {/* FEATURED SHOPS CARDS UNDER CTA */}
         <div className="space-y-3 px-1">
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center gap-2">
@@ -2738,7 +2644,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
   const filteredDining = useMemo(() => {
     if (!searchQuery) return dining;
     return dining.filter(d => 
-      d.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      (d.title || d.name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
       d.cuisine?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       d.neighborhood?.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -2768,7 +2674,7 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <span className="bg-[#ffcb05] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Spotlight</span>
-                <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{res.title}</h3>
+                <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{res.title || res.name}</h3>
                 <p className="text-[10px] font-black text-[#ffcb05] uppercase tracking-wider mt-1">{res.cuisine || 'Gourmet A2'}</p>
               </div>
             </div>
@@ -2787,9 +2693,9 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
             const isFavorited = (favorites || []).some(f => f.id === res.id && f.type === 'dining');
             return (
               <div key={res.id} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex gap-4 cursor-pointer shadow-md items-center group active:scale-[0.99] transition-transform`}>
-                <img src={res.img} className="w-24 h-24 rounded-2xl object-cover shadow-inner flex-shrink-0" alt={res.title} />
+                <img src={res.img} className="w-24 h-24 rounded-2xl object-cover shadow-inner flex-shrink-0" alt={res.title || res.name} />
                 <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{res.title}</h3>
+                  <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{res.title || res.name}</h3>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
                     <span className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md inline-block whitespace-nowrap">{res.cuisine || 'Eats'}</span>
                     {res.neighborhood && <span className="text-[10px] font-bold text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-wider truncate">{res.neighborhood}</span>}
@@ -2856,7 +2762,6 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
 
   return (
     <div className="animate-fade space-y-7 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
-       
       <div className="text-center px-4 w-full space-y-2">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>
           A2 Guide
@@ -2909,7 +2814,6 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
         </div>
       ) : (
         <div className="px-1 space-y-6 w-full">
-           
           {featuredStory && (
             <div
               onClick={() => setSelectedItem(featuredStory)}
@@ -3000,49 +2904,13 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
           )}
         </div>
       )}
-
-      <div className="grid grid-cols-2 gap-3.5 px-1 pt-4">
-        <div 
-          onClick={() => onOpenPartnerModal('general')}
-          className="rounded-[30px] p-4 flex flex-col justify-between cursor-pointer border border-[#38bdf8]/30 bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] shadow-lg group hover:border-[#38bdf8] active:scale-[0.98] transition-all"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2.5 bg-[#38bdf8]/15 text-[#38bdf8] rounded-xl">
-              <Calendar size={18} />
-            </div>
-            <ArrowRight size={16} className="text-[#38bdf8] group-hover:translate-x-1 transition-transform" />
-          </div>
-          <div className="space-y-0.5">
-            <span className="text-[8px] font-black uppercase text-[#38bdf8] tracking-widest block">City Schedule</span>
-            <h4 className="text-sm font-header font-black uppercase text-white leading-tight">Add Your Event</h4>
-            <p className="text-[10px] text-slate-300 leading-snug line-clamp-1">List shows, pop-ups, and meetups</p>
-          </div>
-        </div>
-
-        <div 
-          onClick={onOpenContributorModal}
-          className="rounded-[30px] p-4 flex flex-col justify-between cursor-pointer border border-[#a855f7]/30 bg-gradient-to-br from-[#00274c] via-[#1a0f30] to-[#0a121e] shadow-lg group hover:border-[#a855f7] active:scale-[0.98] transition-all"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2.5 bg-[#a855f7]/15 text-[#a855f7] rounded-xl">
-              <PenTool size={18} />
-            </div>
-            <ArrowRight size={16} className="text-[#a855f7] group-hover:translate-x-1 transition-transform" />
-          </div>
-          <div className="space-y-0.5">
-            <span className="text-[8px] font-black uppercase text-[#a855f7] tracking-widest block">Contributor Desk</span>
-            <h4 className="text-sm font-header font-black uppercase text-white leading-tight">Submit Story</h4>
-            <p className="text-[10px] text-slate-300 leading-snug line-clamp-1">Local reviews, tips, and articles</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [loadingAuth, setLoadingAuth] = useState(true); // Added to prevent race-condition data wipes on mount
+  const [loadingAuth, setLoadingAuth] = useState(true);
   const [view, setView] = useState('home');
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
@@ -3060,9 +2928,10 @@ export default function App() {
   const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
   const [bucketList, setBucketList] = useState(() => { const s = localStorage.getItem('a2v_bucketlist'); return s ? JSON.parse(s) : DEFAULT_BUCKET_ITEMS; });
   const [vibeTags, setVibeTags] = useState(() => { const s = localStorage.getItem('a2v_vibetags'); return s ? JSON.parse(s) : []; });
+  const [points, setPoints] = useState(() => { const s = localStorage.getItem('a2v_points'); return s ? parseInt(s, 10) : 50; });
 
   const [itineraries, setItineraries] = useState(happeningsData);
-  const [dining, setDining] = useState(eatsData);
+  const [dining, setDining] = useState(() => [MISS_KIM_FALLBACK, ...eatsData]);
   const [posts, setPosts] = useState(journalData);
   const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
    
@@ -3076,35 +2945,37 @@ export default function App() {
     setIsPartnerModalOpen(true);
   };
 
-  const openContributorModal = () => {
-    setIsContributorModalOpen(true);
-  };
+  const openContributorModal = () => setIsContributorModalOpen(true);
+  const openParksModal = () => setIsParksModalOpen(true);
+  const openTransitModal = () => setIsTransitModalOpen(true);
+  const openShopsModal = () => setIsShopsModalOpen(true);
+  const handleParkSelect = (park) => setSelectedPark(park);
+  const handleShopSelect = (shop) => setSelectedShop(shop);
 
-  const openParksModal = () => {
-    setIsParksModalOpen(true);
-  };
-
-  const openTransitModal = () => {
-    setIsTransitModalOpen(true);
-  };
-
-  const openShopsModal = () => {
-    setIsShopsModalOpen(true);
-  };
-
-  const handleParkSelect = (park) => {
-    setSelectedPark(park);
-  };
-
-  const handleShopSelect = (shop) => {
-    setSelectedShop(shop);
-  };
-
-  // Auth Handlers
   const handleLogin = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (error) { console.error("Login Error:", error); } };
   const handleLogout = async () => { try { await signOut(auth); } catch (error) { console.error("Logout Error:", error); } };
 
-  // Firebase Auth Listener with loading lock to prevent clearing data on load
+  // Listen for Miss Kim live collection in Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'Miss Kim'), (snapshot) => {
+      if (!snapshot.empty) {
+        const firestoreSpots = snapshot.docs.map(doc => ({
+          id: doc.id,
+          title: doc.data().title || doc.data().name || 'Miss Kim',
+          ...doc.data()
+        }));
+        setDining(prev => {
+          const rest = prev.filter(d => d.id !== 'miss-kim-korean' && !firestoreSpots.some(fs => fs.id === d.id));
+          return [...firestoreSpots, ...rest];
+        });
+      }
+    }, (error) => {
+      console.warn("Miss Kim collection live fetch warning:", error);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Auth Listener and User Profile Hydration
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -3117,6 +2988,9 @@ export default function App() {
             setStats(data.stats || { water: 0, drinks: 0 });
             setBucketList(data.bucketList || DEFAULT_BUCKET_ITEMS);
             setVibeTags(data.vibeTags || []);
+            if (typeof data.points === 'number') {
+              setPoints(data.points);
+            }
           }
         } catch (err) {
           console.error("Error fetching user profile:", err);
@@ -3128,13 +3002,30 @@ export default function App() {
         const ss = localStorage.getItem('a2v_stats'); setStats(ss ? JSON.parse(ss) : { water: 0, drinks: 0 });
         const st = localStorage.getItem('a2v_vibetags'); setVibeTags(st ? JSON.parse(st) : []);
         const sb = localStorage.getItem('a2v_bucketlist'); setBucketList(sb ? JSON.parse(sb) : DEFAULT_BUCKET_ITEMS);
+        const sp = localStorage.getItem('a2v_points'); setPoints(sp ? parseInt(sp, 10) : 50);
       }
       setLoadingAuth(false);
     });
     return () => unsubscribe();
   }, []);
 
-  // Sync profile data hooks guarded by loadingAuth
+  // Points incrementer function
+  const handleEarnPoints = async () => {
+    const earned = 10;
+    const newTotal = points + earned;
+    setPoints(newTotal);
+    localStorage.setItem('a2v_points', newTotal.toString());
+    if (user) {
+      try {
+        await updateDoc(doc(db, 'users', user.uid), {
+          points: increment(earned)
+        });
+      } catch (err) {
+        await setDoc(doc(db, 'users', user.uid), { points: newTotal }, { merge: true });
+      }
+    }
+  };
+
   useEffect(() => { 
     if (loadingAuth) return;
     if (user) setDoc(doc(db, 'users', user.uid), { stats }, { merge: true }); 
@@ -3155,7 +3046,6 @@ export default function App() {
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view, activeTool]);
 
-  // Updated toggleFavorite with robust cross-device support
   const toggleFavorite = async (item) => {
     if (item.type === 'park' || PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-')) {
       return;
@@ -3175,10 +3065,8 @@ export default function App() {
       updatedFavorites = [...favorites, itemToSave]; 
     }
 
-    // Update local state immediately
     setFavorites(updatedFavorites);
 
-    // Sync to Firestore if authenticated, otherwise use localStorage
     if (user) {
       try {
         await setDoc(doc(db, 'users', user.uid), { favorites: updatedFavorites }, { merge: true });
@@ -3207,7 +3095,7 @@ export default function App() {
     <div className={`min-h-screen ${theme.windowBg} font-sans transition-colors duration-500 flex flex-col items-center overflow-x-hidden`}>
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <div className={`w-full max-w-xl min-h-screen ${theme.appBg} relative shadow-2xl flex flex-col items-center border-x border-white/5`}>
-         
+        
         <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/90 backdrop-blur-xl border-b ${theme.border} px-5 py-5 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
           <div className="flex items-center gap-4 cursor-pointer" onClick={() => { setActiveTool(null); setView('home'); }}>
             <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black"><Building size={20}/></div>
@@ -3226,8 +3114,7 @@ export default function App() {
 
         <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
-           
-          {/* DEDICATED PARK DETAIL POPUP */}
+          
           <ParkDetailModal
             isOpen={!!selectedPark}
             onClose={() => setSelectedPark(null)}
@@ -3235,7 +3122,6 @@ export default function App() {
             theme={theme}
           />
 
-          {/* PARKS FINDER TOOL MODAL */}
           <ParksDirectoryModal
             isOpen={isParksModalOpen}
             onClose={() => setIsParksModalOpen(false)}
@@ -3243,14 +3129,12 @@ export default function App() {
             onSelectPark={handleParkSelect}
           />
 
-          {/* TRANSIT MODAL */}
           <TransitModal
             isOpen={isTransitModalOpen}
             onClose={() => setIsTransitModalOpen(false)}
             theme={theme}
           />
 
-          {/* SHOPS DIRECTORY MODAL */}
           <ShopsDirectoryModal
             isOpen={isShopsModalOpen}
             onClose={() => setIsShopsModalOpen(false)}
@@ -3261,7 +3145,6 @@ export default function App() {
             onOpenPartnerModal={openPartnerModal}
           />
 
-          {/* SHOP DETAIL MODAL */}
           <ShopDetailModal
             isOpen={!!selectedShop}
             onClose={() => setSelectedShop(null)}
@@ -3350,183 +3233,119 @@ export default function App() {
                   onOpenParksModal={openParksModal}
                   onOpenShopsModal={openShopsModal}
                   onSelectShop={handleShopSelect}
+                  points={points}
+                  onEarnPoints={handleEarnPoints}
                 />
               )}
-               
               {view === 'fun' && (
                 <div className="space-y-12 animate-fade w-full">
-                   <div className="text-center px-4">
-                     <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Happenings</h1>
-                   </div>
+                  <div className="text-center px-4">
+                    <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Happenings</h1>
+                  </div>
 
-                   {(() => {
-                     const featuredHappenings = (itineraries || []).filter(e => e.isFeatured);
-                     const displayFeatured = featuredHappenings.length > 0 ? featuredHappenings.slice(0, 5) : (itineraries || []).slice(0, 5);
-                     return (
-                       <div className="px-1 w-full">
-                         <div className="flex items-center gap-2 mb-4 px-2">
-                           <Zap size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
-                           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Events</h2>
-                         </div>
-                         <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
-                           {displayFeatured.map(exp => (
-                             <div key={`feat-${exp.id}`} onClick={()=>setSelectedItem(exp)} className={`min-w-[280px] h-48 ${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg snap-center relative group cursor-pointer flex-shrink-0`}>
-                               {exp.img && <img src={exp.img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />}
-                               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                               <div className="absolute bottom-4 left-4 right-4 text-white">
-                                 <span className="bg-[#38bdf8] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Top Pick</span>
-                                 <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{exp.name}</h3>
-                                 {exp.date && <p className="text-[10px] font-bold text-[#ffcb05] mt-0.5 truncate">{exp.date}</p>}
-                                 <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
-                                   {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
-                                 </span>
-                               </div>
-                             </div>
-                           ))}
-                         </div>
-                       </div>
-                     );
-                   })()}
-
-                   <div className="text-center px-4">
-                     <div className="flex overflow-x-auto gap-3 mt-6 mb-2 no-scrollbar px-1">
-                        {MONTHS_EXP.map((m) => (
-                           <button key={m} onClick={() => setActiveMonth(m)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeMonth === m ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{m}</button>
-                        ))}
-                     </div>
-                     <div className="flex overflow-x-auto gap-3 mb-2 no-scrollbar px-1">
-                       {CATEGORIES_EXP.map((cat) => (
-                         <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#38bdf8] border-[#38bdf8] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{cat}</button>
-                       ))}
-                     </div>
-                   </div>
-                    
-                   <div className="space-y-4 px-1 pt-4 w-full">
-                      {shuffledExp && shuffledExp.length > 0 ? (
-                        <>
-                          {shuffledExp.slice(0, activeExpCat === 'All' && activeMonth === 'All Months' ? visibleCount : shuffledExp.length).map(exp => (
-                            <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex flex-col sm:flex-row rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group active:scale-[0.99] transition-transform`}>
-                                <div className="sm:w-36 h-40 sm:h-auto relative flex-shrink-0">
-                                  {exp.img ? <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" /> : <div className={`w-full h-full ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={28} className="opacity-30" /></div>}
-                                  {exp.price && <span className="absolute bottom-3 left-3 sm:hidden bg-black/70 backdrop-blur-md text-[#ffcb05] text-[10px] font-black px-2.5 py-1 rounded-lg uppercase">{exp.price}</span>}
-                                </div>
-                                 
-                                <div className="flex-1 p-5 flex flex-col justify-between text-left space-y-3">
-                                   <div>
-                                     <div className="flex justify-between items-start gap-2">
-                                       <h4 className={`font-bold uppercase text-sm leading-tight ${theme.text} line-clamp-1 tracking-tight`}>{exp.name}</h4>
-                                       <div className="flex items-center gap-1">
-                                         <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : theme.secondaryText}`}>
-                                           <Heart size={16} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} />
-                                         </button>
-                                       </div>
-                                     </div>
-
-                                     {exp.date && (
-                                       <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">
-                                         <Calendar size={13} />
-                                         <span>{exp.date}</span>
-                                       </div>
-                                     )}
-
-                                     {exp.time && (
-                                       <div className={`flex items-center gap-1.5 text-[10px] font-medium ${theme.secondaryText} mt-0.5`}>
-                                         <Clock size={12} />
-                                         <span>{exp.time}</span>
-                                       </div>
-                                     )}
-
-                                     {exp.address && (
-                                       <div className={`flex items-center gap-1.5 text-[10px] ${theme.secondaryText} mt-0.5 truncate`}>
-                                         <MapPin size={12} className="flex-shrink-0" />
-                                         <span className="truncate">{exp.address}</span>
-                                       </div>
-                                     )}
-                                   </div>
-
-                                   <div className={`flex items-center justify-between pt-2 border-t ${theme.border}`}>
-                                     <span className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] hidden sm:inline-block">{exp.price || 'Free'}</span>
-                                     <span className="text-[9px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em]">
-                                       {Array.isArray(exp.category) ? exp.category[0] : exp.category}
-                                     </span>
-                                     <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-4 py-2 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
-                                   </div>
-                                </div>
+                  {(() => {
+                    const featuredHappenings = (itineraries || []).filter(e => e.isFeatured);
+                    const displayFeatured = featuredHappenings.length > 0 ? featuredHappenings.slice(0, 5) : (itineraries || []).slice(0, 5);
+                    return (
+                      <div className="px-1 w-full">
+                        <div className="flex items-center gap-2 mb-4 px-2">
+                          <Zap size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
+                          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Events</h2>
+                        </div>
+                        <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
+                          {displayFeatured.map(exp => (
+                            <div key={`feat-${exp.id}`} onClick={()=>setSelectedItem(exp)} className={`min-w-[280px] h-48 ${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg snap-center relative group cursor-pointer flex-shrink-0`}>
+                              {exp.img && <img src={exp.img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                              <div className="absolute bottom-4 left-4 right-4 text-white">
+                                <span className="bg-[#38bdf8] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Top Pick</span>
+                                <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{exp.name}</h3>
+                                {exp.date && <p className="text-[10px] font-bold text-[#ffcb05] mt-0.5 truncate">{exp.date}</p>}
+                                <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
+                                  {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
+                                </span>
+                              </div>
                             </div>
                           ))}
-                          {activeExpCat === 'All' && activeMonth === 'All Months' && visibleCount < (shuffledExp.length || 0) && (
-                            <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
-                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
-                          <div className="pt-6 space-y-3.5">
-                            <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#064e3b] via-[#043e2e] to-[#022c22] border border-emerald-500/30 flex items-center justify-between shadow-xl">
-                              <div className="space-y-1 text-left">
-                                <span className="text-[9px] font-black uppercase text-emerald-400 tracking-widest block">Explore Tree Town</span>
-                                <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Ann Arbor Park Finder</h4>
-                                <p className="text-[11px] text-emerald-100/80">Explore riverfront preserves, nature trails, dog-friendly paths, and playgrounds.</p>
-                              </div>
-                              <button
-                                onClick={openParksModal}
-                                className="p-3.5 bg-emerald-400 text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
-                                title="Open Park Finder"
-                              >
-                                <Trees size={18} />
-                              </button>
+                  <div className="text-center px-4">
+                    <div className="flex overflow-x-auto gap-3 mt-6 mb-2 no-scrollbar px-1">
+                      {MONTHS_EXP.map((m) => (
+                        <button key={m} onClick={() => setActiveMonth(m)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeMonth === m ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{m}</button>
+                      ))}
+                    </div>
+                    <div className="flex overflow-x-auto gap-3 mb-2 no-scrollbar px-1">
+                      {CATEGORIES_EXP.map((cat) => (
+                        <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#38bdf8] border-[#38bdf8] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{cat}</button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4 px-1 pt-4 w-full">
+                    {shuffledExp && shuffledExp.length > 0 ? (
+                      <>
+                        {shuffledExp.slice(0, activeExpCat === 'All' && activeMonth === 'All Months' ? visibleCount : shuffledExp.length).map(exp => (
+                          <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex flex-col sm:flex-row rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group active:scale-[0.99] transition-transform`}>
+                            <div className="sm:w-36 h-40 sm:h-auto relative flex-shrink-0">
+                              {exp.img ? <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" /> : <div className={`w-full h-full ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={28} className="opacity-30" /></div>}
+                              {exp.price && <span className="absolute bottom-3 left-3 sm:hidden bg-black/70 backdrop-blur-md text-[#ffcb05] text-[10px] font-black px-2.5 py-1 rounded-lg uppercase">{exp.price}</span>}
                             </div>
+                            
+                            <div className="flex-1 p-5 flex flex-col justify-between text-left space-y-3">
+                              <div>
+                                <div className="flex justify-between items-start gap-2">
+                                  <h4 className={`font-bold uppercase text-sm leading-tight ${theme.text} line-clamp-1 tracking-tight`}>{exp.name}</h4>
+                                  <div className="flex items-center gap-1">
+                                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : theme.secondaryText}`}>
+                                      <Heart size={16} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} />
+                                    </button>
+                                  </div>
+                                </div>
 
-                            <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
-                              <div className="space-y-1 text-left">
-                                <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Live Events & Gatherings</span>
-                                <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Happening or Event</h4>
-                                <p className="text-[11px] text-slate-300">Submit your concert, workshop, meetup, or festival to the community schedule.</p>
+                                {exp.date && (
+                                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">
+                                    <Calendar size={13} />
+                                    <span>{exp.date}</span>
+                                  </div>
+                                )}
+
+                                {exp.time && (
+                                  <div className={`flex items-center gap-1.5 text-[10px] font-medium ${theme.secondaryText} mt-0.5`}>
+                                    <Clock size={12} />
+                                    <span>{exp.time}</span>
+                                  </div>
+                                )}
+
+                                {exp.address && (
+                                  <div className={`flex items-center gap-1.5 text-[10px] ${theme.secondaryText} mt-0.5 truncate`}>
+                                    <MapPin size={12} className="flex-shrink-0" />
+                                    <span className="truncate">{exp.address}</span>
+                                  </div>
+                                )}
                               </div>
-                              <button
-                                onClick={() => openPartnerModal('general')}
-                                className="p-3.5 bg-[#38bdf8] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
-                                title="Add your event"
-                              >
-                                <Calendar size={18} />
-                              </button>
+
+                              <div className={`flex items-center justify-between pt-2 border-t ${theme.border}`}>
+                                <span className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] hidden sm:inline-block">{exp.price || 'Free'}</span>
+                                <span className="text-[9px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em]">
+                                  {Array.isArray(exp.category) ? exp.category[0] : exp.category}
+                                </span>
+                                <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-4 py-2 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+                              </div>
                             </div>
                           </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
-                          <div className="pt-4 space-y-3.5">
-                            <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#064e3b] via-[#043e2e] to-[#022c22] border border-emerald-500/30 flex items-center justify-between shadow-xl">
-                              <div className="space-y-1 text-left">
-                                <span className="text-[9px] font-black uppercase text-emerald-400 tracking-widest block">Explore Tree Town</span>
-                                <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Ann Arbor Park Finder</h4>
-                                <p className="text-[11px] text-emerald-100/80">Explore riverfront preserves, nature trails, dog-friendly paths, and playgrounds.</p>
-                              </div>
-                              <button
-                                onClick={openParksModal}
-                                className="p-3.5 bg-emerald-400 text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
-                                title="Open Park Finder"
-                              >
-                                <Trees size={18} />
-                              </button>
-                            </div>
-
-                            <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
-                              <div className="space-y-1 text-left">
-                                <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Live Events & Gatherings</span>
-                                <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Happening or Event</h4>
-                                <p className="text-[11px] text-slate-300">Submit your concert, workshop, meetup, or festival to the community schedule.</p>
-                              </div>
-                              <button
-                                onClick={() => openPartnerModal('general')}
-                                className="p-3.5 bg-[#38bdf8] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
-                                title="Add your event"
-                              >
-                                <Calendar size={18} />
-                              </button>
-                            </div>
-                          </div>
-                        </>
-                      )}
-                   </div>
+                        ))}
+                        {activeExpCat === 'All' && activeMonth === 'All Months' && visibleCount < (shuffledExp.length || 0) && (
+                          <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
+                        )}
+                      </>
+                    ) : (
+                      <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
+                    )}
+                  </div>
                 </div>
               )}
             </>
