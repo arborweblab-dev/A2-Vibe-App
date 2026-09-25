@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { 
-  doc, setDoc, getDoc, collection, 
+  getFirestore, doc, setDoc, getDoc, collection, 
   addDoc, updateDoc, arrayUnion, arrayRemove, 
-  onSnapshot, query, orderBy, limit, increment 
+  onSnapshot, query, orderBy, limit 
 } from 'firebase/firestore';
-import { app, auth, db } from './firebase';
+import { app } from './firebase';
+
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 import { 
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
@@ -21,20 +24,6 @@ import { journalData } from './data/journalData';
 import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
 
-// Haversine distance formula (in meters)
-function getDistanceInMeters(lat1, lon1, lat2, lon2) {
-  const R = 6371e3;
-  const toRad = (x) => (x * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
 const SHOPS_DATA = [
   {
     id: 'shop-vibe-a2',
@@ -44,16 +33,13 @@ const SHOPS_DATA = [
     tier: 'featured',
     rating: '4.9',
     address: '407 N 5th Ave, Ann Arbor, MI 48104',
-    lat: 42.28458,
-    lng: -83.74619,
     url: 'https://a2vibe.com',
     img: 'https://a2vibe.com/images/vibe-weed.jpg',
     shortDesc: 'Premier downtown cannabis dispensary offering elite strains, top-shelf edibles, concentrates, and knowledgeable budtenders.',
-    longDesc: '<p>Vibe Ann Arbor sets the benchmark for Tree Town recreational and medical cannabis. Conveniently located near Kerrytown, Vibe pairs a clean, welcoming retail showroom with curated terpene profiles, local craft flower, artisanal gummies, and high-potency concentrates. Staffed by friendly budtenders ready to walk you through cannabinoid balances and tailored experiences.</p>',
+    longDesc: '<p>Vibe Ann Arbor sets the benchmark for Tree Town recreational and medical cannabis. Conveniently located near Kerrytown, Vibe pairs a clean, welcoming retail showroom with curated terpene profiles, local craft flower, artisanal gummies, and high-potency concentrates.</p>',
     specials: [
       'First-time visitor 20% discount on boutique flower',
-      'Daily Happy Hour specials on pre-rolls and live rosin concentrates',
-      'Student and veteran appreciation discounts with valid ID'
+      'Daily Happy Hour specials on pre-rolls and live rosin concentrates'
     ],
     features: ['Recreational 21+', 'Medical Validated', 'Curbside Pickup', 'ATM On-Site', 'Wheelchair Accessible'],
     hours: 'Mon - Sun: 9:00 AM - 9:00 PM'
@@ -66,8 +52,6 @@ const SHOPS_DATA = [
     tier: 'featured',
     rating: '4.9',
     address: '1115 Broadway St, Ann Arbor, MI 48105',
-    lat: 42.2907,
-    lng: -83.7381,
     url: 'https://informationentropy.com',
     img: 'https://placehold.co/800x600/00274c/ffcb05?text=Information+Entropy',
     shortDesc: 'Locally grown craft cannabis dispensary acclaimed for in-house genetics and solventless rosin.',
@@ -87,8 +71,6 @@ const SHOPS_DATA = [
     tier: 'featured',
     rating: '4.9',
     address: '124 E Washington St, Ann Arbor, MI 48104',
-    lat: 42.2808,
-    lng: -83.7478,
     url: 'https://literatibookstore.com',
     img: 'https://placehold.co/800x600/1e293b/38bdf8?text=Literati+Bookstore',
     shortDesc: 'Iconic independent bookstore featuring cozy curated shelves, author readings, and the famous public typewriter.',
@@ -107,8 +89,6 @@ const SHOPS_DATA = [
     category: 'Bookstores & Vinyl',
     tier: 'standard',
     address: '436 E Liberty St, Ann Arbor, MI 48104',
-    lat: 42.2796,
-    lng: -83.7423,
     shortDesc: 'Legendary second-floor record haven packed with used and rare vinyl, CDs, and music memorabilia since 1974.',
     features: ['Vintage Vinyl', 'Rare 45s', 'Used CDs & Cassettes'],
     hours: 'Tue - Sun: 12:00 PM - 6:00 PM'
@@ -120,8 +100,6 @@ const SHOPS_DATA = [
     category: 'Bookstores & Vinyl',
     tier: 'standard',
     address: '208 N 4th Ave, Ann Arbor, MI 48104',
-    lat: 42.2828,
-    lng: -83.7471,
     shortDesc: 'Vast Kerrytown audio institution with thousands of vintage LPs, jazz pressings, and classic stereo equipment.',
     features: ['Extensive Vinyl Catalog', 'Turntables', 'Cassettes'],
     hours: 'Wed - Sun: 11:00 AM - 7:00 PM'
@@ -134,8 +112,6 @@ const SHOPS_DATA = [
     tier: 'featured',
     rating: '4.8',
     address: '336 S State St, Ann Arbor, MI 48104',
-    lat: 42.2778,
-    lng: -83.7412,
     url: 'https://bivouacannarbor.com',
     img: 'https://placehold.co/800x600/0f172a/10b981?text=Bivouac+Ann+Arbor',
     shortDesc: 'Pioneering State Street outfitter combining luxury mountain lifestyle apparel with technical camping and outdoor gear.',
@@ -154,8 +130,6 @@ const SHOPS_DATA = [
     category: 'Vintage & Boutiques',
     tier: 'standard',
     address: '215 S State St, Ann Arbor, MI 48104',
-    lat: 42.2792,
-    lng: -83.7411,
     shortDesc: 'Vibrant vintage shop offering genuine 1950s-90s vintage clothing, leather jackets, denim, and accessories.',
     features: ['True Vintage', 'Hand-Picked Clothing', 'State Street'],
     hours: 'Mon - Sun: 12:00 PM - 7:00 PM'
@@ -167,8 +141,6 @@ const SHOPS_DATA = [
     category: 'Specialty Markets',
     tier: 'standard',
     address: '216 S Main St, Ann Arbor, MI 48104',
-    lat: 42.2801,
-    lng: -83.7486,
     shortDesc: 'Cheerful Main Street gift shop specializing in playful stationery, bespoke paper goods, quirky gifts, and local Michigan novelties.',
     features: ['Custom Gifts', 'Michigan Memorabilia', 'Party Goods'],
     hours: 'Mon - Sun: 10:00 AM - 8:00 PM'
@@ -181,8 +153,6 @@ const SHOPS_DATA = [
     tier: 'featured',
     rating: '4.8',
     address: '303 S State St, Ann Arbor, MI 48104',
-    lat: 42.2783,
-    lng: -83.7414,
     url: 'https://www.mden.com',
     img: 'https://placehold.co/800x600/00274c/ffcb05?text=The+M+Den+Ann+Arbor',
     shortDesc: 'Official home of the Michigan Wolverines with head-to-toe official U-M jerseys, sideline gear, hats, and collectibles.',
@@ -202,8 +172,6 @@ const SHOPS_DATA = [
     tier: 'featured',
     rating: '4.9',
     address: '422 Detroit St, Ann Arbor, MI 48104',
-    lat: 42.2847,
-    lng: -83.7456,
     url: 'https://www.zingermansdeli.com',
     img: 'https://placehold.co/800x600/78350f/fbbf24?text=Zingermans+Specialty+Store',
     shortDesc: 'World-renowned artisan grocery offering small-batch olive oils, farmstead cheeses, vinegar pairings, and traditional bread.',
@@ -222,8 +190,6 @@ const SHOPS_DATA = [
     category: 'Specialty Markets',
     tier: 'standard',
     address: '407 N 5th Ave, Ann Arbor, MI 48104',
-    lat: 42.2846,
-    lng: -83.7462,
     shortDesc: 'Charming multi-level brick marketplace featuring local toy stores, spice shops, paper merchants, and tea emporiums.',
     features: ['Multiple Boutiques', 'Chime Tower', 'Farmers Market Adjacent'],
     hours: 'Mon - Sat: 8:00 AM - 7:00 PM | Sun: 10:00 AM - 5:00 PM'
@@ -239,7 +205,7 @@ const SHOP_CATEGORIES = [
   'Specialty Markets'
 ];
 
-const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorites, onCheckIn, isCheckingIn }) => {
+const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !shop) return null;
   const isFeatured = shop.tier === 'featured';
   const isFavorited = (favorites || []).some(f => f.id === shop.id);
@@ -289,17 +255,6 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
                 {shop.category}
               </span>
             </div>
-          )}
-
-          {shop.lat && shop.lng && (
-            <button
-              onClick={() => onCheckIn(shop)}
-              disabled={isCheckingIn}
-              className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black uppercase text-xs rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              <MapPin size={16} />
-              <span>{isCheckingIn ? 'Verifying GPS Location...' : 'Check In at this Location (+1 Point)'}</span>
-            </button>
           )}
 
           {shop.address && (
@@ -385,7 +340,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
   );
 };
 
-const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavorite, favorites }) => {
+const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavorite, favorites, onOpenPartnerModal }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCat, setSelectedCat] = useState('All');
 
@@ -669,15 +624,13 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Nature & Arb',
     address: '1610 Washington Hts, Ann Arbor, MI',
-    lat: 42.2801,
-    lng: -83.7258,
     img: 'https://a2vibe.com/images/UofM_Nichols_Arboretum.jpg',
     shortDesc: 'Iconic 123-acre river valley featuring the Peony Garden, river trails, and historic tree collections.',
     longDesc: '<p>Beloved by locals as "The Arb," this historic reserve along the Huron River offers miles of gravel pathways, panoramic hillside vistas, glacial topography, and the world-renowned Nichols Arboretum Peony Garden.</p>',
     dogFriendly: true,
     dogNotes: 'Leashed dogs welcome throughout trails.',
     accessibleTrails: false,
-    accessibleNotes: 'Steep natural dirt hills and stone stairways; limited wheelchair access.',
+    accessibilityNotes: 'Steep natural dirt hills and stone stairways; limited wheelchair access.',
     restrooms: true,
     restroomNotes: 'Seasonal portalets and Reader Center restrooms during open hours.',
     playground: false,
@@ -692,15 +645,13 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Riverfront & Trails',
     address: '3000 Fuller Rd, Ann Arbor, MI',
-    lat: 42.2778,
-    lng: -83.7001,
     img: 'https://a2vibe.com/images/Gallup_Park.jpg',
     shortDesc: 'Scenic 69-acre park winding along the Huron River with pedestrian bridges, boat launches, and trails.',
     longDesc: '<p>Gallup Park is Ann Arbor’s premier riverfront escape. Features 3 miles of paved trails traversing small islands, wooden footbridges, picnic pavilions, wildlife viewing spots, and seasonal kayak and canoe rentals.</p>',
     dogFriendly: true,
     dogNotes: 'Dog-friendly on leash with waste bag stations.',
     accessibleTrails: true,
-    accessibleNotes: 'Fully paved, flat walkways and ADA-compliant bridge ramps.',
+    accessibilityNotes: 'Fully paved, flat walkways and ADA-compliant bridge ramps.',
     restrooms: true,
     restroomNotes: 'Permanent year-round ADA restrooms located at the Canoe Livery.',
     playground: true,
@@ -715,15 +666,13 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Woodland Preserve',
     address: 'Newport Rd & Bird Rd, Ann Arbor, MI',
-    lat: 42.3045,
-    lng: -83.7634,
     img: 'https://a2vibe.com/images/birds-hill.jpg',
     shortDesc: 'Ann Arbor’s largest city nature park with 146 acres of quiet dirt trails under dense hardwood canopy.',
     longDesc: '<p>A sanctuary for trail runners and bird watchers, Bird Hills is an untouched forested refuge featuring rugged terrain, deep ravines, and native oak and maple groves without bikes or motorized access.</p>',
     dogFriendly: true,
     dogNotes: 'Leashed dogs permitted; must stay on trails.',
     accessibleTrails: false,
-    accessibleNotes: 'Rugged dirt paths, exposed roots, and steep grades.',
+    accessibilityNotes: 'Rugged dirt paths, exposed roots, and steep grades.',
     restrooms: false,
     restroomNotes: 'No public restrooms on-site.',
     playground: false,
@@ -738,15 +687,13 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Botanic Garden',
     address: '1800 N Dixboro Rd, Ann Arbor, MI',
-    lat: 42.3005,
-    lng: -83.6644,
     img: 'https://a2vibe.com/images/matt.png',
     shortDesc: 'Sprawling conservatories, display gardens, wetlands, and peaceful nature loops on Dixboro Road.',
     longDesc: '<p>Features a 10,000+ square foot tropical and desert conservatory surrounded by outdoor display beds, bonsai gardens, boardwalk trails over Fleming Creek, and sweeping wildflower habitats.</p>',
     dogFriendly: false,
     dogNotes: 'Service animals only. Pets not permitted in gardens or conservatory.',
     accessibleTrails: true,
-    accessibleNotes: 'Paved paths and level boardwalks through the central gardens.',
+    accessibilityNotes: 'Paved paths and level boardwalks through the central gardens.',
     restrooms: true,
     restroomNotes: 'Full modern ADA restrooms in visitor center.',
     playground: false,
@@ -761,15 +708,13 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Wetland & River',
     address: 'Huron River Dr, Ann Arbor, MI',
-    lat: 42.3021,
-    lng: -83.7548,
     img: 'https://a2vibe.com/images/barton.jpg',
     shortDesc: 'Quiet 102-acre natural area bordered by Barton Pond and the Huron River with boardwalk passages.',
     longDesc: '<p>Located just northwest of downtown, Barton Nature Area features scenic river overlooks, rich marshlands, and walking connections through foot bridges to Huron River Drive and Foster Bridge.</p>',
     dogFriendly: true,
     dogNotes: 'Leashed dogs allowed on marked footpaths.',
     accessibleTrails: false,
-    accessibleNotes: 'Mostly unpaved nature paths, earthen trails, and boardwalks.',
+    accessibilityNotes: 'Mostly unpaved nature paths, earthen trails, and boardwalks.',
     restrooms: false,
     restroomNotes: 'No restroom facilities available.',
     playground: false,
@@ -784,15 +729,13 @@ const PARKS_DATA = [
     type: 'park',
     category: 'Waterfront & Disc Golf',
     address: '1352 Lakeshore Dr, Ann Arbor, MI',
-    lat: 42.2982,
-    lng: -83.7493,
     img: 'https://a2vibe.com/images/bandemer.jpg',
     shortDesc: 'Waterfront park featuring boardwalks along Argo Pond, a 9-hole disc golf course, and dirt bike jumps.',
     longDesc: '<p>Bordering the west side of Argo Pond, Bandemer offers docks for crew shells and canoes, a shaded disc golf run, accessibility to the B2B Trail, and panoramic views of the water.</p>',
     dogFriendly: true,
     dogNotes: 'Leashed dogs allowed along paths and open spaces.',
     accessibleTrails: true,
-    accessibleNotes: 'Accessible paved path connecting to the Border-to-Border (B2B) Trail.',
+    accessibilityNotes: 'Accessible paved path connecting to the Border-to-Border (B2B) Trail.',
     restrooms: true,
     restroomNotes: 'Seasonal portable restrooms.',
     playground: false,
@@ -842,7 +785,7 @@ const DEFAULT_BUCKET_ITEMS = [
   { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
 ];
 
-const ParkDetailModal = ({ isOpen, onClose, park, theme, onCheckIn, isCheckingIn }) => {
+const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
   if (!isOpen || !park) return null;
 
   return (
@@ -879,17 +822,6 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme, onCheckIn, isCheckingIn
                 Ann Arbor Green Space
               </span>
             </div>
-          )}
-
-          {park.lat && park.lng && (
-            <button
-              onClick={() => onCheckIn(park)}
-              disabled={isCheckingIn}
-              className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black uppercase text-xs rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              <MapPin size={16} />
-              <span>{isCheckingIn ? 'Verifying GPS Location...' : 'Check In at this Park (+1 Point)'}</span>
-            </button>
           )}
 
           {park.address && (
@@ -1543,7 +1475,7 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
   );
 };
 
-const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites, onCheckIn, isCheckingIn }) => {
+const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id);
   
@@ -1566,18 +1498,6 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites, onChec
         </div>
         <div className="p-8 space-y-6">
           {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
-
-          {/* REAL GPS CHECK-IN BUTTON */}
-          {item.lat && item.lng && (
-            <button
-              onClick={() => onCheckIn(item)}
-              disabled={isCheckingIn}
-              className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black uppercase text-xs rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              <MapPin size={16} />
-              <span>{isCheckingIn ? 'Verifying GPS Location...' : 'Check In at this Location (+1 Point)'}</span>
-            </button>
-          )}
 
           <div className="flex items-center gap-2 flex-wrap">
             {item.price && <div className="bg-[#ffcb05]/20 text-[#b45309] dark:text-[#ffcb05] px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
@@ -1944,11 +1864,75 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   );
 };
 
+// REPLACEMENT WIDGET: TOWNIE DAY TRIP / VIBE GENERATOR
+const TownieDayPlannerWidget = ({ theme, dining, onSelectSpot }) => {
+  const [selectedMood, setSelectedMood] = useState('Chill Saturday');
+
+  const moods = {
+    'Chill Saturday': {
+      morning: 'Kerrytown Market & Shops',
+      afternoon: 'Nichols Arboretum',
+      night: 'Zingerman’s Specialty Food Store'
+    },
+    'Date Night': {
+      morning: 'Literati Bookstore',
+      afternoon: 'Main Street Dining',
+      night: 'State Theatre'
+    },
+    'Campus Explorer': {
+      morning: 'U-M Law Quadrangle',
+      afternoon: 'The M Den on State Street',
+      night: 'Michigan Stadium'
+    }
+  };
+
+  const currentPlan = moods[selectedMood] || moods['Chill Saturday'];
+
+  return (
+    <div className="p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] border border-[#ffcb05]/40 shadow-2xl text-white space-y-4 mx-1">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Compass className="text-[#ffcb05]" size={22} />
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-[#ffcb05]">A2 Day Trip Generator</span>
+        </div>
+        <span className="text-[10px] font-bold text-slate-400">Curated Plan</span>
+      </div>
+
+      <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+        {Object.keys(moods).map(m => (
+          <button
+            key={m}
+            onClick={() => setSelectedMood(m)}
+            className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${selectedMood === m ? 'bg-[#ffcb05] text-black shadow-md' : 'bg-white/10 text-slate-300'}`}
+          >
+            {m}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+          <span className="text-[8px] font-black uppercase text-[#38bdf8] tracking-widest block">Morning</span>
+          <p className="text-[11px] font-bold text-white line-clamp-2">{currentPlan.morning}</p>
+        </div>
+        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+          <span className="text-[8px] font-black uppercase text-[#ffcb05] tracking-widest block">Afternoon</span>
+          <p className="text-[11px] font-bold text-white line-clamp-2">{currentPlan.afternoon}</p>
+        </div>
+        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+          <span className="text-[8px] font-black uppercase text-[#a855f7] tracking-widest block">Evening</span>
+          <p className="text-[11px] font-bold text-white line-clamp-2">{currentPlan.night}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const HubView = ({ 
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
   vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
-  onOpenShopsModal, onSelectShop, points
+  onOpenShopsModal, onSelectShop
 }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
@@ -2069,30 +2053,8 @@ const HubView = ({
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
 
-        {/* LOYALTY POINTS PASSPORT WIDGET */}
-        <div className="p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] border border-[#ffcb05]/40 shadow-2xl text-white space-y-3 mx-1">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Award className="text-[#ffcb05]" size={20} />
-              <span className="text-xs font-black uppercase tracking-wider text-[#ffcb05]">A2 Loyalty Passport</span>
-            </div>
-            <span className="bg-[#ffcb05]/20 text-[#ffcb05] text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
-              {points >= 30 ? 'Townie Elite' : (points >= 10 ? 'Regular' : 'Explorer')}
-            </span>
-          </div>
-
-          <div>
-            <p className="text-4xl font-black">{points} <span className="text-xs font-bold text-slate-400 uppercase">PTS</span></p>
-            <p className="text-[10px] text-slate-300">Earn 1 pt per day by checking in at participating local venues using GPS.</p>
-          </div>
-
-          <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-            <div 
-              className="bg-[#ffcb05] h-full rounded-full transition-all duration-500" 
-              style={{ width: `${Math.min(100, ((points % 10) / 10) * 100 || 5)}%` }} 
-            />
-          </div>
-        </div>
+        {/* TOWNIE DAY PLANNER WIDGET (Replaces Loyalty Widget) */}
+        <TownieDayPlannerWidget theme={theme} dining={dining} onSelectSpot={setSelectedItem} />
 
         <div className={`${theme.card} p-5 rounded-[32px] border ${theme.border} flex flex-col gap-4 text-center shadow-lg mx-1`}>
           {user ? (
@@ -2125,7 +2087,7 @@ const HubView = ({
                 <Utensils size={16} className="text-[#f97316]" />
                 <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Eats Favs ({eatsFavs.length})</h4>
               </div>
-              <button onClick={() => setView('flavors')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] hover:underline">View All Flavors →</button>
+              <button onClick={() => setView('flavors')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#34a4b8] tracking-[0.2em] hover:underline">View All Flavors →</button>
             </div>
             <div className="grid grid-cols-1 gap-4">
               {!eatsFavs.length ? (
@@ -2952,7 +2914,6 @@ export default function App() {
   const [isParksModalOpen, setIsParksModalOpen] = useState(false);
   const [isTransitModalOpen, setIsTransitModalOpen] = useState(false);
   const [isShopsModalOpen, setIsShopsModalOpen] = useState(false);
-  const [isCheckingIn, setIsCheckingIn] = useState(false);
    
   const [favorites, setFavorites] = useState(() => {
     try { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; } catch { return []; }
@@ -2966,15 +2927,11 @@ export default function App() {
   const [vibeTags, setVibeTags] = useState(() => {
     try { const s = localStorage.getItem('a2v_vibetags'); return s ? JSON.parse(s) : []; } catch { return []; }
   });
-  const [points, setPoints] = useState(() => {
-    try { const s = localStorage.getItem('a2v_points'); return s ? parseInt(s, 10) : 0; } catch { return 0; }
-  });
-  const [lastCheckInDate, setLastCheckInDate] = useState(() => localStorage.getItem('a2v_last_checkin_date') || '');
 
-  const [itineraries] = useState(Array.isArray(happeningsData) ? happeningsData : []);
-  const [dining, setDining] = useState(Array.isArray(eatsData) ? eatsData : []);
-  const [posts] = useState(Array.isArray(journalData) ? journalData : []);
-  const [featuredPosts] = useState(Array.isArray(journalData) ? journalData.filter(p => p.isHighlight) : []);
+  const [itineraries] = useState(happeningsData);
+  const [dining, setDining] = useState(eatsData);
+  const [posts] = useState(journalData);
+  const [featuredPosts] = useState(journalData.filter(p => p.isHighlight));
    
   const [activeExpCat, setActiveExpCat] = useState('All');
   const [activeMonth, setActiveMonth] = useState('All Months');
@@ -2995,7 +2952,7 @@ export default function App() {
 
   const handleLogin = async () => {
     try {
-      if (auth) await signInWithPopup(auth, new GoogleAuthProvider());
+      await signInWithPopup(auth, new GoogleAuthProvider());
     } catch (error) {
       console.error("Login Error:", error);
     }
@@ -3003,43 +2960,37 @@ export default function App() {
 
   const handleLogout = async () => {
     try {
-      if (auth) await signOut(auth);
+      await signOut(auth);
     } catch (error) {
       console.error("Logout Error:", error);
     }
   };
 
-  // Listen for Miss Kim documents in Firestore safely
+  // Merge Firestore Miss Kim collection into dining
   useEffect(() => {
-    if (!db) return;
-    try {
-      const unsubscribe = onSnapshot(collection(db, 'Miss Kim'), (snapshot) => {
-        if (!snapshot.empty) {
-          const firestoreSpots = snapshot.docs.map(doc => ({
-            id: doc.id,
-            title: doc.data().title || doc.data().name || doc.id,
-            ...doc.data()
-          }));
-          setDining(prev => {
-            const rest = prev.filter(d => !firestoreSpots.some(fs => fs.id === d.id));
-            return [...rest, ...firestoreSpots];
-          });
-        }
-      }, (error) => {
-        console.warn("Miss Kim listener:", error);
-      });
-      return () => unsubscribe();
-    } catch (e) {
-      console.warn(e);
-    }
+    const unsubscribe = onSnapshot(collection(db, 'Miss Kim'), (snapshot) => {
+      if (!snapshot.empty) {
+        const firestoreSpots = snapshot.docs.map(doc => ({
+          id: doc.id,
+          title: doc.data().title || doc.data().name || doc.id,
+          ...doc.data()
+        }));
+        setDining(prev => {
+          const rest = prev.filter(d => !firestoreSpots.some(fs => fs.id === d.id));
+          return [...rest, ...firestoreSpots];
+        });
+      }
+    }, (error) => {
+      console.warn("Miss Kim collection listener:", error);
+    });
+    return () => unsubscribe();
   }, []);
 
   // Auth Listener
   useEffect(() => {
-    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      if (currentUser && db) {
+      if (currentUser) {
         try {
           const docSnap = await getDoc(doc(db, 'users', currentUser.uid));
           if (docSnap.exists()) {
@@ -3048,116 +2999,43 @@ export default function App() {
             if (data.stats) setStats(data.stats);
             if (data.bucketList) setBucketList(data.bucketList);
             if (data.vibeTags) setVibeTags(data.vibeTags);
-            if (typeof data.points === 'number') setPoints(data.points);
-            if (data.lastCheckInDate) {
-              setLastCheckInDate(data.lastCheckInDate);
-              localStorage.setItem('a2v_last_checkin_date', data.lastCheckInDate);
-            }
           }
         } catch (err) {
-          console.error("User profile fetch error:", err);
+          console.error("Error fetching user profile:", err);
         }
       }
     });
     return () => unsubscribe();
   }, []);
 
-  // GPS CHECK-IN (1 POINT PER DAY ONLY WITHIN 200m)
-  const handleLocationCheckIn = (place) => {
-    if (!user) {
-      alert("Please sign in with Google first so we can save your check-in points!");
-      return;
-    }
-
-    if (!place?.lat || !place?.lng) {
-      alert("This location does not have registered GPS coordinates for check-in.");
-      return;
-    }
-
-    const todayStr = new Date().toISOString().split('T')[0];
-    if (lastCheckInDate === todayStr) {
-      alert("You have already claimed your 1 check-in point for today! Check in again tomorrow.");
-      return;
-    }
-
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser. Please enable location permissions.");
-      return;
-    }
-
-    setIsCheckingIn(true);
-
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const userLat = pos.coords.latitude;
-        const userLng = pos.coords.longitude;
-        const distance = getDistanceInMeters(userLat, userLng, place.lat, place.lng);
-
-        if (distance > 200) {
-          setIsCheckingIn(false);
-          alert(
-            `You are too far from ${place.title || place.name}! You are approx ${Math.round(distance)} meters away. You must be at the location (within 200m) to earn your point.`
-          );
-          return;
-        }
-
-        const newPoints = points + 1;
-        setPoints(newPoints);
-        setLastCheckInDate(todayStr);
-        localStorage.setItem('a2v_points', newPoints.toString());
-        localStorage.setItem('a2v_last_checkin_date', todayStr);
-
-        if (db && user) {
-          try {
-            await updateDoc(doc(db, 'users', user.uid), {
-              points: increment(1),
-              lastCheckInDate: todayStr,
-              checkIns: arrayUnion({
-                placeId: place.id,
-                placeName: place.title || place.name,
-                timestamp: Date.now()
-              })
-            });
-          } catch (err) {
-            await setDoc(doc(db, 'users', user.uid), {
-              points: newPoints,
-              lastCheckInDate: todayStr,
-              checkIns: [{
-                placeId: place.id,
-                placeName: place.title || place.name,
-                timestamp: Date.now()
-              }]
-            }, { merge: true });
-          }
-        }
-
-        setIsCheckingIn(false);
-        alert(`Checked in successfully at ${place.title || place.name}! You earned +1 point!`);
-      },
-      (err) => {
-        setIsCheckingIn(false);
-        console.error("GPS Error:", err);
-        alert("Could not access your GPS location. Please allow location access in your mobile browser settings.");
-      },
-      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
-    );
-  };
-
-  const toggleFavorite = (item) => {
+  const toggleFavorite = async (item) => {
     if (item.type === 'park' || PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-')) {
       return;
     }
     
     const isAlreadyFavorited = (favorites || []).some(f => f.id === item.id);
-    const updatedFavorites = isAlreadyFavorited
-      ? favorites.filter(f => f.id !== item.id)
-      : [...favorites, { ...item, type: item.type || 'experience', savedAt: Date.now() }];
+    let updatedFavorites;
+
+    if (isAlreadyFavorited) { 
+      updatedFavorites = favorites.filter(f => f.id !== item.id); 
+    } else { 
+      const itemToSave = { 
+        ...item, 
+        type: item.type || 'experience', 
+        savedAt: Date.now() 
+      }; 
+      updatedFavorites = [...favorites, itemToSave]; 
+    }
 
     setFavorites(updatedFavorites);
     localStorage.setItem('a2v_favorites', JSON.stringify(updatedFavorites));
 
-    if (user && db) {
-      setDoc(doc(db, 'users', user.uid), { favorites: updatedFavorites }, { merge: true }).catch(console.warn);
+    if (user) {
+      try {
+        await setDoc(doc(db, 'users', user.uid), { favorites: updatedFavorites }, { merge: true });
+      } catch (err) {
+        console.error("Error syncing favorite to Firestore:", err);
+      }
     }
   };
 
@@ -3196,24 +3074,13 @@ export default function App() {
         </header>
 
         <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
-          <Modal 
-            isOpen={!!selectedItem} 
-            onClose={() => setSelectedItem(null)} 
-            item={selectedItem} 
-            theme={theme} 
-            toggleFavorite={toggleFavorite} 
-            favorites={favorites} 
-            onCheckIn={handleLocationCheckIn}
-            isCheckingIn={isCheckingIn}
-          />
+          <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           
           <ParkDetailModal
             isOpen={!!selectedPark}
             onClose={() => setSelectedPark(null)}
             park={selectedPark}
             theme={theme}
-            onCheckIn={handleLocationCheckIn}
-            isCheckingIn={isCheckingIn}
           />
 
           <ParksDirectoryModal
@@ -3246,8 +3113,6 @@ export default function App() {
             theme={theme}
             toggleFavorite={toggleFavorite}
             favorites={favorites}
-            onCheckIn={handleLocationCheckIn}
-            isCheckingIn={isCheckingIn}
           />
 
           <PartnerListingModal 
@@ -3329,7 +3194,6 @@ export default function App() {
                   onOpenParksModal={openParksModal}
                   onOpenShopsModal={openShopsModal}
                   onSelectShop={handleShopSelect}
-                  points={points}
                 />
               )}
               {view === 'fun' && (
