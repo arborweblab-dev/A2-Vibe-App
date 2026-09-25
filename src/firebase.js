@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCmullh2QQu6pX_YIWHdKf0N3JNdTaAyxo",
   authDomain: "a2-vibe.firebaseapp.com",
@@ -13,10 +12,8 @@ const firebaseConfig = {
   measurementId: "G-5SKGDHGWWZ"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = typeof window !== "undefined" ? getAnalytics(app) : null;
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Export instances for use throughout your app
-export { app, db, analytics };
+export { app, auth, db };
