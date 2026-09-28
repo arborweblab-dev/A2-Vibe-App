@@ -1966,6 +1966,46 @@ const HubView = ({
     }
   }, [activeFavTab, userFavorites, eatsFavs, shopFavs, happeningsFavs, guideFavs]);
 
+  // Active Category Meta (Title, Section Link Label, Action)
+  const categoryMeta = useMemo(() => {
+    switch (activeFavTab) {
+      case 'eats':
+        return {
+          title: 'Favorite Dining & Drinks',
+          actionLabel: 'Explore All Flavors →',
+          action: () => setView('flavors'),
+          icon: Utensils,
+          iconColor: 'text-[#f97316]'
+        };
+      case 'shops':
+        return {
+          title: 'Favorite Retail & Boutiques',
+          actionLabel: 'Explore All Shops →',
+          action: onOpenShopsModal,
+          icon: ShoppingBag,
+          iconColor: 'text-[#ffcb05]'
+        };
+      case 'events':
+        return {
+          title: 'Favorite Events & Happenings',
+          actionLabel: 'Explore All Happenings →',
+          action: () => setView('fun'),
+          icon: Sparkles,
+          iconColor: 'text-[#0284c7] dark:text-[#38bdf8]'
+        };
+      case 'guides':
+        return {
+          title: 'Favorite Stories & Field Notes',
+          actionLabel: 'Read City Guide Stories →',
+          action: () => setView('journal'),
+          icon: BookText,
+          iconColor: 'text-[#a855f7]'
+        };
+      default:
+        return null;
+    }
+  }, [activeFavTab, setView, onOpenShopsModal]);
+
   // Community Voice & Participation
   const [communityTab, setCommunityTab] = useState('my-activity');
   const [selectedForumChannel, setSelectedForumChannel] = useState('All');
@@ -2055,7 +2095,7 @@ const HubView = ({
           </div>
         </div>
 
-        {/* SAVED FAVORITES (Tabbed / Segmented Control) */}
+        {/* SAVED FAVORITES (Tabbed / Segmented Control with Category Header & Quick Navigation) */}
         <section className="space-y-4 px-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -2082,6 +2122,24 @@ const HubView = ({
               </button>
             ))}
           </div>
+
+          {/* Category-Specific Header & Deep-Link */}
+          {categoryMeta && (
+            <div className={`flex items-center justify-between px-3 py-2.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-white/5' : 'bg-slate-100'} animate-fade`}>
+              <div className="flex items-center gap-2 min-w-0">
+                <categoryMeta.icon size={15} className={categoryMeta.iconColor} />
+                <span className={`text-[11px] font-black uppercase tracking-wider truncate ${theme.text}`}>
+                  {categoryMeta.title} ({displayedFavorites.length})
+                </span>
+              </div>
+              <button
+                onClick={categoryMeta.action}
+                className="text-[10px] font-black uppercase text-[#ffcb05] hover:underline flex-shrink-0 tracking-wider ml-2"
+              >
+                {categoryMeta.actionLabel}
+              </button>
+            </div>
+          )}
 
           {/* 2-Column Responsive Card Grid */}
           <div className="grid grid-cols-2 gap-3 pt-1">
@@ -2197,7 +2255,7 @@ const HubView = ({
           </div>
         </section>
 
-        {/* 6. MY COMMUNITY ACTIVITY & LOCAL VOICE */}
+        {/* MY COMMUNITY ACTIVITY & LOCAL VOICE */}
         <section className={`space-y-5 w-full pt-6 border-t ${theme.border}`}>
           <div className="px-1 flex items-center justify-between">
             <div className="flex items-center gap-2">
