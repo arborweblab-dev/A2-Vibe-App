@@ -17,7 +17,7 @@ import {
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
   Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
   PenTool, ShieldCheck, MessageCircle, Send, Trees, ThumbsUp, MessageCircleCode,
-  Dog, Accessibility, Bike, Baby, Bath, Check, ShoppingBag, Tag, Percent
+  Dog, Accessibility, Bike, Baby, Bath, Check, ShoppingBag, Tag, Percent, LogOut, LogIn
 } from 'lucide-react';
 
 import { journalData } from './data/journalData';
@@ -766,7 +766,6 @@ const THEMES = {
 const CATEGORIES_GUIDE = ['All', 'City Life', 'Parks', 'Local Secrets', 'Arts & Culture', 'Dining Reviews', 'Community Reports', 'Events', 'Meetups'];
 const CATEGORIES_EXP = ['All', 'Festivals', 'Nightlife', 'Museums', 'Parks', 'Workshops', 'Sports', 'Family Friendly', 'Hidden Gems', 'Tours', 'Arts & Culture'];
 const MONTHS_EXP = ['All Months', 'October', 'November', 'December'];
-const AVAILABLE_TAGS = ['Foodie', 'U-M Alum', 'Townie', 'Student', 'Trail Runner', 'Night Owl', 'Art Lover', 'Coffee Snob'];
 const FORUM_CHANNELS = ['All', 'Announcements', 'Local News', 'Events & Meetups', 'Food & Dining', 'Community Chat'];
 
 const SLIDE_IMAGES = [
@@ -1566,8 +1565,8 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   const [communityGems, setCommunityGems] = useState([]);
   const [newGemTitle, setNewGemTitle] = useState('');
   const [newGemDesc, setNewGemDesc] = useState('');
-
   const [leaderboard, setLeaderboard] = useState([]);
+  const [selectedMood, setSelectedMood] = useState('Chill Saturday');
 
   useEffect(() => {
     if (type === 'community') {
@@ -1651,10 +1650,28 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
     setRandomSpot(dining[randomIndex]);
   };
 
+  const dayTripPlans = {
+    'Chill Saturday': {
+      morning: 'Kerrytown Market & Shops',
+      afternoon: 'Nichols Arboretum & River Walk',
+      night: 'Zingerman’s Deli / Main St Drinks'
+    },
+    'Date Night': {
+      morning: 'Literati Bookstore & Espresso',
+      afternoon: 'Main Street Walking & Shopping',
+      night: 'State Theatre Independent Screening'
+    },
+    'Campus Explorer': {
+      morning: 'U-M Law Quadrangle Stroll',
+      afternoon: 'The M Den & State Street Boutiques',
+      night: 'Michigan Stadium & South U'
+    }
+  };
+
   const toolTitles = {
     hots: 'City Hot Spots', calc: 'Tip Calculator', weather: 'City Forecast', water: 'Stay Hydrated',
     randomizer: 'Weekend Pitcher / Randomizer', trivia: 'Tree Town Trivia', bucket: 'A2 Bucket List Passport', mystery: 'Mystery Spot',
-    community: 'Community Gems'
+    community: 'Community Gems', daytrip: 'What To Do Today'
   };
 
   return (
@@ -1667,6 +1684,50 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
       </div>
 
       <div className="px-1 space-y-6 w-full pt-2">
+        {type === 'daytrip' && (
+          <div className="space-y-6 max-w-md mx-auto w-full">
+            <div className="p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] border border-[#ffcb05]/40 shadow-2xl text-white space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Compass className="text-[#ffcb05]" size={22} />
+                  <span className="text-xs font-black uppercase tracking-[0.2em] text-[#ffcb05]">What To Do Today</span>
+                </div>
+                <span className="text-[10px] font-bold text-slate-400">Curated Routine</span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Whether you're a lifelong townie or exploring Ann Arbor for the afternoon, pick your vibe below for a ready-to-roll three-part itinerary.
+              </p>
+
+              <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+                {Object.keys(dayTripPlans).map(m => (
+                  <button
+                    key={m}
+                    onClick={() => setSelectedMood(m)}
+                    className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${selectedMood === m ? 'bg-[#ffcb05] text-black shadow-md' : 'bg-white/10 text-slate-300'}`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 gap-2.5 pt-2 text-left">
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                  <span className="text-[9px] font-black uppercase text-[#38bdf8] bg-sky-500/20 px-2 py-1 rounded-md tracking-wider">Morning</span>
+                  <p className="text-xs font-bold text-white truncate">{dayTripPlans[selectedMood].morning}</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                  <span className="text-[9px] font-black uppercase text-[#ffcb05] bg-yellow-500/20 px-2 py-1 rounded-md tracking-wider">Afternoon</span>
+                  <p className="text-xs font-bold text-white truncate">{dayTripPlans[selectedMood].afternoon}</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                  <span className="text-[9px] font-black uppercase text-[#a855f7] bg-purple-500/20 px-2 py-1 rounded-md tracking-wider">Evening</span>
+                  <p className="text-xs font-bold text-white truncate">{dayTripPlans[selectedMood].night}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {type === 'hots' && (
           <div className="space-y-4">
             {POIs.map(p => (
@@ -1864,74 +1925,10 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   );
 };
 
-// REPLACEMENT WIDGET: TOWNIE DAY TRIP / VIBE GENERATOR
-const TownieDayPlannerWidget = ({ theme, dining, onSelectSpot }) => {
-  const [selectedMood, setSelectedMood] = useState('Chill Saturday');
-
-  const moods = {
-    'Chill Saturday': {
-      morning: 'Kerrytown Market & Shops',
-      afternoon: 'Nichols Arboretum',
-      night: 'Zingerman’s Specialty Food Store'
-    },
-    'Date Night': {
-      morning: 'Literati Bookstore',
-      afternoon: 'Main Street Dining',
-      night: 'State Theatre'
-    },
-    'Campus Explorer': {
-      morning: 'U-M Law Quadrangle',
-      afternoon: 'The M Den on State Street',
-      night: 'Michigan Stadium'
-    }
-  };
-
-  const currentPlan = moods[selectedMood] || moods['Chill Saturday'];
-
-  return (
-    <div className="p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] border border-[#ffcb05]/40 shadow-2xl text-white space-y-4 mx-1">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Compass className="text-[#ffcb05]" size={22} />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-[#ffcb05]">A2 Day Trip Generator</span>
-        </div>
-        <span className="text-[10px] font-bold text-slate-400">Curated Plan</span>
-      </div>
-
-      <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
-        {Object.keys(moods).map(m => (
-          <button
-            key={m}
-            onClick={() => setSelectedMood(m)}
-            className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${selectedMood === m ? 'bg-[#ffcb05] text-black shadow-md' : 'bg-white/10 text-slate-300'}`}
-          >
-            {m}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-3 gap-2 pt-1 text-center">
-        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-          <span className="text-[8px] font-black uppercase text-[#38bdf8] tracking-widest block">Morning</span>
-          <p className="text-[11px] font-bold text-white line-clamp-2">{currentPlan.morning}</p>
-        </div>
-        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-          <span className="text-[8px] font-black uppercase text-[#ffcb05] tracking-widest block">Afternoon</span>
-          <p className="text-[11px] font-bold text-white line-clamp-2">{currentPlan.afternoon}</p>
-        </div>
-        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-          <span className="text-[8px] font-black uppercase text-[#a855f7] tracking-widest block">Evening</span>
-          <p className="text-[11px] font-bold text-white line-clamp-2">{currentPlan.night}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const HubView = ({ 
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
-  vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
+  onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
   onOpenShopsModal, onSelectShop
 }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
@@ -1969,46 +1966,19 @@ const HubView = ({
     }
   }, [activeFavTab, userFavorites, eatsFavs, shopFavs, happeningsFavs, guideFavs]);
 
+  // Community Voice & Participation
+  const [communityTab, setCommunityTab] = useState('my-activity');
   const [selectedForumChannel, setSelectedForumChannel] = useState('All');
   const [forumStories, setForumStories] = useState([]);
-  const [forumPostTitle, setForumPostTitle] = useState('');
-  const [forumPostContent, setForumPostContent] = useState('');
-  const [forumPostChannel, setForumPostChannel] = useState('Community Chat');
-  const [isPostingForum, setIsPostingForum] = useState(false);
   const [activeCommentStory, setActiveCommentStory] = useState(null);
 
   useEffect(() => {
-    const q = query(collection(db, 'community_stories'), orderBy('timestamp', 'desc'), limit(30));
+    const q = query(collection(db, 'community_stories'), orderBy('timestamp', 'desc'), limit(50));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setForumStories(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
     return () => unsubscribe();
   }, []);
-
-  const handleCreateForumPost = async (e) => {
-    e.preventDefault();
-    if (!forumPostTitle.trim() || !forumPostContent.trim()) return alert('Please enter both a title and message.');
-    setIsPostingForum(true);
-    try {
-      await addDoc(collection(db, 'community_stories'), {
-        title: forumPostTitle.trim(),
-        channel: forumPostChannel,
-        content: forumPostContent.trim(),
-        author: user?.displayName || 'A2 Neighbor',
-        userId: user?.uid || null,
-        likes: 0,
-        voters: [],
-        timestamp: Date.now()
-      });
-      setForumPostTitle('');
-      setForumPostContent('');
-    } catch (err) {
-      console.error('Error posting to forum:', err);
-      alert('Could not publish. Please check your connection.');
-    } finally {
-      setIsPostingForum(false);
-    }
-  };
 
   const handleVotePost = async (post, e) => {
     if (e) e.stopPropagation();
@@ -2033,18 +2003,23 @@ const HubView = ({
     }
   };
 
-  const filteredStories = useMemo(() => {
+  const mySubmissions = useMemo(() => {
+    if (!user) return [];
+    return forumStories.filter(s => s.userId === user.uid);
+  }, [forumStories, user]);
+
+  const myUpvotedStories = useMemo(() => {
+    if (!user) return [];
+    return forumStories.filter(s => (s.voters || []).includes(user.uid));
+  }, [forumStories, user]);
+
+  const neighborBoardStories = useMemo(() => {
     if (selectedForumChannel === 'All') return forumStories;
     return forumStories.filter(s => s.channel === selectedForumChannel);
   }, [forumStories, selectedForumChannel]);
 
-  const toggleTag = (tag) => {
-    if (vibeTags.includes(tag)) setVibeTags(vibeTags.filter(t => t !== tag));
-    else setVibeTags([...vibeTags, tag]);
-  };
-
   return (
-    <div className="animate-slide space-y-10 text-left relative z-10 pb-20 font-sans w-full max-w-xl mx-auto flex flex-col">
+    <div className="animate-slide space-y-8 text-left relative z-10 pb-24 font-sans w-full max-w-xl mx-auto flex flex-col">
       <ForumCommentsModal 
         isOpen={!!activeCommentStory} 
         onClose={() => setActiveCommentStory(null)} 
@@ -2053,50 +2028,31 @@ const HubView = ({
         theme={theme} 
       />
 
-      <div className="space-y-10 px-2 w-full">
-        <div className="relative h-64 rounded-[48px] overflow-hidden border border-white/10 group shadow-2xl w-full">
+      <div className="space-y-8 px-2 w-full">
+        {/* Profile Card Header */}
+        <div className="relative h-60 rounded-[44px] overflow-hidden border border-white/10 group shadow-2xl w-full">
           <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a121e] via-[#0a121e]/40 to-transparent" />
-          <div className="absolute bottom-8 left-8 flex items-center gap-4">
-             <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#00274c] to-[#ffcb05] p-0.5 shadow-2xl">
+          <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#00274c] to-[#ffcb05] p-0.5 shadow-2xl flex-shrink-0">
                 <div className={`w-full h-full rounded-full ${theme.card} flex items-center justify-center text-white overflow-hidden`}>
-                   {user && user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <MapPin size={24} className={theme.text} />}
+                  {user && user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <MapPin size={24} className={theme.text} />}
                 </div>
-             </div>
-             <div>
+              </div>
+              <div>
                 <h3 className="text-2xl font-header font-black uppercase text-white drop-shadow-lg tracking-tight">
                   {user ? user.displayName?.split(' ')[0] + "'s Vibe" : 'My Vibe'}
                 </h3>
-                <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">Saved Spots & Local Stats</p>
-             </div>
-          </div>
-          <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
-        </div>
-
-        {/* TOWNIE DAY PLANNER WIDGET */}
-        <TownieDayPlannerWidget theme={theme} dining={dining} onSelectSpot={setSelectedItem} />
-
-        <div className={`${theme.card} p-5 rounded-[32px] border ${theme.border} flex flex-col gap-4 text-center shadow-lg mx-1`}>
-          {user ? (
-            <>
-              <div className="text-left">
-                <p className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} mb-3`}>My A2 Identity Tags</p>
-                <div className="flex flex-wrap gap-2">
-                  {AVAILABLE_TAGS.map(tag => (
-                    <button key={tag} onClick={() => toggleTag(tag)} className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${vibeTags.includes(tag) ? 'bg-[#ffcb05] text-black shadow-md' : (theme.isDark ? 'bg-black/10 text-slate-400' : 'bg-slate-100 text-slate-700')}`}>
-                      {tag}
-                    </button>
-                  ))}
-                </div>
+                <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">
+                  {user ? `${user.displayName || user.email}` : 'Personal Travel & Townie Hub'}
+                </p>
               </div>
-              <button onClick={handleLogout} className="mt-2 bg-red-500/10 text-red-500 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Sign Out ({user.email})</button>
-            </>
-          ) : (
-            <>
-              <p className={`text-[10px] font-bold uppercase tracking-widest ${theme.secondaryText}`}>Sign in to sync your profile, tags, and stats!</p>
-              <button onClick={handleLogin} className="bg-[#ffcb05] text-black py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">Sign in with Google</button>
-            </>
-          )}
+            </div>
+            <button onClick={cycleHeader} className="p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white transition-all active:scale-90" title="Cycle Profile Image">
+              <Camera size={18} />
+            </button>
+          </div>
         </div>
 
         {/* SAVED FAVORITES (Tabbed / Segmented Control) */}
@@ -2206,13 +2162,14 @@ const HubView = ({
         </section>
 
         {/* URBAN AND FUN TOOLS */}
-        <section className={`space-y-5 w-full pt-4 border-t ${theme.border}`}>
+        <section className={`space-y-4 w-full pt-4 border-t ${theme.border}`}>
           <div className="flex items-center gap-2 px-1">
-            <Sparkles size={18} className="text-[#0284c7] dark:text-[#34a4b8]" />
+            <Sparkles size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
             <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {[
+              { id: 'daytrip', icon: Compass, label: 'What To Do Today', color: '#ffcb05' },
               { id: 'shops', icon: ShoppingBag, label: 'Local Shops', color: '#ffcb05', action: onOpenShopsModal },
               { id: 'parkfinder', icon: Trees, label: 'A2 Park Finder', color: '#10b981', action: onOpenParksModal },
               { id: 'community', icon: MessageSquare, label: 'Local Gems', color: '#38bdf8' },
@@ -2240,145 +2197,198 @@ const HubView = ({
           </div>
         </section>
 
-        {/* COMMUNITY FORUM */}
-        <section className={`space-y-6 w-full pt-8 border-t ${theme.border}`}>
-          <div className="px-1 space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Users size={18} className="text-[#a855f7]" />
-                <h3 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Community Forum</h3>
-              </div>
-              <div className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
-                <ShieldCheck size={12} />
-                <span>Zero Ads • Private</span>
-              </div>
+        {/* 6. MY COMMUNITY ACTIVITY & LOCAL VOICE */}
+        <section className={`space-y-5 w-full pt-6 border-t ${theme.border}`}>
+          <div className="px-1 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Users size={18} className="text-[#a855f7]" />
+              <h3 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>My Community Voice</h3>
             </div>
-            <p className={`text-xs ${theme.secondaryText} leading-relaxed`}>
-              A closed, community-powered bulletin board for Tree Town. Share upcoming projects, local recommendations, townie meetups, and independent questions without tracking algorithms or corporate ads.
-            </p>
+            
+            <button
+              onClick={onOpenContributorModal}
+              className="px-3.5 py-2 bg-[#a855f7] text-white rounded-2xl text-[10px] font-black uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+            >
+              <PenTool size={12} />
+              <span>Drop a Tip / Share Spot</span>
+            </button>
           </div>
 
-          <div className="flex overflow-x-auto gap-2 no-scrollbar px-1">
-            {FORUM_CHANNELS.map(ch => (
-              <button
-                key={ch}
-                onClick={() => setSelectedForumChannel(ch)}
-                className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${selectedForumChannel === ch ? 'bg-[#a855f7] text-white border-[#a855f7] shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
-              >
-                {ch}
-              </button>
-            ))}
+          {/* Segmented Voice Switcher */}
+          <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'}`}>
+            <button
+              onClick={() => setCommunityTab('my-activity')}
+              className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all text-center ${
+                communityTab === 'my-activity' ? 'bg-[#a855f7] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')
+              }`}
+            >
+              My Posts & Activity ({mySubmissions.length})
+            </button>
+            <button
+              onClick={() => setCommunityTab('neighbor-board')}
+              className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all text-center ${
+                communityTab === 'neighbor-board' ? 'bg-[#a855f7] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')
+              }`}
+            >
+              Neighbor Board
+            </button>
           </div>
 
-          <div className={`${theme.card} p-4 rounded-3xl border ${theme.border} shadow-sm space-y-3`}>
-            <div className="flex items-center justify-between">
-              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Post to the Community</span>
-              <button 
-                onClick={onOpenContributorModal}
-                className="text-[10px] font-bold text-[#a855f7] hover:underline"
-              >
-                Full Story Mode →
-              </button>
-            </div>
-            <form onSubmit={handleCreateForumPost} className="space-y-2.5">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  required
-                  value={forumPostTitle}
-                  onChange={(e) => setForumPostTitle(e.target.value)}
-                  placeholder="Topic or announcement headline..."
-                  className={`flex-1 p-3 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#a855f7]`}
-                />
-                <select
-                  value={forumPostChannel}
-                  onChange={(e) => setForumPostChannel(e.target.value)}
-                  className={`p-3 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-700'} border text-[10px] font-black uppercase outline-none`}
-                >
-                  {FORUM_CHANNELS.filter(c => c !== 'All').map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-              </div>
-              <textarea
-                required
-                rows={3}
-                value={forumPostContent}
-                onChange={(e) => setForumPostContent(e.target.value)}
-                placeholder="Share your message, project boost, meetup, or question with Ann Arbor neighbors..."
-                className={`w-full p-3 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs leading-relaxed outline-none focus:border-[#a855f7]`}
-              />
-              <div className="flex justify-between items-center pt-1">
-                <span className={`text-[9px] font-medium ${theme.secondaryText}`}>
-                  Posting as <strong>{user?.displayName || 'A2 Neighbor'}</strong>
-                </span>
-                <button
-                  type="submit"
-                  disabled={isPostingForum}
-                  className="px-4 py-2.5 bg-[#a855f7] text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1.5"
-                >
-                  <Send size={12} />
-                  <span>{isPostingForum ? 'Sharing...' : 'Share Post'}</span>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <div className="space-y-3 px-1">
-            {filteredStories.length > 0 ? (
-              filteredStories.map((post) => {
-                const userVoted = (post.voters || []).includes(user?.uid);
-                return (
-                  <div key={post.id} className={`${theme.card} p-4 rounded-3xl border ${theme.border} space-y-2 shadow-sm`}>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 px-2.5 py-0.5 rounded-md">
-                        {post.channel || 'Community Chat'}
-                      </span>
-                      <span className={`text-[10px] font-medium ${theme.secondaryText}`}>
-                        {post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Recent'}
-                      </span>
+          {communityTab === 'my-activity' ? (
+            <div className="space-y-4 px-1">
+              {!user ? (
+                <div className={`p-8 border-2 border-dashed rounded-3xl text-center space-y-3 ${theme.border}`}>
+                  <p className={`text-xs font-bold ${theme.secondaryText}`}>Sign in to view your posts, upvotes, and replies in Tree Town.</p>
+                  <button onClick={handleLogin} className="px-5 py-2.5 bg-[#ffcb05] text-black rounded-xl text-xs font-black uppercase tracking-wider shadow-md">
+                    Sign In with Google
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-2 text-center">
+                    <div className={`p-3 rounded-2xl border ${theme.border} ${theme.card}`}>
+                      <p className="text-xl font-header font-black text-[#a855f7]">{mySubmissions.length}</p>
+                      <span className={`text-[9px] font-black uppercase tracking-widest ${theme.secondaryText}`}>My Stories</span>
                     </div>
-                    <h4 className={`font-bold text-sm uppercase tracking-tight ${theme.text}`}>{post.title}</h4>
-                    <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{post.content}</p>
-                    
-                    <div className="flex items-center justify-between pt-2.5 border-t border-white/5 text-[10px]">
-                      <div className="flex items-center gap-2">
-                        <span className={`font-bold ${theme.secondaryText}`}>Spotted by {post.author}</span>
-                        {post.contact && post.contact !== 'Unlisted' && (
-                          <span className="text-[#38bdf8] font-bold truncate max-w-[140px]">{post.contact}</span>
-                        )}
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => setActiveCommentStory(post)}
-                          className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all active:scale-90 ${theme.border} ${theme.secondaryText} hover:text-white hover:border-[#a855f7]`}
-                          title="Open discussion thread"
-                        >
-                          <MessageCircle size={13} className="text-[#a855f7]" />
-                          <span>Comments</span>
-                        </button>
-
-                        <button
-                          onClick={(e) => handleVotePost(post, e)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all active:scale-90 ${userVoted ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}
-                          title={user ? (userVoted ? 'Remove Vote' : 'Upvote post') : 'Sign in to vote'}
-                        >
-                          <ThumbsUp size={12} className={userVoted ? 'fill-black' : ''} />
-                          <span>{post.likes || 0}</span>
-                        </button>
-                      </div>
+                    <div className={`p-3 rounded-2xl border ${theme.border} ${theme.card}`}>
+                      <p className="text-xl font-header font-black text-[#ffcb05]">{myUpvotedStories.length}</p>
+                      <span className={`text-[9px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Upvoted Posts</span>
                     </div>
                   </div>
-                );
-              })
-            ) : (
-              <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
-                No community discussions in this channel yet. Be the first to share!
+
+                  <div className="space-y-3">
+                    <h5 className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>My Submissions</h5>
+                    {mySubmissions.length > 0 ? (
+                      mySubmissions.map(post => (
+                        <div key={post.id} className={`${theme.card} p-4 rounded-3xl border ${theme.border} space-y-2 shadow-sm`}>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 px-2.5 py-0.5 rounded-md">
+                              {post.channel || 'Community Voice'}
+                            </span>
+                            <span className={`text-[10px] font-medium ${theme.secondaryText}`}>
+                              {post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Recent'}
+                            </span>
+                          </div>
+                          <h4 className={`font-bold text-sm uppercase tracking-tight ${theme.text}`}>{post.title}</h4>
+                          <p className={`text-xs leading-relaxed line-clamp-2 ${theme.secondaryText}`}>{post.content}</p>
+                          <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[10px]">
+                            <button
+                              onClick={() => setActiveCommentStory(post)}
+                              className={`flex items-center gap-1 text-[#a855f7] font-bold`}
+                            >
+                              <MessageCircle size={13} />
+                              <span>Discussion Thread</span>
+                            </button>
+                            <span className="font-bold flex items-center gap-1 text-emerald-500">
+                              <ThumbsUp size={12} /> {post.likes || 0} Upvotes
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                        You haven't posted any local tips yet.
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4 px-1">
+              <div className="flex overflow-x-auto gap-2 no-scrollbar">
+                {FORUM_CHANNELS.map(ch => (
+                  <button
+                    key={ch}
+                    onClick={() => setSelectedForumChannel(ch)}
+                    className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${
+                      selectedForumChannel === ch ? 'bg-[#a855f7] text-white border-[#a855f7] shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')
+                    }`}
+                  >
+                    {ch}
+                  </button>
+                ))}
               </div>
-            )}
-          </div>
+
+              <div className="space-y-3">
+                {neighborBoardStories.length > 0 ? (
+                  neighborBoardStories.map(post => {
+                    const userVoted = (post.voters || []).includes(user?.uid);
+                    return (
+                      <div key={post.id} className={`${theme.card} p-4 rounded-3xl border ${theme.border} space-y-2 shadow-sm`}>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 px-2.5 py-0.5 rounded-md">
+                            {post.channel || 'Community Chat'}
+                          </span>
+                          <span className={`text-[10px] font-medium ${theme.secondaryText}`}>
+                            {post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Recent'}
+                          </span>
+                        </div>
+                        <h4 className={`font-bold text-sm uppercase tracking-tight ${theme.text}`}>{post.title}</h4>
+                        <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{post.content}</p>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[10px]">
+                          <span className={`font-bold ${theme.secondaryText}`}>Spotted by {post.author}</span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setActiveCommentStory(post)}
+                              className={`flex items-center gap-1 px-3 py-1.5 rounded-xl border transition-all ${theme.border} ${theme.secondaryText} hover:text-white`}
+                            >
+                              <MessageCircle size={13} className="text-[#a855f7]" />
+                              <span>Comments</span>
+                            </button>
+                            <button
+                              onClick={(e) => handleVotePost(post, e)}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+                                userVoted ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-700')
+                              }`}
+                            >
+                              <ThumbsUp size={12} className={userVoted ? 'fill-black' : ''} />
+                              <span>{post.likes || 0}</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className={`p-8 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                    No discussions found.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </section>
+
+        {/* MY VIBE FOOTER (List Your Biz & Sign Out) */}
+        <footer className={`pt-6 border-t ${theme.border} space-y-3 px-1`}>
+          <div
+            onClick={() => onOpenPartnerModal('restaurant')}
+            className={`p-4 rounded-3xl ${theme.card} border ${theme.border} flex items-center justify-between cursor-pointer hover:border-[#ffcb05]/60 transition-all shadow-sm`}
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-[#ffcb05]/15 text-[#b45309] dark:text-[#ffcb05] rounded-xl">
+                <Store size={20} />
+              </div>
+              <div>
+                <p className={`font-bold text-xs uppercase tracking-tight ${theme.text}`}>List Your Business on A2 Vibe</p>
+                <p className={`text-[10px] ${theme.secondaryText}`}>Feature your shop, restaurant, or local event</p>
+              </div>
+            </div>
+            <ArrowRight size={18} className="text-[#ffcb05]" />
+          </div>
+
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="w-full py-3.5 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500/20 font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95"
+            >
+              <LogOut size={14} />
+              <span>Sign Out ({user.email})</span>
+            </button>
+          )}
+        </footer>
       </div>
     </div>
   );
@@ -2919,9 +2929,6 @@ export default function App() {
   const [bucketList, setBucketList] = useState(() => {
     try { const s = localStorage.getItem('a2v_bucketlist'); return s ? JSON.parse(s) : DEFAULT_BUCKET_ITEMS; } catch { return DEFAULT_BUCKET_ITEMS; }
   });
-  const [vibeTags, setVibeTags] = useState(() => {
-    try { const s = localStorage.getItem('a2v_vibetags'); return s ? JSON.parse(s) : []; } catch { return []; }
-  });
 
   const [itineraries] = useState(happeningsData);
   const [dining, setDining] = useState(eatsData);
@@ -2993,7 +3000,6 @@ export default function App() {
             if (data.favorites) setFavorites(data.favorites);
             if (data.stats) setStats(data.stats);
             if (data.bucketList) setBucketList(data.bucketList);
-            if (data.vibeTags) setVibeTags(data.vibeTags);
           }
         } catch (err) {
           console.error("Error fetching user profile:", err);
@@ -3052,23 +3058,48 @@ export default function App() {
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <div className={`w-full max-w-xl min-h-screen ${theme.appBg} relative shadow-2xl flex flex-col items-center border-x border-white/5`}>
         
-        <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/90 backdrop-blur-xl border-b ${theme.border} px-5 py-5 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
-          <div className="flex items-center gap-4 cursor-pointer" onClick={() => { setActiveTool(null); setView('home'); }}>
-            <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black"><Building size={20}/></div>
+        {/* Persistent App Header with Sign In/Sign Up */}
+        <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/90 backdrop-blur-xl border-b ${theme.border} px-5 py-4 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTool(null); setView('home'); }}>
+            <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black flex-shrink-0">
+              <Building size={20}/>
+            </div>
             <div className="flex flex-col leading-none text-left">
               <span className={`text-[11px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span>
               <span className={`text-[9px] font-header font-bold uppercase tracking-widest ${theme.secondaryText}`}>Vibe</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => { setActiveTool(null); setView('profile'); }} className={`w-10 h-10 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'} flex items-center justify-center overflow-hidden border ${theme.text}`}>
-              {user && user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <User size={18}/>}
+          
+          <div className="flex items-center gap-2.5">
+            {!user ? (
+              <button
+                onClick={handleLogin}
+                className="px-3.5 py-2 rounded-xl bg-[#ffcb05] text-black text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 transition-all"
+              >
+                <LogIn size={13} />
+                <span>Sign In</span>
+              </button>
+            ) : (
+              <button 
+                onClick={() => { setActiveTool(null); setView('profile'); }} 
+                className={`w-9 h-9 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'} flex items-center justify-center overflow-hidden border ${theme.text}`}
+                title="Open My Vibe"
+              >
+                {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <User size={16}/>}
+              </button>
+            )}
+
+            <button 
+              onClick={() => setThemeKey(theme.isDark ? 'light' : 'dark')} 
+              className={`p-2.5 rounded-2xl bg-[#00274c] hover:bg-[#ffcb05] transition-colors border border-white/10 ${theme.text}`}
+              title="Toggle theme"
+            >
+              {theme.isDark ? <Sun size={18} className="text-[#ffcb05]" /> : <Moon size={18} className="text-white" />}
             </button>
-            <button onClick={() => setThemeKey(theme.isDark ? 'light' : 'dark')} className={`p-3 rounded-2xl bg-[#00274c] hover:bg-[#ffcb05] transition-colors border border-white/10 ${theme.text}`}>{theme.isDark ? <Sun size={20} className="text-[#ffcb05]" /> : <Moon size={20} className="text-white" />}</button>
           </div>
         </header>
 
-        <main className="flex-1 pt-32 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
+        <main className="flex-1 pt-28 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           
           <ParkDetailModal
@@ -3127,7 +3158,17 @@ export default function App() {
           />
 
           {activeTool ? (
-            <ToolFullScreenView type={activeTool} onClose={() => setActiveTool(null)} theme={theme} stats={stats} setStats={setStats} dining={dining} bucketList={bucketList} setBucketList={setBucketList} user={user} />
+            <ToolFullScreenView 
+              type={activeTool} 
+              onClose={() => setActiveTool(null)} 
+              theme={theme} 
+              stats={stats} 
+              setStats={setStats} 
+              dining={dining} 
+              bucketList={bucketList} 
+              setBucketList={setBucketList} 
+              user={user} 
+            />
           ) : (
             <>
               {view === 'home' && (
@@ -3182,8 +3223,6 @@ export default function App() {
                   user={user} 
                   handleLogin={handleLogin} 
                   handleLogout={handleLogout} 
-                  vibeTags={vibeTags} 
-                  setVibeTags={setVibeTags} 
                   onOpenPartnerModal={openPartnerModal}
                   onOpenContributorModal={openContributorModal}
                   onOpenParksModal={openParksModal}
