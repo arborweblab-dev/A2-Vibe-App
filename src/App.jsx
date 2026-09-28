@@ -961,7 +961,7 @@ const MyVibeHeroSlideshow = ({
 };
 
 /* =========================================================================
-   NEW DYNAMIC "THE SCENE" SLIDESHOW: FEATURED EATS, HAPPENINGS, SHOPS & A2 VIBES
+   "THE SCENE" SLIDESHOW: BRAND-FORWARD SLIDESHOW (A2 VIBE SPECIFIC)
    ========================================================================= */
 const TheSceneHeroSlideshow = ({ 
   dining, 
@@ -971,7 +971,7 @@ const TheSceneHeroSlideshow = ({
 }) => {
   const [slideIdx, setSlideIdx] = useState(0);
 
-  // Construct an interleaved feed: Eats -> Scene Image -> Happenings -> Scene Image -> Shop...
+  // Construct an interleaved feed: Eats -> A2 Vibe Scene -> Happenings -> A2 Vibe Scene -> Shop...
   const sceneSlides = useMemo(() => {
     const featuredEats = (dining || []).filter(d => d.isFeatured || d.rating >= '4.8').slice(0, 3);
     const featuredEvents = (itineraries || []).filter(e => e.isFeatured || e.price).slice(0, 3);
@@ -984,23 +984,23 @@ const TheSceneHeroSlideshow = ({
       if (featuredEats[i]) {
         slides.push({
           type: 'eats',
-          categoryBadge: featuredEats[i].cuisine || 'Eats Spotlight',
+          categoryBadge: featuredEats[i].cuisine || 'Flavors Spotlight',
           badgeColor: 'bg-[#f97316] text-white',
           title: featuredEats[i].title || featuredEats[i].name,
-          subtitle: featuredEats[i].shortDesc || featuredEats[i].neighborhood || 'Ann Arbor Dining',
+          subtitle: featuredEats[i].shortDesc || featuredEats[i].neighborhood || 'A2 Vibe Curated Eatery',
           img: featuredEats[i].img,
           rawItem: { ...featuredEats[i], type: 'dining' }
         });
       }
 
-      // Interleave scenic Ann Arbor photo
+      // Brand-Centric Ann Arbor Photo Slide
       if (SLIDE_IMAGES[i % SLIDE_IMAGES.length]) {
         slides.push({
           type: 'city',
-          categoryBadge: 'A2 City Vibe',
+          categoryBadge: 'A2 Vibe City Lens',
           badgeColor: 'bg-[#ffcb05] text-black',
-          title: 'The Tree Town Scene',
-          subtitle: 'Pure Ann Arbor culture, parks, music, and energy.',
+          title: 'The Scene',
+          subtitle: 'Curated by A2 Vibe • The Official Local City App',
           img: SLIDE_IMAGES[i % SLIDE_IMAGES.length],
           rawItem: null
         });
@@ -1012,7 +1012,7 @@ const TheSceneHeroSlideshow = ({
           categoryBadge: Array.isArray(featuredEvents[i].category) ? featuredEvents[i].category[0] : (featuredEvents[i].category || 'Happenings'),
           badgeColor: 'bg-[#0284c7] text-white',
           title: featuredEvents[i].name || featuredEvents[i].title,
-          subtitle: featuredEvents[i].date ? `📅 ${featuredEvents[i].date} • ${featuredEvents[i].address || 'Ann Arbor'}` : (featuredEvents[i].shortDesc || 'Happening in A2'),
+          subtitle: featuredEvents[i].date ? `📅 ${featuredEvents[i].date} • ${featuredEvents[i].address || 'Ann Arbor'}` : (featuredEvents[i].shortDesc || 'A2 Vibe Top Event Pick'),
           img: featuredEvents[i].img,
           rawItem: { ...featuredEvents[i], type: 'experience' }
         });
@@ -1024,19 +1024,19 @@ const TheSceneHeroSlideshow = ({
           categoryBadge: featuredShops[i].category || 'Featured Retail',
           badgeColor: 'bg-[#ffcb05] text-black',
           title: featuredShops[i].name,
-          subtitle: featuredShops[i].shortDesc || featuredShops[i].address,
+          subtitle: featuredShops[i].shortDesc || featuredShops[i].address || 'A2 Vibe Verified Store',
           img: featuredShops[i].img,
           rawItem: { ...featuredShops[i], type: 'shop' }
         });
       }
     }
 
-    return slides.length > 0 ? slides : SLIDE_IMAGES.map((img, idx) => ({
+    return slides.length > 0 ? slides : SLIDE_IMAGES.map((img) => ({
       type: 'city',
-      categoryBadge: 'The Scene',
+      categoryBadge: 'A2 Vibe City Lens',
       badgeColor: 'bg-[#ffcb05] text-black',
-      title: 'Curated by A2 Vibe',
-      subtitle: 'Discover Tree Town local gems, flavors, and shops.',
+      title: 'The Scene',
+      subtitle: 'Curated by A2 Vibe • The Official Local City App',
       img: img,
       rawItem: null
     }));
@@ -2811,7 +2811,7 @@ const HomeView = ({
   return (
     <div className="space-y-12 animate-fade text-left relative z-10 pb-16 font-sans w-full">
       {/* =========================================================================
-          THE SCENE: MULTI-CATEGORY FEATURED HERO SLIDESHOW (Eats, Happenings, Shops & A2 Imagery)
+          THE SCENE: BRAND-FORWARD MULTI-CATEGORY HERO SLIDESHOW (A2 Vibe App Focused)
           ========================================================================= */}
       <TheSceneHeroSlideshow
         dining={dining}
@@ -3614,7 +3614,7 @@ export default function App() {
                                 <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{exp.name}</h3>
                                 {exp.date && <p className="text-[10px] font-bold text-[#ffcb05] mt-0.5 truncate">{exp.date}</p>}
                                 <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
-                                  {Array.isArray(exp.category) ? exp.category.join(' • ') : exp.category}
+                                  {Array.isArray(exp.category) ? exp.category[0] : exp.category}
                                 </span>
                               </div>
                             </div>
