@@ -1949,6 +1949,26 @@ const HubView = ({
     f.type === 'shop' || f.id?.startsWith('shop-')
   );
 
+  const [activeFavTab, setActiveFavTab] = useState('all');
+
+  const favTabs = [
+    { id: 'all', label: `All (${userFavorites.length})` },
+    { id: 'eats', label: `Eats (${eatsFavs.length})` },
+    { id: 'shops', label: `Shops (${shopFavs.length})` },
+    { id: 'events', label: `Events (${happeningsFavs.length})` },
+    { id: 'guides', label: `Guides (${guideFavs.length})` }
+  ];
+
+  const displayedFavorites = useMemo(() => {
+    switch (activeFavTab) {
+      case 'eats': return eatsFavs;
+      case 'shops': return shopFavs;
+      case 'events': return happeningsFavs;
+      case 'guides': return guideFavs;
+      default: return userFavorites;
+    }
+  }, [activeFavTab, userFavorites, eatsFavs, shopFavs, happeningsFavs, guideFavs]);
+
   const [selectedForumChannel, setSelectedForumChannel] = useState('All');
   const [forumStories, setForumStories] = useState([]);
   const [forumPostTitle, setForumPostTitle] = useState('');
@@ -2053,7 +2073,7 @@ const HubView = ({
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
 
-        {/* TOWNIE DAY PLANNER WIDGET (Replaces Loyalty Widget) */}
+        {/* TOWNIE DAY PLANNER WIDGET */}
         <TownieDayPlannerWidget theme={theme} dining={dining} onSelectSpot={setSelectedItem} />
 
         <div className={`${theme.card} p-5 rounded-[32px] border ${theme.border} flex flex-col gap-4 text-center shadow-lg mx-1`}>
@@ -2079,136 +2099,111 @@ const HubView = ({
           )}
         </div>
 
-        <div className="space-y-8">
-          {/* EATS FAVS */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-2">
-                <Utensils size={16} className="text-[#f97316]" />
-                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Eats Favs ({eatsFavs.length})</h4>
-              </div>
-              <button onClick={() => setView('flavors')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#34a4b8] tracking-[0.2em] hover:underline">View All Flavors →</button>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {!eatsFavs.length ? (
-                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No eats saved yet</div>
-              ) : (
-                eatsFavs.map(fav => (
-                  <div key={`eats-${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
-                    {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={20} className="opacity-40"/></div>}
-                    <div className="flex-1">
-                      <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest">{fav.cuisine || 'A2 Eats'}</p>
-                    </div>
-                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
-                  </div>
-                ))
-              )}
+        {/* SAVED FAVORITES (Tabbed / Segmented Control) */}
+        <section className="space-y-4 px-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Heart size={18} className="text-red-500 fill-red-500" />
+              <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>
+                Saved Favorites ({userFavorites.length})
+              </h4>
             </div>
           </div>
 
-          {/* SHOP FAVS */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-2">
-                <ShoppingBag size={16} className="text-[#ffcb05]" />
-                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Shop Favs ({shopFavs.length})</h4>
+          {/* Segmented Chips */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+            {favTabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveFavTab(tab.id)}
+                className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap transition-all border ${
+                  activeFavTab === tab.id
+                    ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md scale-105'
+                    : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* 2-Column Responsive Card Grid */}
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            {displayedFavorites.length === 0 ? (
+              <div className={`col-span-2 p-8 border-2 border-dashed rounded-3xl text-center opacity-40 text-[10px] font-black uppercase tracking-widest ${theme.border}`}>
+                No saved items in this category
               </div>
-              <button onClick={onOpenShopsModal} className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] hover:underline">Explore All Shops →</button>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {!shopFavs.length ? (
-                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No shops saved yet</div>
-              ) : (
-                shopFavs.map(fav => (
-                  <div 
-                    key={`shop-${fav.id}`} 
-                    onClick={() => {
-                      if (onSelectShop) onSelectShop(fav);
-                    }} 
-                    className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}
+            ) : (
+              displayedFavorites.map(fav => {
+                const isShop = fav.type === 'shop' || fav.id?.startsWith('shop-');
+                const isEats = fav.type === 'dining' || Boolean(fav.cuisine);
+                const isEvent = fav.type === 'experience' || (fav.date && !fav.cuisine);
+
+                const badgeText = isShop
+                  ? (fav.category || 'Retail')
+                  : isEats
+                  ? (fav.cuisine || 'Eats')
+                  : isEvent
+                  ? (Array.isArray(fav.category) ? fav.category[0] : (fav.category || 'Event'))
+                  : (fav.category || 'Guide');
+
+                const handleClick = () => {
+                  if (isShop && onSelectShop) {
+                    onSelectShop(fav);
+                  } else {
+                    setSelectedItem(fav);
+                  }
+                };
+
+                return (
+                  <div
+                    key={`${fav.id}-${fav.type || 'fav'}`}
+                    onClick={handleClick}
+                    className={`${theme.card} rounded-3xl border ${theme.border} overflow-hidden shadow-md flex flex-col justify-between cursor-pointer group hover:border-[#ffcb05]/50 active:scale-[0.98] transition-all relative`}
                   >
-                    {fav.img ? (
-                      <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner flex-shrink-0" alt="" />
-                    ) : (
-                      <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center flex-shrink-0`}>
-                        <Store size={20} className="text-[#ffcb05]" />
+                    <div className="relative h-28 overflow-hidden w-full">
+                      {fav.img ? (
+                        <img src={fav.img} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className={`w-full h-full ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-center`}>
+                          {isShop ? <Store size={22} className="opacity-40 text-[#ffcb05]" /> : <Building size={22} className="opacity-30" />}
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(isShop ? { ...fav, type: 'shop' } : fav);
+                        }}
+                        className="absolute top-2 right-2 p-1.5 rounded-full bg-black/40 backdrop-blur-md text-red-500 hover:scale-110 active:scale-90 transition-transform"
+                      >
+                        <Heart size={14} fill="currentColor" />
+                      </button>
+
+                      <span className="absolute bottom-2 left-2 bg-[#ffcb05] text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-md truncate max-w-[85%]">
+                        {badgeText}
+                      </span>
+                    </div>
+
+                    <div className="p-3 flex-1 flex flex-col justify-between space-y-1">
+                      <div>
+                        <h5 className={`font-bold text-xs leading-tight line-clamp-1 uppercase tracking-tight ${theme.text}`}>
+                          {fav.name || fav.title}
+                        </h5>
+                        {(fav.address || fav.date) && (
+                          <p className={`text-[10px] truncate ${theme.secondaryText} mt-0.5`}>
+                            {fav.date ? `📅 ${fav.date}` : `📍 ${fav.address}`}
+                          </p>
+                        )}
                       </div>
-                    )}
-                    <div className="flex-1 min-w-0 pr-1">
-                      <p className={`text-sm font-bold leading-tight truncate ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest truncate">
-                        {fav.category || 'Retail Store'}
-                      </p>
-                      {fav.address && <p className={`text-[10px] truncate ${theme.secondaryText} mt-0.5`}>📍 {fav.address}</p>}
                     </div>
-                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite({ ...fav, type: 'shop' });}} className="text-red-500 p-2 flex-shrink-0">
-                      <Heart size={18} fill="currentColor" />
-                    </button>
                   </div>
-                ))
-              )}
-            </div>
+                );
+              })
+            )}
           </div>
-
-          {/* HAPPENINGS FAVS */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-2">
-                <Sparkles size={16} className="text-[#0284c7] dark:text-[#38bdf8]" />
-                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Happenings Favs ({happeningsFavs.length})</h4>
-              </div>
-              <button onClick={() => setView('fun')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] hover:underline">View All Happenings →</button>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {!happeningsFavs.length ? (
-                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No happenings saved yet</div>
-              ) : (
-                happeningsFavs.map(fav => (
-                  <div key={`happenings-${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
-                    {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={20} className="opacity-40"/></div>}
-                    <div className="flex-1">
-                      <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest">
-                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'A2 Event')}
-                      </p>
-                    </div>
-                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* GUIDE FAVS */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-2">
-                <BookText size={16} className="text-[#a855f7]" />
-                <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Guide Favs ({guideFavs.length})</h4>
-              </div>
-              <button onClick={() => setView('journal')} className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] hover:underline">View All Guide Stories →</button>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {!guideFavs.length ? (
-                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-[9px] font-black uppercase tracking-widest ${theme.border}`}>No guide stories saved yet</div>
-              ) : (
-                guideFavs.map(fav => (
-                  <div key={`guide-${fav.id}`} onClick={() => setSelectedItem(fav)} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-5 cursor-pointer relative shadow-md`}>
-                    {fav.img ? <img src={fav.img} className="w-16 h-16 rounded-2xl object-cover shadow-inner" alt="" /> : <div className={`w-16 h-16 rounded-2xl ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={20} className="opacity-40"/></div>}
-                    <div className="flex-1">
-                      <p className={`text-sm font-bold leading-tight ${theme.text}`}>{fav.name || fav.title}</p>
-                      <p className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] mt-1 tracking-widest">
-                        {Array.isArray(fav.category) ? fav.category.join(' • ') : (fav.category || 'A2 Guide')}
-                      </p>
-                    </div>
-                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(fav);}} className="text-red-500 p-2"><Heart size={18} fill="currentColor" /></button>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
+        </section>
 
         {/* URBAN AND FUN TOOLS */}
         <section className={`space-y-5 w-full pt-4 border-t ${theme.border}`}>
