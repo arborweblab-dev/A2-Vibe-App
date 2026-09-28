@@ -784,6 +784,189 @@ const DEFAULT_BUCKET_ITEMS = [
   { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
 ];
 
+/* =========================================================================
+   NEW DYNAMIC FAVORITES SLIDESHOW COMPONENT FOR MY VIBE TOP SECTION
+   ========================================================================= */
+const MyVibeHeroSlideshow = ({ 
+  user, 
+  userFavorites, 
+  theme, 
+  onSelectItem, 
+  onSelectShop, 
+  setView 
+}) => {
+  const [slideIdx, setSlideIdx] = useState(0);
+  const hasFavorites = userFavorites && userFavorites.length > 0;
+
+  // Auto-advance every 5 seconds if there are multiple favorites
+  useEffect(() => {
+    if (!hasFavorites || userFavorites.length <= 1) return;
+    const timer = setInterval(() => {
+      setSlideIdx(prev => (prev + 1) % userFavorites.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [hasFavorites, userFavorites.length]);
+
+  const currentFav = hasFavorites ? userFavorites[slideIdx % userFavorites.length] : null;
+
+  const nextSlide = (e) => {
+    e.stopPropagation();
+    if (!hasFavorites) return;
+    setSlideIdx(prev => (prev + 1) % userFavorites.length);
+  };
+
+  const prevSlide = (e) => {
+    e.stopPropagation();
+    if (!hasFavorites) return;
+    setSlideIdx(prev => (prev - 1 + userFavorites.length) % userFavorites.length);
+  };
+
+  const handleSpotClick = () => {
+    if (!currentFav) return;
+    const isShop = currentFav.type === 'shop' || currentFav.id?.startsWith('shop-');
+    if (isShop && onSelectShop) {
+      onSelectShop(currentFav);
+    } else if (onSelectItem) {
+      onSelectItem(currentFav);
+    }
+  };
+
+  return (
+    <div 
+      onClick={hasFavorites ? handleSpotClick : undefined}
+      className={`relative h-64 rounded-[44px] overflow-hidden border border-white/10 group shadow-2xl w-full select-none ${hasFavorites ? 'cursor-pointer' : ''}`}
+    >
+      {/* Background Image / Placeholder */}
+      {hasFavorites ? (
+        currentFav?.img ? (
+          <img 
+            key={currentFav.id || slideIdx}
+            src={currentFav.img} 
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105" 
+            alt={currentFav.name || currentFav.title || ''} 
+          />
+        ) : (
+          <div className="absolute inset-0 bg-[#00274c] flex items-center justify-center">
+            <Building size={64} className="text-[#ffcb05]/20" />
+          </div>
+        )
+      ) : (
+        <img 
+          src={SLIDE_IMAGES[0]} 
+          className="absolute inset-0 w-full h-full object-cover" 
+          alt="Ann Arbor" 
+        />
+      )}
+
+      {/* Cinematic Gradient Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0a121e] via-[#0a121e]/50 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
+
+      {/* Top Header Pill: User ID + Favorite Counter */}
+      <div className="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
+        <div className="flex items-center gap-3 bg-black/40 backdrop-blur-md py-1.5 px-3 rounded-full border border-white/10">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00274c] to-[#ffcb05] p-0.5 shadow-md flex-shrink-0">
+            <div className={`w-full h-full rounded-full ${theme.card} flex items-center justify-center text-white overflow-hidden`}>
+              {user?.photoURL ? (
+                <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <User size={14} className={theme.text} />
+              )}
+            </div>
+          </div>
+          <span className="text-[11px] font-black uppercase text-white tracking-wider pr-1">
+            {user ? `${user.displayName?.split(' ')[0]}'s Vibe` : 'My Vibe'}
+          </span>
+        </div>
+
+        {hasFavorites && (
+          <span className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-2.5 py-1 rounded-full shadow-md tracking-wider">
+            {(slideIdx % userFavorites.length) + 1} / {userFavorites.length} Saved
+          </span>
+        )}
+      </div>
+
+      {/* Slide Navigation Arrows */}
+      {hasFavorites && userFavorites.length > 1 && (
+        <div className="absolute top-1/2 left-3 right-3 -translate-y-1/2 flex justify-between pointer-events-none z-10">
+          <button 
+            onClick={prevSlide}
+            className="w-9 h-9 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white pointer-events-auto active:scale-90 transition-all border border-white/10 hover:bg-black/70 shadow-lg"
+            title="Previous Favorite"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button 
+            onClick={nextSlide}
+            className="w-9 h-9 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white pointer-events-auto active:scale-90 transition-all border border-white/10 hover:bg-black/70 shadow-lg"
+            title="Next Favorite"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      )}
+
+      {/* Bottom Content Area */}
+      <div className="absolute bottom-5 left-5 right-5 z-10">
+        {hasFavorites ? (
+          <div className="space-y-1 animate-fade text-left">
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest bg-black/60 px-2 py-0.5 rounded-md">
+                {currentFav.cuisine || currentFav.category || (currentFav.type === 'shop' ? 'Shop' : 'Favorite')}
+              </span>
+              {(currentFav.price || currentFav.date) && (
+                <span className="text-[9px] font-bold text-slate-300">
+                  {currentFav.price || currentFav.date}
+                </span>
+              )}
+            </div>
+
+            <h3 className="text-2xl font-header font-black uppercase text-white drop-shadow-md tracking-tight leading-tight line-clamp-1 group-hover:text-[#ffcb05] transition-colors">
+              {currentFav.name || currentFav.title}
+            </h3>
+
+            <p className="text-[11px] text-slate-300 line-clamp-1 leading-snug">
+              {currentFav.shortDesc || currentFav.address || currentFav.neighborhood || 'Tap to view details & route'}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-1.5 text-left">
+            <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest">
+              Curate Your Tree Town Feed
+            </span>
+            <h3 className="text-xl font-header font-black uppercase text-white tracking-tight">
+              No Favorites Saved Yet
+            </h3>
+            <p className="text-[11px] text-slate-300">
+              Tap the heart icon on any restaurant, boutique, or happening to turn this into your personal slideshow.
+            </p>
+            <button 
+              onClick={(e) => { e.stopPropagation(); setView('flavors'); }}
+              className="mt-1 px-3.5 py-1.5 bg-[#ffcb05] text-black text-[9px] font-black uppercase rounded-xl tracking-wider shadow-md active:scale-95 transition-all"
+            >
+              Explore Flavors →
+            </button>
+          </div>
+        )}
+
+        {/* Dots Pagination */}
+        {hasFavorites && userFavorites.length > 1 && (
+          <div className="flex gap-1.5 justify-center pt-3">
+            {userFavorites.slice(0, 10).map((_, i) => (
+              <div 
+                key={i} 
+                className={`h-1 rounded-full transition-all duration-300 ${
+                  i === (slideIdx % userFavorites.length) ? 'w-6 bg-[#ffcb05]' : 'w-1.5 bg-white/40'
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
   if (!isOpen || !park) return null;
 
@@ -1931,8 +2114,6 @@ const HubView = ({
   onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
   onOpenShopsModal, onSelectShop
 }) => {
-  const [headerIdx, setHeaderIdx] = useState(0);
-  const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
   const userFavorites = favorites || [];
 
   const eatsFavs = userFavorites.filter(f => (f.type === 'dining' || Boolean(f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-'));
@@ -2069,31 +2250,17 @@ const HubView = ({
       />
 
       <div className="space-y-8 px-2 w-full">
-        {/* Profile Card Header */}
-        <div className="relative h-60 rounded-[44px] overflow-hidden border border-white/10 group shadow-2xl w-full">
-          <img src={SLIDE_IMAGES[headerIdx]} className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" alt="" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a121e] via-[#0a121e]/40 to-transparent" />
-          <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#00274c] to-[#ffcb05] p-0.5 shadow-2xl flex-shrink-0">
-                <div className={`w-full h-full rounded-full ${theme.card} flex items-center justify-center text-white overflow-hidden`}>
-                  {user && user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <MapPin size={24} className={theme.text} />}
-                </div>
-              </div>
-              <div>
-                <h3 className="text-2xl font-header font-black uppercase text-white drop-shadow-lg tracking-tight">
-                  {user ? user.displayName?.split(' ')[0] + "'s Vibe" : 'My Vibe'}
-                </h3>
-                <p className="text-[9px] font-black uppercase text-[#ffcb05] tracking-[0.2em] opacity-90">
-                  {user ? `${user.displayName || user.email}` : 'Personal Travel & Townie Hub'}
-                </p>
-              </div>
-            </div>
-            <button onClick={cycleHeader} className="p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white transition-all active:scale-90" title="Cycle Profile Image">
-              <Camera size={18} />
-            </button>
-          </div>
-        </div>
+        {/* =========================================================================
+            TOP PROFILE CARD: DYNAMIC SLIDESHOW OF SAVED HAPPENINGS, EATS & SHOPS
+            ========================================================================= */}
+        <MyVibeHeroSlideshow
+          user={user}
+          userFavorites={userFavorites}
+          theme={theme}
+          onSelectItem={setSelectedItem}
+          onSelectShop={onSelectShop}
+          setView={setView}
+        />
 
         {/* SAVED FAVORITES (Tabbed / Segmented Control with Category Header & Quick Navigation) */}
         <section className="space-y-4 px-1">
