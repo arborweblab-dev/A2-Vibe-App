@@ -785,7 +785,7 @@ const DEFAULT_BUCKET_ITEMS = [
 ];
 
 /* =========================================================================
-   NEW DYNAMIC FAVORITES SLIDESHOW COMPONENT FOR MY VIBE TOP SECTION
+   DYNAMIC FAVORITES SLIDESHOW COMPONENT FOR MY VIBE TOP SECTION
    ========================================================================= */
 const MyVibeHeroSlideshow = ({ 
   user, 
@@ -798,7 +798,6 @@ const MyVibeHeroSlideshow = ({
   const [slideIdx, setSlideIdx] = useState(0);
   const hasFavorites = userFavorites && userFavorites.length > 0;
 
-  // Auto-advance every 5 seconds if there are multiple favorites
   useEffect(() => {
     if (!hasFavorites || userFavorites.length <= 1) return;
     const timer = setInterval(() => {
@@ -836,7 +835,6 @@ const MyVibeHeroSlideshow = ({
       onClick={hasFavorites ? handleSpotClick : undefined}
       className={`relative h-64 rounded-[44px] overflow-hidden border border-white/10 group shadow-2xl w-full select-none ${hasFavorites ? 'cursor-pointer' : ''}`}
     >
-      {/* Background Image / Placeholder */}
       {hasFavorites ? (
         currentFav?.img ? (
           <img 
@@ -858,11 +856,9 @@ const MyVibeHeroSlideshow = ({
         />
       )}
 
-      {/* Cinematic Gradient Overlays */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a121e] via-[#0a121e]/50 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
 
-      {/* Top Header Pill: User ID + Favorite Counter */}
       <div className="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
         <div className="flex items-center gap-3 bg-black/40 backdrop-blur-md py-1.5 px-3 rounded-full border border-white/10">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00274c] to-[#ffcb05] p-0.5 shadow-md flex-shrink-0">
@@ -886,7 +882,6 @@ const MyVibeHeroSlideshow = ({
         )}
       </div>
 
-      {/* Slide Navigation Arrows */}
       {hasFavorites && userFavorites.length > 1 && (
         <div className="absolute top-1/2 left-3 right-3 -translate-y-1/2 flex justify-between pointer-events-none z-10">
           <button 
@@ -906,7 +901,6 @@ const MyVibeHeroSlideshow = ({
         </div>
       )}
 
-      {/* Bottom Content Area */}
       <div className="absolute bottom-5 left-5 right-5 z-10">
         {hasFavorites ? (
           <div className="space-y-1 animate-fade text-left">
@@ -949,7 +943,6 @@ const MyVibeHeroSlideshow = ({
           </div>
         )}
 
-        {/* Dots Pagination */}
         {hasFavorites && userFavorites.length > 1 && (
           <div className="flex gap-1.5 justify-center pt-3">
             {userFavorites.slice(0, 10).map((_, i) => (
@@ -964,6 +957,201 @@ const MyVibeHeroSlideshow = ({
         )}
       </div>
     </div>
+  );
+};
+
+/* =========================================================================
+   NEW DYNAMIC "THE SCENE" SLIDESHOW: FEATURED EATS, HAPPENINGS, SHOPS & A2 VIBES
+   ========================================================================= */
+const TheSceneHeroSlideshow = ({ 
+  dining, 
+  itineraries, 
+  onSelectItem, 
+  onSelectShop 
+}) => {
+  const [slideIdx, setSlideIdx] = useState(0);
+
+  // Construct an interleaved feed: Eats -> Scene Image -> Happenings -> Scene Image -> Shop...
+  const sceneSlides = useMemo(() => {
+    const featuredEats = (dining || []).filter(d => d.isFeatured || d.rating >= '4.8').slice(0, 3);
+    const featuredEvents = (itineraries || []).filter(e => e.isFeatured || e.price).slice(0, 3);
+    const featuredShops = SHOPS_DATA.filter(s => s.tier === 'featured').slice(0, 3);
+
+    const slides = [];
+    const maxLen = Math.max(featuredEats.length, featuredEvents.length, featuredShops.length, 1);
+
+    for (let i = 0; i < maxLen; i++) {
+      if (featuredEats[i]) {
+        slides.push({
+          type: 'eats',
+          categoryBadge: featuredEats[i].cuisine || 'Eats Spotlight',
+          badgeColor: 'bg-[#f97316] text-white',
+          title: featuredEats[i].title || featuredEats[i].name,
+          subtitle: featuredEats[i].shortDesc || featuredEats[i].neighborhood || 'Ann Arbor Dining',
+          img: featuredEats[i].img,
+          rawItem: { ...featuredEats[i], type: 'dining' }
+        });
+      }
+
+      // Interleave scenic Ann Arbor photo
+      if (SLIDE_IMAGES[i % SLIDE_IMAGES.length]) {
+        slides.push({
+          type: 'city',
+          categoryBadge: 'A2 City Vibe',
+          badgeColor: 'bg-[#ffcb05] text-black',
+          title: 'The Tree Town Scene',
+          subtitle: 'Pure Ann Arbor culture, parks, music, and energy.',
+          img: SLIDE_IMAGES[i % SLIDE_IMAGES.length],
+          rawItem: null
+        });
+      }
+
+      if (featuredEvents[i]) {
+        slides.push({
+          type: 'event',
+          categoryBadge: Array.isArray(featuredEvents[i].category) ? featuredEvents[i].category[0] : (featuredEvents[i].category || 'Happenings'),
+          badgeColor: 'bg-[#0284c7] text-white',
+          title: featuredEvents[i].name || featuredEvents[i].title,
+          subtitle: featuredEvents[i].date ? `📅 ${featuredEvents[i].date} • ${featuredEvents[i].address || 'Ann Arbor'}` : (featuredEvents[i].shortDesc || 'Happening in A2'),
+          img: featuredEvents[i].img,
+          rawItem: { ...featuredEvents[i], type: 'experience' }
+        });
+      }
+
+      if (featuredShops[i]) {
+        slides.push({
+          type: 'shop',
+          categoryBadge: featuredShops[i].category || 'Featured Retail',
+          badgeColor: 'bg-[#ffcb05] text-black',
+          title: featuredShops[i].name,
+          subtitle: featuredShops[i].shortDesc || featuredShops[i].address,
+          img: featuredShops[i].img,
+          rawItem: { ...featuredShops[i], type: 'shop' }
+        });
+      }
+    }
+
+    return slides.length > 0 ? slides : SLIDE_IMAGES.map((img, idx) => ({
+      type: 'city',
+      categoryBadge: 'The Scene',
+      badgeColor: 'bg-[#ffcb05] text-black',
+      title: 'Curated by A2 Vibe',
+      subtitle: 'Discover Tree Town local gems, flavors, and shops.',
+      img: img,
+      rawItem: null
+    }));
+  }, [dining, itineraries]);
+
+  // Auto-advance every 5.5 seconds
+  useEffect(() => {
+    if (!sceneSlides || sceneSlides.length <= 1) return;
+    const timer = setInterval(() => {
+      setSlideIdx(prev => (prev + 1) % sceneSlides.length);
+    }, 5500);
+    return () => clearInterval(timer);
+  }, [sceneSlides]);
+
+  const currentSlide = sceneSlides[slideIdx % sceneSlides.length];
+
+  const handleSlideClick = () => {
+    if (!currentSlide || !currentSlide.rawItem) return;
+    if (currentSlide.type === 'shop' && onSelectShop) {
+      onSelectShop(currentSlide.rawItem);
+    } else if (onSelectItem) {
+      onSelectItem(currentSlide.rawItem);
+    }
+  };
+
+  const nextSlide = (e) => {
+    e.stopPropagation();
+    setSlideIdx(prev => (prev + 1) % sceneSlides.length);
+  };
+
+  const prevSlide = (e) => {
+    e.stopPropagation();
+    setSlideIdx(prev => (prev - 1 + sceneSlides.length) % sceneSlides.length);
+  };
+
+  return (
+    <section 
+      onClick={currentSlide?.rawItem ? handleSlideClick : undefined}
+      className={`relative h-72 rounded-[40px] overflow-hidden shadow-2xl flex items-end p-7 mx-1 border border-white/10 group select-none ${currentSlide?.rawItem ? 'cursor-pointer' : ''}`}
+    >
+      {/* Background Image */}
+      {currentSlide?.img ? (
+        <img 
+          key={currentSlide.img + slideIdx}
+          src={currentSlide.img} 
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105" 
+          alt={currentSlide.title || 'The Scene'} 
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-[#00274c] via-[#05182d] to-[#0a121e]" />
+      )}
+
+      {/* Cinematic Gradient Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
+
+      {/* Top Header Badge & Slide Counter */}
+      <div className="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
+        <span className={`text-[9px] font-black uppercase px-3 py-1 rounded-full shadow-md tracking-wider ${currentSlide.badgeColor}`}>
+          ★ {currentSlide.categoryBadge}
+        </span>
+
+        <span className="bg-black/50 backdrop-blur-md text-white text-[9px] font-black uppercase px-2.5 py-1 rounded-full border border-white/10 tracking-widest">
+          {(slideIdx % sceneSlides.length) + 1} / {sceneSlides.length}
+        </span>
+      </div>
+
+      {/* Manual Slide Navigation Buttons */}
+      <div className="absolute top-1/2 left-3 right-3 -translate-y-1/2 flex justify-between pointer-events-none z-10">
+        <button 
+          onClick={prevSlide}
+          className="w-9 h-9 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white pointer-events-auto active:scale-90 transition-all border border-white/10 hover:bg-black/70 shadow-lg"
+          title="Previous Slide"
+        >
+          <ChevronLeft size={18} />
+        </button>
+        <button 
+          onClick={nextSlide}
+          className="w-9 h-9 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white pointer-events-auto active:scale-90 transition-all border border-white/10 hover:bg-black/70 shadow-lg"
+          title="Next Slide"
+        >
+          <ChevronRight size={18} />
+        </button>
+      </div>
+
+      {/* Slide Text Content */}
+      <div className="relative z-10 text-white w-full pr-8">
+        <h1 className="text-3xl font-header font-black uppercase italic tracking-tighter leading-none mb-1.5 drop-shadow-md truncate group-hover:text-[#ffcb05] transition-colors">
+          {currentSlide.title}
+        </h1>
+        <p className="text-xs text-slate-200 font-medium line-clamp-1 drop-shadow-sm leading-snug">
+          {currentSlide.subtitle}
+        </p>
+
+        {/* Interactive Indicator */}
+        {currentSlide.rawItem && (
+          <div className="flex items-center gap-1.5 mt-2 text-[9px] font-black uppercase text-[#ffcb05] tracking-wider">
+            <span>Explore Details</span>
+            <ArrowRight size={11} />
+          </div>
+        )}
+
+        {/* Progress Bar / Indicator Dots */}
+        <div className="flex gap-1.5 justify-center pt-3">
+          {sceneSlides.slice(0, 8).map((_, i) => (
+            <div 
+              key={i} 
+              className={`h-1 rounded-full transition-all duration-300 ${
+                i === (slideIdx % Math.min(sceneSlides.length, 8)) ? 'w-6 bg-[#ffcb05]' : 'w-1.5 bg-white/40'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
 
@@ -2147,7 +2335,6 @@ const HubView = ({
     }
   }, [activeFavTab, userFavorites, eatsFavs, shopFavs, happeningsFavs, guideFavs]);
 
-  // Active Category Meta (Title, Section Link Label, Action)
   const categoryMeta = useMemo(() => {
     switch (activeFavTab) {
       case 'eats':
@@ -2187,7 +2374,6 @@ const HubView = ({
     }
   }, [activeFavTab, setView, onOpenShopsModal]);
 
-  // Community Voice & Participation
   const [communityTab, setCommunityTab] = useState('my-activity');
   const [selectedForumChannel, setSelectedForumChannel] = useState('All');
   const [forumStories, setForumStories] = useState([]);
@@ -2250,9 +2436,7 @@ const HubView = ({
       />
 
       <div className="space-y-8 px-2 w-full">
-        {/* =========================================================================
-            TOP PROFILE CARD: DYNAMIC SLIDESHOW OF SAVED HAPPENINGS, EATS & SHOPS
-            ========================================================================= */}
+        {/* TOP PROFILE CARD: DYNAMIC SLIDESHOW OF SAVED HAPPENINGS, EATS & SHOPS */}
         <MyVibeHeroSlideshow
           user={user}
           userFavorites={userFavorites}
@@ -2262,7 +2446,7 @@ const HubView = ({
           setView={setView}
         />
 
-        {/* SAVED FAVORITES (Tabbed / Segmented Control with Category Header & Quick Navigation) */}
+        {/* SAVED FAVORITES */}
         <section className="space-y-4 px-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -2273,7 +2457,6 @@ const HubView = ({
             </div>
           </div>
 
-          {/* Segmented Chips */}
           <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
             {favTabs.map(tab => (
               <button
@@ -2290,7 +2473,6 @@ const HubView = ({
             ))}
           </div>
 
-          {/* Category-Specific Header & Deep-Link */}
           {categoryMeta && (
             <div className={`flex items-center justify-between px-3 py-2.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-white/5' : 'bg-slate-100'} animate-fade`}>
               <div className="flex items-center gap-2 min-w-0">
@@ -2308,7 +2490,6 @@ const HubView = ({
             </div>
           )}
 
-          {/* 2-Column Responsive Card Grid */}
           <div className="grid grid-cols-2 gap-3 pt-1">
             {displayedFavorites.length === 0 ? (
               <div className={`col-span-2 p-8 border-2 border-dashed rounded-3xl text-center opacity-40 text-[10px] font-black uppercase tracking-widest ${theme.border}`}>
@@ -2439,7 +2620,6 @@ const HubView = ({
             </button>
           </div>
 
-          {/* Segmented Voice Switcher */}
           <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'}`}>
             <button
               onClick={() => setCommunityTab('my-activity')}
@@ -2586,7 +2766,7 @@ const HubView = ({
           )}
         </section>
 
-        {/* MY VIBE FOOTER (List Your Biz & Sign Out) */}
+        {/* MY VIBE FOOTER */}
         <footer className={`pt-6 border-t ${theme.border} space-y-3 px-1`}>
           <div
             onClick={() => onOpenPartnerModal('restaurant')}
@@ -2624,37 +2804,21 @@ const HomeView = ({
   toggleFavorite, setView, onOpenPartnerModal, onOpenParksModal, onOpenTransitModal,
   onOpenShopsModal, onSelectShop
 }) => {
-  const [heroIdx, setHeroIdx] = useState(0);
-  const [highlightIdx, setHighlightIdx] = useState(0);
-
-  useEffect(() => {
-    const t = setInterval(() => setHeroIdx(p => (p + 1) % SLIDE_IMAGES.length), 5000);
-    return () => clearInterval(t);
-  }, []);
-
-  useEffect(() => {
-    if (!featuredPosts || featuredPosts.length === 0) return;
-    const interval = setInterval(() => setHighlightIdx(p => (p + 1) % (featuredPosts.length || 1)), 6000);
-    return () => clearInterval(interval);
-  }, [featuredPosts]);
-
-  const nextHighlight = (e) => { e.stopPropagation(); setHighlightIdx(p => (p + 1) % featuredPosts.length); };
-  const prevHighlight = (e) => { e.stopPropagation(); setHighlightIdx(p => (p - 1 + featuredPosts.length) % featuredPosts.length); };
-
   const featuredShopsList = useMemo(() => {
     return SHOPS_DATA.filter(s => s.tier === 'featured');
   }, []);
 
   return (
     <div className="space-y-12 animate-fade text-left relative z-10 pb-16 font-sans w-full">
-      <section className="relative h-72 rounded-[40px] overflow-hidden shadow-2xl flex items-end p-8 mx-1 border border-white/5">
-        {SLIDE_IMAGES.map((img, i) => <img key={i} src={img} className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms] ${i === heroIdx ? 'opacity-100 scale-105' : 'opacity-0 scale-100'}`} alt="" />)}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-        <div className="relative z-10 text-white">
-          <h1 className="text-4xl font-header font-black uppercase italic tracking-tighter mb-2">The Scene</h1>
-          <p className="text-[#ffcb05] font-header font-medium tracking-[0.05em] text-base">Curated by A2 Vibe.</p>
-        </div>
-      </section>
+      {/* =========================================================================
+          THE SCENE: MULTI-CATEGORY FEATURED HERO SLIDESHOW (Eats, Happenings, Shops & A2 Imagery)
+          ========================================================================= */}
+      <TheSceneHeroSlideshow
+        dining={dining}
+        itineraries={itineraries}
+        onSelectItem={setSelectedItem}
+        onSelectShop={onSelectShop}
+      />
 
       <section>
         <div className="flex items-center gap-2 mb-4 px-2">
@@ -2732,34 +2896,6 @@ const HomeView = ({
             </div>
           ))}
         </div>
-      </section>
-
-      <section>
-        <div className="flex items-center gap-2 mb-5 px-2">
-          <Sparkles size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
-          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>City Pulse</h2>
-        </div>
-        
-        {featuredPosts && featuredPosts.length > 0 && (
-          <div className="px-1 relative">
-            <div onClick={() => setSelectedItem(featuredPosts[highlightIdx])} className="relative h-[420px] rounded-[48px] overflow-hidden shadow-2xl cursor-pointer group border border-white/10">
-              <img src={featuredPosts[highlightIdx]?.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-110" alt="" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute bottom-12 left-8 right-8 text-white space-y-3">
-                <span className="bg-[#ffcb05] text-black px-4 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Trending Now</span>
-                <h4 className="text-2xl font-header font-black uppercase italic leading-tight drop-shadow-md tracking-tighter">{featuredPosts[highlightIdx]?.title || ''}</h4>
-                <p className="text-sm font-medium opacity-80 line-clamp-2 leading-relaxed italic">{featuredPosts[highlightIdx]?.excerpt || ''}</p>
-              </div>
-              <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 flex justify-between px-4 pointer-events-none">
-                 <button onClick={prevHighlight} className="w-12 h-12 bg-black/30 backdrop-blur-xl rounded-full flex items-center justify-center text-white pointer-events-auto active:scale-90 transition-all border border-white/10 shadow-lg"><ChevronLeft size={24} /></button>
-                 <button onClick={nextHighlight} className="w-12 h-12 bg-black/30 backdrop-blur-xl rounded-full flex items-center justify-center text-white pointer-events-auto active:scale-90 transition-all border border-white/10 shadow-lg"><ChevronRight size={24} /></button>
-              </div>
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
-                {featuredPosts.map((_, i) => <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i === highlightIdx ? 'w-8 bg-[#ffcb05]' : 'w-2 bg-white/40'}`} />)}
-              </div>
-            </div>
-          </div>
-        )}
       </section>
 
       {/* FEATURED SHOPS */}
@@ -3193,7 +3329,6 @@ export default function App() {
     }
   };
 
-  // Merge Firestore Miss Kim collection into dining
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'Miss Kim'), (snapshot) => {
       if (!snapshot.empty) {
@@ -3213,7 +3348,6 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Auth Listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -3283,7 +3417,7 @@ export default function App() {
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <div className={`w-full max-w-xl min-h-screen ${theme.appBg} relative shadow-2xl flex flex-col items-center border-x border-white/5`}>
         
-        {/* Persistent App Header with Sign In/Sign Up */}
+        {/* Persistent App Header */}
         <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/90 backdrop-blur-xl border-b ${theme.border} px-5 py-4 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTool(null); setView('home'); }}>
             <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black flex-shrink-0">
