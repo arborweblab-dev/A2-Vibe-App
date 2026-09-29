@@ -17,7 +17,7 @@ import {
   Clock, Compass, Search, Dice5, HelpCircle, Award, Users, Plus, Trash2, RotateCcw, MessageSquare,
   Calendar, QrCode, CheckCircle2, ArrowRight, ExternalLink, Store, FileText, UploadCloud,
   PenTool, ShieldCheck, MessageCircle, Send, Trees, ThumbsUp, MessageCircleCode,
-  Dog, Accessibility, Bike, Baby, Bath, Check, ShoppingBag, Tag, Percent, LogOut, LogIn
+  Dog, Accessibility, Bike, Baby, Bath, Check, ShoppingBag, Tag, Percent, LogOut, LogIn, Share2
 } from 'lucide-react';
 
 import { journalData } from './data/journalData';
@@ -533,6 +533,26 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
             </div>
           </div>
         </div>
+
+        {/* SHOP MODAL CTA: GET LISTED */}
+        <div className={`p-4 border-t ${theme.border} ${theme.appBg}/95 backdrop-blur-md`}>
+          <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#00274c] to-[#0a121e] border border-[#ffcb05]/30 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest block">Retail & Cannabis Spotlight</span>
+              <p className="text-xs font-bold text-white truncate">Own a boutique, market, or dispensary?</p>
+            </div>
+            <button
+              onClick={() => {
+                onClose();
+                onOpenPartnerModal('shop');
+              }}
+              className="px-3.5 py-2 bg-[#ffcb05] text-black rounded-xl font-black uppercase text-[10px] tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
+            >
+              <span>Get Listed</span>
+              <ArrowRight size={12} />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -971,7 +991,6 @@ const TheSceneHeroSlideshow = ({
 }) => {
   const [slideIdx, setSlideIdx] = useState(0);
 
-  // Construct an interleaved feed: Eats -> A2 Vibe Scene -> Happenings -> A2 Vibe Scene -> Shop...
   const sceneSlides = useMemo(() => {
     const featuredEats = (dining || []).filter(d => d.isFeatured || d.rating >= '4.8').slice(0, 3);
     const featuredEvents = (itineraries || []).filter(e => e.isFeatured || e.price).slice(0, 3);
@@ -993,7 +1012,6 @@ const TheSceneHeroSlideshow = ({
         });
       }
 
-      // Brand-Centric Ann Arbor Photo Slide
       if (SLIDE_IMAGES[i % SLIDE_IMAGES.length]) {
         slides.push({
           type: 'city',
@@ -1042,7 +1060,6 @@ const TheSceneHeroSlideshow = ({
     }));
   }, [dining, itineraries]);
 
-  // Auto-advance every 5.5 seconds
   useEffect(() => {
     if (!sceneSlides || sceneSlides.length <= 1) return;
     const timer = setInterval(() => {
@@ -1077,7 +1094,6 @@ const TheSceneHeroSlideshow = ({
       onClick={currentSlide?.rawItem ? handleSlideClick : undefined}
       className={`relative h-72 rounded-[40px] overflow-hidden shadow-2xl flex items-end p-7 mx-1 border border-white/10 group select-none ${currentSlide?.rawItem ? 'cursor-pointer' : ''}`}
     >
-      {/* Background Image */}
       {currentSlide?.img ? (
         <img 
           key={currentSlide.img + slideIdx}
@@ -1089,11 +1105,9 @@ const TheSceneHeroSlideshow = ({
         <div className="absolute inset-0 bg-gradient-to-br from-[#00274c] via-[#05182d] to-[#0a121e]" />
       )}
 
-      {/* Cinematic Gradient Overlays */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
 
-      {/* Top Header Badge & Slide Counter */}
       <div className="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
         <span className={`text-[9px] font-black uppercase px-3 py-1 rounded-full shadow-md tracking-wider ${currentSlide.badgeColor}`}>
           ★ {currentSlide.categoryBadge}
@@ -1104,7 +1118,6 @@ const TheSceneHeroSlideshow = ({
         </span>
       </div>
 
-      {/* Manual Slide Navigation Buttons */}
       <div className="absolute top-1/2 left-3 right-3 -translate-y-1/2 flex justify-between pointer-events-none z-10">
         <button 
           onClick={prevSlide}
@@ -1122,7 +1135,6 @@ const TheSceneHeroSlideshow = ({
         </button>
       </div>
 
-      {/* Slide Text Content */}
       <div className="relative z-10 text-white w-full pr-8">
         <h1 className="text-3xl font-header font-black uppercase italic tracking-tighter leading-none mb-1.5 drop-shadow-md truncate group-hover:text-[#ffcb05] transition-colors">
           {currentSlide.title}
@@ -1131,7 +1143,6 @@ const TheSceneHeroSlideshow = ({
           {currentSlide.subtitle}
         </p>
 
-        {/* Interactive Indicator */}
         {currentSlide.rawItem && (
           <div className="flex items-center gap-1.5 mt-2 text-[9px] font-black uppercase text-[#ffcb05] tracking-wider">
             <span>Explore Details</span>
@@ -1139,7 +1150,6 @@ const TheSceneHeroSlideshow = ({
           </div>
         )}
 
-        {/* Progress Bar / Indicator Dots */}
         <div className="flex gap-1.5 justify-center pt-3">
           {sceneSlides.slice(0, 8).map((_, i) => (
             <div 
@@ -1575,7 +1585,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
               className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'restaurant' ? 'bg-[#f97316] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
             >
               <Utensils size={14} />
-              <span>Restaurant / Bar</span>
+              <span>Dining</span>
             </button>
             <button
               onClick={() => setListingCategory('shop')}
@@ -1589,24 +1599,24 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
               className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'general' ? 'bg-[#38bdf8] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
             >
               <Calendar size={14} />
-              <span>Event / Experience</span>
+              <span>Events & Promos</span>
             </button>
           </div>
 
           {(listingCategory === 'restaurant' || listingCategory === 'shop') ? (
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/30 text-white space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
                     {listingCategory === 'shop' ? 'Retail Showcase' : 'Dining Premiere'}
                   </span>
                   <span className="text-[10px] font-bold text-[#38bdf8] flex items-center gap-1">
-                    <FileText size={12} /> Menu / Catalog Upload Enabled
+                    <FileText size={12} /> {listingCategory === 'shop' ? 'Catalog Upload Enabled' : 'Menu Upload Enabled'}
                   </span>
                 </div>
 
                 <h4 className="text-xl font-header font-black uppercase italic">
-                  {listingCategory === 'shop' ? 'Boosted Retail & Shop Showcase' : 'Boosted Eatery & Bar Showcase'}
+                  {listingCategory === 'shop' ? 'Boosted Retail & Shop Plan' : 'Restaurant and Bars - Boosted Plan'}
                 </h4>
 
                 <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
@@ -1618,40 +1628,46 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                 </ul>
               </div>
 
+              {/* Billboard Add-on */}
               <div className="p-4 rounded-2xl bg-gradient-to-r from-[#f97316]/20 via-[#f97316]/10 to-transparent border border-[#f97316]/30 flex items-center justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-1.5">
                     <Zap size={14} className="text-[#b45309] dark:text-[#ffcb05]" />
-                    <span className={`text-xs font-black uppercase ${theme.isDark ? 'text-white' : 'text-slate-900'}`}>Discounted Featured Pick</span>
-                    <span className="bg-[#f97316] text-white dark:text-black text-[8px] font-black px-1.5 py-0.5 rounded">SAVE $40</span>
+                    <span className={`text-xs font-black uppercase ${theme.isDark ? 'text-white' : 'text-slate-900'}`}>
+                      {listingCategory === 'shop' ? 'Featured Shop - Top Pick Billboard Add-on' : 'Restaurant Featured Pick Add-on'}
+                    </span>
                   </div>
-                  <p className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-600'} mt-1`}>
-                    Top-of-app billboard spot. <strong className="text-[#b45309] dark:text-[#ffcb05]">$50</strong> <span className={`line-through ${theme.isDark ? 'text-slate-500' : 'text-slate-400'} text-[10px]` }>(Normally $90)</span>
+                  <p className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-600'} mt-0.5`}>
+                    Top-of-app billboard spot. <strong className="text-[#b45309] dark:text-[#ffcb05]">$50.00 USD</strong>
                   </p>
                 </div>
                 <button
                   onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopFeaturedPickAddon : STRIPE_LINKS.restaurantFeaturedPickAddon)}
                   className="px-3.5 py-2 bg-[#f97316] text-white dark:text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
                 >
-                  <span>$50 Pick</span>
+                  <span>$50.00</span>
                   <ExternalLink size={12} />
                 </button>
               </div>
 
+              {/* Boosted Annual & Monthly Options */}
               <div className="space-y-3">
                 <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-black uppercase ${theme.text}`}>Annual Membership</span>
-                      <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[8px] font-black px-2 py-0.5 rounded">SAVE $120 / YR</span>
+                      <span className={`text-xs font-black uppercase ${theme.text}`}>
+                        {listingCategory === 'shop' ? 'Boosted Shop — Annual Plan' : 'Restaurant and Bars - Boosted Annual Membership'}
+                      </span>
                     </div>
-                    <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-1">$25 / mo <span className={`${theme.secondaryText} font-normal`}>($300 billed yearly)</span></p>
+                    <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-1">
+                      $300.00 USD <span className={`${theme.secondaryText} font-normal`}>/ year</span>
+                    </p>
                   </div>
                   <button
                     onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopBoostedAnnual : STRIPE_LINKS.restaurantBoostedAnnual)}
                     className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
                   >
-                    <span>Select</span>
+                    <span>$300/yr</span>
                     <ExternalLink size={14} />
                   </button>
                 </div>
@@ -1659,15 +1675,19 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                 <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-black uppercase ${theme.text}`}>Monthly Plan</span>
+                      <span className={`text-xs font-black uppercase ${theme.text}`}>
+                        {listingCategory === 'shop' ? 'Boosted Shop - Monthly' : 'Restaurant and Bars - Boosted Monthly Plan'}
+                      </span>
                     </div>
-                    <p className="text-xs font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">$35 / mo <span className={`${theme.secondaryText} font-normal`}>billed monthly</span></p>
+                    <p className="text-xs font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">
+                      $35.00 USD <span className={`${theme.secondaryText} font-normal`}>/ month</span>
+                    </p>
                   </div>
                   <button
                     onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopBoostedMonthly : STRIPE_LINKS.restaurantBoostedMonthly)}
                     className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
                   >
-                    <span>Select</span>
+                    <span>$35/mo</span>
                     <ExternalLink size={14} />
                   </button>
                 </div>
@@ -1678,34 +1698,96 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
               <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} space-y-1.5`}>
                 <div className="flex items-center gap-2 text-[#0284c7] dark:text-[#38bdf8]">
                   <Calendar size={18} />
-                  <h4 className="text-xs font-black uppercase tracking-wider">List on A2 Happenings</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider">Happenings & Editorial Promos</h4>
                 </div>
                 <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
-                  Reach thousands of Ann Arbor locals, students, and visitors. Select your listing option below to activate your event in the city schedule.
+                  Reach thousands of Ann Arbor locals, students, and visitors across the official A2 Vibe network.
                 </p>
               </div>
 
-              <div className={`p-5 rounded-3xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-3`}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <span className="text-[9px] font-black uppercase tracking-widest text-[#0284c7] dark:text-[#38bdf8] bg-sky-500/10 px-2.5 py-0.5 rounded-md inline-block mb-1">
-                      Calendar Placement
-                    </span>
-                    <h4 className={`text-base font-header font-black uppercase tracking-tight ${theme.text}`}>
-                      Standard Event Listing
-                    </h4>
-                    <p className="text-lg font-black text-[#0284c7] dark:text-[#38bdf8] mt-0.5">
-                      $25 <span className={`text-[11px] font-normal ${theme.secondaryText}`}>one-time</span>
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => openStripeCheckout(STRIPE_LINKS.eventStandard)}
-                    className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 mt-1"
-                  >
-                    <span>List ($25)</span>
-                    <ExternalLink size={13} />
-                  </button>
+              {/* Standard Event */}
+              <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div>
+                  <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>
+                    Standard Event Listing
+                  </h4>
+                  <p className="text-xs font-bold text-[#0284c7] dark:text-[#38bdf8] mt-0.5">
+                    $25.00 USD <span className={`text-[10px] font-normal ${theme.secondaryText}`}>one-time</span>
+                  </p>
                 </div>
+                <button
+                  onClick={() => openStripeCheckout(STRIPE_LINKS.eventStandard)}
+                  className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <span>$25.00</span>
+                  <ExternalLink size={13} />
+                </button>
+              </div>
+
+              {/* Featured Event Showcase */}
+              <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <Sparkles size={13} className="text-[#ffcb05]" />
+                    <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>
+                      Featured Event Showcase
+                    </h4>
+                  </div>
+                  <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-0.5">
+                    $45.00 USD <span className={`text-[10px] font-normal ${theme.secondaryText}`}>highlight placement</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => openStripeCheckout(STRIPE_LINKS.eventFeatured)}
+                  className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <span>$45.00</span>
+                  <ExternalLink size={13} />
+                </button>
+              </div>
+
+              {/* City Guide Feature Story */}
+              <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <BookText size={13} className="text-[#a855f7]" />
+                    <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>
+                      City Guide Feature Story
+                    </h4>
+                  </div>
+                  <p className="text-xs font-bold text-[#a855f7] mt-0.5">
+                    $45.00 USD <span className={`text-[10px] font-normal ${theme.secondaryText}`}>editorial writeup</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
+                  className="px-4 py-2.5 bg-[#a855f7] text-white text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <span>$45.00</span>
+                  <ExternalLink size={13} />
+                </button>
+              </div>
+
+              {/* Social Media Blast */}
+              <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <Share2 size={13} className="text-emerald-500" />
+                    <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>
+                      Social Media Blast
+                    </h4>
+                  </div>
+                  <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                    $25.00 USD <span className={`text-[10px] font-normal ${theme.secondaryText}`}>channels blast</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => openStripeCheckout(STRIPE_LINKS.promoSMSocial)}
+                  className="px-4 py-2.5 bg-emerald-500 text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <span>$25.00</span>
+                  <ExternalLink size={13} />
+                </button>
               </div>
             </div>
           )}
@@ -2436,7 +2518,6 @@ const HubView = ({
       />
 
       <div className="space-y-8 px-2 w-full">
-        {/* TOP PROFILE CARD: DYNAMIC SLIDESHOW OF SAVED HAPPENINGS, EATS & SHOPS */}
         <MyVibeHeroSlideshow
           user={user}
           userFavorites={userFavorites}
@@ -2446,7 +2527,6 @@ const HubView = ({
           setView={setView}
         />
 
-        {/* SAVED FAVORITES */}
         <section className="space-y-4 px-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -2810,9 +2890,6 @@ const HomeView = ({
 
   return (
     <div className="space-y-12 animate-fade text-left relative z-10 pb-16 font-sans w-full">
-      {/* =========================================================================
-          THE SCENE: BRAND-FORWARD MULTI-CATEGORY HERO SLIDESHOW (A2 Vibe App Focused)
-          ========================================================================= */}
       <TheSceneHeroSlideshow
         dining={dining}
         itineraries={itineraries}
@@ -3262,6 +3339,24 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
           )}
         </div>
       )}
+
+      {/* GUIDE BOTTOM CTA */}
+      <div className="pt-6 px-1">
+        <div className="p-5 rounded-[32px] bg-gradient-to-r from-[#170a2a] via-[#1f103b] to-[#0a121e] border border-[#a855f7]/30 flex items-center justify-between shadow-xl">
+          <div className="space-y-1 text-left">
+            <span className="text-[9px] font-black uppercase text-[#a855f7] tracking-widest block">Tree Town Editorial</span>
+            <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Feature Your Brand or Story</h4>
+            <p className="text-[11px] text-slate-300">Book an editorial feature story or launch social blasts.</p>
+          </div>
+          <button
+            onClick={() => onOpenPartnerModal('general')}
+            className="px-4 py-3 bg-[#a855f7] text-white rounded-2xl font-black text-xs uppercase shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 ml-3"
+          >
+            <span>Promote</span>
+            <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
@@ -3695,6 +3790,24 @@ export default function App() {
                     ) : (
                       <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
                     )}
+                  </div>
+
+                  {/* HAPPENINGS BOTTOM CTA */}
+                  <div className="pt-2 px-1">
+                    <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
+                      <div className="space-y-1 text-left">
+                        <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Event Organizers & Promoters</span>
+                        <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Host an Event in Ann Arbor?</h4>
+                        <p className="text-[11px] text-slate-300">Feature your festival, live music, or meetup to Tree Town.</p>
+                      </div>
+                      <button
+                        onClick={() => openPartnerModal('general')}
+                        className="px-4 py-3 bg-[#38bdf8] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 ml-3"
+                      >
+                        <span>List Event</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
