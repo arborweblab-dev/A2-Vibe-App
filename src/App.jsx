@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
 import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { 
   getFirestore, doc, setDoc, getDoc, collection, 
   addDoc, updateDoc, arrayUnion, arrayRemove, 
-  onSnapshot, query, orderBy, limit 
+  onSnapshot, query, orderBy, limit, increment 
 } from 'firebase/firestore';
 import { app } from './firebase';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Building, Utensils, Ticket, Sparkles, Zap, Droplets, X, 
   ChevronLeft, ChevronRight, BookText, User, Heart, 
@@ -36,10 +36,11 @@ const SHOPS_DATA = [
     url: 'https://a2vibe.com',
     img: 'https://a2vibe.com/images/vibe-weed.jpg',
     shortDesc: 'Premier downtown cannabis dispensary offering elite strains, top-shelf edibles, concentrates, and knowledgeable budtenders.',
-    longDesc: '<p>Vibe Ann Arbor sets the benchmark for Tree Town recreational and medical cannabis. Conveniently located near Kerrytown, Vibe pairs a clean, welcoming retail showroom with curated terpene profiles, local craft flower, artisanal gummies, and high-potency concentrates.</p>',
+    longDesc: '<p>Vibe Ann Arbor sets the benchmark for Tree Town recreational and medical cannabis. Conveniently located near Kerrytown, Vibe pairs a clean, welcoming retail showroom with curated terpene profiles, local craft flower, artisanal gummies, and high-potency concentrates. Staffed by friendly budtenders ready to walk you through cannabinoid balances and tailored experiences.</p>',
     specials: [
       'First-time visitor 20% discount on boutique flower',
-      'Daily Happy Hour specials on pre-rolls and live rosin concentrates'
+      'Daily Happy Hour specials on pre-rolls and live rosin concentrates',
+      'Student and veteran appreciation discounts with valid ID'
     ],
     features: ['Recreational 21+', 'Medical Validated', 'Curbside Pickup', 'ATM On-Site', 'Wheelchair Accessible'],
     hours: 'Mon - Sun: 9:00 AM - 9:00 PM'
@@ -366,6 +367,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
     <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
       <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        
         <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2.5">
@@ -532,6 +534,27 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
               )}
             </div>
           </div>
+
+          <div className="pt-2">
+            <div className="p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#ffcb05]/30 flex items-center justify-between shadow-xl">
+              <div className="space-y-1 text-left">
+                <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest block">Retail Partner</span>
+                <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Shop</h4>
+                <p className="text-[11px] text-slate-300">Feature your boutique, bookstore, or dispensary across A2 Vibe.</p>
+              </div>
+              <button
+                onClick={() => {
+                  onClose();
+                  onOpenPartnerModal('shop');
+                }}
+                className="p-3.5 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
+                title="Add your shop"
+              >
+                <Store size={18} />
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -951,6 +974,7 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
     <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
       <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        
         <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2.5">
@@ -958,9 +982,7 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
                 <Trees size={22} />
               </div>
               <div>
-                <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">
-                  Interactive Directory
-                </span>
+                <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-[0.2em] block">Interactive Directory</span>
                 <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
                   Ann Arbor Park Finder
                 </h3>
@@ -1864,75 +1886,11 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
   );
 };
 
-// REPLACEMENT WIDGET: TOWNIE DAY TRIP / VIBE GENERATOR
-const TownieDayPlannerWidget = ({ theme, dining, onSelectSpot }) => {
-  const [selectedMood, setSelectedMood] = useState('Chill Saturday');
-
-  const moods = {
-    'Chill Saturday': {
-      morning: 'Kerrytown Market & Shops',
-      afternoon: 'Nichols Arboretum',
-      night: 'Zingerman’s Specialty Food Store'
-    },
-    'Date Night': {
-      morning: 'Literati Bookstore',
-      afternoon: 'Main Street Dining',
-      night: 'State Theatre'
-    },
-    'Campus Explorer': {
-      morning: 'U-M Law Quadrangle',
-      afternoon: 'The M Den on State Street',
-      night: 'Michigan Stadium'
-    }
-  };
-
-  const currentPlan = moods[selectedMood] || moods['Chill Saturday'];
-
-  return (
-    <div className="p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] border border-[#ffcb05]/40 shadow-2xl text-white space-y-4 mx-1">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Compass className="text-[#ffcb05]" size={22} />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-[#ffcb05]">A2 Day Trip Generator</span>
-        </div>
-        <span className="text-[10px] font-bold text-slate-400">Curated Plan</span>
-      </div>
-
-      <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
-        {Object.keys(moods).map(m => (
-          <button
-            key={m}
-            onClick={() => setSelectedMood(m)}
-            className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${selectedMood === m ? 'bg-[#ffcb05] text-black shadow-md' : 'bg-white/10 text-slate-300'}`}
-          >
-            {m}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-3 gap-2 pt-1 text-center">
-        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-          <span className="text-[8px] font-black uppercase text-[#38bdf8] tracking-widest block">Morning</span>
-          <p className="text-[11px] font-bold text-white line-clamp-2">{currentPlan.morning}</p>
-        </div>
-        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-          <span className="text-[8px] font-black uppercase text-[#ffcb05] tracking-widest block">Afternoon</span>
-          <p className="text-[11px] font-bold text-white line-clamp-2">{currentPlan.afternoon}</p>
-        </div>
-        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-          <span className="text-[8px] font-black uppercase text-[#a855f7] tracking-widest block">Evening</span>
-          <p className="text-[11px] font-bold text-white line-clamp-2">{currentPlan.night}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const HubView = ({ 
   theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
   setView, dining, setActiveTool, user, handleLogin, handleLogout, 
   vibeTags, setVibeTags, onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
-  onOpenShopsModal, onSelectShop
+  onOpenShopsModal, onSelectShop, points, onEarnPoints
 }) => {
   const [headerIdx, setHeaderIdx] = useState(0);
   const cycleHeader = () => setHeaderIdx(prev => (prev + 1) % SLIDE_IMAGES.length);
@@ -2053,8 +2011,40 @@ const HubView = ({
           <button onClick={cycleHeader} className="absolute top-6 right-6 p-3 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 text-white opacity-100 transition-all active:scale-90" title="Cycle Profile Image"><Camera size={20} /></button>
         </div>
 
-        {/* TOWNIE DAY PLANNER WIDGET (Replaces Loyalty Widget) */}
-        <TownieDayPlannerWidget theme={theme} dining={dining} onSelectSpot={setSelectedItem} />
+        {/* LOYALTY POINTS REWARDS PASSPORT */}
+        <div className="p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] border border-[#ffcb05]/40 shadow-2xl text-white space-y-4 mx-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Award className="text-[#ffcb05]" size={22} />
+              <span className="text-xs font-black uppercase tracking-[0.2em] text-[#ffcb05]">A2 Loyalty Passport</span>
+            </div>
+            <span className="bg-[#ffcb05]/20 text-[#ffcb05] text-[10px] font-black px-3 py-1 rounded-full uppercase">
+              {points >= 100 ? 'Townie Elite' : 'Vibe Explorer'}
+            </span>
+          </div>
+
+          <div className="flex items-end justify-between">
+            <div>
+              <p className="text-4xl font-header font-black text-white">{points}</p>
+              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Accumulated Vibe Points</p>
+            </div>
+            <button
+              onClick={onEarnPoints}
+              className="px-4 py-2.5 bg-[#ffcb05] text-black font-black uppercase text-xs rounded-xl shadow-lg active:scale-95 transition-all flex items-center gap-1.5"
+            >
+              <Sparkles size={14} />
+              <span>Check In (+10)</span>
+            </button>
+          </div>
+
+          <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+            <div 
+              className="bg-[#ffcb05] h-full rounded-full transition-all duration-500" 
+              style={{ width: `${Math.min(100, (points % 100) || 10)}%` }} 
+            />
+          </div>
+          <p className="text-[10px] text-slate-400">Earn points by exploring local spots, saving favorites, and contributing community stories.</p>
+        </div>
 
         <div className={`${theme.card} p-5 rounded-[32px] border ${theme.border} flex flex-col gap-4 text-center shadow-lg mx-1`}>
           {user ? (
@@ -2902,6 +2892,7 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [loadingAuth, setLoadingAuth] = useState(true);
   const [view, setView] = useState('home');
   const [themeKey, setThemeKey] = useState('dark');
   const [selectedItem, setSelectedItem] = useState(null);
@@ -2915,23 +2906,16 @@ export default function App() {
   const [isTransitModalOpen, setIsTransitModalOpen] = useState(false);
   const [isShopsModalOpen, setIsShopsModalOpen] = useState(false);
    
-  const [favorites, setFavorites] = useState(() => {
-    try { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; } catch { return []; }
-  });
-  const [stats, setStats] = useState(() => {
-    try { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; } catch { return { water: 0, drinks: 0 }; }
-  });
-  const [bucketList, setBucketList] = useState(() => {
-    try { const s = localStorage.getItem('a2v_bucketlist'); return s ? JSON.parse(s) : DEFAULT_BUCKET_ITEMS; } catch { return DEFAULT_BUCKET_ITEMS; }
-  });
-  const [vibeTags, setVibeTags] = useState(() => {
-    try { const s = localStorage.getItem('a2v_vibetags'); return s ? JSON.parse(s) : []; } catch { return []; }
-  });
+  const [favorites, setFavorites] = useState(() => { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; });
+  const [stats, setStats] = useState(() => { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; });
+  const [bucketList, setBucketList] = useState(() => { const s = localStorage.getItem('a2v_bucketlist'); return s ? JSON.parse(s) : DEFAULT_BUCKET_ITEMS; });
+  const [vibeTags, setVibeTags] = useState(() => { const s = localStorage.getItem('a2v_vibetags'); return s ? JSON.parse(s) : []; });
+  const [points, setPoints] = useState(() => { const s = localStorage.getItem('a2v_points'); return s ? parseInt(s, 10) : 50; });
 
-  const [itineraries] = useState(happeningsData);
+  const [itineraries, setItineraries] = useState(happeningsData);
   const [dining, setDining] = useState(eatsData);
-  const [posts] = useState(journalData);
-  const [featuredPosts] = useState(journalData.filter(p => p.isHighlight));
+  const [posts, setPosts] = useState(journalData);
+  const [featuredPosts, setFeaturedPosts] = useState(journalData.filter(p => p.isHighlight));
    
   const [activeExpCat, setActiveExpCat] = useState('All');
   const [activeMonth, setActiveMonth] = useState('All Months');
@@ -2950,23 +2934,10 @@ export default function App() {
   const handleParkSelect = (park) => setSelectedPark(park);
   const handleShopSelect = (shop) => setSelectedShop(shop);
 
-  const handleLogin = async () => {
-    try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
-    } catch (error) {
-      console.error("Login Error:", error);
-    }
-  };
+  const handleLogin = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (error) { console.error("Login Error:", error); } };
+  const handleLogout = async () => { try { await signOut(auth); } catch (error) { console.error("Logout Error:", error); } };
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Logout Error:", error);
-    }
-  };
-
-  // Merge Firestore Miss Kim collection into dining
+  // Listen for Miss Kim documents in Firestore and merge normally into dining without overriding featured spots
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'Miss Kim'), (snapshot) => {
       if (!snapshot.empty) {
@@ -2986,7 +2957,7 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Auth Listener
+  // Auth Listener and User Profile Hydration
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -2995,18 +2966,67 @@ export default function App() {
           const docSnap = await getDoc(doc(db, 'users', currentUser.uid));
           if (docSnap.exists()) {
             const data = docSnap.data();
-            if (data.favorites) setFavorites(data.favorites);
-            if (data.stats) setStats(data.stats);
-            if (data.bucketList) setBucketList(data.bucketList);
-            if (data.vibeTags) setVibeTags(data.vibeTags);
+            setFavorites((data.favorites || []).filter(f => f.type !== 'park' && !f.id?.startsWith('park-')));
+            setStats(data.stats || { water: 0, drinks: 0 });
+            setBucketList(data.bucketList || DEFAULT_BUCKET_ITEMS);
+            setVibeTags(data.vibeTags || []);
+            if (typeof data.points === 'number') {
+              setPoints(data.points);
+            }
           }
         } catch (err) {
           console.error("Error fetching user profile:", err);
         }
+      } else {
+        const sf = localStorage.getItem('a2v_favorites'); 
+        const parsed = sf ? JSON.parse(sf) : [];
+        setFavorites(parsed.filter(f => f.type !== 'park' && !f.id?.startsWith('park-')));
+        const ss = localStorage.getItem('a2v_stats'); setStats(ss ? JSON.parse(ss) : { water: 0, drinks: 0 });
+        const st = localStorage.getItem('a2v_vibetags'); setVibeTags(st ? JSON.parse(st) : []);
+        const sb = localStorage.getItem('a2v_bucketlist'); setBucketList(sb ? JSON.parse(sb) : DEFAULT_BUCKET_ITEMS);
+        const sp = localStorage.getItem('a2v_points'); setPoints(sp ? parseInt(sp, 10) : 50);
       }
+      setLoadingAuth(false);
     });
     return () => unsubscribe();
   }, []);
+
+  // Points incrementer function
+  const handleEarnPoints = async () => {
+    const earned = 10;
+    const newTotal = points + earned;
+    setPoints(newTotal);
+    localStorage.setItem('a2v_points', newTotal.toString());
+    if (user) {
+      try {
+        await updateDoc(doc(db, 'users', user.uid), {
+          points: increment(earned)
+        });
+      } catch (err) {
+        await setDoc(doc(db, 'users', user.uid), { points: newTotal }, { merge: true });
+      }
+    }
+  };
+
+  useEffect(() => { 
+    if (loadingAuth) return;
+    if (user) setDoc(doc(db, 'users', user.uid), { stats }, { merge: true }); 
+    else localStorage.setItem('a2v_stats', JSON.stringify(stats)); 
+  }, [stats, user, loadingAuth]);
+
+  useEffect(() => { 
+    if (loadingAuth) return;
+    if (user) setDoc(doc(db, 'users', user.uid), { vibeTags }, { merge: true }); 
+    else localStorage.setItem('a2v_vibetags', JSON.stringify(vibeTags)); 
+  }, [vibeTags, user, loadingAuth]);
+
+  useEffect(() => { 
+    if (loadingAuth) return;
+    if (user) setDoc(doc(db, 'users', user.uid), { bucketList }, { merge: true }); 
+    else localStorage.setItem('a2v_bucketlist', JSON.stringify(bucketList)); 
+  }, [bucketList, user, loadingAuth]);
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [view, activeTool]);
 
   const toggleFavorite = async (item) => {
     if (item.type === 'park' || PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-')) {
@@ -3028,7 +3048,6 @@ export default function App() {
     }
 
     setFavorites(updatedFavorites);
-    localStorage.setItem('a2v_favorites', JSON.stringify(updatedFavorites));
 
     if (user) {
       try {
@@ -3036,6 +3055,8 @@ export default function App() {
       } catch (err) {
         console.error("Error syncing favorite to Firestore:", err);
       }
+    } else {
+      localStorage.setItem('a2v_favorites', JSON.stringify(updatedFavorites));
     }
   };
 
@@ -3194,6 +3215,8 @@ export default function App() {
                   onOpenParksModal={openParksModal}
                   onOpenShopsModal={openShopsModal}
                   onSelectShop={handleShopSelect}
+                  points={points}
+                  onEarnPoints={handleEarnPoints}
                 />
               )}
               {view === 'fun' && (
@@ -3289,7 +3312,9 @@ export default function App() {
 
                               <div className={`flex items-center justify-between pt-2 border-t ${theme.border}`}>
                                 <span className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] hidden sm:inline-block">{exp.price || 'Free'}</span>
-                                <span className="text-[9px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em]">{Array.isArray(exp.category) ? exp.category[0] : exp.category}</span>
+                                <span className="text-[9px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em]">
+                                  {Array.isArray(exp.category) ? exp.category[0] : exp.category}
+                                </span>
                                 <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-4 py-2 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
                               </div>
                             </div>
