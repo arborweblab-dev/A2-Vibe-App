@@ -2,6 +2,26 @@
 
 export const eatsData = [
   {
+    id: "eat-orange-market",
+    title: "Orange Market on Broadway",
+    neighborhood: "Broadway / North Campus",
+    tags: ["Korean", "Prepared Foods", "Specialty Grocery", "Daily Fresh"],
+    cuisine: "Korean & Asian Street Food",
+    address: "Broadway Street, Ann Arbor, MI 48105",
+    img: "https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg",
+    images: [
+      "https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg",
+      "https://a2vibe.com/images/Orange%20Market.jpg",
+      "https://a2vibe.com/images/Orange%20Market%202.jpg"
+    ],
+    shortDesc: "Broadway staple preparing daily house-made kimchi, fresh gimbap, bibimbap, and hot specials.",
+    longDesc: "<p>Orange Market on Broadway Street is a celebrated destination for authentic Asian ingredients and daily made-from-scratch Korean dishes. Loved by local residents and U-M students alike, Orange Market brings traditional comfort food straight to North Campus.</p><h4>Prepared Fresh In-House Daily:</h4><ul><li><strong>House-Made Kimchi:</strong> Traditional, fermented small-batch cabbage and radish kimchi.</li><li><strong>Handcrafted Gimbap:</strong> Freshly rolled Korean rice rolls packed with vegetables, egg, and savory meats.</li><li><strong>Hot Bibimbap Bowls:</strong> Authentic rice bowls topped with seasoned vegetables, fried egg, and gochujang.</li><li><strong>Fresh Banchan:</strong> Daily rotated Korean side dishes including seasoned spinach, bean sprouts, and marinated potatoes.</li><li><strong>Hot Kitchen Entrees:</strong> Rotating daily specials, snacks, and imported specialty groceries.</li></ul>",
+    ctaText: "Visit Market",
+    url: "https://a2vibe.com",
+    isHighlight: true,
+    isFeatured: true
+  },
+  {
     id: "eat-1",
     title: "Frita Batidos",
     neighborhood: "Downtown",
