@@ -15,7 +15,7 @@ export const eatsData = [
       "https://a2vibe.com/images/Orange%20Market%202.jpg"
     ],
     shortDesc: "Broadway staple preparing daily house-made kimchi, fresh gimbap, bibimbap, and hot specials.",
-    longDesc: "<p>Orange Market on Broadway Street is a celebrated destination for authentic Asian ingredients and daily made-from-scratch Korean dishes. Loved by local residents and U-M students alike, Orange Market brings traditional comfort food straight to North Campus.</p><h4>Prepared Fresh In-House Daily:</h4><ul><li><strong>House-Made Kimchi:</strong> Traditional, fermented small-batch cabbage and radish kimchi.</li><li><strong>Handcrafted Gimbap:</strong> Freshly rolled Korean rice rolls packed with vegetables, egg, and savory meats.</li><li><strong>Hot Bibimbap Bowls:</strong> Authentic rice bowls topped with seasoned vegetables, fried egg, and gochujang.</li><li><strong>Fresh Banchan:</strong> Daily rotated Korean side dishes including seasoned spinach, bean sprouts, and marinated potatoes.</li><li><strong>Hot Kitchen Entrees:</strong> Rotating daily specials, snacks, and imported specialty groceries.</li></ul>",
+    longDesc: "<p>Orange Market on Broadway Street is a celebrated destination for authentic Asian ingredients and daily made-from-scratch Korean dishes. Loved by local residents and students alike, Orange Market brings traditional comfort food straight to North Campus.</p><h4>Prepared Fresh In-House Daily:</h4><ul><li><strong>House-Made Kimchi:</strong> Traditional, fermented small-batch cabbage and radish kimchi.</li><li><strong>Handcrafted Gimbap:</strong> Freshly rolled Korean rice rolls packed with vegetables, egg, and savory meats.</li><li><strong>Hot Bibimbap Bowls:</strong> Authentic rice bowls topped with seasoned vegetables, fried egg, and gochujang.</li><li><strong>Fresh Banchan:</strong> Daily rotated Korean side dishes including seasoned spinach, bean sprouts, and marinated potatoes.</li><li><strong>Hot Kitchen Entrees:</strong> Rotating daily specials, snacks, and imported specialty groceries.</li></ul>",
     ctaText: "Visit Market",
     url: "https://a2vibe.com",
     isHighlight: true,
@@ -184,7 +184,7 @@ export const eatsData = [
     address: "347 S Main St, Ann Arbor, MI 48104",
     img: "/images/palio.jpg",
     shortDesc: "Rustic Tuscan food with a vibrant rooftop dining deck.",
-    longDesc: "<p>Hearty Italian dishes, giant portions of pasta, wood-fired pizzas, and the best outdoor rooftop seating in downtown Ann Arbor.</p>",
+    longDesc: "<p>Hearty Italian dishes, giant portions of pasta, wood-fired pizzas, and outdoor rooftop seating in downtown Ann Arbor.</p>",
     ctaText: "View Menu",
     url: "https://palioannarbor.com",
     isHighlight: false
@@ -197,8 +197,8 @@ export const eatsData = [
     cuisine: "Traditional American",
     address: "226 S Main St, Ann Arbor, MI 48104",
     img: "/images/pretzel-bell.jpg",
-    shortDesc: "Historic Main Street eatery celebrating rich university heritage.",
-    longDesc: "<p>A resurrected Ann Arbor classic serving comfort foods like soft pretzels, burgers, and Michigan craft beers surrounded by historic U-M memorabilia.</p>",
+    shortDesc: "Historic Main Street eatery celebrating rich local heritage.",
+    longDesc: "<p>A resurrected Ann Arbor classic serving comfort foods like soft pretzels, burgers, and Michigan craft beers surrounded by historic town memorabilia.</p>",
     ctaText: "Book Table",
     url: "https://pretzelbell.com",
     isHighlight: false
@@ -282,7 +282,7 @@ export const eatsData = [
     address: "311 Maynard St, Ann Arbor, MI 48104",
     img: "/images/hopcat.jpg",
     shortDesc: "Massive craft beer selection and famous cracked pepper fries.",
-    longDesc: "<p>A vibrant college-town favorite known for dozens of rotating draft taps, burgers, and an unbeatable pub atmosphere.</p>",
+    longDesc: "<p>A vibrant local favorite known for dozens of rotating draft taps, burgers, and an unbeatable pub atmosphere.</p>",
     ctaText: "View Beers",
     url: "https://hopcat.com/ann-arbor",
     isHighlight: false
