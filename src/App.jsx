@@ -146,6 +146,19 @@ const SHOPS_DATA = [
     hours: 'Mon - Sun: 10:00 AM - 8:00 PM'
   },
   {
+    id: 'shop-orange-market',
+    name: 'Orange Market',
+    type: 'shop',
+    category: 'Specialty Markets',
+    tier: 'standard',
+    address: '300 S Maple Rd, Ann Arbor, MI 48103',
+    img: 'https://a2vibe.com/images/Orange-Market.jpg',
+    shortDesc: 'Neighborhood corner grocery and specialty market offering fresh produce, pantry staples, snacks, and everyday local essentials.',
+    longDesc: '<p>Orange Market is a convenient local neighborhood hub stocked with fresh essentials, everyday groceries, snacks, cold beverages, and specialty items for quick, easy shopping.</p>',
+    features: ['Neighborhood Market', 'Fresh Produce', 'Pantry Essentials', 'Quick Stop'],
+    hours: 'Mon - Sun: 8:00 AM - 9:00 PM'
+  },
+  {
     id: 'shop-mden',
     name: 'The M Den on State Street',
     type: 'shop',
@@ -2081,8 +2094,8 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
     { name: "Michigan Stadium", type: "Landmark", color: "bg-[#00274c] text-white", desc: "The Big House. Essential Saturday destination." },
     { name: "Nichols Arboretum", type: "Nature", color: "bg-emerald-600 text-white", desc: "The 'Arb'. Perfect for riverside walks." },
     { name: "Main Street", type: "Social", color: "bg-[#ffcb05] text-black", desc: "The heart of dining and local shopping." },
-    { name: "State Theatre", type: "Culture", color: "bg-purple-600 text-white", desc: "Historic cinema with a neon glow." },
-    { name: "Kerrytown Market", type: "Local", color: "bg-orange-600 text-white", desc: "Artisan shops and the farmers market." },
+    { name: "State Theatre", type: "Culture", color: "bg-[#a855f7] text-white", desc: "Historic cinema with a neon glow." },
+    { name: "Kerrytown Market", type: "Local", color: "bg-[#f97316] text-white", desc: "Artisan shops and the farmers market." },
     { name: "Law Quad", type: "Architecture", color: "bg-stone-600 text-white", desc: "Stunning Gothic-style university grounds." }
   ];
 
