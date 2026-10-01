@@ -26,31 +26,6 @@ import { happeningsData } from './data/happeningsData';
 
 const SHOPS_DATA = [
   {
-    id: 'shop-orange-market',
-    name: 'Orange Market',
-    type: 'shop',
-    category: 'Specialty Markets',
-    tier: 'featured',
-    isFeatured: true,
-    rating: '4.9',
-    address: 'Broadway Street, Ann Arbor, MI 48105',
-    url: 'https://a2vibe.com',
-    img: 'https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg',
-    images: [
-      'https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg',
-      'https://a2vibe.com/images/Orange%20Market.jpg',
-      'https://a2vibe.com/images/Orange%20Market%202.jpg'
-    ],
-    shortDesc: 'Premier Broadway Street Asian market renowned for daily fresh-made kimchi, gimbap, hot prepared meals, and authentic specialty groceries.',
-    longDesc: '<p>Orange Market on Broadway Street is a cherished Ann Arbor culinary landmark. Loved by locals, Orange Market brings the authentic flavors of Asian street food and homemade traditional staples straight to North Campus and Broadway.</p><p>Every single day, their kitchen team crafts a vibrant lineup of prepared foods from scratch. Stop in for fresh house-made kimchi, handcrafted gimbap rolls, savory bibimbap bowls, fresh banchan (Korean side dishes), and hot daily lunch and dinner entrees alongside hard-to-find imported Asian groceries, produce, and snacks.</p>',
-    specials: [
-      'Made Daily Fresh: Homemade Kimchi & Artisanal Banchan',
-      'Daily Kitchen Specials: Fresh-rolled Gimbap & Hot Bibimbap Bowls'
-    ],
-    features: ['Daily Prepared Foods', 'House-Made Kimchi', 'Fresh Gimbap', 'Hot Lunch Specials', 'Asian Specialty Groceries'],
-    hours: 'Mon - Sat: 9:00 AM - 8:00 PM | Sun: 10:00 AM - 7:00 PM'
-  },
-  {
     id: 'shop-vibe-a2',
     name: 'Vibe Ann Arbor',
     type: 'shop',
@@ -171,22 +146,22 @@ const SHOPS_DATA = [
     hours: 'Mon - Sun: 10:00 AM - 8:00 PM'
   },
   {
-    id: 'shop-[#ffcb05]-and-blue',
-    name: 'Tree Town Vintage & Market',
+    id: 'shop-mden',
+    name: 'The M Den on State Street',
     type: 'shop',
-    category: 'Specialty Markets',
+    category: 'University Apparel',
     tier: 'featured',
     rating: '4.8',
     address: '303 S State St, Ann Arbor, MI 48104',
-    url: 'https://a2vibe.com',
-    img: 'https://placehold.co/800x600/00274c/ffcb05?text=Tree+Town+Market',
-    shortDesc: 'Downtown destination featuring local artisan crafts, Michigan outerwear, and Ann Arbor neighborhood goods.',
-    longDesc: '<p>The ultimate headquarters for locals and visitors celebrating Ann Arbor culture. Packed with local design collections and classic townie apparel.</p>',
+    url: 'https://www.mden.com',
+    img: 'https://placehold.co/800x600/00274c/ffcb05?text=The+M+Den+Ann+Arbor',
+    shortDesc: 'Official home of the Michigan Wolverines with head-to-toe official U-M jerseys, sideline gear, hats, and collectibles.',
+    longDesc: '<p>The ultimate headquarters for University of Michigan students, alumni, and passionate fans. Packed with licensed Nike sideline collections, historic Rose Bowl and Championship memorabilia, and classic Maize and Blue outerwear.</p>',
     specials: [
-      'Local artisan goods discounts during selected weekends',
+      'Gameday apparel discounts during selected weekends',
       'Free souvenir sticker pack with in-store purchase'
     ],
-    features: ['Local Apparel', 'Artisan Crafts', 'A2 Souvenirs'],
+    features: ['Official U-M Apparel', 'Nike Sideline Gear', 'Big House Souvenirs'],
     hours: 'Mon - Sat: 9:00 AM - 8:00 PM | Sun: 10:00 AM - 6:00 PM'
   },
   {
@@ -221,40 +196,19 @@ const SHOPS_DATA = [
   }
 ];
 
-const ORANGE_MARKET_EATS_ENTRY = {
-  id: 'eat-orange-market',
-  name: 'Orange Market on Broadway',
-  title: 'Orange Market on Broadway',
-  type: 'dining',
-  cuisine: 'Korean & Asian Grocery Hot Spot',
-  neighborhood: 'Broadway / North Campus',
-  rating: '4.9',
-  isFeatured: true,
-  address: 'Broadway Street, Ann Arbor, MI 48105',
-  img: 'https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg',
-  images: [
-    'https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg',
-    'https://a2vibe.com/images/Orange%20Market.jpg',
-    'https://a2vibe.com/images/Orange%20Market%202.jpg'
-  ],
-  shortDesc: 'Broadway staple preparing daily house-made kimchi, fresh gimbap, bibimbap, Korean side dishes, and daily kitchen specials.',
-  longDesc: '<p>Orange Market on Broadway Street is a celebrated destination for authentic Asian ingredients and daily made-from-scratch Korean dishes. Famous across Tree Town for its warm hospitality and kitchen offerings, Orange Market serves fresh Korean comfort food made daily on-site.</p><h4>Made Daily Fresh in Kitchen:</h4><ul><li><strong>House-Made Kimchi:</strong> Traditional, fermented small-batch cabbage and radish kimchi.</li><li><strong>Handcrafted Gimbap:</strong> Freshly rolled Korean rice rolls packed with vegetables, savory egg, and savory meats.</li><li><strong>Hot Bibimbap Bowls:</strong> Authentic rice bowls with seasoned vegetables, fried egg, and gochujang.</li><li><strong>Fresh Banchan:</strong> Rotated daily side dishes including seasoned spinach, bean sprouts, and marinated potatoes.</li><li><strong>Daily Hot Entrees:</strong> Rotating daily prepared entrees and authentic snacks.</li></ul>',
-  price: '$$'
-};
-
 const SHOP_CATEGORIES = [
   'All',
   'Marijuana Dispensaries',
   'Bookstores & Vinyl',
   'Vintage & Boutiques',
+  'University Apparel',
   'Specialty Markets'
 ];
 
 const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !shop) return null;
-  const isFeatured = shop.tier === 'featured' || shop.isFeatured;
+  const isFeatured = shop.tier === 'featured';
   const isFavorited = (favorites || []).some(f => f.id === shop.id);
-  const shopImages = shop.images || (shop.img ? [shop.img] : []);
 
   return (
     <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
@@ -288,30 +242,18 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
         </div>
 
         <div className="p-6 space-y-6">
-          {shopImages.length > 0 && (
-            <div className="space-y-3">
-              <div className="relative rounded-[32px] overflow-hidden shadow-lg h-64">
-                <img src={shopImages[0]} className="w-full h-full object-cover" alt={shop.name} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                {isFeatured && (
-                  <span className="absolute top-4 left-4 bg-[#ffcb05] text-black text-[9px] font-black uppercase px-3 py-1 rounded-full tracking-wider shadow-md">
-                    Featured Spotlight
-                  </span>
-                )}
-                <span className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-3 py-1 rounded-full">
-                  {shop.category}
+          {shop.img && (
+            <div className="relative rounded-[32px] overflow-hidden shadow-lg h-60">
+              <img src={shop.img} className="w-full h-full object-cover" alt={shop.name} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              {isFeatured && (
+                <span className="absolute top-4 left-4 bg-[#ffcb05] text-black text-[9px] font-black uppercase px-3 py-1 rounded-full tracking-wider shadow-md">
+                  ★ Featured Shop
                 </span>
-              </div>
-
-              {shopImages.length > 1 && (
-                <div className="grid grid-cols-2 gap-2">
-                  {shopImages.slice(1).map((imgUrl, idx) => (
-                    <div key={idx} className="h-28 rounded-2xl overflow-hidden shadow-md border border-white/10">
-                      <img src={imgUrl} className="w-full h-full object-cover" alt={`${shop.name} view ${idx + 2}`} />
-                    </div>
-                  ))}
-                </div>
               )}
+              <span className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-3 py-1 rounded-full">
+                {shop.category}
+              </span>
             </div>
           )}
 
@@ -339,7 +281,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
             <div className="p-4 rounded-3xl bg-gradient-to-br from-[#ffcb05]/15 to-transparent border border-[#ffcb05]/30 space-y-2.5">
               <div className="flex items-center gap-2 text-[#b45309] dark:text-[#ffcb05]">
                 <Percent size={18} />
-                <h4 className="text-xs font-black uppercase tracking-wider">Current Deals & Daily Kitchen Specials</h4>
+                <h4 className="text-xs font-black uppercase tracking-wider">Current Deals & Specials</h4>
               </div>
               <ul className="space-y-1.5 text-xs">
                 {shop.specials.map((spec, i) => (
@@ -354,7 +296,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
 
           {shop.features && shop.features.length > 0 && (
             <div className="space-y-2">
-              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Amenities & Daily Offerings</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Amenities & Highlights</span>
               <div className="flex flex-wrap gap-2">
                 {shop.features.map(f => (
                   <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border} ${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
@@ -366,7 +308,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
           )}
 
           <div className="space-y-2">
-            <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>About this Spot</span>
+            <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>About this Shop</span>
             <div className={`text-sm leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`}
               dangerouslySetInnerHTML={{ __html: shop.longDesc || `<p>${shop.shortDesc}</p>` }}
             />
@@ -403,7 +345,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
   const [selectedCat, setSelectedCat] = useState('All');
 
   const featuredShops = useMemo(() => {
-    return SHOPS_DATA.filter(s => s.tier === 'featured' || s.isFeatured);
+    return SHOPS_DATA.filter(s => s.tier === 'featured');
   }, []);
 
   const filteredShops = useMemo(() => {
@@ -450,7 +392,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search dispensaries, kimchi, vinyl, boutiques, books..."
+              placeholder="Search dispensaries, vinyl, boutiques, books..."
               className={`w-full pl-10 pr-4 py-3 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05] transition-all`}
             />
           </div>
@@ -552,7 +494,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
                           <span className="text-[9px] font-black uppercase tracking-wider text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md truncate">
                             {shop.category}
                           </span>
-                          {(shop.tier === 'featured' || shop.isFeatured) && (
+                          {shop.tier === 'featured' && (
                             <span className="bg-[#ffcb05] text-black text-[8px] font-black uppercase px-1.5 py-0.5 rounded">
                               Featured
                             </span>
@@ -592,6 +534,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
           </div>
         </div>
 
+        {/* SHOP MODAL CTA: GET LISTED */}
         <div className={`p-4 border-t ${theme.border} ${theme.appBg}/95 backdrop-blur-md`}>
           <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#00274c] to-[#0a121e] border border-[#ffcb05]/30 flex items-center justify-between gap-3">
             <div className="min-w-0">
@@ -855,10 +798,10 @@ const SLIDE_IMAGES = [
 ];
 
 const DEFAULT_BUCKET_ITEMS = [
-  { id: 1, text: "Catch a local concert downtown", done: false },
+  { id: 1, text: "Catch a game at the Big House", done: false },
   { id: 2, text: "Walk through the Nichols Arboretum", done: false },
   { id: 3, text: "Explore Kerrytown Farmers Market", done: false },
-  { id: 4, text: "Snap photos at the Law Quad", done: false }
+  { id: 4, text: "Snap photos at the U-M Law Quad", done: false }
 ];
 
 /* =========================================================================
@@ -1051,7 +994,7 @@ const TheSceneHeroSlideshow = ({
   const sceneSlides = useMemo(() => {
     const featuredEats = (dining || []).filter(d => d.isFeatured || d.rating >= '4.8').slice(0, 3);
     const featuredEvents = (itineraries || []).filter(e => e.isFeatured || e.price).slice(0, 3);
-    const featuredShops = SHOPS_DATA.filter(s => s.tier === 'featured' || s.isFeatured).slice(0, 3);
+    const featuredShops = SHOPS_DATA.filter(s => s.tier === 'featured').slice(0, 3);
 
     const slides = [];
     const maxLen = Math.max(featuredEats.length, featuredEvents.length, featuredShops.length, 1);
@@ -1758,7 +1701,7 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
                   <h4 className="text-xs font-black uppercase tracking-wider">Happenings & Editorial Promos</h4>
                 </div>
                 <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
-                  Reach thousands of Ann Arbor locals and visitors across the official A2 Vibe network.
+                  Reach thousands of Ann Arbor locals, students, and visitors across the official A2 Vibe network.
                 </p>
               </div>
 
@@ -1987,7 +1930,6 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id);
-  const itemImages = item.images || (item.img ? [item.img] : []);
   
   return (
     <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
@@ -2007,18 +1949,7 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           </div>
         </div>
         <div className="p-8 space-y-6">
-          {itemImages.length > 0 && (
-            <div className="space-y-3">
-              <img src={itemImages[0]} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />
-              {itemImages.length > 1 && (
-                <div className="grid grid-cols-2 gap-2">
-                  {itemImages.slice(1).map((imgUrl, idx) => (
-                    <img key={idx} src={imgUrl} className="w-full h-28 object-cover rounded-2xl shadow-md border border-white/10" alt="" />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
 
           <div className="flex items-center gap-2 flex-wrap">
             {item.price && <div className="bg-[#ffcb05]/20 text-[#b45309] dark:text-[#ffcb05] px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
@@ -2152,7 +2083,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
     { name: "Main Street", type: "Social", color: "bg-[#ffcb05] text-black", desc: "The heart of dining and local shopping." },
     { name: "State Theatre", type: "Culture", color: "bg-purple-600 text-white", desc: "Historic cinema with a neon glow." },
     { name: "Kerrytown Market", type: "Local", color: "bg-orange-600 text-white", desc: "Artisan shops and the farmers market." },
-    { name: "Law Quad", type: "Architecture", color: "bg-stone-600 text-white", desc: "Stunning Gothic-style campus grounds." }
+    { name: "Law Quad", type: "Architecture", color: "bg-stone-600 text-white", desc: "Stunning Gothic-style university grounds." }
   ];
 
   const weatherData = [
@@ -2184,8 +2115,8 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
       night: 'State Theatre Independent Screening'
     },
     'Campus Explorer': {
-      morning: 'Law Quadrangle Stroll',
-      afternoon: 'Tree Town Boutiques & State Street',
+      morning: 'U-M Law Quadrangle Stroll',
+      afternoon: 'The M Den & State Street Boutiques',
       night: 'Michigan Stadium & South U'
     }
   };
@@ -2382,8 +2313,8 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
               <h4 className={`text-sm font-bold ${theme.text}`}>Which Ann Arbor building's courtyard is rumored to have inspired Hogwarts architecture?</h4>
             </div>
             <div className="space-y-2">
-              {['Law Quadrangle', 'Michigan Union', 'Angell Hall', 'Rackham Building'].map((opt) => {
-                const isCorrect = opt === 'Law Quadrangle';
+              {['U-M Law Quadrangle', 'Michigan Union', 'Angell Hall', 'Rackham Building'].map((opt) => {
+                const isCorrect = opt === 'U-M Law Quadrangle';
                 let btnStyle = theme.isDark ? 'bg-white/5 text-slate-300 border-white/5' : 'bg-slate-100 text-slate-800 border-slate-200';
                 if (triviaAnswered) {
                   if (isCorrect) btnStyle = 'bg-emerald-600 text-white font-bold border-transparent';
@@ -2439,7 +2370,7 @@ const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, buc
               <img src="/images/law-quad.jpg" className="w-full h-36 object-cover rounded-2xl shadow-md" alt="" />
               <p className={`text-xs italic ${theme.secondaryText}`}>"Stunning stone gargoyles, quiet cloisters, and hidden carved faces..."</p>
             </div>
-            <div className="p-4 rounded-2xl bg-[#ffcb05]/20 text-[#b45309] dark:text-[#ffcb05] font-black text-xs uppercase tracking-widest">Spot: Law Quadrangle</div>
+            <div className="p-4 rounded-2xl bg-[#ffcb05]/20 text-[#b45309] dark:text-[#ffcb05] font-black text-xs uppercase tracking-widest">Spot: U-M Law Quadrangle</div>
           </div>
         )}
       </div>
@@ -2954,7 +2885,7 @@ const HomeView = ({
   onOpenShopsModal, onSelectShop
 }) => {
   const featuredShopsList = useMemo(() => {
-    return SHOPS_DATA.filter(s => s.tier === 'featured' || s.isFeatured);
+    return SHOPS_DATA.filter(s => s.tier === 'featured');
   }, []);
 
   return (
@@ -3058,7 +2989,7 @@ const HomeView = ({
               Explore Local Shops & Dispensaries
             </h4>
             <p className="text-xs text-slate-300 leading-relaxed max-w-md">
-              From fresh kimchi and gimbap at Orange Market to top dispensary strains at Vibe Ann Arbor, indie bookstores, and vintage gear. Discover local tree town retail.
+              From top dispensary strains at Vibe Ann Arbor to rare vintage vinyl, indie bookstores, and Michigan gear. Discover local tree town retail.
             </p>
           </div>
           <button
@@ -3156,14 +3087,14 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
 
   const featuredDining = useMemo(() => {
     const featured = dining.filter(d => d.isFeatured);
-    return featured.length > 0 ? featured : dining.slice(0, 5);
+    return featured.length > 0 ? featured.slice(0, 5) : dining.slice(0, 5);
   }, [dining]);
 
   return (
     <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col">
       <div className="text-center px-4 w-full space-y-4">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
-        <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants, markets, and eateries.</p>
+        <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
       </div>
 
       <div className="px-1 w-full">
@@ -3419,7 +3350,7 @@ const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, o
           </div>
           <button
             onClick={() => onOpenPartnerModal('general')}
-            className="px-4 py-3 bg-[#a855f7] text-[#ffcb05] rounded-2xl font-black text-xs uppercase shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 ml-3"
+            className="px-4 py-3 bg-[#a855f7] text-white rounded-2xl font-black text-xs uppercase shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 ml-3"
           >
             <span>Promote</span>
             <ArrowRight size={14} />
@@ -3444,7 +3375,7 @@ export default function App() {
   const [isParksModalOpen, setIsParksModalOpen] = useState(false);
   const [isTransitModalOpen, setIsTransitModalOpen] = useState(false);
   const [isShopsModalOpen, setIsShopsModalOpen] = useState(false);
-    
+   
   const [favorites, setFavorites] = useState(() => {
     try { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; } catch { return []; }
   });
@@ -3456,10 +3387,10 @@ export default function App() {
   });
 
   const [itineraries] = useState(happeningsData);
-  const [dining, setDining] = useState([ORANGE_MARKET_EATS_ENTRY, ...eatsData]);
+  const [dining, setDining] = useState(eatsData);
   const [posts] = useState(journalData);
   const [featuredPosts] = useState(journalData.filter(p => p.isHighlight));
-    
+   
   const [activeExpCat, setActiveExpCat] = useState('All');
   const [activeMonth, setActiveMonth] = useState('All Months');
   const [visibleCount, setVisibleCount] = useState(6);
@@ -3533,237 +3464,385 @@ export default function App() {
   }, []);
 
   const toggleFavorite = async (item) => {
-    const isFav = favorites.some(f => f.id === item.id);
-    const newFavs = isFav ? favorites.filter(f => f.id !== item.id) : [...favorites, item];
-    setFavorites(newFavs);
-    localStorage.setItem('a2v_favorites', JSON.stringify(newFavs));
+    if (item.type === 'park' || PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-')) {
+      return;
+    }
+    
+    const isAlreadyFavorited = (favorites || []).some(f => f.id === item.id);
+    let updatedFavorites;
+
+    if (isAlreadyFavorited) { 
+      updatedFavorites = favorites.filter(f => f.id !== item.id); 
+    } else { 
+      const itemToSave = { 
+        ...item, 
+        type: item.type || 'experience', 
+        savedAt: Date.now() 
+      }; 
+      updatedFavorites = [...favorites, itemToSave]; 
+    }
+
+    setFavorites(updatedFavorites);
+    localStorage.setItem('a2v_favorites', JSON.stringify(updatedFavorites));
 
     if (user) {
       try {
-        await setDoc(doc(db, 'users', user.uid), { favorites: newFavs }, { merge: true });
+        await setDoc(doc(db, 'users', user.uid), { favorites: updatedFavorites }, { merge: true });
       } catch (err) {
-        console.error("Error saving favorites:", err);
+        console.error("Error syncing favorite to Firestore:", err);
       }
     }
   };
 
+  const shuffledExp = useMemo(() => {
+    let list = itineraries || [];
+    if (activeMonth !== 'All Months') list = list.filter(i => i.month === activeMonth);
+    if (activeExpCat !== 'All') {
+      list = list.filter(i => {
+        let itemCats = Array.isArray(i.category) ? i.category : (Array.isArray(i.categories) ? i.categories : (typeof i.category === 'string' ? i.category.split(',').map(c => c.trim()) : []));
+        const filterVal = activeExpCat.toLowerCase();
+        return itemCats.some(c => c.toLowerCase().includes(filterVal)) || (filterVal === 'museums' && (i.name?.toLowerCase().includes('museum') || i.shortDesc?.toLowerCase().includes('museum')));
+      });
+    }
+    return list;
+  }, [itineraries, activeExpCat, activeMonth]);
+
   return (
-    <div className={`min-h-screen ${theme.appBg} ${theme.text} flex flex-col items-center justify-start antialiased transition-colors duration-300 font-sans`}>
-      <header className={`sticky top-0 z-50 w-full max-w-xl ${theme.appBg}/90 backdrop-blur-md border-b ${theme.border} px-4 py-3.5 flex items-center justify-between`}>
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setView('home')}>
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#00274c] to-[#ffcb05] p-0.5 flex items-center justify-center shadow-lg">
-            <div className={`w-full h-full rounded-[14px] ${theme.card} flex items-center justify-center`}>
-              <Zap size={18} className="text-[#ffcb05]" />
+    <div className={`min-h-screen ${theme.windowBg} font-sans transition-colors duration-500 flex flex-col items-center overflow-x-hidden`}>
+      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      <div className={`w-full max-w-xl min-h-screen ${theme.appBg} relative shadow-2xl flex flex-col items-center border-x border-white/5`}>
+        
+        {/* Persistent App Header */}
+        <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/90 backdrop-blur-xl border-b ${theme.border} px-5 py-4 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTool(null); setView('home'); }}>
+            <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black flex-shrink-0">
+              <Building size={20}/>
+            </div>
+            <div className="flex flex-col leading-none text-left">
+              <span className={`text-[11px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span>
+              <span className={`text-[9px] font-header font-bold uppercase tracking-widest ${theme.secondaryText}`}>Vibe</span>
             </div>
           </div>
-          <div>
-            <span className="font-header font-black text-xl italic tracking-tighter uppercase block leading-none" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
-              A2 Vibe
-            </span>
-            <span className="text-[8px] font-black uppercase tracking-[0.25em] text-[#0284c7] dark:text-[#38bdf8] block mt-0.5">
-              Ann Arbor Guide
-            </span>
+          
+          <div className="flex items-center gap-2.5">
+            {!user ? (
+              <button
+                onClick={handleLogin}
+                className="px-3.5 py-2 rounded-xl bg-[#ffcb05] text-black text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 transition-all"
+              >
+                <LogIn size={13} />
+                <span>Sign In</span>
+              </button>
+            ) : (
+              <button 
+                onClick={() => { setActiveTool(null); setView('profile'); }} 
+                className={`w-9 h-9 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'} flex items-center justify-center overflow-hidden border ${theme.text}`}
+                title="Open My Vibe"
+              >
+                {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <User size={16}/>}
+              </button>
+            )}
+
+            <button 
+              onClick={() => setThemeKey(theme.isDark ? 'light' : 'dark')} 
+              className={`p-2.5 rounded-2xl bg-[#00274c] hover:bg-[#ffcb05] transition-colors border border-white/10 ${theme.text}`}
+              title="Toggle theme"
+            >
+              {theme.isDark ? <Sun size={18} className="text-[#ffcb05]" /> : <Moon size={18} className="text-white" />}
+            </button>
           </div>
-        </div>
+        </header>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setThemeKey(prev => prev === 'dark' ? 'light' : 'dark')}
-            className={`p-2 rounded-xl border ${theme.border} ${theme.isDark ? 'bg-white/5 text-yellow-400' : 'bg-black/5 text-slate-700'} active:scale-90 transition-transform`}
-            title="Toggle theme"
-          >
-            {themeKey === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
+        <main className="flex-1 pt-28 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
+          <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
+          
+          <ParkDetailModal
+            isOpen={!!selectedPark}
+            onClose={() => setSelectedPark(null)}
+            park={selectedPark}
+            theme={theme}
+          />
 
-          {user ? (
-            <div className="w-8 h-8 rounded-full border border-[#ffcb05] overflow-hidden flex items-center justify-center">
-              {user.photoURL ? (
-                <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <User size={14} />
-              )}
-            </div>
+          <ParksDirectoryModal
+            isOpen={isParksModalOpen}
+            onClose={() => setIsParksModalOpen(false)}
+            theme={theme}
+            onSelectPark={handleParkSelect}
+          />
+
+          <TransitModal
+            isOpen={isTransitModalOpen}
+            onClose={() => setIsTransitModalOpen(false)}
+            theme={theme}
+          />
+
+          <ShopsDirectoryModal
+            isOpen={isShopsModalOpen}
+            onClose={() => setIsShopsModalOpen(false)}
+            theme={theme}
+            onSelectShop={handleShopSelect}
+            toggleFavorite={toggleFavorite}
+            favorites={favorites}
+            onOpenPartnerModal={openPartnerModal}
+          />
+
+          <ShopDetailModal
+            isOpen={!!selectedShop}
+            onClose={() => setSelectedShop(null)}
+            shop={selectedShop}
+            theme={theme}
+            toggleFavorite={toggleFavorite}
+            favorites={favorites}
+          />
+
+          <PartnerListingModal 
+            isOpen={isPartnerModalOpen} 
+            onClose={() => setIsPartnerModalOpen(false)} 
+            theme={theme} 
+            user={user} 
+            initialCategory={partnerModalCategory}
+          />
+
+          <ContributorSubmissionModal
+            isOpen={isContributorModalOpen}
+            onClose={() => setIsContributorModalOpen(false)}
+            theme={theme}
+            user={user}
+            onPostSuccess={() => {}}
+          />
+
+          {activeTool ? (
+            <ToolFullScreenView 
+              type={activeTool} 
+              onClose={() => setActiveTool(null)} 
+              theme={theme} 
+              stats={stats} 
+              setStats={setStats} 
+              dining={dining} 
+              bucketList={bucketList} 
+              setBucketList={setBucketList} 
+              user={user} 
+            />
           ) : (
-            <button
-              onClick={handleLogin}
-              className="px-3 py-1.5 bg-[#ffcb05] text-black text-[10px] font-black uppercase rounded-xl tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1"
-            >
-              <LogIn size={12} />
-              <span>Sign In</span>
-            </button>
+            <>
+              {view === 'home' && (
+                <HomeView 
+                  theme={theme} 
+                  setView={setView} 
+                  setSelectedItem={setSelectedItem} 
+                  itineraries={itineraries} 
+                  dining={dining} 
+                  featuredPosts={featuredPosts} 
+                  favorites={favorites} 
+                  toggleFavorite={toggleFavorite} 
+                  onOpenPartnerModal={openPartnerModal}
+                  onOpenParksModal={openParksModal}
+                  onOpenTransitModal={openTransitModal}
+                  onOpenShopsModal={openShopsModal}
+                  onSelectShop={handleShopSelect}
+                />
+              )}
+              {view === 'journal' && (
+                <GuideView 
+                  theme={theme} 
+                  setSelectedItem={setSelectedItem} 
+                  toggleFavorite={toggleFavorite} 
+                  favorites={favorites} 
+                  posts={posts} 
+                  onOpenPartnerModal={openPartnerModal} 
+                  onOpenContributorModal={openContributorModal}
+                />
+              )}
+              {view === 'flavors' && (
+                <FlavorsView 
+                  theme={theme} 
+                  setSelectedItem={setSelectedItem} 
+                  toggleFavorite={toggleFavorite} 
+                  favorites={favorites} 
+                  dining={dining}
+                  onOpenPartnerModal={openPartnerModal}
+                />
+              )}
+              {view === 'profile' && (
+                <HubView 
+                  theme={theme} 
+                  favorites={favorites} 
+                  toggleFavorite={toggleFavorite} 
+                  stats={stats} 
+                  setStats={setStats} 
+                  setSelectedItem={setSelectedItem} 
+                  setView={setView} 
+                  dining={dining} 
+                  setActiveTool={setActiveTool} 
+                  user={user} 
+                  handleLogin={handleLogin} 
+                  handleLogout={handleLogout} 
+                  onOpenPartnerModal={openPartnerModal}
+                  onOpenContributorModal={openContributorModal}
+                  onOpenParksModal={openParksModal}
+                  onOpenShopsModal={openShopsModal}
+                  onSelectShop={handleShopSelect}
+                />
+              )}
+              {view === 'fun' && (
+                <div className="space-y-12 animate-fade w-full">
+                  <div className="text-center px-4">
+                    <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Happenings</h1>
+                  </div>
+
+                  {(() => {
+                    const featuredHappenings = (itineraries || []).filter(e => e.isFeatured);
+                    const displayFeatured = featuredHappenings.length > 0 ? featuredHappenings.slice(0, 5) : (itineraries || []).slice(0, 5);
+                    return (
+                      <div className="px-1 w-full">
+                        <div className="flex items-center gap-2 mb-4 px-2">
+                          <Zap size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
+                          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Events</h2>
+                        </div>
+                        <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
+                          {displayFeatured.map(exp => (
+                            <div key={`feat-${exp.id}`} onClick={()=>setSelectedItem(exp)} className={`min-w-[280px] h-48 ${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg snap-center relative group cursor-pointer flex-shrink-0`}>
+                              {exp.img && <img src={exp.img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                              <div className="absolute bottom-4 left-4 right-4 text-white">
+                                <span className="bg-[#38bdf8] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Top Pick</span>
+                                <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{exp.name}</h3>
+                                {exp.date && <p className="text-[10px] font-bold text-[#ffcb05] mt-0.5 truncate">{exp.date}</p>}
+                                <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
+                                  {Array.isArray(exp.category) ? exp.category[0] : exp.category}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  <div className="text-center px-4">
+                    <div className="flex overflow-x-auto gap-3 mt-6 mb-2 no-scrollbar px-1">
+                      {MONTHS_EXP.map((m) => (
+                        <button key={m} onClick={() => setActiveMonth(m)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeMonth === m ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{m}</button>
+                      ))}
+                    </div>
+                    <div className="flex overflow-x-auto gap-3 mb-2 no-scrollbar px-1">
+                      {CATEGORIES_EXP.map((cat) => (
+                        <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#38bdf8] border-[#38bdf8] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{cat}</button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4 px-1 pt-4 w-full">
+                    {shuffledExp && shuffledExp.length > 0 ? (
+                      <>
+                        {shuffledExp.slice(0, activeExpCat === 'All' && activeMonth === 'All Months' ? visibleCount : shuffledExp.length).map(exp => (
+                          <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex flex-col sm:flex-row rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group active:scale-[0.99] transition-transform`}>
+                            <div className="sm:w-36 h-40 sm:h-auto relative flex-shrink-0">
+                              {exp.img ? <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" /> : <div className={`w-full h-full ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={28} className="opacity-30" /></div>}
+                              {exp.price && <span className="absolute bottom-3 left-3 sm:hidden bg-black/70 backdrop-blur-md text-[#ffcb05] text-[10px] font-black px-2.5 py-1 rounded-lg uppercase">{exp.price}</span>}
+                            </div>
+                            
+                            <div className="flex-1 p-5 flex flex-col justify-between text-left space-y-3">
+                              <div>
+                                <div className="flex justify-between items-start gap-2">
+                                  <h4 className={`font-bold uppercase text-sm leading-tight ${theme.text} line-clamp-1 tracking-tight`}>{exp.name}</h4>
+                                  <div className="flex items-center gap-1">
+                                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : theme.secondaryText}`}>
+                                      <Heart size={16} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} />
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {exp.date && (
+                                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">
+                                    <Calendar size={13} />
+                                    <span>{exp.date}</span>
+                                  </div>
+                                )}
+
+                                {exp.time && (
+                                  <div className={`flex items-center gap-1.5 text-[10px] font-medium ${theme.secondaryText} mt-0.5`}>
+                                    <Clock size={12} />
+                                    <span>{exp.time}</span>
+                                  </div>
+                                )}
+
+                                {exp.address && (
+                                  <div className={`flex items-center gap-1.5 text-[10px] ${theme.secondaryText} mt-0.5 truncate`}>
+                                    <MapPin size={12} className="flex-shrink-0" />
+                                    <span className="truncate">{exp.address}</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className={`flex items-center justify-between pt-2 border-t ${theme.border}`}>
+                                <span className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] hidden sm:inline-block">{exp.price || 'Free'}</span>
+                                <span className="text-[9px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em]">{Array.isArray(exp.category) ? exp.category[0] : exp.category}</span>
+                                <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-4 py-2 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        {activeExpCat === 'All' && activeMonth === 'All Months' && visibleCount < (shuffledExp.length || 0) && (
+                          <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
+                        )}
+                      </>
+                    ) : (
+                      <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
+                    )}
+                  </div>
+
+                  {/* HAPPENINGS BOTTOM CTA */}
+                  <div className="pt-2 px-1">
+                    <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
+                      <div className="space-y-1 text-left">
+                        <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Event Organizers & Promoters</span>
+                        <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Host an Event in Ann Arbor?</h4>
+                        <p className="text-[11px] text-slate-300">Feature your festival, live music, or meetup to Tree Town.</p>
+                      </div>
+                      <button
+                        onClick={() => openPartnerModal('general')}
+                        className="px-4 py-3 bg-[#38bdf8] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 ml-3"
+                      >
+                        <span>List Event</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
           )}
-        </div>
-      </header>
+        </main>
 
-      <main className="w-full max-w-xl px-4 pt-4 flex-1">
-        {view === 'home' && (
-          <HomeView
-            theme={theme}
-            setSelectedItem={setSelectedItem}
-            itineraries={itineraries}
-            dining={dining}
-            featuredPosts={featuredPosts}
-            favorites={favorites}
-            toggleFavorite={toggleFavorite}
-            setView={setView}
-            onOpenPartnerModal={openPartnerModal}
-            onOpenParksModal={openParksModal}
-            onOpenTransitModal={openTransitModal}
-            onOpenShopsModal={openShopsModal}
-            onSelectShop={handleShopSelect}
-          />
-        )}
+        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
+          {[
+            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
+            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
+            { id: 'journal', icon: BookText, label: 'Guide', color: '#a855f7' }, 
+            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
+            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
+          ].map(v => {
+            const isActive = !activeTool && view === v.id;
+            return (
+              <button key={v.id} onClick={() => { setActiveTool(null); setView(v.id); }} className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-115 opacity-100' : 'opacity-60 hover:opacity-100'}`} style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}>
+                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
+                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
 
-        {view === 'flavors' && (
-          <FlavorsView
-            theme={theme}
-            setSelectedItem={setSelectedItem}
-            toggleFavorite={toggleFavorite}
-            favorites={favorites}
-            dining={dining}
-            onOpenPartnerModal={openPartnerModal}
-          />
-        )}
-
-        {view === 'journal' && (
-          <GuideView
-            theme={theme}
-            setSelectedItem={setSelectedItem}
-            toggleFavorite={toggleFavorite}
-            favorites={favorites}
-            posts={posts}
-            onOpenPartnerModal={openPartnerModal}
-            onOpenContributorModal={openContributorModal}
-          />
-        )}
-
-        {view === 'hub' && (
-          <HubView
-            theme={theme}
-            favorites={favorites}
-            toggleFavorite={toggleFavorite}
-            stats={stats}
-            setStats={setStats}
-            setSelectedItem={setSelectedItem}
-            setView={setView}
-            dining={dining}
-            setActiveTool={setActiveTool}
-            user={user}
-            handleLogin={handleLogin}
-            handleLogout={handleLogout}
-            onOpenPartnerModal={openPartnerModal}
-            onOpenContributorModal={openContributorModal}
-            onOpenParksModal={openParksModal}
-            onOpenShopsModal={openShopsModal}
-            onSelectShop={handleShopSelect}
-          />
-        )}
-      </main>
-
-      {/* Bottom Navigation Bar */}
-      <nav className={`fixed bottom-0 z-40 w-full max-w-xl ${theme.appBg}/95 backdrop-blur-lg border-t ${theme.border} px-6 py-2.5 flex justify-around items-center`}>
-        {[
-          { id: 'home', label: 'Scene', icon: Sparkles },
-          { id: 'flavors', label: 'Flavors', icon: Utensils },
-          { id: 'journal', label: 'Guide', icon: BookText },
-          { id: 'hub', label: 'My Vibe', icon: User }
-        ].map(item => {
-          const Icon = item.icon;
-          const isActive = view === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => setView(item.id)}
-              className={`flex flex-col items-center gap-1 transition-all active:scale-90 ${
-                isActive ? 'text-[#ffcb05]' : (theme.isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900')
-              }`}
-            >
-              <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-              <span className="text-[9px] font-black uppercase tracking-wider">{item.label}</span>
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* Modals & Overlays */}
-      <Modal
-        isOpen={!!selectedItem}
-        onClose={() => setSelectedItem(null)}
-        item={selectedItem}
-        theme={theme}
-        toggleFavorite={toggleFavorite}
-        favorites={favorites}
-      />
-
-      <ShopDetailModal
-        isOpen={!!selectedShop}
-        onClose={() => setSelectedShop(null)}
-        shop={selectedShop}
-        theme={theme}
-        toggleFavorite={toggleFavorite}
-        favorites={favorites}
-      />
-
-      <ParkDetailModal
-        isOpen={!!selectedPark}
-        onClose={() => setSelectedPark(null)}
-        park={selectedPark}
-        theme={theme}
-      />
-
-      <ShopsDirectoryModal
-        isOpen={isShopsModalOpen}
-        onClose={() => setIsShopsModalOpen(false)}
-        theme={theme}
-        onSelectShop={handleShopSelect}
-        toggleFavorite={toggleFavorite}
-        favorites={favorites}
-        onOpenPartnerModal={openPartnerModal}
-      />
-
-      <ParksDirectoryModal
-        isOpen={isParksModalOpen}
-        onClose={() => setIsParksModalOpen(false)}
-        theme={theme}
-        onSelectPark={handleParkSelect}
-      />
-
-      <TransitModal
-        isOpen={isTransitModalOpen}
-        onClose={() => setIsTransitModalOpen(false)}
-        theme={theme}
-      />
-
-      <PartnerListingModal
-        isOpen={isPartnerModalOpen}
-        onClose={() => setIsPartnerModalOpen(false)}
-        theme={theme}
-        user={user}
-        initialCategory={partnerModalCategory}
-      />
-
-      <ContributorSubmissionModal
-        isOpen={isContributorModalOpen}
-        onClose={() => setIsContributorModalOpen(false)}
-        theme={theme}
-        user={user}
-      />
-
-      {activeTool && (
-        <div className="fixed inset-0 z-[110] bg-black/80 backdrop-blur-md p-4 overflow-y-auto">
-          <ToolFullScreenView
-            type={activeTool}
-            onClose={() => setActiveTool(null)}
-            theme={theme}
-            stats={stats}
-            setStats={setStats}
-            dining={dining}
-            bucketList={bucketList}
-            setBucketList={setBucketList}
-            user={user}
-          />
-        </div>
-      )}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .font-header { font-family: 'Outfit', sans-serif; }
+        .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
+        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
+        .wp-content strong { color: #ffcb05; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .bg-slate-50 .wp-content, .wp-content p { color: #00274c !important; }
+        .bg-\\[\\#0a121e\\] .wp-content, .wp-content p { color: #f1f5f9 !important; }
+      `}} />
     </div>
   );
 }
