@@ -26,6 +26,31 @@ import { happeningsData } from './data/happeningsData';
 
 const SHOPS_DATA = [
   {
+    id: 'shop-orange-market',
+    name: 'Orange Market',
+    type: 'shop',
+    category: 'Specialty Markets',
+    tier: 'featured',
+    isFeatured: true,
+    rating: '4.9',
+    address: 'Broadway Street, Ann Arbor, MI 48105',
+    url: 'https://a2vibe.com',
+    img: 'https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg',
+    images: [
+      'https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg',
+      'https://a2vibe.com/images/Orange%20Market.jpg',
+      'https://a2vibe.com/images/Orange%20Market%202.jpg'
+    ],
+    shortDesc: 'Premier Broadway Street Asian market renowned for daily fresh-made kimchi, gimbap, hot prepared meals, and authentic specialty groceries.',
+    longDesc: '<p>Orange Market on Broadway Street is a cherished Ann Arbor culinary landmark. Loved by locals and students alike, Orange Market brings the authentic flavors of Asian street food and homemade traditional staples straight to North Campus and Broadway.</p><p>Every single day, their kitchen team crafts a vibrant lineup of prepared foods from scratch. Stop in for fresh house-made kimchi, handcrafted gimbap rolls, savory bibimbap bowls, fresh banchan (Korean side dishes), and hot daily lunch and dinner entrees alongside hard-to-find imported Asian groceries, produce, and snacks.</p>',
+    specials: [
+      'Made Daily Fresh: Homemade Kimchi & Artisanal Banchan',
+      'Daily Kitchen Specials: Fresh-rolled Gimbap & Hot Bibimbap Bowls'
+    ],
+    features: ['Daily Prepared Foods', 'House-Made Kimchi', 'Fresh Gimbap', 'Hot Lunch Specials', 'Asian Specialty Groceries'],
+    hours: 'Mon - Sat: 9:00 AM - 8:00 PM | Sun: 10:00 AM - 7:00 PM'
+  },
+  {
     id: 'shop-vibe-a2',
     name: 'Vibe Ann Arbor',
     type: 'shop',
@@ -196,6 +221,27 @@ const SHOPS_DATA = [
   }
 ];
 
+const ORANGE_MARKET_EATS_ENTRY = {
+  id: 'orange-market-eats',
+  name: 'Orange Market on Broadway',
+  title: 'Orange Market on Broadway',
+  type: 'dining',
+  cuisine: 'Korean & Asian Grocery Hot Spot',
+  neighborhood: 'Broadway / North Campus',
+  rating: '4.9',
+  isFeatured: true,
+  address: 'Broadway Street, Ann Arbor, MI 48105',
+  img: 'https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg',
+  images: [
+    'https://a2vibe.com/images/Orange%20Market%20-%20Broadway%20Street%20Ann%20Arbor.jpg',
+    'https://a2vibe.com/images/Orange%20Market.jpg',
+    'https://a2vibe.com/images/Orange%20Market%202.jpg'
+  ],
+  shortDesc: 'Broadway staple preparing daily house-made kimchi, fresh gimbap, bibimbap, Korean side dishes, and daily kitchen specials.',
+  longDesc: '<p>Orange Market on Broadway Street is a celebrated destination for authentic Asian ingredients and daily made-from-scratch Korean dishes. Famous across Tree Town for its warm hospitality and kitchen offerings, Orange Market serves fresh Korean comfort food made daily on-site.</p><h4>Made Daily Fresh in Kitchen:</h4><ul><li><strong>House-Made Kimchi:</strong> Traditional, fermented small-batch cabbage and radish kimchi.</li><li><strong>Handcrafted Gimbap:</strong> Freshly rolled Korean rice rolls packed with vegetables, savory egg, and savory meats.</li><li><strong>Hot Bibimbap Bowls:</strong> Authentic rice bowls with seasoned vegetables, fried egg, and gochujang.</li><li><strong>Fresh Banchan:</strong> Rotated daily side dishes including seasoned spinach, bean sprouts, and marinated potatoes.</li><li><strong>Daily Hot Entrees:</strong> Rotating daily prepared entrees and authentic snacks.</li></ul>',
+  price: '$$'
+};
+
 const SHOP_CATEGORIES = [
   'All',
   'Marijuana Dispensaries',
@@ -207,8 +253,9 @@ const SHOP_CATEGORIES = [
 
 const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !shop) return null;
-  const isFeatured = shop.tier === 'featured';
+  const isFeatured = shop.tier === 'featured' || shop.isFeatured;
   const isFavorited = (favorites || []).some(f => f.id === shop.id);
+  const shopImages = shop.images || (shop.img ? [shop.img] : []);
 
   return (
     <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
@@ -242,18 +289,30 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
         </div>
 
         <div className="p-6 space-y-6">
-          {shop.img && (
-            <div className="relative rounded-[32px] overflow-hidden shadow-lg h-60">
-              <img src={shop.img} className="w-full h-full object-cover" alt={shop.name} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-              {isFeatured && (
-                <span className="absolute top-4 left-4 bg-[#ffcb05] text-black text-[9px] font-black uppercase px-3 py-1 rounded-full tracking-wider shadow-md">
-                  ★ Featured Shop
+          {shopImages.length > 0 && (
+            <div className="space-y-3">
+              <div className="relative rounded-[32px] overflow-hidden shadow-lg h-64">
+                <img src={shopImages[0]} className="w-full h-full object-cover" alt={shop.name} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                {isFeatured && (
+                  <span className="absolute top-4 left-4 bg-[#ffcb05] text-black text-[9px] font-black uppercase px-3 py-1 rounded-full tracking-wider shadow-md">
+                    ★ Featured Spotlight
+                  </span>
+                )}
+                <span className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-3 py-1 rounded-full">
+                  {shop.category}
                 </span>
+              </div>
+
+              {shopImages.length > 1 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {shopImages.slice(1).map((imgUrl, idx) => (
+                    <div key={idx} className="h-28 rounded-2xl overflow-hidden shadow-md border border-white/10">
+                      <img src={imgUrl} className="w-full h-full object-cover" alt={`${shop.name} view ${idx + 2}`} />
+                    </div>
+                  ))}
+                </div>
               )}
-              <span className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-3 py-1 rounded-full">
-                {shop.category}
-              </span>
             </div>
           )}
 
@@ -281,7 +340,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
             <div className="p-4 rounded-3xl bg-gradient-to-br from-[#ffcb05]/15 to-transparent border border-[#ffcb05]/30 space-y-2.5">
               <div className="flex items-center gap-2 text-[#b45309] dark:text-[#ffcb05]">
                 <Percent size={18} />
-                <h4 className="text-xs font-black uppercase tracking-wider">Current Deals & Specials</h4>
+                <h4 className="text-xs font-black uppercase tracking-wider">Current Deals & Daily Kitchen Specials</h4>
               </div>
               <ul className="space-y-1.5 text-xs">
                 {shop.specials.map((spec, i) => (
@@ -296,7 +355,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
 
           {shop.features && shop.features.length > 0 && (
             <div className="space-y-2">
-              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Amenities & Highlights</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Amenities & Daily Offerings</span>
               <div className="flex flex-wrap gap-2">
                 {shop.features.map(f => (
                   <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border} ${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
@@ -308,7 +367,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
           )}
 
           <div className="space-y-2">
-            <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>About this Shop</span>
+            <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>About this Spot</span>
             <div className={`text-sm leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`}
               dangerouslySetInnerHTML={{ __html: shop.longDesc || `<p>${shop.shortDesc}</p>` }}
             />
@@ -345,7 +404,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
   const [selectedCat, setSelectedCat] = useState('All');
 
   const featuredShops = useMemo(() => {
-    return SHOPS_DATA.filter(s => s.tier === 'featured');
+    return SHOPS_DATA.filter(s => s.tier === 'featured' || s.isFeatured);
   }, []);
 
   const filteredShops = useMemo(() => {
@@ -392,7 +451,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search dispensaries, vinyl, boutiques, books..."
+              placeholder="Search dispensaries, kimchi, vinyl, boutiques, books..."
               className={`w-full pl-10 pr-4 py-3 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05] transition-all`}
             />
           </div>
@@ -494,7 +553,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
                           <span className="text-[9px] font-black uppercase tracking-wider text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md truncate">
                             {shop.category}
                           </span>
-                          {shop.tier === 'featured' && (
+                          {(shop.tier === 'featured' || shop.isFeatured) && (
                             <span className="bg-[#ffcb05] text-black text-[8px] font-black uppercase px-1.5 py-0.5 rounded">
                               Featured
                             </span>
@@ -534,7 +593,6 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
           </div>
         </div>
 
-        {/* SHOP MODAL CTA: GET LISTED */}
         <div className={`p-4 border-t ${theme.border} ${theme.appBg}/95 backdrop-blur-md`}>
           <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#00274c] to-[#0a121e] border border-[#ffcb05]/30 flex items-center justify-between gap-3">
             <div className="min-w-0">
@@ -994,7 +1052,7 @@ const TheSceneHeroSlideshow = ({
   const sceneSlides = useMemo(() => {
     const featuredEats = (dining || []).filter(d => d.isFeatured || d.rating >= '4.8').slice(0, 3);
     const featuredEvents = (itineraries || []).filter(e => e.isFeatured || e.price).slice(0, 3);
-    const featuredShops = SHOPS_DATA.filter(s => s.tier === 'featured').slice(0, 3);
+    const featuredShops = SHOPS_DATA.filter(s => s.tier === 'featured' || s.isFeatured).slice(0, 3);
 
     const slides = [];
     const maxLen = Math.max(featuredEats.length, featuredEvents.length, featuredShops.length, 1);
@@ -1476,9 +1534,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
     } catch (err) {
       console.error('Error posting comment:', err);
       alert('Could not post comment. Please check your connection.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    } font-sans
   };
 
   return (
@@ -1930,6 +1986,7 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
 const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
   if (!isOpen || !item) return null;
   const isFavorited = (favorites || []).some(f => f.id === item.id);
+  const itemImages = item.images || (item.img ? [item.img] : []);
   
   return (
     <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
@@ -1949,7 +2006,18 @@ const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
           </div>
         </div>
         <div className="p-8 space-y-6">
-          {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
+          {itemImages.length > 0 && (
+            <div className="space-y-3">
+              <img src={itemImages[0]} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />
+              {itemImages.length > 1 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {itemImages.slice(1).map((imgUrl, idx) => (
+                    <img key={idx} src={imgUrl} className="w-full h-28 object-cover rounded-2xl shadow-md border border-white/10" alt="" />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="flex items-center gap-2 flex-wrap">
             {item.price && <div className="bg-[#ffcb05]/20 text-[#b45309] dark:text-[#ffcb05] px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
@@ -2885,7 +2953,7 @@ const HomeView = ({
   onOpenShopsModal, onSelectShop
 }) => {
   const featuredShopsList = useMemo(() => {
-    return SHOPS_DATA.filter(s => s.tier === 'featured');
+    return SHOPS_DATA.filter(s => s.tier === 'featured' || s.isFeatured);
   }, []);
 
   return (
@@ -2989,7 +3057,7 @@ const HomeView = ({
               Explore Local Shops & Dispensaries
             </h4>
             <p className="text-xs text-slate-300 leading-relaxed max-w-md">
-              From top dispensary strains at Vibe Ann Arbor to rare vintage vinyl, indie bookstores, and Michigan gear. Discover local tree town retail.
+              From fresh kimchi and gimbap at Orange Market to top dispensary strains at Vibe Ann Arbor, indie bookstores, and vintage gear. Discover local tree town retail.
             </p>
           </div>
           <button
@@ -3087,14 +3155,14 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
 
   const featuredDining = useMemo(() => {
     const featured = dining.filter(d => d.isFeatured);
-    return featured.length > 0 ? featured.slice(0, 5) : dining.slice(0, 5);
+    return featured.length > 0 ? featured : dining.slice(0, 5);
   }, [dining]);
 
   return (
     <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col">
       <div className="text-center px-4 w-full space-y-4">
         <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
-        <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
+        <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants, markets, and eateries.</p>
       </div>
 
       <div className="px-1 w-full">
@@ -3375,7 +3443,7 @@ export default function App() {
   const [isParksModalOpen, setIsParksModalOpen] = useState(false);
   const [isTransitModalOpen, setIsTransitModalOpen] = useState(false);
   const [isShopsModalOpen, setIsShopsModalOpen] = useState(false);
-   
+    
   const [favorites, setFavorites] = useState(() => {
     try { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; } catch { return []; }
   });
@@ -3387,10 +3455,10 @@ export default function App() {
   });
 
   const [itineraries] = useState(happeningsData);
-  const [dining, setDining] = useState(eatsData);
+  const [dining, setDining] = useState([ORANGE_MARKET_EATS_ENTRY, ...eatsData]);
   const [posts] = useState(journalData);
   const [featuredPosts] = useState(journalData.filter(p => p.isHighlight));
-   
+    
   const [activeExpCat, setActiveExpCat] = useState('All');
   const [activeMonth, setActiveMonth] = useState('All Months');
   const [visibleCount, setVisibleCount] = useState(6);
@@ -3725,89 +3793,35 @@ export default function App() {
                         <button key={m} onClick={() => setActiveMonth(m)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeMonth === m ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{m}</button>
                       ))}
                     </div>
-                    <div className="flex overflow-x-auto gap-3 mb-2 no-scrollbar px-1">
+
+                    <div className="flex overflow-x-auto gap-2 my-2 no-scrollbar px-1">
                       {CATEGORIES_EXP.map((cat) => (
-                        <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#38bdf8] border-[#38bdf8] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{cat}</button>
+                        <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-4 py-2 rounded-full border whitespace-nowrap text-[9px] font-black uppercase tracking-wider transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#38bdf8] border-[#38bdf8] text-black shadow-md' : (theme.isDark ? 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{cat}</button>
                       ))}
                     </div>
-                  </div>
-                  
-                  <div className="space-y-4 px-1 pt-4 w-full">
-                    {shuffledExp && shuffledExp.length > 0 ? (
-                      <>
-                        {shuffledExp.slice(0, activeExpCat === 'All' && activeMonth === 'All Months' ? visibleCount : shuffledExp.length).map(exp => (
-                          <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex flex-col sm:flex-row rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group active:scale-[0.99] transition-transform`}>
-                            <div className="sm:w-36 h-40 sm:h-auto relative flex-shrink-0">
-                              {exp.img ? <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" /> : <div className={`w-full h-full ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={28} className="opacity-30" /></div>}
-                              {exp.price && <span className="absolute bottom-3 left-3 sm:hidden bg-black/70 backdrop-blur-md text-[#ffcb05] text-[10px] font-black px-2.5 py-1 rounded-lg uppercase">{exp.price}</span>}
+
+                    <div className="grid grid-cols-1 gap-4 mt-6 text-left px-1">
+                      {shuffledExp.slice(0, visibleCount).map((exp) => {
+                        const isFavorited = (favorites || []).some(f => f.id === exp.id);
+                        return (
+                          <div key={exp.id} onClick={() => setSelectedItem({...exp, type: 'experience'})} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex gap-4 cursor-pointer shadow-md items-center group active:scale-[0.99] transition-transform`}>
+                            {exp.img ? <img src={exp.img} className="w-24 h-24 rounded-2xl object-cover shadow-inner flex-shrink-0" alt="" /> : <div className={`w-24 h-24 rounded-2xl ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-center flex-shrink-0 text-slate-400`}><Sparkles size={24}/></div>}
+                            <div className="flex-1 min-w-0 flex flex-col justify-center">
+                              <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{exp.name}</h3>
+                              {exp.date && <p className="text-[10px] font-bold text-[#b45309] dark:text-[#ffcb05] mt-0.5 truncate">{exp.date}</p>}
+                              <p className={`text-xs mt-1 line-clamp-1 ${theme.secondaryText}`}>{exp.shortDesc}</p>
                             </div>
-                            
-                            <div className="flex-1 p-5 flex flex-col justify-between text-left space-y-3">
-                              <div>
-                                <div className="flex justify-between items-start gap-2">
-                                  <h4 className={`font-bold uppercase text-sm leading-tight ${theme.text} line-clamp-1 tracking-tight`}>{exp.name}</h4>
-                                  <div className="flex items-center gap-1">
-                                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : theme.secondaryText}`}>
-                                      <Heart size={16} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} />
-                                    </button>
-                                  </div>
-                                </div>
-
-                                {exp.date && (
-                                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">
-                                    <Calendar size={13} />
-                                    <span>{exp.date}</span>
-                                  </div>
-                                )}
-
-                                {exp.time && (
-                                  <div className={`flex items-center gap-1.5 text-[10px] font-medium ${theme.secondaryText} mt-0.5`}>
-                                    <Clock size={12} />
-                                    <span>{exp.time}</span>
-                                  </div>
-                                )}
-
-                                {exp.address && (
-                                  <div className={`flex items-center gap-1.5 text-[10px] ${theme.secondaryText} mt-0.5 truncate`}>
-                                    <MapPin size={12} className="flex-shrink-0" />
-                                    <span className="truncate">{exp.address}</span>
-                                  </div>
-                                )}
-                              </div>
-
-                              <div className={`flex items-center justify-between pt-2 border-t ${theme.border}`}>
-                                <span className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] hidden sm:inline-block">{exp.price || 'Free'}</span>
-                                <span className="text-[9px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em]">{Array.isArray(exp.category) ? exp.category[0] : exp.category}</span>
-                                <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-4 py-2 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
-                              </div>
-                            </div>
+                            <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...exp, type: 'experience'}); }} className={`p-3 rounded-full backdrop-blur-md flex-shrink-0 transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/10 text-slate-400' : 'bg-black/5 text-slate-600')}`}><Heart size={18} fill={isFavorited ? "currentColor" : "none"} /></button>
                           </div>
-                        ))}
-                        {activeExpCat === 'All' && activeMonth === 'All Months' && visibleCount < (shuffledExp.length || 0) && (
-                          <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
-                        )}
-                      </>
-                    ) : (
-                      <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
-                    )}
-                  </div>
-
-                  {/* HAPPENINGS BOTTOM CTA */}
-                  <div className="pt-2 px-1">
-                    <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
-                      <div className="space-y-1 text-left">
-                        <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Event Organizers & Promoters</span>
-                        <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Host an Event in Ann Arbor?</h4>
-                        <p className="text-[11px] text-slate-300">Feature your festival, live music, or meetup to Tree Town.</p>
-                      </div>
-                      <button
-                        onClick={() => openPartnerModal('general')}
-                        className="px-4 py-3 bg-[#38bdf8] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 ml-3"
-                      >
-                        <span>List Event</span>
-                        <ArrowRight size={14} />
-                      </button>
+                        );
+                      })}
                     </div>
+
+                    {shuffledExp.length > visibleCount && (
+                      <button onClick={() => setVisibleCount(p => p + 6)} className="mt-8 px-8 py-3.5 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs tracking-wider shadow-lg active:scale-95 transition-all">
+                        Load More Events ({shuffledExp.length - visibleCount} remaining)
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -3815,34 +3829,37 @@ export default function App() {
           )}
         </main>
 
-        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
+        {/* Bottom Navigation */}
+        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-6 py-3 flex justify-around items-center rounded-t-[40px] shadow-2xl`}>
           {[
-            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
-            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-            { id: 'journal', icon: BookText, label: 'Guide', color: '#a855f7' }, 
-            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
-            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
-          ].map(v => {
-            const isActive = !activeTool && view === v.id;
+            { id: 'home', label: 'Scene', icon: Sparkles },
+            { id: 'journal', label: 'Guide', icon: BookText },
+            { id: 'flavors', label: 'Flavors', icon: Utensils },
+            { id: 'fun', label: 'Events', icon: Zap },
+            { id: 'profile', label: 'My Vibe', icon: User }
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = view === tab.id && !activeTool;
             return (
-              <button key={v.id} onClick={() => { setActiveTool(null); setView(v.id); }} className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-115 opacity-100' : 'opacity-60 hover:opacity-100'}`} style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}>
-                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
-                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setActiveTool(null);
+                  setView(tab.id);
+                }}
+                className={`flex flex-col items-center gap-1 transition-all duration-300 ${isActive ? 'scale-110' : 'opacity-60 hover:opacity-100'}`}
+              >
+                <div className={`p-2 rounded-2xl transition-colors ${isActive ? 'bg-[#ffcb05] text-black shadow-lg shadow-yellow-500/20' : theme.text}`}>
+                  <Icon size={18} />
+                </div>
+                <span className={`text-[9px] font-black uppercase tracking-wider ${isActive ? (theme.isDark ? 'text-[#ffcb05]' : 'text-slate-900') : theme.secondaryText}`}>
+                  {tab.label}
+                </span>
               </button>
             );
           })}
         </nav>
       </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .font-header { font-family: 'Outfit', sans-serif; }
-        .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
-        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
-        .wp-content strong { color: #ffcb05; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .bg-slate-50 .wp-content, .wp-content p { color: #00274c !important; }
-        .bg-\\[\\#0a121e\\] .wp-content, .wp-content p { color: #f1f5f9 !important; }
-      `}} />
     </div>
   );
 }
