@@ -1490,7 +1490,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
     } catch (err) {
       console.error('Error posting comment:', err);
       alert('Could not post comment. Please check your connection.');
-    } finally {
+    } fontally {
       setIsSubmitting(false);
     }
   };
@@ -1850,7 +1850,7 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
     } catch (err) {
       console.error('Error submitting community post:', err);
       alert('Could not submit. Please check your network connection.');
-    } finally {
+    } fontally {
       setSubmitting(false);
     }
   };
@@ -3829,19 +3829,20 @@ export default function App() {
           )}
         </main>
 
-        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-4 py-8 flex justify-around shadow-2xl rounded-t-[40px] font-sans`}>
+        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-3 py-3.5 flex justify-around shadow-2xl rounded-t-[32px] font-sans`}>
           {[
-            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05' }, 
-            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8' }, 
-            { id: 'journal', icon: BookText, label: 'Guide', color: '#a855f7' }, 
-            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316' }, 
-            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981' }
+            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05', action: () => { setActiveTool(null); setView('home'); } }, 
+            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316', action: () => { setActiveTool(null); setView('flavors'); } }, 
+            { id: 'shops', icon: ShoppingBag, label: 'Shops', color: '#ffcb05', action: openShopsModal }, 
+            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8', action: () => { setActiveTool(null); setView('fun'); } }, 
+            { id: 'journal', icon: BookText, label: 'Guide', color: '#a855f7', action: () => { setActiveTool(null); setView('journal'); } }, 
+            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981', action: () => { setActiveTool(null); setView('profile'); } }
           ].map(v => {
-            const isActive = !activeTool && view === v.id;
+            const isActive = v.id === 'shops' ? isShopsModalOpen : (!activeTool && view === v.id && !isShopsModalOpen);
             return (
-              <button key={v.id} onClick={() => { setActiveTool(null); setView(v.id); }} className={`flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-115 opacity-100' : 'opacity-60 hover:opacity-100'}`} style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}>
-                <v.icon size={24} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}66)` : 'none' }} />
-                <span className="text-[11px] font-black uppercase tracking-widest mt-2 leading-none">{v.label}</span>
+              <button key={v.id} onClick={v.action} className={`flex flex-col items-center gap-1 transition-all duration-300 ${isActive ? 'scale-105 opacity-100' : 'opacity-60 hover:opacity-100'}`} style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}>
+                <v.icon size={18} style={{ filter: isActive ? `drop-shadow(0 0 6px ${v.color}66)` : 'none' }} />
+                <span className="text-[9px] font-black uppercase tracking-wider leading-none">{v.label}</span>
               </button>
             );
           })}
