@@ -125,7 +125,7 @@ const SHOPS_DATA = [
     features: ['Outdoor Gear', 'Designer Apparel', 'Camp Equipment', 'Expert Gear Fitting'],
     hours: 'Mon - Sat: 10:00 AM - 7:00 PM | Sun: 12:00 PM - 5:00 PM'
   },
-  {
+     {
     id: 'shop-getup-vintage',
     name: 'The Getup Vintage',
     type: 'shop',
@@ -134,10 +134,10 @@ const SHOPS_DATA = [
     address: '215 S State St, Ann Arbor, MI 48104',
     shortDesc: 'Vibrant vintage shop offering genuine 1950s-90s vintage clothing, leather jackets, denim, and accessories.',
     features: ['True Vintage', 'Hand-Picked Clothing', 'State Street'],
-    hours: 'Mon - Sun: 12:00 PM - 7:00 PM,
-    ,img: 'https://a2vibe.com/images/the-getup-vintage.jpg'
+    hours: 'Mon - Sun: 12:00 PM - 7:00 PM',
+    img: 'https://a2vibe.com/images/the-getup-vintage.jpg'
   },
-  {
+   {
     id: 'shop-rock-paper-scissors',
     name: 'Rock Paper Scissors',
     type: 'shop',
