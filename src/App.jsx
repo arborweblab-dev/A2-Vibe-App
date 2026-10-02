@@ -1490,7 +1490,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
     } catch (err) {
       console.error('Error posting comment:', err);
       alert('Could not post comment. Please check your connection.');
-    } fontally {
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -1850,7 +1850,7 @@ const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSucces
     } catch (err) {
       console.error('Error submitting community post:', err);
       alert('Could not submit. Please check your network connection.');
-    } fontally {
+    } finally {
       setSubmitting(false);
     }
   };
