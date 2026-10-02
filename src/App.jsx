@@ -53,7 +53,7 @@ const SHOPS_DATA = [
     rating: '4.9',
     address: '1115 Broadway St, Ann Arbor, MI 48105',
     url: 'https://informationentropy.com',
-    img: 'https://placehold.co/800x600/00274c/ffcb05?text=Information+Entropy',
+    img: 'https://a2vibe.com/images/Information-Entropy.jpg',
     shortDesc: 'Locally grown craft cannabis dispensary acclaimed for in-house genetics and solventless rosin.',
     longDesc: '<p>A beloved local staple with locations on Broadway and Downtown, Information Entropy is recognized statewide for its dedicated craft cultivation, award-winning rosin, and friendly service.</p>',
     specials: [
@@ -72,7 +72,7 @@ const SHOPS_DATA = [
     rating: '4.9',
     address: '124 E Washington St, Ann Arbor, MI 48104',
     url: 'https://literatibookstore.com',
-    img: 'https://placehold.co/800x600/1e293b/38bdf8?text=Literati+Bookstore',
+    img: 'https://a2vibe.com/images/Literati-Bookstore.jpg',
     shortDesc: 'Iconic independent bookstore featuring cozy curated shelves, author readings, and the famous public typewriter.',
     longDesc: '<p>Literati is an essential downtown cultural beacon. Explore three floors of handpicked fiction, poetry, art monographs, and children’s literature, plus the downstairs public Oliver typewriter where visitors from around the world type anonymous notes.</p>',
     specials: [
