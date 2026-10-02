@@ -17,7 +17,7 @@ export const eatsData = [
     shortDesc: "Broadway staple preparing daily house-made kimchi, fresh gimbap, bibimbap, and hot specials.",
     longDesc: "<p>Orange Market on Broadway Street is a celebrated destination for authentic Asian ingredients and daily made-from-scratch Korean dishes. Loved by local residents and students alike, Orange Market brings traditional comfort food straight to North Campus.</p><h4>Prepared Fresh In-House Daily:</h4><ul><li><strong>House-Made Kimchi:</strong> Traditional, fermented small-batch cabbage and radish kimchi.</li><li><strong>Handcrafted Gimbap:</strong> Freshly rolled Korean rice rolls packed with vegetables, egg, and savory meats.</li><li><strong>Hot Bibimbap Bowls:</strong> Authentic rice bowls topped with seasoned vegetables, fried egg, and gochujang.</li><li><strong>Fresh Banchan:</strong> Daily rotated Korean side dishes including seasoned spinach, bean sprouts, and marinated potatoes.</li><li><strong>Hot Kitchen Entrees:</strong> Rotating daily specials, snacks, and imported specialty groceries.</li></ul>",
     ctaText: "Visit Market",
-    url: "https://a2vibe.com",
+    url: "https://www.orangemarketa2.com/",
     isHighlight: true,
     isFeatured: true
   },
