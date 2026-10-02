@@ -88,6 +88,7 @@ const SHOPS_DATA = [
     type: 'shop',
     category: 'Bookstores & Vinyl',
     tier: 'standard',
+    img: 'https://a2vibe.com/images/Wazoo-Records.jpg',
     address: '436 E Liberty St, Ann Arbor, MI 48104',
     shortDesc: 'Legendary second-floor record haven packed with used and rare vinyl, CDs, and music memorabilia since 1974.',
     features: ['Vintage Vinyl', 'Rare 45s', 'Used CDs & Cassettes'],
