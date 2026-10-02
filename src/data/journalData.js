@@ -175,5 +175,21 @@ export const journalData = [
       <p>On Monday, September 21 from 10:00 to 11:00 AM, the Ann Arbor Parks Volunteer Program is hosting a one-hour cleanup workday to restore the shoreline. Grabbers and collection bags are provided—just show up ready to pitch in.</p>
       <p>Wear long pants, tall socks, and sturdy closed-toe shoes to handle riverbank brush and poison ivy. Minors are welcome with a digital waiver on file (under 14 must be accompanied by an adult). Because parking at the livery fills up fast, hopping on the B2B Trail by bike or walking over is strongly encouraged!</p>
     `
+  },
+  {
+    id: "post-12",
+    title: "Spotlight on Orange Market: Your New Go-To Neighborhood Spot",
+    excerpt: "Discover fresh local produce, specialty snacks, and everyday essentials right in the heart of Tree Town.",
+    author: "City Insider",
+    img: "https://a2vibe.com/images/Orange-Market.jpg",
+    category: "Dining Reviews",
+    allCategories: ["Dining Reviews", "Hidden Gems", "City Life"],
+    isHighlight: false,
+    type: "article",
+    longDesc: `
+      <h3>Fresh Finds at Orange Market</h3>
+      <p>Looking for a vibrant local market with character? Orange Market has quickly become a beloved neighborhood destination for fresh produce, specialty goods, and artisanal snacks.</p>
+      <p>Whether you are stopping by to grab quick ingredients for dinner, hunting down imported treats, or grabbing a quick beverage on the go, Orange Market offers a welcoming community feel that makes grocery runs something to look forward to.</p>
+    `
   }
 ];
