@@ -134,7 +134,8 @@ const SHOPS_DATA = [
     address: '215 S State St, Ann Arbor, MI 48104',
     shortDesc: 'Vibrant vintage shop offering genuine 1950s-90s vintage clothing, leather jackets, denim, and accessories.',
     features: ['True Vintage', 'Hand-Picked Clothing', 'State Street'],
-    hours: 'Mon - Sun: 12:00 PM - 7:00 PM'
+    hours: 'Mon - Sun: 12:00 PM - 7:00 PM,
+    img: 'https://a2vibe.com/images/the-getup-vintage.jpg'
   },
   {
     id: 'shop-rock-paper-scissors',
@@ -145,7 +146,8 @@ const SHOPS_DATA = [
     address: '216 S Main St, Ann Arbor, MI 48104',
     shortDesc: 'Cheerful Main Street gift shop specializing in playful stationery, bespoke paper goods, quirky gifts, and local Michigan novelties.',
     features: ['Custom Gifts', 'Michigan Memorabilia', 'Party Goods'],
-    hours: 'Mon - Sun: 10:00 AM - 8:00 PM'
+    hours: 'Mon - Sun: 10:00 AM - 8:00 PM',
+      img: 'https://a2vibe.com/images/Rock-Paper-Scissors.jpg'
   },
   {
     id: 'shop-orange-market',
@@ -169,7 +171,7 @@ const SHOPS_DATA = [
     rating: '4.9',
     address: '422 Detroit St, Ann Arbor, MI 48104',
     url: 'https://www.zingermansdeli.com',
-    img: 'https://placehold.co/800x600/78350f/fbbf24?text=Zingermans+Specialty+Store',
+    img: 'https://a2vibe.com/Zingermans.jpg',
     shortDesc: 'World-renowned artisan grocery offering small-batch olive oils, farmstead cheeses, vinegar pairings, and traditional bread.',
     longDesc: '<p>Adjoining the legendary deli counter in historic Kerrytown, the Zingerman’s specialty market is a food lover paradise loaded with estate-bottled olive oils, cured meats, single-origin bean chocolates, and farmstead cheeses sampled generously by cheese mongers.</p>',
     specials: [
