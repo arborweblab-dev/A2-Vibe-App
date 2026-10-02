@@ -3389,7 +3389,7 @@ export default function App() {
   const [isParksModalOpen, setIsParksModalOpen] = useState(false);
   const [isTransitModalOpen, setIsTransitModalOpen] = useState(false);
   const [isShopsModalOpen, setIsShopsModalOpen] = useState(false);
-   
+    
   const [favorites, setFavorites] = useState(() => {
     try { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; } catch { return []; }
   });
@@ -3404,7 +3404,7 @@ export default function App() {
   const [dining, setDining] = useState(eatsData);
   const [posts] = useState(journalData);
   const [featuredPosts] = useState(journalData.filter(p => p.isHighlight));
-   
+    
   const [activeExpCat, setActiveExpCat] = useState('All');
   const [activeMonth, setActiveMonth] = useState('All Months');
   const [visibleCount, setVisibleCount] = useState(6);
