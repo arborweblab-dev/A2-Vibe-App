@@ -33,7 +33,8 @@ export const eatsData = [
     longDesc: "<p>Famous for chorizo burgers topped with shoestring fries and a fried egg, paired with sweet coconut or fruit shakes.</p>",
     ctaText: "Order Pickup",
     url: "https://fritabatidos.com",
-    isHighlight: true
+    isHighlight: true,
+    isFeatured: true
   },
   {
     id: "eat-2",
@@ -75,7 +76,8 @@ export const eatsData = [
     longDesc: "<p>Part of the Zingerman's family, Miss Kim serves delicious Korean fried chicken, tteokbokki, and bibimbap with deep local roots.</p>",
     ctaText: "Order Online",
     url: "https://misskimannarbor.com",
-    isHighlight: true
+    isHighlight: true,
+    isFeatured: true
   },
   {
     id: "eat-6",
@@ -103,7 +105,8 @@ export const eatsData = [
     longDesc: "<p>Expect a line on warm summer nights for scratch-made ice cream flavors like fresh sweet corn or salted caramel beer.</p>",
     ctaText: "See Flavors",
     url: "https://blankslatecreamery.com",
-    isHighlight: false
+    isHighlight: false,
+    isFeatured: true
   },
   {
     id: "eat-8",
