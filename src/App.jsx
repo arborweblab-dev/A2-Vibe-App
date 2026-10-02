@@ -160,25 +160,6 @@ const SHOPS_DATA = [
     hours: 'Mon - Sun: 8:00 AM - 9:00 PM'
   },
   {
-    id: 'shop-mden',
-    name: 'The M Den on State Street',
-    type: 'shop',
-    category: 'University Apparel',
-    tier: 'featured',
-    rating: '4.8',
-    address: '303 S State St, Ann Arbor, MI 48104',
-    url: 'https://www.mden.com',
-    img: 'https://placehold.co/800x600/00274c/ffcb05?text=The+M+Den+Ann+Arbor',
-    shortDesc: 'Official home of the Michigan Wolverines with head-to-toe official U-M jerseys, sideline gear, hats, and collectibles.',
-    longDesc: '<p>The ultimate headquarters for University of Michigan students, alumni, and passionate fans. Packed with licensed Nike sideline collections, historic Rose Bowl and Championship memorabilia, and classic Maize and Blue outerwear.</p>',
-    specials: [
-      'Gameday apparel discounts during selected weekends',
-      'Free souvenir sticker pack with in-store purchase'
-    ],
-    features: ['Official U-M Apparel', 'Nike Sideline Gear', 'Big House Souvenirs'],
-    hours: 'Mon - Sat: 9:00 AM - 8:00 PM | Sun: 10:00 AM - 6:00 PM'
-  },
-  {
     id: 'shop-zingermans-deli-shop',
     name: 'Zingerman’s Specialty Food Store',
     type: 'shop',
