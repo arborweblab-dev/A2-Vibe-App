@@ -972,7 +972,7 @@ const MyVibeHeroSlideshow = ({
               onClick={(e) => { e.stopPropagation(); setView('flavors'); }}
               className="mt-1 px-3.5 py-1.5 bg-[#ffcb05] text-black text-[9px] font-black uppercase rounded-xl tracking-wider shadow-md active:scale-95 transition-all"
             >
-              Explore Flavors →
+              Explore Eats →
             </button>
           </div>
         )}
@@ -1017,7 +1017,7 @@ const TheSceneHeroSlideshow = ({
       if (featuredEats[i]) {
         slides.push({
           type: 'eats',
-          categoryBadge: featuredEats[i].cuisine || 'Flavors Spotlight',
+          categoryBadge: featuredEats[i].cuisine || 'Eats Spotlight',
           badgeColor: 'bg-[#f97316] text-white',
           title: featuredEats[i].title || featuredEats[i].name,
           subtitle: featuredEats[i].shortDesc || featuredEats[i].neighborhood || 'A2 Vibe Curated Eatery',
@@ -2436,7 +2436,7 @@ const HubView = ({
       case 'eats':
         return {
           title: 'Favorite Dining & Drinks',
-          actionLabel: 'Explore All Flavors →',
+          actionLabel: 'Explore All Eats →',
           action: () => setView('flavors'),
           icon: Utensils,
           iconColor: 'text-[#f97316]'
@@ -2452,7 +2452,7 @@ const HubView = ({
       case 'events':
         return {
           title: 'Favorite Events & Happenings',
-          actionLabel: 'Explore All Happenings →',
+          actionLabel: 'Explore All Events →',
           action: () => setView('fun'),
           icon: Sparkles,
           iconColor: 'text-[#0284c7] dark:text-[#38bdf8]'
@@ -2522,7 +2522,7 @@ const HubView = ({
   }, [forumStories, selectedForumChannel]);
 
   return (
-    <div className="animate-slide space-y-8 text-left relative z-10 pb-24 font-sans w-full max-w-xl mx-auto flex flex-col">
+    <div className="animate-slide space-y-8 text-left relative z-10 pb-28 font-sans w-full max-w-xl mx-auto flex flex-col">
       <ForumCommentsModal 
         isOpen={!!activeCommentStory} 
         onClose={() => setActiveCommentStory(null)} 
@@ -3107,14 +3107,14 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
   return (
     <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col">
       <div className="text-center px-4 w-full space-y-4">
-        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
+        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Eats</h1>
         <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
       </div>
 
       <div className="px-1 w-full">
         <div className="flex items-center gap-2 mb-4 px-2">
           <Sparkles size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
-          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Flavors</h2>
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Eats</h2>
         </div>
         <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
           {featuredDining.map(res => (
@@ -3567,7 +3567,7 @@ export default function App() {
           </div>
         </header>
 
-        <main className="flex-1 pt-28 pb-36 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
+        <main className="flex-1 pt-28 pb-40 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
           <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
           
           <ParkDetailModal
@@ -3701,7 +3701,7 @@ export default function App() {
               {view === 'fun' && (
                 <div className="space-y-12 animate-fade w-full">
                   <div className="text-center px-4">
-                    <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Happenings</h1>
+                    <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Events</h1>
                   </div>
 
                   {(() => {
@@ -3829,20 +3829,25 @@ export default function App() {
           )}
         </main>
 
-        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-3 py-3.5 flex justify-around shadow-2xl rounded-t-[32px] font-sans`}>
+        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-2.5 py-4 flex justify-around shadow-2xl rounded-t-[36px] font-sans h-24 items-center`}>
           {[
             { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05', action: () => { setActiveTool(null); setView('home'); } }, 
-            { id: 'flavors', icon: Utensils, label: 'Flavors', color: '#f97316', action: () => { setActiveTool(null); setView('flavors'); } }, 
+            { id: 'flavors', icon: Utensils, label: 'Eats', color: '#f97316', action: () => { setActiveTool(null); setView('flavors'); } }, 
             { id: 'shops', icon: ShoppingBag, label: 'Shops', color: '#ffcb05', action: openShopsModal }, 
-            { id: 'fun', icon: Sparkles, label: 'Happenings', color: '#38bdf8', action: () => { setActiveTool(null); setView('fun'); } }, 
+            { id: 'fun', icon: Sparkles, label: 'Events', color: '#38bdf8', action: () => { setActiveTool(null); setView('fun'); } }, 
             { id: 'journal', icon: BookText, label: 'Guide', color: '#a855f7', action: () => { setActiveTool(null); setView('journal'); } }, 
             { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981', action: () => { setActiveTool(null); setView('profile'); } }
           ].map(v => {
             const isActive = v.id === 'shops' ? isShopsModalOpen : (!activeTool && view === v.id && !isShopsModalOpen);
             return (
-              <button key={v.id} onClick={v.action} className={`flex flex-col items-center gap-1 transition-all duration-300 ${isActive ? 'scale-105 opacity-100' : 'opacity-60 hover:opacity-100'}`} style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}>
-                <v.icon size={18} style={{ filter: isActive ? `drop-shadow(0 0 6px ${v.color}66)` : 'none' }} />
-                <span className="text-[9px] font-black uppercase tracking-wider leading-none">{v.label}</span>
+              <button 
+                key={v.id} 
+                onClick={v.action} 
+                className={`flex-1 py-1 flex flex-col items-center justify-center gap-1.5 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-60 hover:opacity-100'}`} 
+                style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}
+              >
+                <v.icon size={22} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}88)` : 'none' }} />
+                <span className="text-[10px] font-black uppercase tracking-wider leading-none">{v.label}</span>
               </button>
             );
           })}
