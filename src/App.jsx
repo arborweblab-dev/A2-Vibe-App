@@ -135,7 +135,7 @@ const SHOPS_DATA = [
     shortDesc: 'Vibrant vintage shop offering genuine 1950s-90s vintage clothing, leather jackets, denim, and accessories.',
     features: ['True Vintage', 'Hand-Picked Clothing', 'State Street'],
     hours: 'Mon - Sun: 12:00 PM - 7:00 PM',
-    img: 'https://a2vibe.com/images/the-getup-vintage.jpg'
+    img: 'https://a2vibe.com/images/The-Getup-Vintage.jpg'
   },
    {
     id: 'shop-rock-paper-scissors',
