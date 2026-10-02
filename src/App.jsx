@@ -103,7 +103,8 @@ const SHOPS_DATA = [
     address: '208 N 4th Ave, Ann Arbor, MI 48104',
     shortDesc: 'Vast Kerrytown audio institution with thousands of vintage LPs, jazz pressings, and classic stereo equipment.',
     features: ['Extensive Vinyl Catalog', 'Turntables', 'Cassettes'],
-    hours: 'Wed - Sun: 11:00 AM - 7:00 PM'
+    hours: 'Wed - Sun: 11:00 AM - 7:00 PM',
+    img: 'https://a2vibe.com/images/Encore-Records.jpg'
   },
   {
     id: 'shop-bivouac',
@@ -114,7 +115,7 @@ const SHOPS_DATA = [
     rating: '4.8',
     address: '336 S State St, Ann Arbor, MI 48104',
     url: 'https://bivouacannarbor.com',
-    img: 'https://placehold.co/800x600/0f172a/10b981?text=Bivouac+Ann+Arbor',
+    img: 'https://a2vibe.com/images/Bivouac.jpg',
     shortDesc: 'Pioneering State Street outfitter combining luxury mountain lifestyle apparel with technical camping and outdoor gear.',
     longDesc: '<p>A State Street landmark since 1970 with the motto Where Outdoor Passion Meets Fashion. Carrying premier outdoor lifestyle labels alongside high-performance trekking equipment and stylish streetwear.</p>',
     specials: [
