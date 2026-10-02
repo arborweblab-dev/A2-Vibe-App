@@ -29,11 +29,11 @@ const SHOPS_DATA = [
     id: 'shop-vibe-a2',
     name: 'Vibe Ann Arbor',
     type: 'shop',
-    category: 'Marijuana Dispensaries',
+    category: 'Dispensaries',
     tier: 'featured',
     rating: '4.9',
     address: '407 N 5th Ave, Ann Arbor, MI 48104',
-    url: 'https://a2vibe.com',
+    url: 'https://letsvibe420.com/shop/shop-ann-arbor/',
     img: 'https://a2vibe.com/images/vibe-weed.jpg',
     shortDesc: 'Premier downtown cannabis dispensary offering elite strains, top-shelf edibles, concentrates, and knowledgeable budtenders.',
     longDesc: '<p>Vibe Ann Arbor sets the benchmark for Tree Town recreational and medical cannabis. Conveniently located near Kerrytown, Vibe pairs a clean, welcoming retail showroom with curated terpene profiles, local craft flower, artisanal gummies, and high-potency concentrates.</p>',
@@ -48,7 +48,7 @@ const SHOPS_DATA = [
     id: 'shop-information-entropy',
     name: 'Information Entropy',
     type: 'shop',
-    category: 'Marijuana Dispensaries',
+    category: 'Dispensaries',
     tier: 'featured',
     rating: '4.9',
     address: '1115 Broadway St, Ann Arbor, MI 48105',
@@ -212,10 +212,10 @@ const SHOPS_DATA = [
 
 const SHOP_CATEGORIES = [
   'All',
-  'Marijuana Dispensaries',
   'Bookstores & Vinyl',
   'Vintage & Boutiques',
   'University Apparel',
+  'Dispensaries',
   'Specialty Markets'
 ];
 
