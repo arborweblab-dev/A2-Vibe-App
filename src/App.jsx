@@ -151,7 +151,7 @@ const SHOPS_DATA = [
     type: 'shop',
     category: 'Specialty Markets',
     tier: 'standard',
-    address: '300 S Maple Rd, Ann Arbor, MI 48103',
+    address: '1118 Broadway St, Ann Arbor, MI 48105',
     img: 'https://a2vibe.com/images/Orange-Market.jpg',
     shortDesc: 'Neighborhood corner grocery and specialty market offering fresh produce, pantry staples, snacks, and everyday local essentials.',
     longDesc: '<p>Orange Market is a convenient local neighborhood hub stocked with fresh essentials, everyday groceries, snacks, cold beverages, and specialty items for quick, easy shopping.</p>',
