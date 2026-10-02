@@ -3107,8 +3107,8 @@ const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining
   return (
     <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col">
       <div className="text-center px-4 w-full space-y-4">
-        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Eats</h1>
-        <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants and eateries.</p>
+        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
+        <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants, bars, and eateries.</p>
       </div>
 
       <div className="px-1 w-full">
