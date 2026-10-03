@@ -25,44 +25,7 @@ import { eatsData } from './data/eatsData';
 import { happeningsData } from './data/happeningsData';
 
 const SHOPS_DATA = [
-  {
-    id: 'shop-vibe-a2',
-    name: 'Vibe Ann Arbor',
-    type: 'shop',
-    category: 'Dispensaries',
-    tier: 'featured',
-    rating: '4.9',
-    address: '407 N 5th Ave, Ann Arbor, MI 48104',
-    url: 'https://letsvibe420.com/shop/shop-ann-arbor/',
-    img: 'https://a2vibe.com/images/vibe-weed.jpg',
-    shortDesc: 'Premier downtown cannabis dispensary offering elite strains, top-shelf edibles, concentrates, and knowledgeable budtenders.',
-    longDesc: '<p>Vibe Ann Arbor sets the benchmark for Tree Town recreational and medical cannabis. Conveniently located near Kerrytown, Vibe pairs a clean, welcoming retail showroom with curated terpene profiles, local craft flower, artisanal gummies, and high-potency concentrates.</p>',
-    specials: [
-      'First-time visitor 20% discount on boutique flower',
-      'Daily Happy Hour specials on pre-rolls and live rosin concentrates'
-    ],
-    features: ['Recreational 21+', 'Medical Validated', 'Curbside Pickup', 'ATM On-Site', 'Wheelchair Accessible'],
-    hours: 'Mon - Sun: 9:00 AM - 9:00 PM'
-  },
-  {
-    id: 'shop-information-entropy',
-    name: 'Information Entropy',
-    type: 'shop',
-    category: 'Dispensaries',
-    tier: 'featured',
-    rating: '4.9',
-    address: '1115 Broadway St, Ann Arbor, MI 48105',
-    url: 'https://informationentropy.com',
-    img: 'https://a2vibe.com/images/Information-Entropy.jpg',
-    shortDesc: 'Locally grown craft cannabis dispensary acclaimed for in-house genetics and solventless rosin.',
-    longDesc: '<p>A beloved local staple with locations on Broadway and Downtown, Information Entropy is recognized statewide for its dedicated craft cultivation, award-winning rosin, and friendly service.</p>',
-    specials: [
-      'Weekly solventless concentrates specials',
-      'Mix-and-match premium 1/8ths bundling'
-    ],
-    features: ['In-House Cultivation', 'Solventless Rosin', 'Downtown & Broadway Locations', 'Curbside Pickup'],
-    hours: 'Mon - Sun: 9:00 AM - 9:00 PM'
-  },
+  
   {
     id: 'shop-literati',
     name: 'Literati Bookstore',
@@ -136,6 +99,44 @@ const SHOPS_DATA = [
     features: ['True Vintage', 'Hand-Picked Clothing', 'State Street'],
     hours: 'Mon - Sun: 12:00 PM - 7:00 PM',
     img: 'https://a2vibe.com/images/The-Getup-Vintage.jpg'
+  },
+  {
+    id: 'shop-vibe-a2',
+    name: 'Vibe Ann Arbor',
+    type: 'shop',
+    category: 'Dispensaries',
+    tier: 'featured',
+    rating: '4.9',
+    address: '407 N 5th Ave, Ann Arbor, MI 48104',
+    url: 'https://letsvibe420.com/shop/shop-ann-arbor/',
+    img: 'https://a2vibe.com/images/vibe-weed.jpg',
+    shortDesc: 'Premier downtown cannabis dispensary offering elite strains, top-shelf edibles, concentrates, and knowledgeable budtenders.',
+    longDesc: '<p>Vibe Ann Arbor sets the benchmark for Tree Town recreational and medical cannabis. Conveniently located near Kerrytown, Vibe pairs a clean, welcoming retail showroom with curated terpene profiles, local craft flower, artisanal gummies, and high-potency concentrates.</p>',
+    specials: [
+      'First-time visitor 20% discount on boutique flower',
+      'Daily Happy Hour specials on pre-rolls and live rosin concentrates'
+    ],
+    features: ['Recreational 21+', 'Medical Validated', 'Curbside Pickup', 'ATM On-Site', 'Wheelchair Accessible'],
+    hours: 'Mon - Sun: 9:00 AM - 9:00 PM'
+  },
+  {
+    id: 'shop-information-entropy',
+    name: 'Information Entropy',
+    type: 'shop',
+    category: 'Dispensaries',
+    tier: 'featured',
+    rating: '4.9',
+    address: '1115 Broadway St, Ann Arbor, MI 48105',
+    url: 'https://informationentropy.com',
+    img: 'https://a2vibe.com/images/Information-Entropy.jpg',
+    shortDesc: 'Locally grown craft cannabis dispensary acclaimed for in-house genetics and solventless rosin.',
+    longDesc: '<p>A beloved local staple with locations on Broadway and Downtown, Information Entropy is recognized statewide for its dedicated craft cultivation, award-winning rosin, and friendly service.</p>',
+    specials: [
+      'Weekly solventless concentrates specials',
+      'Mix-and-match premium 1/8ths bundling'
+    ],
+    features: ['In-House Cultivation', 'Solventless Rosin', 'Downtown & Broadway Locations', 'Curbside Pickup'],
+    hours: 'Mon - Sun: 9:00 AM - 9:00 PM'
   },
    {
     id: 'shop-rock-paper-scissors',
