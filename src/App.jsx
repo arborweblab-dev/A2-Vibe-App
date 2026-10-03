@@ -190,7 +190,8 @@ const SHOPS_DATA = [
     address: '407 N 5th Ave, Ann Arbor, MI 48104',
     shortDesc: 'Charming multi-level brick marketplace featuring local toy stores, spice shops, paper merchants, and tea emporiums.',
     features: ['Multiple Boutiques', 'Chime Tower', 'Farmers Market Adjacent'],
-    hours: 'Mon - Sat: 8:00 AM - 7:00 PM | Sun: 10:00 AM - 5:00 PM'
+    hours: 'Mon - Sat: 8:00 AM - 7:00 PM | Sun: 10:00 AM - 5:00 PM',
+    img: 'https://a2vibe.com/images/Kerrytown-Market.jpg'
   }
 ];
 
