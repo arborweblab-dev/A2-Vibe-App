@@ -22,6 +22,24 @@ export const eatsData = [
     isFeatured: true
   },
   {
+    id: "eat-plate-sushi",
+    title: "Plate Sushi & Chicken",
+    neighborhood: "Broadway / North Campus",
+    tags: ["Sushi", "Japanese", "Korean Fried Chicken", "Asian Fusion"],
+    cuisine: "Sushi & Korean Fried Chicken",
+    address: "1133 Broadway St, Ann Arbor, MI 48105",
+    img: "https://a2vibe.com/images/Plate-Sushi.jpg",
+    images: [
+      "https://a2vibe.com/images/Plate-Sushi.jpg"
+    ],
+    shortDesc: "Local favorite serving up fresh sushi rolls, sashimi, and extra-crispy Korean fried chicken.",
+    longDesc: "<p>Located on Broadway just up from the river, Plate Sushi & Chicken offers an irresistible combination of beautifully presented sushi and perfectly crispy Korean-style fried chicken. It's a massive hit with North Campus students and locals alike.</p><h4>Menu Highlights:</h4><ul><li><strong>Specialty Rolls:</strong> Creative and classic sushi rolls made with high-quality fresh fish.</li><li><strong>Korean Fried Chicken:</strong> Double-fried for maximum crunch, tossed in signature soy garlic or spicy sweet sauces.</li><li><strong>Bento Boxes:</strong> Massive lunch combos featuring teriyaki, katsu, or sushi pairings with sides.</li><li><strong>Noodles & Bowls:</strong> Hearty udon, yakisoba, and donburi rice bowls to warm up on a cold Ann Arbor day.</li></ul>",
+    ctaText: "View Menu",
+    url: "https://www.platesushichicken.com/", 
+    isHighlight:false,
+    isFeatured: false
+  },
+  {
     id: "eat-2",
     title: "Zingerman's Roadhouse",
     neighborhood: "West Side",
