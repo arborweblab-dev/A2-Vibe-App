@@ -22,21 +22,6 @@ export const eatsData = [
     isFeatured: true
   },
   {
-    id: "eat-1",
-    title: "Frita Batidos",
-    neighborhood: "Downtown",
-    tags: ["Street Food", "Cuban", "Late Night"],
-    cuisine: "Cuban Street Food",
-    address: "117 W Washington St, Ann Arbor, MI 48104",
-    img: "/images/frita-batidos.jpg",
-    shortDesc: "Cuban-inspired street food burgers and tropical batidos.",
-    longDesc: "<p>Famous for chorizo burgers topped with shoestring fries and a fried egg, paired with sweet coconut or fruit shakes.</p>",
-    ctaText: "Order Pickup",
-    url: "https://fritabatidos.com",
-    isHighlight: true,
-    isFeatured: true
-  },
-  {
     id: "eat-2",
     title: "Zingerman's Roadhouse",
     neighborhood: "West Side",
