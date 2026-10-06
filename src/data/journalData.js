@@ -96,22 +96,6 @@ export const journalData = [
     `
   },
   {
-    id: "post-7",
-    title: "The Cult of Frita Batidos",
-    excerpt: "Cuban street food that commands a massive line down Washington Street.",
-    author: "A2 Vibe Team",
-    img: "/images/frita-batidos.jpg",
-    category: "Dining Reviews",
-    allCategories: ["Dining Reviews", "Nightlife", "City Life"],
-    isHighlight: true,
-    type: "article",
-    longDesc: `
-      <h3>Burgers, Tropical Drinks, and Long Lines</h3>
-      <p>If you ask a U-M student what their favorite restaurant is, there is a very high chance they will say Frita Batidos. This Cuban-inspired street food joint has a massive local following.</p>
-      <p>The move here is a chorizo burger topped with a fried egg, washed down with a passion fruit batido. It is loud, vibrant, and an absolute must-do for anyone spending a weekend in the city.</p>
-    `
-  },
-  {
     id: "post-8",
     title: "Ringing the Kerrytown Chime",
     excerpt: "Cobblestones, farmers markets, and historic bells in Ann Arbor's coolest district.",
