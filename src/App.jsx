@@ -991,7 +991,7 @@ const TheSceneHeroSlideshow = ({
 }) => {
   const [slideIdx, setSlideIdx] = useState(0);
 
-  const sceneSlides = useMemo(() => {
+const sceneSlides = useMemo(() => {
     const featuredEats = (dining || []).filter(d => d.isFeatured || d.rating >= '4.8').slice(0, 3);
     const featuredEvents = (itineraries || []).filter(e => e.isFeatured || e.price).slice(0, 3);
     const featuredShops = SHOPS_DATA.filter(s => s.tier === 'featured').slice(0, 3);
@@ -1000,18 +1000,7 @@ const TheSceneHeroSlideshow = ({
     const maxLen = Math.max(featuredEats.length, featuredEvents.length, featuredShops.length, 1);
 
     for (let i = 0; i < maxLen; i++) {
-      if (featuredEats[i]) {
-        slides.push({
-          type: 'eats',
-          categoryBadge: featuredEats[i].cuisine || 'Eats Spotlight',
-          badgeColor: 'bg-[#f97316] text-white',
-          title: featuredEats[i].title || featuredEats[i].name,
-          subtitle: featuredEats[i].shortDesc || featuredEats[i].neighborhood || 'A2 Vibe Curated Eatery',
-          img: featuredEats[i].img,
-          rawItem: { ...featuredEats[i], type: 'dining' }
-        });
-      }
-
+      // 1. Push "The Scene" first so it leads the slideshow
       if (SLIDE_IMAGES[i % SLIDE_IMAGES.length]) {
         slides.push({
           type: 'city',
@@ -1024,6 +1013,20 @@ const TheSceneHeroSlideshow = ({
         });
       }
 
+      // 2. Then push Eats
+      if (featuredEats[i]) {
+        slides.push({
+          type: 'eats',
+          categoryBadge: featuredEats[i].cuisine || 'Eats Spotlight',
+          badgeColor: 'bg-[#f97316] text-white',
+          title: featuredEats[i].title || featuredEats[i].name,
+          subtitle: featuredEats[i].shortDesc || featuredEats[i].neighborhood || 'A2 Vibe Curated Eatery',
+          img: featuredEats[i].img,
+          rawItem: { ...featuredEats[i], type: 'dining' }
+        });
+      }
+
+      // 3. Then push Events
       if (featuredEvents[i]) {
         slides.push({
           type: 'event',
@@ -1036,6 +1039,7 @@ const TheSceneHeroSlideshow = ({
         });
       }
 
+      // 4. Then push Shops
       if (featuredShops[i]) {
         slides.push({
           type: 'shop',
