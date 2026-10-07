@@ -193,27 +193,7 @@ export const happeningsData = [
       url: `${BASE_SHARE_URL}#oct-09`
     }
   },
-  {
-    id: "oct-10",
-    name: "Halloween Horror Film Marathon",
-    month: "October",
-    date: "October 31, 2026",
-    time: "8:00 PM - 4:00 AM",
-    address: "233 S State St, Ann Arbor, MI 48104 (State Theatre)",
-    category: ["Nightlife", "Arts & Culture"],
-    price: "$20",
-    neighborhood: "Downtown",
-    img: "/images/oct-horror.jpg",
-    shortDesc: "All-night horror movie screenings at the State Theatre.",
-    longDesc: "<p>Grab your popcorn for this cult classic marathon featuring slasher favorites and eerie psychological thrillers.</p>",
-    url: "https://michtheater.org/",
-    type: "experience",
-    share: {
-      title: "Halloween Horror Film Marathon on A2 Vibe",
-      text: "Check out Halloween Horror Film Marathon on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-10`
-    }
-  },
+ 
 
   // --- NOVEMBER EVENTS ---
   {
