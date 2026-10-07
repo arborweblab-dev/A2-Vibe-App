@@ -156,7 +156,7 @@ export const happeningsData = [
     name: "Downtown Trick-or-Treat Parade",
     month: "October",
     date: "October 25, 2026",
-    time: "Check schedule for times",
+    time: "11:30AM to 3:00PM",
     address: "Main St, Ann Arbor, MI 48104",
     category: ["Family Friendly", "Festivals"],
     price: "Free",
