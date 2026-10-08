@@ -266,7 +266,7 @@ export const happeningsData = [
     category: ["Nightlife", "Festivals"],
     price: "Free",
     neighborhood: "West Side",
-    img: "/images/Homes-Holloween-Party.jpg",
+    img: "/images/Homes-Halloween-Party.jpg",
     shortDesc: "Annual Halloween party featuring vintage cellar beer releases, screenings, and a costume contest.",
     longDesc: "<p>HOMES Campus hosts its massive Halloween party and vintage bottle release with a costume contest, 80s horror vinyl DJing, classic movie screenings in the gallery, tarot readings, and pumpkin painting.</p>",
     url: "https://homesbrewery.com",
