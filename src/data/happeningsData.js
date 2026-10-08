@@ -308,7 +308,7 @@ export const happeningsData = [
     category: ["Shopping", "Family Friendly"],
     price: "Free",
     neighborhood: "Downtown",
-    img: "/images/Clothing-SWap.jpg",
+    img: "/images/Clothing-Swap.jpg",
     shortDesc: "A²ZERO monthly clothing swap with a special focus on Halloween costumes and repair clinics.",
     longDesc: "<p>Refresh your wardrobe and find Halloween costumes sustainably at this free community swap, featuring an All Hands Active mending and repair clinic.</p>",
     url: "https://a2zero.org",
