@@ -448,26 +448,6 @@ export const happeningsData = [
       text: "Check out Holiday Pops Concert on A2 Vibe!",
       url: `${BASE_SHARE_URL}#dec-04`
     }
-  },
-  {
-    id: "dec-05",
-    name: "NYE at The Ark",
-    month: "December",
-    date: "December 31, 2026",
-    time: "8:00 PM - 12:30 AM",
-    address: "316 S Main St, Ann Arbor, MI 48104",
-    category: ["Nightlife", "Arts & Culture"],
-    price: "$45",
-    neighborhood: "Downtown",
-    img: "/images/dec-theark.jpg",
-    shortDesc: "Ring in the New Year with exceptional live folk music.",
-    longDesc: "<p>Celebrate New Year's Eve in Ann Arbor's premier acoustic music venue. Expect incredible live performances, a warm community vibe, and a midnight toast.</p>",
-    url: "https://theark.org",
-    type: "experience",
-    share: {
-      title: "NYE at The Ark on A2 Vibe",
-      text: "Ring in the New Year at The Ark on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#dec-05`
-    }
   }
+
 ];
