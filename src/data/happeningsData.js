@@ -140,7 +140,7 @@ export const happeningsData = [
     category: ["Sports", "Family Friendly"],
     price: "Varies",
     neighborhood: "U-M Campus",
-    img: "/images/oct-football-indiana.jpg",
+    img: "/images/UMvsIndiana.jpg",
     shortDesc: "The Wolverines take on the Indiana Hoosiers at the Big House.",
     longDesc: "<p>Experience the thrill of Big Ten football as Michigan defends the Big House against the Indiana Hoosiers.</p>",
     url: "https://mgoblue.com/",
