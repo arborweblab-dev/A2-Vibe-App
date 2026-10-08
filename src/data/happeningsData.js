@@ -290,7 +290,7 @@ export const happeningsData = [
     category: ["Sports", "Festivals"],
     price: "Varies",
     neighborhood: "U-M Campus",
-    img: "/images/nov-football-ucla.jpg",
+    img: "/images/Michigan-Vs-UCLA.jpg",
     shortDesc: "Michigan welcomes new Big Ten opponent UCLA to the Big House.",
     longDesc: "<p>Watch the Wolverines take on the Bruins in this exciting cross-country conference matchup.</p>",
     url: "https://mgoblue.com",
