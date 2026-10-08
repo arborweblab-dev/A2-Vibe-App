@@ -156,7 +156,7 @@ export const happeningsData = [
     name: "Downtown Trick-or-Treat Parade",
     month: "October",
     date: "October 25, 2026",
-    time: "11:30AM to 3:00PM",
+    time: "11:30 AM - 3:00 PM",
     address: "Main St, Ann Arbor, MI 48104",
     category: ["Family Friendly", "Festivals"],
     price: "Free",
@@ -191,6 +191,195 @@ export const happeningsData = [
       title: "U-M Orchestras Halloween Concert on A2 Vibe",
       text: "Check out U-M Orchestras Halloween Concert on A2 Vibe!",
       url: `${BASE_SHARE_URL}#oct-09`
+    }
+  },
+  {
+    id: "oct-10",
+    name: "Jay Stevens: Live Stand-Up Comedy",
+    month: "October",
+    date: "October 8 - 10, 2026",
+    time: "7:15 PM - 8:45 PM",
+    address: "212 S Fourth Ave, Ann Arbor, MI 48104 (Ann Arbor Comedy Showcase)",
+    category: ["Arts & Culture", "Nightlife"],
+    price: "Varies",
+    neighborhood: "Downtown",
+    img: "/images/oct-jaystevens.jpg",
+    shortDesc: "Viral clean comedian and Dry Bar Comedy star performs live in downtown Ann Arbor.",
+    longDesc: "<p>Jay Stevens brings over 20 years of professional stand-up experience and clean, relatable humor to the Ann Arbor Comedy Showcase for a three-night run.</p>",
+    url: "https://aacomedy.com",
+    type: "experience",
+    share: {
+      title: "Jay Stevens Live on A2 Vibe",
+      text: "Check out Jay Stevens live at the Ann Arbor Comedy Showcase on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-10`
+    }
+  },
+  {
+    id: "oct-11",
+    name: "A2 Artoberfest",
+    month: "October",
+    date: "October 10 - 11, 2026",
+    time: "Sat (10:00 AM - 6:00 PM), Sun (10:00 AM - 4:00 PM)",
+    address: "Main St (Washington to Williams), Ann Arbor, MI 48104",
+    category: ["Arts & Culture", "Festivals", "Shopping"],
+    price: "Free",
+    neighborhood: "Downtown",
+    img: "/images/oct-artoberfest.jpg",
+    shortDesc: "A celebration of the arts featuring juried artists, live entertainment, and hands-on activities.",
+    longDesc: "<p>Stroll down Main Street in downtown Ann Arbor for Artoberfest, featuring talented artisans, delicious local food, live music, and family-friendly art-making activities.</p>",
+    url: "https://annarbor.org",
+    type: "experience",
+    share: {
+      title: "A2 Artoberfest on A2 Vibe",
+      text: "Check out A2 Artoberfest on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-11`
+    }
+  },
+  {
+    id: "oct-12",
+    name: "Banned Books Read-In Ann Arbor",
+    month: "October",
+    date: "October 10, 2026",
+    time: "1:00 PM - 2:30 PM",
+    address: "2513 Jackson Ave, Ann Arbor, MI 48103",
+    category: ["Arts & Culture", "Family Friendly"],
+    price: "Free",
+    neighborhood: "West Side",
+    img: "/images/oct-bannedbooks.jpg",
+    shortDesc: "Community reading event celebrating and discussing challenged books.",
+    longDesc: "<p>Grab your favorite banned book and join fellow readers for this community read-in created by Libro.fm and Silent Book Club.</p>",
+    url: "https://libro.fm",
+    type: "experience",
+    share: {
+      title: "Banned Books Read-In on A2 Vibe",
+      text: "Check out the Banned Books Read-In on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-12`
+    }
+  },
+  {
+    id: "oct-13",
+    name: "Permanent HOMES Halloween Party & Beer Release",
+    month: "October",
+    date: "October 10, 2026",
+    time: "4:00 PM - 10:00 PM",
+    address: "112 Jackson Plaza, Ann Arbor, MI 48103 (HOMES Campus)",
+    category: ["Nightlife", "Festivals"],
+    price: "Free",
+    neighborhood: "West Side",
+    img: "/images/oct-homes-halloween.jpg",
+    shortDesc: "Annual Halloween party featuring vintage cellar beer releases, screenings, and a costume contest.",
+    longDesc: "<p>HOMES Campus hosts its massive Halloween party and vintage bottle release with a costume contest, 80s horror vinyl DJing, classic movie screenings in the gallery, tarot readings, and pumpkin painting.</p>",
+    url: "https://homesbrewery.com",
+    type: "experience",
+    share: {
+      title: "Permanent HOMES Halloween Party on A2 Vibe",
+      text: "Check out the Permanent HOMES Halloween Party on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-13`
+    }
+  },
+  {
+    id: "oct-14",
+    name: "BOGO Free Day at MilkShake Factory",
+    month: "October",
+    date: "October 14, 2026",
+    time: "11:30 AM - 10:00 PM",
+    address: "326 S Maple Rd, Suite 326, Ann Arbor, MI 48103",
+    category: ["Flavors", "Shopping"],
+    price: "Free",
+    neighborhood: "West Side",
+    img: "/images/oct-milkshake.jpg",
+    shortDesc: "Buy one, get one free frozen treats for National Dessert Day.",
+    longDesc: "<p>Celebrate National Dessert Day at the MilkShake Factory with a BOGO free offer on all handspun milkshakes, sundaes, floats, and molten cups.</p>",
+    url: "https://milkshakefactory.com",
+    type: "experience",
+    share: {
+      title: "BOGO MilkShake Factory on A2 Vibe",
+      text: "Check out the MilkShake Factory BOGO Free Day on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-14`
+    }
+  },
+  {
+    id: "oct-15",
+    name: "Monthly Clothing & Halloween Costume Swap + Mending",
+    month: "October",
+    date: "October 15, 2026",
+    time: "4:00 PM - 7:00 PM",
+    address: "301 E Huron St, Ann Arbor, MI 48104",
+    category: ["Shopping", "Family Friendly"],
+    price: "Free",
+    neighborhood: "Downtown",
+    img: "/images/oct-clothingswap.jpg",
+    shortDesc: "A²ZERO monthly clothing swap with a special focus on Halloween costumes and repair clinics.",
+    longDesc: "<p>Refresh your wardrobe and find Halloween costumes sustainably at this free community swap, featuring an All Hands Active mending and repair clinic.</p>",
+    url: "https://a2zero.org",
+    type: "experience",
+    share: {
+      title: "Clothing & Costume Swap on A2 Vibe",
+      text: "Check out the Monthly Clothing & Halloween Costume Swap on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-15`
+    }
+  },
+  {
+    id: "oct-16",
+    name: "The Mystic Market",
+    month: "October",
+    date: "October 25, 2026",
+    time: "10:00 AM - 6:00 PM",
+    address: "114 S Main St, Ann Arbor, MI 48104 (Crazy Wisdom Bookstore)",
+    category: ["Shopping", "Hidden Gems", "Arts & Culture"],
+    price: "Free",
+    neighborhood: "Downtown",
+    img: "/images/Crazy-Wisdom-Mystic-Market-2026.jpg",
+    shortDesc: "An enchanted artisan gathering featuring mystical makers, intuitive readers, and esoteric crafts.",
+    longDesc: "<p>Crazy Wisdom Bookstore hosts an enchanted artisan gathering celebrating the otherworldly, esoteric, and botanical with gifted readers, makers, and photo booths.</p>",
+    url: "https://crazywisdom.net",
+    type: "experience",
+    share: {
+      title: "The Mystic Market on A2 Vibe",
+      text: "Check out The Mystic Market at Crazy Wisdom on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-16`
+    }
+  },
+  {
+    id: "oct-17",
+    name: "The Ark's Open Stage Event",
+    month: "October",
+    date: "October 21, 2026",
+    time: "7:30 PM",
+    address: "316 S Main St, Ann Arbor, MI 48104 (The Ark)",
+    category: ["Arts & Culture", "Nightlife"],
+    price: "Varies",
+    neighborhood: "Downtown",
+    img: "/images/oct-theark.jpg",
+    shortDesc: "Supportive stage for local musicians and performers to share their music.",
+    longDesc: "<p>Take your music to the masses at The Ark's legendary Open Stage night. Performers get 8 minutes or 2 songs in a supportive, historic listening room environment.</p>",
+    url: "https://theark.org",
+    type: "experience",
+    share: {
+      title: "The Ark's Open Stage on A2 Vibe",
+      text: "Check out Open Stage at The Ark on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-17`
+    }
+  },
+  {
+    id: "oct-18",
+    name: "Ann Arbor Halloween Bar Crawl",
+    month: "October",
+    date: "October 31, 2026",
+    time: "4:00 PM - 12:00 AM",
+    address: "315 S State St, Ann Arbor, MI 48104 (The Brown Jug & Downtown Venues)",
+    category: ["Nightlife", "Festivals"],
+    price: "Varies",
+    neighborhood: "U-M Campus / Downtown",
+    img: "/images/oct-barcrawl.jpg",
+    shortDesc: "Spooktacular Halloween bar crawl featuring creepy cocktails and costume contests.",
+    longDesc: "<p>Crawl With Us brings a massive Halloween bar crawl through Ann Arbor's top bars, featuring drink specials, professional photographers, custom badges, and an epic after-party.</p>",
+    url: "https://www.crawlwith.us/annarbor/halloween",
+    type: "experience",
+    share: {
+      title: "Halloween Bar Crawl on A2 Vibe",
+      text: "Check out the Ann Arbor Halloween Bar Crawl on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-18`
     }
   },
 
@@ -412,7 +601,7 @@ export const happeningsData = [
     name: "The Nutcracker",
     month: "December",
     date: "December 11 - 13, 2026",
-    time: "Dec 11 (7pm), Dec 12 (1pm & 6pm), Dec 13 (2pm)",
+    time: "Dec 11 (7:00 PM), Dec 12 (1:00 PM & 6:00 PM), Dec 13 (2:00 PM)",
     address: "121 Fletcher St, Ann Arbor, MI 48109 (Power Center for Performing Arts)",
     category: ["Arts & Culture", "Family Friendly"],
     price: "From $30",
@@ -449,5 +638,4 @@ export const happeningsData = [
       url: `${BASE_SHARE_URL}#dec-04`
     }
   }
-
 ];
