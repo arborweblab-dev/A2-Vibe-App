@@ -371,7 +371,7 @@ export const happeningsData = [
     category: ["Nightlife", "Festivals"],
     price: "Varies",
     neighborhood: "U-M Campus / Downtown",
-    img: "/images/oct-barcrawl.jpg",
+    img: "/images/Halloween-Bar-Crawl.jpg",
     shortDesc: "Spooktacular Halloween bar crawl featuring creepy cocktails and costume contests.",
     longDesc: "<p>Crawl With Us brings a massive Halloween bar crawl through Ann Arbor's top bars, featuring drink specials, professional photographers, custom badges, and an epic after-party.</p>",
     url: "https://www.crawlwith.us/annarbor/halloween",
