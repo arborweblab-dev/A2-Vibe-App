@@ -193,7 +193,6 @@ export const happeningsData = [
       url: `${BASE_SHARE_URL}#oct-09`
     }
   },
- 
 
   // --- NOVEMBER EVENTS ---
   {
@@ -410,22 +409,22 @@ export const happeningsData = [
   },
   {
     id: "dec-03",
-    name: "The Nutcracker Ballet",
+    name: "The Nutcracker",
     month: "December",
-    date: "December 14 - 15, 2026",
-    time: "7:00 PM",
-    address: "603 E Liberty St, Ann Arbor, MI 48104 (Michigan Theater)",
+    date: "December 11 - 13, 2026",
+    time: "Dec 11 (7pm), Dec 12 (1pm & 6pm), Dec 13 (2pm)",
+    address: "121 Fletcher St, Ann Arbor, MI 48109 (Power Center for Performing Arts)",
     category: ["Arts & Culture", "Family Friendly"],
-    price: "$46",
-    neighborhood: "Downtown",
+    price: "From $30",
+    neighborhood: "U-M Campus",
     img: "/images/dec-nutcracker.jpg",
-    shortDesc: "World Ballet Company brings the timeless ballet to life.",
-    longDesc: "<p>Watch dancers perform this magical winter classic, complete with beautiful costumes, grand sets, and Tchaikovsky's unforgettable score.</p>",
-    url: "https://michtheater.org",
+    shortDesc: "iBallet Studio presents the timeless holiday classic featuring live orchestra music.",
+    longDesc: "<p>Immerse yourself this December in Clara’s magical world of toy soldiers, sleigh rides, and dancing sugar plums! The Nutcracker ballet is back in Ann Arbor at the Power Center for Performing Arts. Featuring live orchestra music. The Nutcracker is a timeless holiday classic for all ages. Don't miss the early bird special for the opening night show while tickets last.</p>",
+    url: "https://mutotix.umich.edu/",
     type: "experience",
     share: {
-      title: "The Nutcracker Ballet on A2 Vibe",
-      text: "Check out The Nutcracker Ballet at Michigan Theater on A2 Vibe!",
+      title: "The Nutcracker on A2 Vibe",
+      text: "Check out The Nutcracker at the Power Center on A2 Vibe!",
       url: `${BASE_SHARE_URL}#dec-03`
     }
   },
