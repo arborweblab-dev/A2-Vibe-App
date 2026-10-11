@@ -382,6 +382,111 @@ export const happeningsData = [
       url: `${BASE_SHARE_URL}#oct-18`
     }
   },
+  {
+    id: "oct-19",
+    name: "The Rocky Horror Picture Show at Michigan Theater",
+    month: "October",
+    date: "October 31, 2026",
+    time: "10:00 PM",
+    address: "603 E Liberty St, Ann Arbor, MI 48104",
+    category: ["Arts & Culture", "Nightlife"],
+    price: "$15",
+    neighborhood: "Downtown",
+    img: "/images/oct-rockyhorror.jpg",
+    shortDesc: "The ultimate cult classic Halloween tradition.",
+    longDesc: "<p>Join the tradition at the historic Michigan Theater for a raucous, prop-filled midnight-style screening of The Rocky Horror Picture Show. Costumes and audience participation are highly encouraged!</p>",
+    url: "https://michtheater.org",
+    type: "experience",
+    share: {
+      title: "Rocky Horror at Michigan Theater on A2 Vibe",
+      text: "Check out The Rocky Horror Picture Show on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-19`
+    }
+  },
+  {
+    id: "oct-20",
+    name: "The Creature Conservancy: Howl-O-Ween",
+    month: "October",
+    date: "October 24 - 25, 2026",
+    time: "1:00 PM - 5:00 PM",
+    address: "4940 Ann Arbor-Saline Rd, Ann Arbor, MI 48103",
+    category: ["Family Friendly", "Arts & Culture"],
+    price: "$12",
+    neighborhood: "South Ann Arbor",
+    img: "/images/oct-creatureconservancy.jpg",
+    shortDesc: "Celebrate Halloween with the animals at The Creature Conservancy.",
+    longDesc: "<p>Bring the family in costume for special animal presentations, spooky displays, and a chance to meet the resident sloths, cougars, and creepy crawlies.</p>",
+    url: "https://thecreatureconservancy.org",
+    type: "experience",
+    share: {
+      title: "Howl-O-Ween at Creature Conservancy on A2 Vibe",
+      text: "Check out Howl-O-Ween at The Creature Conservancy on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-20`
+    }
+  },
+  {
+    id: "oct-21",
+    name: "Ann Arbor Farmers Market: Fall Harvest Festival",
+    month: "October",
+    date: "October 28, 2026",
+    time: "7:00 AM - 3:00 PM",
+    address: "315 Detroit St, Ann Arbor, MI 48104",
+    category: ["Flavors", "Shopping"],
+    price: "Free",
+    neighborhood: "Kerrytown",
+    img: "/images/oct-farmersmarket.jpg",
+    shortDesc: "Celebrate the peak of Michigan's autumn harvest season.",
+    longDesc: "<p>Stock up on local apples, cider, pumpkins, and hearty fall vegetables. Local vendors will feature seasonal baked goods and hot cider to keep you warm while you shop.</p>",
+    url: "https://www.a2gov.org/departments/Parks-Recreation/parks-places/farmers-market",
+    type: "experience",
+    share: {
+      title: "Farmers Market Fall Harvest on A2 Vibe",
+      text: "Check out the Fall Harvest Festival at the Ann Arbor Farmers Market on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-21`
+    }
+  },
+  {
+    id: "oct-22",
+    name: "Blind Pig Halloween Bash",
+    month: "October",
+    date: "October 31, 2026",
+    time: "9:00 PM - 2:00 AM",
+    address: "208 S First St, Ann Arbor, MI 48104",
+    category: ["Nightlife", "Arts & Culture"],
+    price: "$15",
+    neighborhood: "Downtown",
+    img: "/images/oct-blindpig.jpg",
+    shortDesc: "Ann Arbor's legendary live music venue hosts its annual Halloween costume party.",
+    longDesc: "<p>Dance the night away at The Blind Pig's legendary Halloween Bash featuring local bands covering famous artists, a massive costume contest, and drink specials all night.</p>",
+    url: "https://blindpigmusic.com",
+    type: "experience",
+    share: {
+      title: "Blind Pig Halloween Bash on A2 Vibe",
+      text: "Check out the Halloween Bash at The Blind Pig on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-22`
+    }
+  },
+  {
+    id: "oct-23",
+    name: "U-M Men's Ice Hockey vs. Minnesota",
+    month: "October",
+    date: "October 30, 2026",
+    time: "7:00 PM",
+    address: "1016 S State St, Ann Arbor, MI 48109 (Yost Ice Arena)",
+    category: ["Sports", "Family Friendly"],
+    price: "Varies",
+    neighborhood: "U-M Campus",
+    img: "/images/oct-yosthockey.jpg",
+    shortDesc: "The Wolverines face off against the Golden Gophers.",
+    longDesc: "<p>Experience the unmatched energy of Yost Ice Arena as the U-M Men's Ice Hockey team takes on Big Ten rival Minnesota. Get ready for the famous student section chants!</p>",
+    url: "https://mgoblue.com",
+    type: "experience",
+    share: {
+      title: "U-M Hockey vs. Minnesota on A2 Vibe",
+      text: "Check out U-M Hockey vs. Minnesota at Yost on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-23`
+    }
+  },
 
   // --- NOVEMBER EVENTS ---
   {
@@ -552,6 +657,153 @@ export const happeningsData = [
       url: `${BASE_SHARE_URL}#nov-08`
     }
   },
+  {
+    id: "nov-09",
+    name: "Ann Arbor Jewish Book Festival",
+    month: "November",
+    date: "November 8 - 15, 2026",
+    time: "Various Times",
+    address: "2935 Birch Hollow Dr, Ann Arbor, MI 48108 (Jewish Community Center)",
+    category: ["Arts & Culture", "Family Friendly"],
+    price: "Varies (Many Free)",
+    neighborhood: "South Ann Arbor",
+    img: "/images/nov-bookfest.jpg",
+    shortDesc: "Annual literary festival featuring acclaimed authors and community events.",
+    longDesc: "<p>The JCC of Greater Ann Arbor hosts its annual celebration of Jewish literature, culture, and arts. Enjoy author talks, book signings, and thought-provoking panel discussions throughout the week.</p>",
+    url: "https://jccannarbor.org",
+    type: "experience",
+    share: {
+      title: "Ann Arbor Jewish Book Festival on A2 Vibe",
+      text: "Check out the Ann Arbor Jewish Book Festival on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#nov-09`
+    }
+  },
+  {
+    id: "nov-10",
+    name: "Holiday Art Shop Opening",
+    month: "November",
+    date: "November 13, 2026",
+    time: "11:00 AM - 7:00 PM",
+    address: "117 W Liberty St, Ann Arbor, MI 48104 (Ann Arbor Art Center)",
+    category: ["Shopping", "Arts & Culture"],
+    price: "Free",
+    neighborhood: "Downtown",
+    img: "/images/nov-artcenter.jpg",
+    shortDesc: "Find unique, handcrafted gifts by local artists for the holiday season.",
+    longDesc: "<p>The Ann Arbor Art Center transforms its gallery space into a vibrant holiday market. Shop original ceramics, jewelry, prints, and textiles made directly by local Michigan artists.</p>",
+    url: "https://annarborartcenter.org",
+    type: "experience",
+    share: {
+      title: "Holiday Art Shop at A2AC on A2 Vibe",
+      text: "Check out the Holiday Art Shop Opening at the Ann Arbor Art Center on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#nov-10`
+    }
+  },
+  {
+    id: "nov-11",
+    name: "U-M Men's Ice Hockey vs. Michigan State",
+    month: "November",
+    date: "November 20, 2026",
+    time: "7:00 PM",
+    address: "1016 S State St, Ann Arbor, MI 48109 (Yost Ice Arena)",
+    category: ["Sports", "Nightlife"],
+    price: "Varies",
+    neighborhood: "U-M Campus",
+    img: "/images/nov-hockeymsu.jpg",
+    shortDesc: "Intense in-state hockey rivalry at Yost Ice Arena.",
+    longDesc: "<p>The rivalry comes to the ice as the Wolverines battle the Michigan State Spartans. The atmosphere inside Yost for this matchup is famously electric.</p>",
+    url: "https://mgoblue.com",
+    type: "experience",
+    share: {
+      title: "U-M Hockey vs. MSU on A2 Vibe",
+      text: "Check out U-M Hockey vs. Michigan State at Yost on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#nov-11`
+    }
+  },
+  {
+    id: "nov-12",
+    name: "UMS Presents: Jazz at the Michigan Theater",
+    month: "November",
+    date: "November 14, 2026",
+    time: "8:00 PM",
+    address: "603 E Liberty St, Ann Arbor, MI 48104 (Michigan Theater)",
+    category: ["Arts & Culture", "Nightlife"],
+    price: "From $25",
+    neighborhood: "Downtown",
+    img: "/images/nov-umsjazz.jpg",
+    shortDesc: "World-class jazz performance presented by the University Musical Society.",
+    longDesc: "<p>The University Musical Society (UMS) brings a top-tier jazz ensemble to the historic Michigan Theater for a night of incredible rhythm, improvisation, and musical mastery.</p>",
+    url: "https://ums.org",
+    type: "experience",
+    share: {
+      title: "UMS Jazz at Michigan Theater on A2 Vibe",
+      text: "Check out UMS Presents: Jazz at the Michigan Theater on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#nov-12`
+    }
+  },
+  {
+    id: "nov-13",
+    name: "Festive Lighting of Main Street",
+    month: "November",
+    date: "November 20, 2026",
+    time: "6:00 PM",
+    address: "Main St, Ann Arbor, MI 48104",
+    category: ["Family Friendly", "Festivals"],
+    price: "Free",
+    neighborhood: "Downtown",
+    img: "/images/nov-treelighting.jpg",
+    shortDesc: "Downtown Ann Arbor flips the switch on the holiday lights.",
+    longDesc: "<p>Gather in downtown Ann Arbor as the city officially lights up Main Street for the holiday season. Enjoy carolers, hot cocoa specials from local cafes, and the magic of a lit-up downtown.</p>",
+    url: "https://mainstreetannarbor.org",
+    type: "experience",
+    share: {
+      title: "Main Street Holiday Lighting on A2 Vibe",
+      text: "Check out the Festive Lighting of Main Street on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#nov-13`
+    }
+  },
+  {
+    id: "nov-14",
+    name: "Zingerman's Deli: Holiday Food Tasting Event",
+    month: "November",
+    date: "November 18, 2026",
+    time: "6:30 PM - 8:30 PM",
+    address: "422 Detroit St, Ann Arbor, MI 48104",
+    category: ["Flavors", "Hidden Gems"],
+    price: "$45",
+    neighborhood: "Kerrytown",
+    img: "/images/nov-zingermans.jpg",
+    shortDesc: "Sample Zingerman's finest holiday meats, cheeses, and baked goods.",
+    longDesc: "<p>Get ready for hosting season! Zingerman's Deli experts guide you through a curated tasting of exclusive holiday cheeses, cured meats, artisan breads, and festive confections.</p>",
+    url: "https://zingermansdeli.com",
+    type: "experience",
+    share: {
+      title: "Zingerman's Holiday Tasting on A2 Vibe",
+      text: "Check out Zingerman's Deli Holiday Tasting Event on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#nov-14`
+    }
+  },
+  {
+    id: "nov-15",
+    name: "Matthaei Botanical Gardens: Winter Conservatory Display",
+    month: "November",
+    date: "Nov 28 - Dec 31, 2026",
+    time: "10:00 AM - 4:30 PM",
+    address: "1800 N Dixboro Rd, Ann Arbor, MI 48105",
+    category: ["Arts & Culture", "Family Friendly", "Hidden Gems"],
+    price: "Free",
+    neighborhood: "East Ann Arbor",
+    img: "/images/nov-matthaei.jpg",
+    shortDesc: "Escape the cold in the lush, beautifully decorated tropical conservatory.",
+    longDesc: "<p>Wander through the warm, humid climate of the Matthaei Botanical Gardens conservatory, specially decorated with beautiful winter blooms, amaryllis, and festive botanical displays.</p>",
+    url: "https://mbgna.umich.edu",
+    type: "experience",
+    share: {
+      title: "Winter Conservatory Display on A2 Vibe",
+      text: "Check out the Matthaei Winter Conservatory Display on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#nov-15`
+    }
+  },
 
   // --- DECEMBER EVENTS ---
   {
@@ -636,6 +888,174 @@ export const happeningsData = [
       title: "Holiday Pops Concert on A2 Vibe",
       text: "Check out Holiday Pops Concert on A2 Vibe!",
       url: `${BASE_SHARE_URL}#dec-04`
+    }
+  },
+  {
+    id: "dec-05",
+    name: "Handel's Messiah by UMS",
+    month: "December",
+    date: "December 5 - 6, 2026",
+    time: "Sat (8:00 PM), Sun (2:00 PM)",
+    address: "825 N University Ave, Ann Arbor, MI 48109 (Hill Auditorium)",
+    category: ["Arts & Culture", "Family Friendly"],
+    price: "From $20",
+    neighborhood: "U-M Campus",
+    img: "/images/dec-messiah.jpg",
+    shortDesc: "The spectacular annual performance of Handel's masterwork.",
+    longDesc: "<p>A cornerstone of the Ann Arbor holiday season. The UMS Choral Union and the Ann Arbor Symphony Orchestra combine forces in acoustically perfect Hill Auditorium to perform Handel's soaring Messiah.</p>",
+    url: "https://ums.org",
+    type: "experience",
+    share: {
+      title: "Handel's Messiah on A2 Vibe",
+      text: "Check out Handel's Messiah at Hill Auditorium on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#dec-05`
+    }
+  },
+  {
+    id: "dec-06",
+    name: "Kerrytown Menorah Lighting",
+    month: "December",
+    date: "December 8, 2026",
+    time: "5:30 PM",
+    address: "315 Detroit St, Ann Arbor, MI 48104 (Kerrytown Courtyard)",
+    category: ["Festivals", "Family Friendly"],
+    price: "Free",
+    neighborhood: "Kerrytown",
+    img: "/images/dec-menorah.jpg",
+    shortDesc: "Community Chanukah celebration with music and treats.",
+    longDesc: "<p>Join Chabad of Ann Arbor for the public Menorah lighting in the Kerrytown Courtyard. Festivities include lively music, traditional sufganiyot (jelly donuts), and a joyful community gathering.</p>",
+    url: "https://jewmich.com",
+    type: "experience",
+    share: {
+      title: "Kerrytown Menorah Lighting on A2 Vibe",
+      text: "Check out the Kerrytown Menorah Lighting on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#dec-06`
+    }
+  },
+  {
+    id: "dec-07",
+    name: "Tiny Expo Indie Art & Craft Fair",
+    month: "December",
+    date: "December 12, 2026",
+    time: "11:00 AM - 6:00 PM",
+    address: "343 S Fifth Ave, Ann Arbor, MI 48104 (AADL Downtown)",
+    category: ["Shopping", "Arts & Culture"],
+    price: "Free",
+    neighborhood: "Downtown",
+    img: "/images/dec-tinyexpo.jpg",
+    shortDesc: "Annual indie craft fair hosted at the Downtown Library.",
+    longDesc: "<p>Shop local for the holidays! Tiny Expo features over 40 artists and crafters selling their handmade wares in the lobby of the Ann Arbor District Library. It's the perfect place to find unique, locally made gifts.</p>",
+    url: "https://aadl.org/tinyexpo",
+    type: "experience",
+    share: {
+      title: "Tiny Expo at AADL on A2 Vibe",
+      text: "Check out Tiny Expo Indie Art & Craft Fair on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#dec-07`
+    }
+  },
+  {
+    id: "dec-08",
+    name: "Sing Along with Santa in Kerrytown",
+    month: "December",
+    date: "December 12, 2026",
+    time: "10:00 AM - 1:00 PM",
+    address: "315 Detroit St, Ann Arbor, MI 48104",
+    category: ["Family Friendly", "Festivals"],
+    price: "Free",
+    neighborhood: "Kerrytown",
+    img: "/images/dec-santa.jpg",
+    shortDesc: "Bring the kids to sing carols and meet Santa.",
+    longDesc: "<p>A favorite local tradition! Gather in the Kerrytown Market & Shops courtyard for a joyful morning of singing holiday carols accompanied by local musicians, followed by a visit from Santa.</p>",
+    url: "https://kerrytown.com",
+    type: "experience",
+    share: {
+      title: "Sing Along with Santa on A2 Vibe",
+      text: "Check out Sing Along with Santa in Kerrytown on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#dec-08`
+    }
+  },
+  {
+    id: "dec-09",
+    name: "A2CT: A Christmas Carol",
+    month: "December",
+    date: "December 17 - 20, 2026",
+    time: "7:30 PM (Matinees at 2:00 PM)",
+    address: "1226 Murfin Ave, Ann Arbor, MI 48109 (Arthur Miller Theatre)",
+    category: ["Arts & Culture", "Family Friendly"],
+    price: "$22",
+    neighborhood: "North Campus",
+    img: "/images/dec-christmascarol.jpg",
+    shortDesc: "Ann Arbor Civic Theatre performs the Dickens holiday classic.",
+    longDesc: "<p>Experience the magic of A Christmas Carol performed by the talented local actors of the Ann Arbor Civic Theatre. A heartwarming theatrical experience for the entire family on North Campus.</p>",
+    url: "https://a2ct.org",
+    type: "experience",
+    share: {
+      title: "A2CT A Christmas Carol on A2 Vibe",
+      text: "Check out A2CT's A Christmas Carol on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#dec-09`
+    }
+  },
+  {
+    id: "dec-10",
+    name: "Michigan Theater Holiday Classic Film Series: White Christmas",
+    month: "December",
+    date: "December 20, 2026",
+    time: "3:00 PM",
+    address: "603 E Liberty St, Ann Arbor, MI 48104",
+    category: ["Arts & Culture", "Family Friendly"],
+    price: "$10.50",
+    neighborhood: "Downtown",
+    img: "/images/dec-whitechristmas.jpg",
+    shortDesc: "Sing along to White Christmas in the beautifully restored grand theater.",
+    longDesc: "<p>Get in the holiday spirit with a special screening of the beloved classic 'White Christmas'. The historic Michigan Theater features a pre-show concert on the Barton organ.</p>",
+    url: "https://michtheater.org",
+    type: "experience",
+    share: {
+      title: "White Christmas at Michigan Theater on A2 Vibe",
+      text: "Check out White Christmas at the Michigan Theater on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#dec-10`
+    }
+  },
+  {
+    id: "dec-11",
+    name: "U-M Men's Basketball vs. Purdue",
+    month: "December",
+    date: "December 29, 2026",
+    time: "7:00 PM",
+    address: "333 Stadium Dr, Ann Arbor, MI 48109 (Crisler Center)",
+    category: ["Sports", "Family Friendly"],
+    price: "Varies",
+    neighborhood: "U-M Campus",
+    img: "/images/dec-umbball.jpg",
+    shortDesc: "A massive late-December Big Ten basketball showdown.",
+    longDesc: "<p>Keep the holiday excitement rolling as the Michigan Wolverines host the Purdue Boilermakers in a highly anticipated Big Ten clash at Crisler Center.</p>",
+    url: "https://mgoblue.com",
+    type: "experience",
+    share: {
+      title: "U-M Basketball vs. Purdue on A2 Vibe",
+      text: "Check out U-M Basketball vs. Purdue on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#dec-11`
+    }
+  },
+  {
+    id: "dec-12",
+    name: "Blind Pig New Year's Eve Bash",
+    month: "December",
+    date: "December 31, 2026",
+    time: "9:00 PM - 2:00 AM",
+    address: "208 S First St, Ann Arbor, MI 48104",
+    category: ["Nightlife", "Festivals"],
+    price: "$20",
+    neighborhood: "Downtown",
+    img: "/images/dec-nyeblindpig.jpg",
+    shortDesc: "Ring in 2027 at Ann Arbor's most iconic rock club.",
+    longDesc: "<p>Say goodbye to 2026! The Blind Pig throws its massive annual New Year's Eve party featuring multiple local bands, dancing, and a midnight champagne toast to welcome the new year.</p>",
+    url: "https://blindpigmusic.com",
+    type: "experience",
+    share: {
+      title: "Blind Pig NYE Bash on A2 Vibe",
+      text: "Check out the New Year's Eve Bash at The Blind Pig on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#dec-12`
     }
   }
 ];
