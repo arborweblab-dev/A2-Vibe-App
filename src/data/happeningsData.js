@@ -392,7 +392,7 @@ export const happeningsData = [
     category: ["Arts & Culture", "Nightlife"],
     price: "$15",
     neighborhood: "Downtown",
-    img: "/images/oct-rockyhorror.jpg",
+    img: "/images/Rocky-Horror.jpg",
     shortDesc: "The ultimate cult classic Halloween tradition.",
     longDesc: "<p>Join the tradition at the historic Michigan Theater for a raucous, prop-filled midnight-style screening of The Rocky Horror Picture Show. Costumes and audience participation are highly encouraged!</p>",
     url: "https://michtheater.org",
@@ -413,7 +413,7 @@ export const happeningsData = [
     category: ["Family Friendly", "Arts & Culture"],
     price: "$12",
     neighborhood: "South Ann Arbor",
-    img: "/images/oct-creatureconservancy.jpg",
+    img: "/images/Spooky.jpg",
     shortDesc: "Celebrate Halloween with the animals at The Creature Conservancy.",
     longDesc: "<p>Bring the family in costume for special animal presentations, spooky displays, and a chance to meet the resident sloths, cougars, and creepy crawlies.</p>",
     url: "https://thecreatureconservancy.org",
@@ -434,7 +434,7 @@ export const happeningsData = [
     category: ["Flavors", "Shopping"],
     price: "Free",
     neighborhood: "Kerrytown",
-    img: "/images/oct-farmersmarket.jpg",
+    img: "/images/Fall-Harvest.jpg",
     shortDesc: "Celebrate the peak of Michigan's autumn harvest season.",
     longDesc: "<p>Stock up on local apples, cider, pumpkins, and hearty fall vegetables. Local vendors will feature seasonal baked goods and hot cider to keep you warm while you shop.</p>",
     url: "https://www.a2gov.org/departments/Parks-Recreation/parks-places/farmers-market",
@@ -447,7 +447,7 @@ export const happeningsData = [
   },
   {
     id: "oct-22",
-    name: "Blind Pig Halloween Bash",
+    name: "Blind Pig - Pajamas Play Bowie (4th Annual Halloween Tribute)",
     month: "October",
     date: "October 31, 2026",
     time: "9:00 PM - 2:00 AM",
@@ -455,7 +455,7 @@ export const happeningsData = [
     category: ["Nightlife", "Arts & Culture"],
     price: "$15",
     neighborhood: "Downtown",
-    img: "/images/oct-blindpig.jpg",
+    img: "/images/Pajamas.jpg",
     shortDesc: "Ann Arbor's legendary live music venue hosts its annual Halloween costume party.",
     longDesc: "<p>Dance the night away at The Blind Pig's legendary Halloween Bash featuring local bands covering famous artists, a massive costume contest, and drink specials all night.</p>",
     url: "https://blindpigmusic.com",
@@ -466,27 +466,7 @@ export const happeningsData = [
       url: `${BASE_SHARE_URL}#oct-22`
     }
   },
-  {
-    id: "oct-23",
-    name: "U-M Men's Ice Hockey vs. Minnesota",
-    month: "October",
-    date: "October 30, 2026",
-    time: "7:00 PM",
-    address: "1016 S State St, Ann Arbor, MI 48109 (Yost Ice Arena)",
-    category: ["Sports", "Family Friendly"],
-    price: "Varies",
-    neighborhood: "U-M Campus",
-    img: "/images/oct-yosthockey.jpg",
-    shortDesc: "The Wolverines face off against the Golden Gophers.",
-    longDesc: "<p>Experience the unmatched energy of Yost Ice Arena as the U-M Men's Ice Hockey team takes on Big Ten rival Minnesota. Get ready for the famous student section chants!</p>",
-    url: "https://mgoblue.com",
-    type: "experience",
-    share: {
-      title: "U-M Hockey vs. Minnesota on A2 Vibe",
-      text: "Check out U-M Hockey vs. Minnesota at Yost on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-23`
-    }
-  },
+  
 
   // --- NOVEMBER EVENTS ---
   {
