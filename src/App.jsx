@@ -1155,16 +1155,15 @@ const sceneSlides = useMemo(() => {
         )}
 
         <div className="flex gap-1.5 justify-center pt-3">
-          {sceneSlides.slice(0, 12).map((_, i) => (
+          {sceneSlides.map((_, i) => (
             <div 
               key={i} 
               className={`h-1 rounded-full transition-all duration-300 ${
-                i === (slideIdx % Math.min(sceneSlides.length, 8)) ? 'w-6 bg-[#ffcb05]' : 'w-1.5 bg-white/40'
+                i === (slideIdx % sceneSlides.length) ? 'w-6 bg-[#ffcb05]' : 'w-1.5 bg-white/40'
               }`}
             />
           ))}
         </div>
-      </div>
     </section>
   );
 };
