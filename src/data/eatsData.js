@@ -264,7 +264,8 @@ export const eatsData = [
     longDesc: "<p>Serving creative, delicious meatless dishes, macrobiotic bowls, fresh juices, and vegan comfort food classics since 1973.</p>",
     ctaText: "View Menu",
     url: "https://sevarestaurant.com",
-    isHighlight: false
+    isHighlight: false,
+    isFeatured: true
   },
   {
     id: "eat-19",
