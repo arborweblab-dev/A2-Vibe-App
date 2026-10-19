@@ -108,7 +108,7 @@ export const eatsData = [
     longDesc: "<p>Expect a line on warm summer nights for scratch-made ice cream flavors like fresh sweet corn or salted caramel beer.</p>",
     ctaText: "See Flavors",
     url: "https://blankslatecreamery.com",
-    isHighlight: false,
+    isHighlight: true,
     isFeatured: true
   },
   {
