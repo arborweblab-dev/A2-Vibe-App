@@ -109,7 +109,7 @@ export const eatsData = [
     ctaText: "See Flavors",
     url: "https://blankslatecreamery.com",
     isHighlight: false,
-    isFeatured: false
+    isFeatured: true
   },
   {
     id: "eat-8",
@@ -249,7 +249,8 @@ export const eatsData = [
     longDesc: "<p>Offering an extensive selection of fresh fish, oysters, lobster, and crab legs in a polished, energetic dining space.</p>",
     ctaText: "Reserve",
     url: "https://realseafoodcoreast.com",
-    isHighlight: false
+    isHighlight: false,
+    isFeatured: true
   },
   {
     id: "eat-18",
