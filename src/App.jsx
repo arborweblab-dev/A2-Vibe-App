@@ -213,8 +213,8 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
   return (
     <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div className="flex items-center gap-2.5 min-w-0 pr-3">
             <div className="p-2 rounded-xl bg-[#ffcb05]/15 text-[#b45309] dark:text-[#ffcb05] flex-shrink-0">
               <Store size={20} />
@@ -258,7 +258,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
           )}
 
           {shop.address && (
-            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
+            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
               <MapPin size={18} className="text-[#b45309] dark:text-[#ffcb05] flex-shrink-0 mt-0.5" />
               <div className="text-xs">
                 <span className={`font-black uppercase tracking-wider block ${theme.text}`}>Address</span>
@@ -268,7 +268,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
           )}
 
           {shop.hours && (
-            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
+            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
               <Clock size={18} className="text-[#0284c7] dark:text-[#38bdf8] flex-shrink-0 mt-0.5" />
               <div className="text-xs">
                 <span className={`font-black uppercase tracking-wider block ${theme.text}`}>Hours</span>
@@ -299,7 +299,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
               <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Amenities & Highlights</span>
               <div className="flex flex-wrap gap-2">
                 {shop.features.map(f => (
-                  <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border}${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
+                  <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border} ${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
                     ✓ {f}
                   </span>
                 ))}
@@ -328,7 +328,7 @@ const ShopDetailModal = ({ isOpen, onClose, shop, theme, toggleFavorite, favorit
 
             <button
               onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.name + ' ' + shop.address)}`, '_blank')}
-              className={`w-full py-3.5 rounded-2xl font-black uppercase text-xs border ${theme.border}${theme.isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-slate-100 text-slate-900 hover:bg-slate-200'} active:scale-95 transition-all flex items-center justify-center gap-2`}
+              className={`w-full py-3.5 rounded-2xl font-black uppercase text-xs border ${theme.border} ${theme.isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-slate-100 text-slate-900 hover:bg-slate-200'} active:scale-95 transition-all flex items-center justify-center gap-2`}
             >
               <Navigation size={15} />
               <span>Get Directions in Google Maps</span>
@@ -365,8 +365,8 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
   return (
     <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border${theme.border} animate-slide flex flex-col`}>
-        <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-xl bg-[#ffcb05]/15 text-[#b45309] dark:text-[#ffcb05]">
@@ -428,7 +428,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
                     <div
                       key={shop.id}
                       onClick={() => onSelectShop(shop)}
-                      className={`min-w-[240px] max-w-[240px] ${theme.card} rounded-3xl border${theme.border} overflow-hidden shadow-md cursor-pointer snap-center group flex-shrink-0 hover:border-[#ffcb05]/60 transition-all relative`}
+                      className={`min-w-[240px] max-w-[240px] ${theme.card} rounded-3xl border ${theme.border} overflow-hidden shadow-md cursor-pointer snap-center group flex-shrink-0 hover:border-[#ffcb05]/60 transition-all relative`}
                     >
                       <div className="h-32 relative overflow-hidden">
                         <img src={shop.img} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -479,7 +479,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
                     <div
                       key={shop.id}
                       onClick={() => onSelectShop(shop)}
-                      className={`${theme.card} p-4 rounded-3xl border${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-[#ffcb05]/50 active:scale-[0.99] transition-all`}
+                      className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-[#ffcb05]/50 active:scale-[0.99] transition-all`}
                     >
                       {shop.img ? (
                         <img src={shop.img} alt={shop.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
@@ -535,7 +535,7 @@ const ShopsDirectoryModal = ({ isOpen, onClose, theme, onSelectShop, toggleFavor
         </div>
 
         {/* SHOP MODAL CTA: GET LISTED */}
-        <div className={`p-4 border-t ${theme.border}${theme.appBg}/95 backdrop-blur-md`}>
+        <div className={`p-4 border-t ${theme.border} ${theme.appBg}/95 backdrop-blur-md`}>
           <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#00274c] to-[#0a121e] border border-[#ffcb05]/30 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <span className="text-[9px] font-black uppercase text-[#ffcb05] tracking-widest block">Retail & Cannabis Spotlight</span>
@@ -591,8 +591,8 @@ const TransitModal = ({ isOpen, onClose, theme }) => {
   return (
     <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div className="flex items-center gap-2.5 min-w-0 pr-3">
             <div className="p-2 rounded-xl bg-[#00274c] text-[#ffcb05] flex-shrink-0">
               <Navigation size={20} />
@@ -616,7 +616,7 @@ const TransitModal = ({ isOpen, onClose, theme }) => {
             <div
               key={opt.name}
               onClick={() => window.open(opt.url, '_blank', 'noopener,noreferrer')}
-              className={`${theme.card} p-4 rounded-3xl border${theme.border} flex items-center justify-between gap-4 cursor-pointer shadow-sm hover:border-[#ffcb05]/60 active:scale-[0.99] transition-all`}
+              className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center justify-between gap-4 cursor-pointer shadow-sm hover:border-[#ffcb05]/60 active:scale-[0.99] transition-all`}
             >
               <div className="min-w-0 flex-1">
                 <span className="text-[9px] font-black uppercase tracking-widest text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md inline-block mb-1">
@@ -991,66 +991,77 @@ const TheSceneHeroSlideshow = ({
 }) => {
   const [slideIdx, setSlideIdx] = useState(0);
 
-  const sceneSlides = useMemo(() => {
-    const featuredEats = (dining || []).filter(d => d.isFeatured || d.rating >= '4.8');
-    const featuredEvents = (itineraries || []).filter(e => e.isFeatured || e.price);
-    const featuredShops = SHOPS_DATA.filter(s => s.tier === 'featured');
+const sceneSlides = useMemo(() => {
+    const featuredEats = (dining || []).filter(d => d.isFeatured || d.rating >= '4.8').slice(0, 3);
+    const featuredEvents = (itineraries || []).filter(e => e.isFeatured || e.price).slice(0, 3);
+    const featuredShops = SHOPS_DATA.filter(s => s.tier === 'featured').slice(0, 3);
 
     const slides = [];
+    const maxLen = Math.max(featuredEats.length, featuredEvents.length, featuredShops.length, 1);
 
-    // 1. Push all 6 city slides first to guarantee all 12 are available
-    SLIDE_IMAGES.forEach((imgUrl, index) => {
-      slides.push({
-        type: 'city',
-        categoryBadge: 'A2 Vibe City Lens',
-        badgeColor: 'bg-[#ffcb05] text-black',
-        title: index === 0 ? 'The Scene' : `Ann Arbor Vibe ${index + 1}`,
-        subtitle: 'Curated by A2 Vibe • The Official Local City App',
-        img: imgUrl,
-        rawItem: null
-      });
-    });
+    for (let i = 0; i < maxLen; i++) {
+      // 1. Push "The Scene" first so it leads the slideshow
+      if (SLIDE_IMAGES[i % SLIDE_IMAGES.length]) {
+        slides.push({
+          type: 'city',
+          categoryBadge: 'A2 Vibe City Lens',
+          badgeColor: 'bg-[#ffcb05] text-black',
+          title: 'The Scene',
+          subtitle: 'Curated by A2 Vibe • The Official Local City App',
+          img: SLIDE_IMAGES[i % SLIDE_IMAGES.length],
+          rawItem: null
+        });
+      }
 
-    // 2. Push Eats
-    featuredEats.forEach(eat => {
-      slides.push({
-        type: 'eats',
-        categoryBadge: eat.cuisine || 'Eats Spotlight',
-        badgeColor: 'bg-[#f97316] text-white',
-        title: eat.title || eat.name,
-        subtitle: eat.shortDesc || eat.neighborhood || 'A2 Vibe Curated Eatery',
-        img: eat.img,
-        rawItem: { ...eat, type: 'dining' }
-      });
-    });
+      // 2. Then push Eats
+      if (featuredEats[i]) {
+        slides.push({
+          type: 'eats',
+          categoryBadge: featuredEats[i].cuisine || 'Eats Spotlight',
+          badgeColor: 'bg-[#f97316] text-white',
+          title: featuredEats[i].title || featuredEats[i].name,
+          subtitle: featuredEats[i].shortDesc || featuredEats[i].neighborhood || 'A2 Vibe Curated Eatery',
+          img: featuredEats[i].img,
+          rawItem: { ...featuredEats[i], type: 'dining' }
+        });
+      }
 
-    // 3. Push Events
-    featuredEvents.forEach(evt => {
-      slides.push({
-        type: 'event',
-        categoryBadge: Array.isArray(evt.category) ? evt.category[0] : (evt.category || 'Happenings'),
-        badgeColor: 'bg-[#0284c7] text-white',
-        title: evt.name || evt.title,
-        subtitle: evt.date ? `📅 ${evt.date} •${evt.address || 'Ann Arbor'}` : (evt.shortDesc || 'A2 Vibe Top Event Pick'),
-        img: evt.img,
-        rawItem: { ...evt, type: 'experience' }
-      });
-    });
+      // 3. Then push Events
+      if (featuredEvents[i]) {
+        slides.push({
+          type: 'event',
+          categoryBadge: Array.isArray(featuredEvents[i].category) ? featuredEvents[i].category[0] : (featuredEvents[i].category || 'Happenings'),
+          badgeColor: 'bg-[#0284c7] text-white',
+          title: featuredEvents[i].name || featuredEvents[i].title,
+          subtitle: featuredEvents[i].date ? `📅 ${featuredEvents[i].date} • ${featuredEvents[i].address || 'Ann Arbor'}` : (featuredEvents[i].shortDesc || 'A2 Vibe Top Event Pick'),
+          img: featuredEvents[i].img,
+          rawItem: { ...featuredEvents[i], type: 'experience' }
+        });
+      }
 
-    // 4. Push Shops
-    featuredShops.forEach(shop => {
-      slides.push({
-        type: 'shop',
-        categoryBadge: shop.category || 'Featured Retail',
-        badgeColor: 'bg-[#ffcb05] text-black',
-        title: shop.name,
-        subtitle: shop.shortDesc || shop.address || 'A2 Vibe Verified Store',
-        img: shop.img,
-        rawItem: { ...shop, type: 'shop' }
-      });
-    });
+      // 4. Then push Shops
+      if (featuredShops[i]) {
+        slides.push({
+          type: 'shop',
+          categoryBadge: featuredShops[i].category || 'Featured Retail',
+          badgeColor: 'bg-[#ffcb05] text-black',
+          title: featuredShops[i].name,
+          subtitle: featuredShops[i].shortDesc || featuredShops[i].address || 'A2 Vibe Verified Store',
+          img: featuredShops[i].img,
+          rawItem: { ...featuredShops[i], type: 'shop' }
+        });
+      }
+    }
 
-    return slides;
+    return slides.length > 0 ? slides : SLIDE_IMAGES.map((img) => ({
+      type: 'city',
+      categoryBadge: 'A2 Vibe City Lens',
+      badgeColor: 'bg-[#ffcb05] text-black',
+      title: 'The Scene',
+      subtitle: 'Curated by A2 Vibe • The Official Local City App',
+      img: img,
+      rawItem: null
+    }));
   }, [dining, itineraries]);
 
   useEffect(() => {
@@ -1059,7 +1070,7 @@ const TheSceneHeroSlideshow = ({
       setSlideIdx(prev => (prev + 1) % sceneSlides.length);
     }, 5500);
     return () => clearInterval(timer);
-  }, [sceneSlides.length]);
+  }, [sceneSlides]);
 
   const currentSlide = sceneSlides[slideIdx % sceneSlides.length];
 
@@ -1143,12 +1154,12 @@ const TheSceneHeroSlideshow = ({
           </div>
         )}
 
-        <div className="flex gap-1.5 justify-center pt-3 overflow-x-auto no-scrollbar">
-          {sceneSlides.map((_, i) => (
+        <div className="flex gap-1.5 justify-center pt-3">
+          {sceneSlides.slice(0, 8).map((_, i) => (
             <div 
               key={i} 
-              className={`h-1 rounded-full transition-all duration-300 flex-shrink-0 ${
-                i === (slideIdx % sceneSlides.length) ? 'w-6 bg-[#ffcb05]' : 'w-1.5 bg-white/40'
+              className={`h-1 rounded-full transition-all duration-300 ${
+                i === (slideIdx % Math.min(sceneSlides.length, 8)) ? 'w-6 bg-[#ffcb05]' : 'w-1.5 bg-white/40'
               }`}
             />
           ))}
@@ -1164,8 +1175,8 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
   return (
     <div className="fixed inset-0 z-[125] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div className="flex items-center gap-2.5 min-w-0 pr-3">
             <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 flex-shrink-0">
               <Trees size={20} />
@@ -1198,7 +1209,7 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
           )}
 
           {park.address && (
-            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
+            <div className={`flex items-start gap-3 p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'}`}>
               <MapPin size={18} className="text-[#b45309] dark:text-[#ffcb05] flex-shrink-0 mt-0.5" />
               <div className="text-xs">
                 <span className={`font-black uppercase tracking-wider block ${theme.text}`}>Location Address</span>
@@ -1208,7 +1219,7 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
           )}
 
           <div className="grid grid-cols-2 gap-3">
-            <div className={`p-3.5 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
               <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
                 <Dog size={16} />
                 <span>Dog Friendly</span>
@@ -1219,7 +1230,7 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
               {park.dogNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.dogNotes}</p>}
             </div>
 
-            <div className={`p-3.5 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
               <div className="flex items-center gap-1.5 text-xs font-bold text-[#0284c7] dark:text-[#38bdf8]">
                 <Accessibility size={16} />
                 <span>Accessibility</span>
@@ -1230,7 +1241,7 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
               {park.accessibilityNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.accessibilityNotes}</p>}
             </div>
 
-            <div className={`p-3.5 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
               <div className="flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400">
                 <Bath size={16} />
                 <span>Restrooms</span>
@@ -1241,7 +1252,7 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
               {park.restroomNotes && <p className={`text-[10px] ${theme.secondaryText} leading-snug`}>{park.restroomNotes}</p>}
             </div>
 
-            <div className={`p-3.5 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
+            <div className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} space-y-1`}>
               <div className="flex items-center gap-1.5 text-xs font-bold text-[#b45309] dark:text-[#ffcb05]">
                 <Bike size={16} />
                 <span>Biking</span>
@@ -1257,7 +1268,7 @@ const ParkDetailModal = ({ isOpen, onClose, park, theme }) => {
               <span className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Features & Highlights</span>
               <div className="flex flex-wrap gap-2">
                 {park.features.map(f => (
-                  <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border}${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
+                  <span key={f} className={`px-3 py-1 rounded-xl text-[10px] font-bold border ${theme.border} ${theme.isDark ? 'bg-white/5 text-slate-200' : 'bg-slate-100 text-slate-800'}`}>
                     ✓ {f}
                   </span>
                 ))}
@@ -1323,8 +1334,8 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
   return (
     <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border${theme.border} animate-slide flex flex-col`}>
-        <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        <div className={`sticky top-0 z-10 p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
@@ -1389,7 +1400,7 @@ const ParksDirectoryModal = ({ isOpen, onClose, theme, onSelectPark }) => {
                 <div 
                   key={park.id}
                   onClick={() => onSelectPark(park)}
-                  className={`${theme.card} p-4 rounded-3xl border${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/50 active:scale-[0.99] transition-all`}
+                  className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-4 cursor-pointer relative shadow-sm hover:border-emerald-500/50 active:scale-[0.99] transition-all`}
                 >
                   <img src={park.img} alt={park.name} className="w-20 h-20 rounded-2xl object-cover shadow-inner flex-shrink-0" />
                   <div className="flex-1 min-w-0 pr-1">
@@ -1477,8 +1488,8 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
   return (
     <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border${theme.border} animate-slide flex flex-col`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide flex flex-col`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div>
             <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Discussion Thread</span>
             <h3 className="text-lg font-header font-black uppercase italic tracking-tight truncate max-w-[320px]" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
@@ -1501,7 +1512,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
             
             {comments.length > 0 ? (
               comments.map(c => (
-                <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border}${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
+                <div key={c.id} className={`p-3.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-50'} space-y-1`}>
                   <div className="flex justify-between items-center text-[10px]">
                     <span className={`font-black uppercase tracking-wider text-[#a855f7]`}>{c.author}</span>
                     <span className={theme.secondaryText}>{c.timestamp ? new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Just now'}</span>
@@ -1517,7 +1528,7 @@ const ForumCommentsModal = ({ isOpen, onClose, story, user, theme }) => {
           </div>
         </div>
 
-        <div className={`sticky bottom-0 p-4 ${theme.appBg} border-t${theme.border}`}>
+        <div className={`sticky bottom-0 p-4 ${theme.appBg} border-t ${theme.border}`}>
           <form onSubmit={handleAddComment} className="flex gap-2">
             <input 
               type="text" 
@@ -1560,8 +1571,8 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade text-left font-sans">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
-      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border${theme.border} animate-slide`}>
-        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b${theme.border}`}>
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
           <div>
             <span className="text-[10px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-[0.2em] block">Partner With A2 Vibe</span>
             <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Listing Pricing Structure</h3>
@@ -1589,4 +1600,2259 @@ const PartnerListingModal = ({ isOpen, onClose, theme, user, initialCategory = '
             </button>
             <button
               onClick={() => setListingCategory('general')}
-              className={`py-2.5 rounded-xl text-xs
+              className={`py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${listingCategory === 'general' ? 'bg-[#38bdf8] text-black shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')}`}
+            >
+              <Calendar size={14} />
+              <span>Events & Promos</span>
+            </button>
+          </div>
+
+          {(listingCategory === 'restaurant' || listingCategory === 'shop') ? (
+            <div className="space-y-5">
+              <div className="p-5 rounded-3xl bg-gradient-to-br from-[#00274c] to-[#0a1b30] border border-[#ffcb05]/30 text-white space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                    {listingCategory === 'shop' ? 'Retail Showcase' : 'Dining Premiere'}
+                  </span>
+                  <span className="text-[10px] font-bold text-[#38bdf8] flex items-center gap-1">
+                    <FileText size={12} /> {listingCategory === 'shop' ? 'Catalog Upload Enabled' : 'Menu Upload Enabled'}
+                  </span>
+                </div>
+
+                <h4 className="text-xl font-header font-black uppercase italic">
+                  {listingCategory === 'shop' ? 'Boosted Retail & Shop Plan' : 'Restaurant and Bars - Boosted Plan'}
+                </h4>
+
+                <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
+                  <li className="flex items-center gap-2">✓ <strong>Up to 20 HD Photos</strong> (Dishes, products, venue, crowd)</li>
+                  <li className="flex items-center gap-2">✓ <strong>Longer Description & Story</strong> with direct store links</li>
+                  <li className="flex items-center gap-2">✓ <strong>Optional Menu / Catalog Upload</strong> on profile</li>
+                  <li className="flex items-center gap-2">✓ <strong>Dedicated Feature Article</strong> in A2 Guide</li>
+                  <li className="flex items-center gap-2">✓ <strong>Social Media Post Promos</strong> across our channels</li>
+                </ul>
+              </div>
+
+              {/* Billboard Add-on */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-[#f97316]/20 via-[#f97316]/10 to-transparent border border-[#f97316]/30 flex items-center justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <Zap size={14} className="text-[#b45309] dark:text-[#ffcb05]" />
+                    <span className={`text-xs font-black uppercase ${theme.isDark ? 'text-white' : 'text-slate-900'}`}>
+                      {listingCategory === 'shop' ? 'Featured Shop - Top Pick Billboard Add-on' : 'Restaurant Featured Pick Add-on'}
+                    </span>
+                  </div>
+                  <p className={`text-[11px] ${theme.isDark ? 'text-slate-300' : 'text-slate-600'} mt-0.5`}>
+                    Top-of-app billboard spot. <strong className="text-[#b45309] dark:text-[#ffcb05]">$50.00 USD</strong>
+                  </p>
+                </div>
+                <button
+                  onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopFeaturedPickAddon : STRIPE_LINKS.restaurantFeaturedPickAddon)}
+                  className="px-3.5 py-2 bg-[#f97316] text-white dark:text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1 flex-shrink-0"
+                >
+                  <span>$50.00</span>
+                  <ExternalLink size={12} />
+                </button>
+              </div>
+
+              {/* Boosted Annual & Monthly Options */}
+              <div className="space-y-3">
+                <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs font-black uppercase ${theme.text}`}>
+                        {listingCategory === 'shop' ? 'Boosted Shop — Annual Plan' : 'Restaurant and Bars - Boosted Annual Membership'}
+                      </span>
+                    </div>
+                    <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-1">
+                      $300.00 USD <span className={`${theme.secondaryText} font-normal`}>/ year</span>
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopBoostedAnnual : STRIPE_LINKS.restaurantBoostedAnnual)}
+                    className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                  >
+                    <span>$300/yr</span>
+                    <ExternalLink size={14} />
+                  </button>
+                </div>
+
+                <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs font-black uppercase ${theme.text}`}>
+                        {listingCategory === 'shop' ? 'Boosted Shop - Monthly' : 'Restaurant and Bars - Boosted Monthly Plan'}
+                      </span>
+                    </div>
+                    <p className="text-xs font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">
+                      $35.00 USD <span className={`${theme.secondaryText} font-normal`}>/ month</span>
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => openStripeCheckout(listingCategory === 'shop' ? STRIPE_LINKS.shopBoostedMonthly : STRIPE_LINKS.restaurantBoostedMonthly)}
+                    className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                  >
+                    <span>$35/mo</span>
+                    <ExternalLink size={14} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className={`p-4 rounded-2xl ${theme.isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-100 border border-slate-200'} space-y-1.5`}>
+                <div className="flex items-center gap-2 text-[#0284c7] dark:text-[#38bdf8]">
+                  <Calendar size={18} />
+                  <h4 className="text-xs font-black uppercase tracking-wider">Happenings & Editorial Promos</h4>
+                </div>
+                <p className={`text-[11px] ${theme.secondaryText} leading-relaxed`}>
+                  Reach thousands of Ann Arbor locals, students, and visitors across the official A2 Vibe network.
+                </p>
+              </div>
+
+              {/* Standard Event */}
+              <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div>
+                  <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>
+                    Standard Event Listing
+                  </h4>
+                  <p className="text-xs font-bold text-[#0284c7] dark:text-[#38bdf8] mt-0.5">
+                    $25.00 USD <span className={`text-[10px] font-normal ${theme.secondaryText}`}>one-time</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => openStripeCheckout(STRIPE_LINKS.eventStandard)}
+                  className="px-4 py-2.5 bg-[#38bdf8] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <span>$25.00</span>
+                  <ExternalLink size={13} />
+                </button>
+              </div>
+
+              {/* Featured Event Showcase */}
+              <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <Sparkles size={13} className="text-[#ffcb05]" />
+                    <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>
+                      Featured Event Showcase
+                    </h4>
+                  </div>
+                  <p className="text-xs font-bold text-[#b45309] dark:text-[#ffcb05] mt-0.5">
+                    $45.00 USD <span className={`text-[10px] font-normal ${theme.secondaryText}`}>highlight placement</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => openStripeCheckout(STRIPE_LINKS.eventFeatured)}
+                  className="px-4 py-2.5 bg-[#ffcb05] text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <span>$45.00</span>
+                  <ExternalLink size={13} />
+                </button>
+              </div>
+
+              {/* City Guide Feature Story */}
+              <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <BookText size={13} className="text-[#a855f7]" />
+                    <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>
+                      City Guide Feature Story
+                    </h4>
+                  </div>
+                  <p className="text-xs font-bold text-[#a855f7] mt-0.5">
+                    $45.00 USD <span className={`text-[10px] font-normal ${theme.secondaryText}`}>editorial writeup</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => openStripeCheckout(STRIPE_LINKS.promoJournal)}
+                  className="px-4 py-2.5 bg-[#a855f7] text-white text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <span>$45.00</span>
+                  <ExternalLink size={13} />
+                </button>
+              </div>
+
+              {/* Social Media Blast */}
+              <div className={`p-4 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-between gap-4`}>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <Share2 size={13} className="text-emerald-500" />
+                    <h4 className={`text-xs font-black uppercase tracking-tight ${theme.text}`}>
+                      Social Media Blast
+                    </h4>
+                  </div>
+                  <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                    $25.00 USD <span className={`text-[10px] font-normal ${theme.secondaryText}`}>channels blast</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => openStripeCheckout(STRIPE_LINKS.promoSMSocial)}
+                  className="px-4 py-2.5 bg-emerald-500 text-black text-xs font-black uppercase rounded-xl shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <span>$25.00</span>
+                  <ExternalLink size={13} />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ContributorSubmissionModal = ({ isOpen, onClose, theme, user, onPostSuccess }) => {
+  const [title, setTitle] = useState('');
+  const [channel, setChannel] = useState('Local News');
+  const [content, setContent] = useState('');
+  const [authorName, setAuthorName] = useState(user?.displayName || '');
+  const [authorContact, setAuthorContact] = useState(user?.email || '');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setAuthorName(user.displayName || '');
+      setAuthorContact(user.email || '');
+    }
+  }, [user]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) return alert('Please enter a headline and story content.');
+    setSubmitting(true);
+    try {
+      await addDoc(collection(db, 'community_stories'), {
+        title: title.trim(),
+        channel,
+        content: content.trim(),
+        author: authorName.trim() || 'A2 Resident',
+        contact: authorContact.trim() || 'Unlisted',
+        userId: user?.uid || null,
+        likes: 0,
+        voters: [],
+        timestamp: Date.now()
+      });
+      setSubmitted(true);
+      if (onPostSuccess) onPostSuccess();
+    } catch (err) {
+      console.error('Error submitting community post:', err);
+      alert('Could not submit. Please check your network connection.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[36px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <div>
+            <span className="text-[10px] font-black uppercase text-[#a855f7] tracking-[0.2em] block">Community Voice</span>
+            <h3 className="text-xl font-header font-black uppercase italic tracking-tight" style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>Submit Local Story</h3>
+          </div>
+          <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          {submitted ? (
+            <div className="text-center py-8 space-y-4 animate-fade">
+              <div className="w-16 h-16 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 size={36} />
+              </div>
+              <h4 className={`text-lg font-black uppercase ${theme.text}`}>Story Published To Community</h4>
+              <p className={`text-xs ${theme.secondaryText} leading-relaxed max-w-sm mx-auto`}>
+                Your post is now live on the A2 Vibe community board. Thanks for keeping Tree Town informed and connected.
+              </p>
+              <button onClick={onClose} className="mt-4 px-6 py-3 bg-[#ffcb05] text-black rounded-xl font-black uppercase text-xs shadow-md">
+                Done
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Channel / Topic</label>
+                <div className="flex flex-wrap gap-2">
+                  {FORUM_CHANNELS.filter(c => c !== 'All').map(c => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setChannel(c)}
+                      className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${channel === c ? 'bg-[#a855f7] text-white border-[#a855f7]' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')}`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Headline</label>
+                <input
+                  type="text"
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Saturday Pop-Up Market at Kerrytown"
+                  className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`}
+                />
+              </div>
+
+              <div>
+                <label className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} block mb-1.5`}>Details</label>
+                <textarea
+                  required
+                  rows={5}
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="What's happening? Who is invited? Where, when, and why does it matter?"
+                  className={`w-full p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border text-xs leading-relaxed outline-none focus:border-[#ffcb05]`}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-4 bg-[#a855f7] text-white rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Send size={14} />
+                <span>{submitting ? 'Publishing...' : 'Publish to Community Board'}</span>
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Modal = ({ isOpen, onClose, item, theme, toggleFavorite, favorites }) => {
+  if (!isOpen || !item) return null;
+  const isFavorited = (favorites || []).some(f => f.id === item.id);
+  
+  return (
+    <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 animate-fade text-left font-sans">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`${theme.card} relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl border ${theme.border} animate-slide`}>
+        <div className={`sticky top-0 z-10 flex justify-between items-center p-6 ${theme.appBg}/95 backdrop-blur-md border-b ${theme.border}`}>
+          <h3 className={`text-lg font-header font-black uppercase italic tracking-tight pr-4 truncate`} style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>
+            {item.name || item.title || 'Spotlight'}
+          </h3>
+          <div className="flex items-center gap-2">
+            <button onClick={() => toggleFavorite(item)} className={`p-2.5 rounded-full transition-all duration-300 ${theme.isDark ? 'bg-white/5' : 'bg-black/5'} active:scale-90`}>
+              <Heart size={22} className="text-[#ffcb05]" fill={isFavorited ? "#ffcb05" : "none"} strokeWidth={2.5}/>
+            </button>
+            <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+              <X size={22}/>
+            </button>
+          </div>
+        </div>
+        <div className="p-8 space-y-6">
+          {item.img && <img src={item.img} className="w-full h-64 object-cover rounded-[32px] shadow-lg" alt="" />}
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {item.price && <div className="bg-[#ffcb05]/20 text-[#b45309] dark:text-[#ffcb05] px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wide">{item.price}</div>}
+            {item.cuisine && <div className="bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wide">{item.cuisine}</div>}
+            <div className={`${theme.isDark ? 'bg-[#00274c]/40 text-[#34a4b8]' : 'bg-sky-100 text-[#0284c7]'} px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest`}>
+              {Array.isArray(item.category) ? item.category.join(' • ') : (item.category || item.neighborhood || 'City Guide')}
+            </div>
+            {item.month && (
+               <div className="bg-[#a855f7]/20 text-purple-700 dark:text-[#a855f7] px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest">
+                 {item.month}
+               </div>
+            )}
+          </div>
+
+          {(item.date || item.time) && (
+            <div className={`space-y-2 ${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} p-4 rounded-2xl border`}>
+              {item.date && (
+                <div className={`flex items-center gap-2.5 text-xs font-bold ${theme.isDark ? 'text-slate-300' : 'text-slate-800'}`}>
+                  <Calendar size={16} className="text-[#0284c7] dark:text-[#38bdf8] flex-shrink-0" />
+                  <span>{item.date}</span>
+                </div>
+              )}
+              {item.time && (
+                <div className={`flex items-center gap-2.5 text-xs font-bold ${theme.isDark ? 'text-slate-300' : 'text-slate-800'}`}>
+                  <Clock size={16} className="text-[#b45309] dark:text-[#ffcb05] flex-shrink-0" />
+                  <span>{item.time}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {item.address && (
+            <div className={`flex items-center gap-2.5 text-xs font-bold ${theme.isDark ? 'text-slate-400 bg-black/20 border-white/5' : 'text-slate-700 bg-slate-100 border-slate-200'} p-4 rounded-2xl border`}>
+              <MapPin size={16} className="text-[#b45309] dark:text-[#ffcb05] flex-shrink-0" />
+              <span className="leading-snug">{item.address}</span>
+            </div>
+          )}
+
+          <div className={`text-base leading-relaxed wp-content ${theme.isDark ? 'text-slate-100' : 'text-slate-800'}`} 
+            dangerouslySetInnerHTML={{ __html: item.longDesc || item.desc || item.excerpt || 'Accessing city database...' }} 
+          />
+
+          <div className="flex gap-3 pt-2">
+            {item.url && (
+              <button onClick={() => { window.open(item.url, '_blank'); }} className="w-full bg-[#ffcb05] text-black font-black uppercase text-sm py-4 rounded-2xl shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
+                <span>Visit Official Site</span>
+                <Navigation size={16} />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ToolFullScreenView = ({ type, onClose, theme, stats, setStats, dining, bucketList, setBucketList, user }) => {
+  const [bill, setBill] = useState('');
+  const [tipPerc, setTipPerc] = useState(20);
+  const [weatherIdx, setWeatherIdx] = useState(new Date().getMonth());
+  const [randomSpot, setRandomSpot] = useState(null);
+  const [triviaAnswered, setTriviaAnswered] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [newBucketText, setNewBucketText] = useState('');
+
+  const [communityGems, setCommunityGems] = useState([]);
+  const [newGemTitle, setNewGemTitle] = useState('');
+  const [newGemDesc, setNewGemDesc] = useState('');
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [selectedMood, setSelectedMood] = useState('Chill Saturday');
+
+  useEffect(() => {
+    if (type === 'community') {
+      const q = query(collection(db, "community_gems"), orderBy("timestamp", "desc"), limit(20));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        setCommunityGems(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      });
+      return () => unsubscribe();
+    }
+    if (type === 'water') {
+      const q = query(collection(db, "leaderboard"), orderBy("water", "desc"), limit(10));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        setLeaderboard(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      });
+      return () => unsubscribe();
+    }
+  }, [type]);
+
+  const handleAddGem = async (e) => {
+    e.preventDefault();
+    if (!user || !newGemTitle.trim()) return alert('Please sign in to post!');
+    await addDoc(collection(db, "community_gems"), {
+      title: newGemTitle,
+      desc: newGemDesc,
+      author: user.displayName || 'Anonymous',
+      timestamp: Date.now()
+    });
+    setNewGemTitle('');
+    setNewGemDesc('');
+  };
+
+  const handleHydration = async (drinkType) => {
+    const newStats = { ...stats, [drinkType]: (stats[drinkType] || 0) + 1 };
+    setStats(newStats);
+    if (user && drinkType === 'water') {
+      await setDoc(doc(db, 'leaderboard', user.uid), {
+        name: user.displayName || 'Local Drinker',
+        water: newStats.water,
+        lastUpdated: Date.now()
+      }, { merge: true });
+    }
+  };
+
+  const toggleBucketItem = (id) => setBucketList(bucketList.map(item => item.id === id ? { ...item, done: !item.done } : item));
+  const deleteBucketItem = (id, e) => { e.stopPropagation(); setBucketList(bucketList.filter(item => item.id !== id)); };
+  const resetBucketList = () => setBucketList(DEFAULT_BUCKET_ITEMS);
+  const addBucketItem = (e) => {
+    e.preventDefault();
+    if (!newBucketText.trim()) return;
+    setBucketList([...bucketList, { id: Date.now(), text: newBucketText.trim(), done: false }]);
+    setNewBucketText('');
+  };
+
+  const billVal = parseFloat(bill) || 0;
+  const tipAmount = (billVal * (tipPerc / 100)).toFixed(2);
+  const totalBill = (billVal + parseFloat(tipAmount)).toFixed(2);
+
+  const POIs = [
+    { name: "Michigan Stadium", type: "Landmark", color: "bg-[#00274c] text-white", desc: "The Big House. Essential Saturday destination." },
+    { name: "Nichols Arboretum", type: "Nature", color: "bg-emerald-600 text-white", desc: "The 'Arb'. Perfect for riverside walks." },
+    { name: "Main Street", type: "Social", color: "bg-[#ffcb05] text-black", desc: "The heart of dining and local shopping." },
+    { name: "State Theatre", type: "Culture", color: "bg-[#a855f7] text-white", desc: "Historic cinema with a neon glow." },
+    { name: "Kerrytown Market", type: "Local", color: "bg-[#f97316] text-white", desc: "Artisan shops and the farmers market." },
+    { name: "Law Quad", type: "Architecture", color: "bg-stone-600 text-white", desc: "Stunning Gothic-style university grounds." }
+  ];
+
+  const weatherData = [
+    { month: "January", high: 31, low: 18, vibe: "bg-blue-800" }, { month: "February", high: 35, low: 20, vibe: "bg-blue-700" },
+    { month: "March", high: 46, low: 28, vibe: "bg-cyan-700" }, { month: "April", high: 59, low: 38, vibe: "bg-teal-600" },
+    { month: "May", high: 71, low: 49, vibe: "bg-emerald-600" }, { month: "June", high: 80, low: 59, vibe: "bg-yellow-500" },
+    { month: "July", high: 84, low: 63, vibe: "bg-orange-500" }, { month: "August", high: 82, low: 61, vibe: "bg-red-500" },
+    { month: "September", high: 75, low: 53, vibe: "bg-orange-600" }, { month: "October", high: 62, low: 42, vibe: "bg-amber-600" },
+    { month: "November", high: 48, low: 32, vibe: "bg-slate-600" }, { month: "December", high: 36, low: 23, vibe: "bg-slate-800" }
+  ];
+
+  const currentW = weatherData[weatherIdx];
+
+  const spinRandomizer = () => {
+    if (!dining || dining.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * dining.length);
+    setRandomSpot(dining[randomIndex]);
+  };
+
+  const dayTripPlans = {
+    'Chill Saturday': {
+      morning: 'Kerrytown Market & Shops',
+      afternoon: 'Nichols Arboretum & River Walk',
+      night: 'Zingerman’s Deli / Main St Drinks'
+    },
+    'Date Night': {
+      morning: 'Literati Bookstore & Espresso',
+      afternoon: 'Main Street Walking & Shopping',
+      night: 'State Theatre Independent Screening'
+    },
+    'Campus Explorer': {
+      morning: 'U-M Law Quadrangle Stroll',
+      afternoon: 'The M Den & State Street Boutiques',
+      night: 'Michigan Stadium & South U'
+    }
+  };
+
+  const toolTitles = {
+    hots: 'City Hot Spots', calc: 'Tip Calculator', weather: 'City Forecast', water: 'Stay Hydrated',
+    randomizer: 'Weekend Pitcher / Randomizer', trivia: 'Tree Town Trivia', bucket: 'A2 Bucket List Passport', mystery: 'Mystery Spot',
+    community: 'Community Gems', daytrip: 'What To Do Today'
+  };
+
+  return (
+    <div className="animate-fade space-y-6 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
+      <div className={`sticky top-0 z-40 flex justify-between items-center py-4 px-4 ${theme.appBg} border-b ${theme.border} shadow-sm -mx-5 w-[calc(100%+40px)] mb-4`}>
+        <h1 className={`text-xl font-header font-black uppercase italic tracking-tighter`} style={{ color: theme.isDark ? '#ffcb05' : '#d97706' }}>{toolTitles[type] || 'City Tool'}</h1>
+        <button onClick={onClose} className={`p-2.5 rounded-full ${theme.isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-slate-700'} backdrop-blur-sm transition-all active:scale-90`}>
+          <X size={22}/>
+        </button>
+      </div>
+
+      <div className="px-1 space-y-6 w-full pt-2">
+        {type === 'daytrip' && (
+          <div className="space-y-6 max-w-md mx-auto w-full">
+            <div className="p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#071d37] to-[#0a121e] border border-[#ffcb05]/40 shadow-2xl text-white space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Compass className="text-[#ffcb05]" size={22} />
+                  <span className="text-xs font-black uppercase tracking-[0.2em] text-[#ffcb05]">What To Do Today</span>
+                </div>
+                <span className="text-[10px] font-bold text-slate-400">Curated Routine</span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Whether you're a lifelong townie or exploring Ann Arbor for the afternoon, pick your vibe below for a ready-to-roll three-part itinerary.
+              </p>
+
+              <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+                {Object.keys(dayTripPlans).map(m => (
+                  <button
+                    key={m}
+                    onClick={() => setSelectedMood(m)}
+                    className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${selectedMood === m ? 'bg-[#ffcb05] text-black shadow-md' : 'bg-white/10 text-slate-300'}`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 gap-2.5 pt-2 text-left">
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                  <span className="text-[9px] font-black uppercase text-[#38bdf8] bg-sky-500/20 px-2 py-1 rounded-md tracking-wider">Morning</span>
+                  <p className="text-xs font-bold text-white truncate">{dayTripPlans[selectedMood].morning}</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                  <span className="text-[9px] font-black uppercase text-[#ffcb05] bg-yellow-500/20 px-2 py-1 rounded-md tracking-wider">Afternoon</span>
+                  <p className="text-xs font-bold text-white truncate">{dayTripPlans[selectedMood].afternoon}</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                  <span className="text-[9px] font-black uppercase text-[#a855f7] bg-purple-500/20 px-2 py-1 rounded-md tracking-wider">Evening</span>
+                  <p className="text-xs font-bold text-white truncate">{dayTripPlans[selectedMood].night}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {type === 'hots' && (
+          <div className="space-y-4">
+            {POIs.map(p => (
+              <div key={p.name} className={`p-5 rounded-[24px] border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} shadow-inner`}>
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className={`font-bold ${theme.text}`}>{p.name}</h4>
+                  <span className={`text-[8px] font-black uppercase px-2 py-1 rounded-full ${p.color}`}>{p.type}</span>
+                </div>
+                <p className={`text-xs ${theme.secondaryText} leading-relaxed`}>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {type === 'calc' && (
+          <div className="space-y-8 max-w-md mx-auto w-full">
+            <div className={`${theme.isDark ? 'bg-black/20 border-white/5' : 'bg-slate-100 border-slate-200'} p-6 rounded-3xl border text-center`}>
+               <p className={`text-[10px] font-black uppercase ${theme.secondaryText} mb-1 tracking-widest`}>Total with Tip</p>
+               <h2 className={`text-5xl font-header font-black ${theme.text}`}>${totalBill}</h2>
+               <div className="flex justify-center gap-4 mt-4 text-[#b45309] dark:text-[#ffcb05] font-bold text-sm"><span>Tip: ${tipAmount}</span></div>
+            </div>
+            <div className="space-y-4">
+              <input type="number" value={bill} onChange={(e) => setBill(e.target.value)} placeholder="0.00" className={`w-full p-5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border font-bold text-xl outline-none focus:border-[#ffcb05]`} />
+              <div className="grid grid-cols-3 gap-2">
+                {[18, 20, 25].map(p => (
+                  <button key={p} onClick={() => setTipPerc(p)} className={`py-4 rounded-xl font-black text-xs transition-all ${tipPerc === p ? 'bg-[#ffcb05] text-black scale-105 shadow-lg shadow-yellow-500/20' : (theme.isDark ? 'bg-white/5 text-slate-400' : 'bg-slate-200 text-slate-700')}`}>{p}%</button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {type === 'weather' && (
+          <div className="space-y-6 max-w-md mx-auto w-full">
+            <div className={`p-10 rounded-[32px] ${currentW.vibe} text-white text-center shadow-2xl relative overflow-hidden transition-all duration-500`}>
+               <div className="absolute top-0 right-0 p-4 opacity-20 rotate-12"><Building size={120} /></div>
+               <p className="text-xs font-black uppercase tracking-[0.3em] mb-2">{currentW.month}</p>
+               <h2 className="text-6xl font-header font-black">{currentW.high}°</h2>
+               <p className="text-sm font-bold opacity-80 mt-2">Avg Low: {currentW.low}°</p>
+            </div>
+            <div className="flex justify-between items-center gap-4">
+              <button onClick={() => setWeatherIdx(p => (p - 1 + 12) % 12)} className={`p-4 ${theme.isDark ? 'bg-white/5 text-white' : 'bg-slate-200 text-slate-800'} rounded-2xl active:scale-90 transition-all`}><ChevronLeft size={24}/></button>
+              <span className={`font-header font-black uppercase text-[10px] tracking-widest ${theme.secondaryText}`}>A2 Calendar</span>
+              <button onClick={() => setWeatherIdx(p => (p + 1) % 12)} className={`p-4 ${theme.isDark ? 'bg-white/5 text-white' : 'bg-slate-200 text-slate-800'} rounded-2xl active:scale-90 transition-all`}><ChevronRight size={24}/></button>
+            </div>
+          </div>
+        )}
+
+        {type === 'water' && (
+          <div className="space-y-6 max-w-md mx-auto w-full">
+             <div className="flex justify-around items-center text-center">
+                <div>
+                   <p className="text-4xl font-black text-blue-600 dark:text-blue-400">{stats.water || 0}</p>
+                   <p className={`text-[10px] font-black uppercase ${theme.secondaryText} tracking-widest`}>Water</p>
+                </div>
+                <div>
+                   <p className="text-4xl font-black text-[#b45309] dark:text-[#ffcb05]">{stats.drinks || 0}</p>
+                   <p className={`text-[10px] font-black uppercase ${theme.secondaryText} tracking-widest`}>Beverages</p>
+                </div>
+             </div>
+             <div className="grid grid-cols-2 gap-4">
+                <button onClick={() => handleHydration('water')} className="bg-blue-600 py-4 rounded-2xl text-white font-black uppercase text-xs shadow-lg shadow-blue-500/20">+ Water</button>
+                <button onClick={() => handleHydration('drinks')} className="bg-[#ffcb05] py-4 rounded-2xl text-black font-black uppercase text-xs shadow-lg shadow-yellow-500/20">+ Drink</button>
+             </div>
+             <button onClick={() => setStats({...stats, water: 0, drinks: 0})} className={`w-full py-3 ${theme.isDark ? 'bg-white/5 text-slate-400 border-white/5' : 'bg-slate-200 text-slate-600 border-slate-300'} rounded-2xl font-black uppercase text-[10px] tracking-widest border active:scale-95 transition-all`}>Reset Hydration</button>
+
+             <div className={`mt-8 p-5 rounded-[24px] border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'}`}>
+                <h3 className="text-xs font-black uppercase text-[#b45309] dark:text-[#ffcb05] tracking-widest mb-4">Global A2 Hydration</h3>
+                <div className="space-y-3">
+                  {leaderboard.map((entry, i) => (
+                    <div key={entry.id} className={`flex justify-between items-center ${theme.isDark ? 'bg-black/20' : 'bg-white'} p-3 rounded-xl shadow-sm`}>
+                      <div className="flex items-center gap-3">
+                        <span className="text-slate-500 font-black text-xs">#{i + 1}</span>
+                        <span className={`text-sm font-bold ${entry.id === user?.uid ? 'text-[#b45309] dark:text-[#ffcb05]' : theme.text}`}>{entry.name}</span>
+                      </div>
+                      <span className="text-blue-600 dark:text-blue-400 font-black flex items-center gap-1"><Droplets size={12}/> {entry.water}</span>
+                    </div>
+                  ))}
+                  {leaderboard.length === 0 && <p className={`text-xs ${theme.secondaryText} text-center py-4`}>No logged drinkers yet!</p>}
+                </div>
+             </div>
+          </div>
+        )}
+
+        {type === 'community' && (
+          <div className="space-y-6 max-w-md mx-auto w-full">
+            <div className={`p-5 rounded-[24px] border ${theme.border} ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'}`}>
+              <h3 className="text-xs font-black uppercase text-[#b45309] dark:text-[#ffcb05] tracking-widest mb-3">Share a Local Gem</h3>
+              <form onSubmit={handleAddGem} className="space-y-3">
+                <input type="text" value={newGemTitle} onChange={e=>setNewGemTitle(e.target.value)} placeholder="Name of place or tip..." className={`w-full p-3 rounded-xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'} border text-sm outline-none`} required />
+                <textarea value={newGemDesc} onChange={e=>setNewGemDesc(e.target.value)} placeholder="Why is it awesome?" className={`w-full p-3 rounded-xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'} border text-sm outline-none h-20`} required />
+                <button type="submit" className="w-full py-3 bg-[#38bdf8] text-black rounded-xl font-black uppercase text-xs">Post to Community</button>
+              </form>
+            </div>
+
+            <div className="space-y-4">
+              {communityGems.map(gem => (
+                <div key={gem.id} className={`p-4 rounded-[24px] border ${theme.border} ${theme.isDark ? 'bg-black/5' : 'bg-slate-100'}`}>
+                  <h4 className={`font-bold ${theme.text}`}>{gem.title}</h4>
+                  <p className={`text-xs ${theme.secondaryText} mt-1`}>{gem.desc}</p>
+                  <p className="text-[9px] font-black uppercase text-[#0284c7] dark:text-[#38bdf8] tracking-widest mt-3">Spotted by {gem.author}</p>
+                </div>
+              ))}
+              {communityGems.length === 0 && <p className={`text-xs ${theme.secondaryText} text-center py-4`}>No gems posted yet!</p>}
+            </div>
+          </div>
+        )}
+
+        {type === 'randomizer' && (
+          <div className="space-y-6 text-center py-4 max-w-md mx-auto w-full">
+            <p className={`text-xs ${theme.secondaryText}`}>Can't decide where to eat or hang out? Let the Weekend Pitcher pick your destination!</p>
+            {randomSpot ? (
+              <div className={`p-6 rounded-3xl ${theme.isDark ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'} border space-y-3 animate-fade`}>
+                <img src={randomSpot.img} className="w-full h-40 object-cover rounded-2xl shadow-md" alt="" />
+                <h4 className={`text-lg font-black uppercase ${theme.text}`}>{randomSpot.title}</h4>
+                <p className="text-xs text-[#b45309] dark:text-[#ffcb05] font-bold uppercase">{randomSpot.cuisine || randomSpot.neighborhood}</p>
+                <p className={`text-xs ${theme.secondaryText}`}>{randomSpot.shortDesc}</p>
+              </div>
+            ) : (
+              <div className={`p-10 border-2 border-dashed rounded-3xl opacity-40 text-xs font-bold uppercase ${theme.border}`}>Click roll to pick a spot!</div>
+            )}
+            <button onClick={spinRandomizer} className="w-full py-4 bg-[#ffcb05] text-black rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">Roll the Dice 🎲</button>
+          </div>
+        )}
+
+        {type === 'trivia' && (
+          <div className="space-y-6 text-center py-4 max-w-md mx-auto w-full">
+            <div className={`p-5 rounded-3xl ${theme.isDark ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'} border space-y-3`}>
+              <span className="bg-[#ffcb05] text-black px-3 py-1 rounded-lg text-[9px] font-black uppercase">Daily Challenge</span>
+              <h4 className={`text-sm font-bold ${theme.text}`}>Which Ann Arbor building's courtyard is rumored to have inspired Hogwarts architecture?</h4>
+            </div>
+            <div className="space-y-2">
+              {['U-M Law Quadrangle', 'Michigan Union', 'Angell Hall', 'Rackham Building'].map((opt) => {
+                const isCorrect = opt === 'U-M Law Quadrangle';
+                let btnStyle = theme.isDark ? 'bg-white/5 text-slate-300 border-white/5' : 'bg-slate-100 text-slate-800 border-slate-200';
+                if (triviaAnswered) {
+                  if (isCorrect) btnStyle = 'bg-emerald-600 text-white font-bold border-transparent';
+                  else if (selectedAnswer === opt) btnStyle = 'bg-red-600 text-white font-bold border-transparent';
+                }
+                return (
+                  <button key={opt} disabled={triviaAnswered} onClick={() => { setSelectedAnswer(opt); setTriviaAnswered(true); }} className={`w-full p-4 rounded-2xl text-xs font-bold transition-all border ${btnStyle}`}>
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+            {triviaAnswered && <p className="text-xs text-[#b45309] dark:text-[#ffcb05] font-bold uppercase animate-fade">Correct! The Gothic architecture of the Law Quad is a local legend.</p>}
+          </div>
+        )}
+
+        {type === 'bucket' && (
+          <div className="space-y-4 text-left py-2 max-w-md mx-auto w-full">
+            <div className="flex justify-between items-center mb-2 px-1">
+              <span className="text-xs font-black text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-3 py-1 rounded-xl">
+                {bucketList.filter(i => i.done).length} / {bucketList.length} Done
+              </span>
+              <button onClick={resetBucketList} className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${theme.secondaryText} hover:text-[#ffcb05] transition-colors`}><RotateCcw size={12} /> Reset List</button>
+            </div>
+
+            <form onSubmit={addBucketItem} className="flex gap-2">
+              <input type="text" value={newBucketText} onChange={(e) => setNewBucketText(e.target.value)} placeholder="Add custom bucket list item..." className={`flex-1 p-3.5 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-bold outline-none focus:border-[#ffcb05]`} />
+              <button type="submit" className="bg-[#ffcb05] text-black px-5 rounded-2xl font-black text-xs uppercase shadow-lg active:scale-95 transition-all flex items-center justify-center"><Plus size={18} /></button>
+            </form>
+
+            <div className="space-y-2 mt-2">
+              {bucketList.length === 0 ? (
+                <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>Your bucket list is empty. Add items above or reset!</div>
+              ) : (
+                bucketList.map(item => (
+                  <div key={item.id} onClick={() => toggleBucketItem(item.id)} className={`p-3.5 rounded-2xl border ${theme.border} flex items-center justify-between gap-3 cursor-pointer transition-all ${item.done ? 'bg-emerald-500/10 border-emerald-500/30 opacity-70 line-through' : (theme.isDark ? 'bg-black/10' : 'bg-slate-100')}`}>
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <div className={`w-5 h-5 rounded-lg border flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-emerald-500 border-emerald-500 text-black font-black text-xs' : 'border-slate-500'}`}>{item.done ? '✓' : ''}</div>
+                      <span className={`text-xs font-bold truncate ${theme.text}`}>{item.text}</span>
+                    </div>
+                    <button onClick={(e) => deleteBucketItem(item.id, e)} className={`${theme.secondaryText} hover:text-red-500 p-1.5 rounded-lg transition-colors flex-shrink-0`} title="Delete item"><Trash2 size={16} /></button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {type === 'mystery' && (
+          <div className="space-y-6 text-center py-4 max-w-md mx-auto w-full">
+            <div className={`p-5 rounded-3xl ${theme.isDark ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'} border space-y-3`}>
+              <span className="bg-[#0284c7] text-white px-3 py-1 rounded-lg text-[9px] font-black uppercase">Landmark ID</span>
+              <img src="/images/law-quad.jpg" className="w-full h-36 object-cover rounded-2xl shadow-md" alt="" />
+              <p className={`text-xs italic ${theme.secondaryText}`}>"Stunning stone gargoyles, quiet cloisters, and hidden carved faces..."</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-[#ffcb05]/20 text-[#b45309] dark:text-[#ffcb05] font-black text-xs uppercase tracking-widest">Spot: U-M Law Quadrangle</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const HubView = ({ 
+  theme, favorites, toggleFavorite, stats, setStats, setSelectedItem, 
+  setView, dining, setActiveTool, user, handleLogin, handleLogout, 
+  onOpenPartnerModal, onOpenContributorModal, onOpenParksModal,
+  onOpenShopsModal, onSelectShop
+}) => {
+  const userFavorites = favorites || [];
+
+  const eatsFavs = userFavorites.filter(f => (f.type === 'dining' || Boolean(f.cuisine)) && f.type !== 'park' && !f.id?.startsWith('park-'));
+  const happeningsFavs = userFavorites.filter(f => 
+    (f.type === 'experience' || (f.name && !f.cuisine && f.type !== 'shop')) && f.type !== 'park' && !f.id?.startsWith('park-') && !f.id?.startsWith('shop-')
+  );
+  const guideFavs = userFavorites.filter(f => 
+    (f.type === 'journal' || f.type === 'guide' || f.excerpt || (f.title && !f.cuisine && !f.name && f.type !== 'shop')) && f.type !== 'park' && !f.id?.startsWith('park-') && !f.id?.startsWith('shop-')
+  );
+  const shopFavs = userFavorites.filter(f => 
+    f.type === 'shop' || f.id?.startsWith('shop-')
+  );
+
+  const [activeFavTab, setActiveFavTab] = useState('all');
+
+  const favTabs = [
+    { id: 'all', label: `All (${userFavorites.length})` },
+    { id: 'eats', label: `Eats (${eatsFavs.length})` },
+    { id: 'shops', label: `Shops (${shopFavs.length})` },
+    { id: 'events', label: `Events (${happeningsFavs.length})` },
+    { id: 'guides', label: `Guides (${guideFavs.length})` }
+  ];
+
+  const displayedFavorites = useMemo(() => {
+    switch (activeFavTab) {
+      case 'eats': return eatsFavs;
+      case 'shops': return shopFavs;
+      case 'events': return happeningsFavs;
+      case 'guides': return guideFavs;
+      default: return userFavorites;
+    }
+  }, [activeFavTab, userFavorites, eatsFavs, shopFavs, happeningsFavs, guideFavs]);
+
+  const categoryMeta = useMemo(() => {
+    switch (activeFavTab) {
+      case 'eats':
+        return {
+          title: 'Favorite Dining & Drinks',
+          actionLabel: 'Explore All Eats →',
+          action: () => setView('flavors'),
+          icon: Utensils,
+          iconColor: 'text-[#f97316]'
+        };
+      case 'shops':
+        return {
+          title: 'Favorite Retail & Boutiques',
+          actionLabel: 'Explore All Shops →',
+          action: onOpenShopsModal,
+          icon: ShoppingBag,
+          iconColor: 'text-[#ffcb05]'
+        };
+      case 'events':
+        return {
+          title: 'Favorite Events & Happenings',
+          actionLabel: 'Explore All Events →',
+          action: () => setView('fun'),
+          icon: Sparkles,
+          iconColor: 'text-[#0284c7] dark:text-[#38bdf8]'
+        };
+      case 'guides':
+        return {
+          title: 'Favorite Stories & Field Notes',
+          actionLabel: 'Read City Guide Stories →',
+          action: () => setView('journal'),
+          icon: BookText,
+          iconColor: 'text-[#a855f7]'
+        };
+      default:
+        return null;
+    }
+  }, [activeFavTab, setView, onOpenShopsModal]);
+
+  const [communityTab, setCommunityTab] = useState('my-activity');
+  const [selectedForumChannel, setSelectedForumChannel] = useState('All');
+  const [forumStories, setForumStories] = useState([]);
+  const [activeCommentStory, setActiveCommentStory] = useState(null);
+
+  useEffect(() => {
+    const q = query(collection(db, 'community_stories'), orderBy('timestamp', 'desc'), limit(50));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setForumStories(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleVotePost = async (post, e) => {
+    if (e) e.stopPropagation();
+    if (!user) return alert('Please sign in to vote on community posts!');
+    const postRef = doc(db, 'community_stories', post.id);
+    const hasVoted = (post.voters || []).includes(user.uid);
+
+    try {
+      if (hasVoted) {
+        await updateDoc(postRef, {
+          likes: Math.max(0, (post.likes || 1) - 1),
+          voters: arrayRemove(user.uid)
+        });
+      } else {
+        await updateDoc(postRef, {
+          likes: (post.likes || 0) + 1,
+          voters: arrayUnion(user.uid)
+        });
+      }
+    } catch (err) {
+      console.error('Error toggling vote:', err);
+    }
+  };
+
+  const mySubmissions = useMemo(() => {
+    if (!user) return [];
+    return forumStories.filter(s => s.userId === user.uid);
+  }, [forumStories, user]);
+
+  const myUpvotedStories = useMemo(() => {
+    if (!user) return [];
+    return forumStories.filter(s => (s.voters || []).includes(user.uid));
+  }, [forumStories, user]);
+
+  const neighborBoardStories = useMemo(() => {
+    if (selectedForumChannel === 'All') return forumStories;
+    return forumStories.filter(s => s.channel === selectedForumChannel);
+  }, [forumStories, selectedForumChannel]);
+
+  return (
+    <div className="animate-slide space-y-8 text-left relative z-10 pb-28 font-sans w-full max-w-xl mx-auto flex flex-col">
+      <ForumCommentsModal 
+        isOpen={!!activeCommentStory} 
+        onClose={() => setActiveCommentStory(null)} 
+        story={activeCommentStory} 
+        user={user} 
+        theme={theme} 
+      />
+
+      <div className="space-y-8 px-2 w-full">
+        <MyVibeHeroSlideshow
+          user={user}
+          userFavorites={userFavorites}
+          theme={theme}
+          onSelectItem={setSelectedItem}
+          onSelectShop={onSelectShop}
+          setView={setView}
+        />
+
+        <section className="space-y-4 px-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Heart size={18} className="text-red-500 fill-red-500" />
+              <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>
+                Saved Favorites ({userFavorites.length})
+              </h4>
+            </div>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+            {favTabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveFavTab(tab.id)}
+                className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap transition-all border ${
+                  activeFavTab === tab.id
+                    ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md scale-105'
+                    : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {categoryMeta && (
+            <div className={`flex items-center justify-between px-3 py-2.5 rounded-2xl border ${theme.border} ${theme.isDark ? 'bg-white/5' : 'bg-slate-100'} animate-fade`}>
+              <div className="flex items-center gap-2 min-w-0">
+                <categoryMeta.icon size={15} className={categoryMeta.iconColor} />
+                <span className={`text-[11px] font-black uppercase tracking-wider truncate ${theme.text}`}>
+                  {categoryMeta.title} ({displayedFavorites.length})
+                </span>
+              </div>
+              <button
+                onClick={categoryMeta.action}
+                className="text-[10px] font-black uppercase text-[#ffcb05] hover:underline flex-shrink-0 tracking-wider ml-2"
+              >
+                {categoryMeta.actionLabel}
+              </button>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            {displayedFavorites.length === 0 ? (
+              <div className={`col-span-2 p-8 border-2 border-dashed rounded-3xl text-center opacity-40 text-[10px] font-black uppercase tracking-widest ${theme.border}`}>
+                No saved items in this category
+              </div>
+            ) : (
+              displayedFavorites.map(fav => {
+                const isShop = fav.type === 'shop' || fav.id?.startsWith('shop-');
+                const isEats = fav.type === 'dining' || Boolean(fav.cuisine);
+                const isEvent = fav.type === 'experience' || (fav.date && !fav.cuisine);
+
+                const badgeText = isShop
+                  ? (fav.category || 'Retail')
+                  : isEats
+                  ? (fav.cuisine || 'Eats')
+                  : isEvent
+                  ? (Array.isArray(fav.category) ? fav.category[0] : (fav.category || 'Event'))
+                  : (fav.category || 'Guide');
+
+                const handleClick = () => {
+                  if (isShop && onSelectShop) {
+                    onSelectShop(fav);
+                  } else {
+                    setSelectedItem(fav);
+                  }
+                };
+
+                return (
+                  <div
+                    key={`${fav.id}-${fav.type || 'fav'}`}
+                    onClick={handleClick}
+                    className={`${theme.card} rounded-3xl border ${theme.border} overflow-hidden shadow-md flex flex-col justify-between cursor-pointer group hover:border-[#ffcb05]/50 active:scale-[0.98] transition-all relative`}
+                  >
+                    <div className="relative h-28 overflow-hidden w-full">
+                      {fav.img ? (
+                        <img src={fav.img} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className={`w-full h-full ${theme.isDark ? 'bg-black/20' : 'bg-slate-100'} flex items-center justify-center`}>
+                          {isShop ? <Store size={22} className="opacity-40 text-[#ffcb05]" /> : <Building size={22} className="opacity-30" />}
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(isShop ? { ...fav, type: 'shop' } : fav);
+                        }}
+                        className="absolute top-2 right-2 p-1.5 rounded-full bg-black/40 backdrop-blur-md text-red-500 hover:scale-110 active:scale-90 transition-transform"
+                      >
+                        <Heart size={14} fill="currentColor" />
+                      </button>
+
+                      <span className="absolute bottom-2 left-2 bg-[#ffcb05] text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-md truncate max-w-[85%]">
+                        {badgeText}
+                      </span>
+                    </div>
+
+                    <div className="p-3 flex-1 flex flex-col justify-between space-y-1">
+                      <div>
+                        <h5 className={`font-bold text-xs leading-tight line-clamp-1 uppercase tracking-tight ${theme.text}`}>
+                          {fav.name || fav.title}
+                        </h5>
+                        {(fav.address || fav.date) && (
+                          <p className={`text-[10px] truncate ${theme.secondaryText} mt-0.5`}>
+                            {fav.date ? `📅 ${fav.date}` : `📍 ${fav.address}`}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </section>
+
+        {/* URBAN AND FUN TOOLS */}
+        <section className={`space-y-4 w-full pt-4 border-t ${theme.border}`}>
+          <div className="flex items-center gap-2 px-1">
+            <Sparkles size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
+            <h4 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>Urban & Fun Tools</h4>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { id: 'daytrip', icon: Compass, label: 'What To Do Today', color: '#ffcb05' },
+              { id: 'shops', icon: ShoppingBag, label: 'Local Shops', color: '#ffcb05', action: onOpenShopsModal },
+              { id: 'parkfinder', icon: Trees, label: 'A2 Park Finder', color: '#10b981', action: onOpenParksModal },
+              { id: 'community', icon: MessageSquare, label: 'Local Gems', color: '#38bdf8' },
+              { id: 'water', icon: Droplets, label: 'Hydration', color: '#34a4b8' },
+              { id: 'bucket', icon: Award, label: 'Bucket List', color: '#ffcb05' },
+              { id: 'hots', icon: MapPin, label: 'Hot Spots', color: '#ffcb05' },
+              { id: 'randomizer', icon: Dice5, label: 'Weekend Pitcher', color: '#f97316' },
+              { id: 'trivia', icon: HelpCircle, label: 'A2 Trivia', color: '#a855f7' },
+              { id: 'calc', icon: Calculator, label: 'Tip Calc', color: '#10b981' }
+            ].map(t => (
+              <button
+                key={t.id}
+                onClick={() => {
+                  if (t.action) t.action();
+                  else setActiveTool(t.id);
+                }}
+                className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex items-center gap-3 text-left shadow-lg active:scale-95 transition-all`}
+              >
+                <div className="p-2 rounded-lg" style={{backgroundColor: t.color+'20', color: t.color}}>
+                  <t.icon size={18}/>
+                </div>
+                <span className={`text-[10px] font-black uppercase tracking-widest ${theme.text}`}>{t.label}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* MY COMMUNITY ACTIVITY & LOCAL VOICE */}
+        <section className={`space-y-5 w-full pt-6 border-t ${theme.border}`}>
+          <div className="px-1 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Users size={18} className="text-[#a855f7]" />
+              <h3 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>My Community Voice</h3>
+            </div>
+            
+            <button
+              onClick={onOpenContributorModal}
+              className="px-3.5 py-2 bg-[#a855f7] text-white rounded-2xl text-[10px] font-black uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+            >
+              <PenTool size={12} />
+              <span>Drop a Tip / Share Spot</span>
+            </button>
+          </div>
+
+          <div className={`grid grid-cols-2 p-1 rounded-2xl ${theme.isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'}`}>
+            <button
+              onClick={() => setCommunityTab('my-activity')}
+              className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all text-center ${
+                communityTab === 'my-activity' ? 'bg-[#a855f7] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')
+              }`}
+            >
+              My Posts & Activity ({mySubmissions.length})
+            </button>
+            <button
+              onClick={() => setCommunityTab('neighbor-board')}
+              className={`py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all text-center ${
+                communityTab === 'neighbor-board' ? 'bg-[#a855f7] text-white shadow-md' : (theme.isDark ? 'text-slate-400' : 'text-slate-600')
+              }`}
+            >
+              Neighbor Board
+            </button>
+          </div>
+
+          {communityTab === 'my-activity' ? (
+            <div className="space-y-4 px-1">
+              {!user ? (
+                <div className={`p-8 border-2 border-dashed rounded-3xl text-center space-y-3 ${theme.border}`}>
+                  <p className={`text-xs font-bold ${theme.secondaryText}`}>Sign in to view your posts, upvotes, and replies in Tree Town.</p>
+                  <button onClick={handleLogin} className="px-5 py-2.5 bg-[#ffcb05] text-black rounded-xl text-xs font-black uppercase tracking-wider shadow-md">
+                    Sign In with Google
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-2 text-center">
+                    <div className={`p-3 rounded-2xl border ${theme.border} ${theme.card}`}>
+                      <p className="text-xl font-header font-black text-[#a855f7]">{mySubmissions.length}</p>
+                      <span className={`text-[9px] font-black uppercase tracking-widest ${theme.secondaryText}`}>My Stories</span>
+                    </div>
+                    <div className={`p-3 rounded-2xl border ${theme.border} ${theme.card}`}>
+                      <p className="text-xl font-header font-black text-[#ffcb05]">{myUpvotedStories.length}</p>
+                      <span className={`text-[9px] font-black uppercase tracking-widest ${theme.secondaryText}`}>Upvoted Posts</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h5 className={`text-[10px] font-black uppercase tracking-widest ${theme.secondaryText}`}>My Submissions</h5>
+                    {mySubmissions.length > 0 ? (
+                      mySubmissions.map(post => (
+                        <div key={post.id} className={`${theme.card} p-4 rounded-3xl border ${theme.border} space-y-2 shadow-sm`}>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 px-2.5 py-0.5 rounded-md">
+                              {post.channel || 'Community Voice'}
+                            </span>
+                            <span className={`text-[10px] font-medium ${theme.secondaryText}`}>
+                              {post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Recent'}
+                            </span>
+                          </div>
+                          <h4 className={`font-bold text-sm uppercase tracking-tight ${theme.text}`}>{post.title}</h4>
+                          <p className={`text-xs leading-relaxed line-clamp-2 ${theme.secondaryText}`}>{post.content}</p>
+                          <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[10px]">
+                            <button
+                              onClick={() => setActiveCommentStory(post)}
+                              className={`flex items-center gap-1 text-[#a855f7] font-bold`}
+                            >
+                              <MessageCircle size={13} />
+                              <span>Discussion Thread</span>
+                            </button>
+                            <span className="font-bold flex items-center gap-1 text-emerald-500">
+                              <ThumbsUp size={12} /> {post.likes || 0} Upvotes
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className={`p-6 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                        You haven't posted any local tips yet.
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4 px-1">
+              <div className="flex overflow-x-auto gap-2 no-scrollbar">
+                {FORUM_CHANNELS.map(ch => (
+                  <button
+                    key={ch}
+                    onClick={() => setSelectedForumChannel(ch)}
+                    className={`px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${
+                      selectedForumChannel === ch ? 'bg-[#a855f7] text-white border-[#a855f7] shadow-md' : (theme.isDark ? 'bg-black/20 border-white/5 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-700')
+                    }`}
+                  >
+                    {ch}
+                  </button>
+                ))}
+              </div>
+
+              <div className="space-y-3">
+                {neighborBoardStories.length > 0 ? (
+                  neighborBoardStories.map(post => {
+                    const userVoted = (post.voters || []).includes(user?.uid);
+                    return (
+                      <div key={post.id} className={`${theme.card} p-4 rounded-3xl border ${theme.border} space-y-2 shadow-sm`}>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 px-2.5 py-0.5 rounded-md">
+                            {post.channel || 'Community Chat'}
+                          </span>
+                          <span className={`text-[10px] font-medium ${theme.secondaryText}`}>
+                            {post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Recent'}
+                          </span>
+                        </div>
+                        <h4 className={`font-bold text-sm uppercase tracking-tight ${theme.text}`}>{post.title}</h4>
+                        <p className={`text-xs leading-relaxed ${theme.secondaryText}`}>{post.content}</p>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[10px]">
+                          <span className={`font-bold ${theme.secondaryText}`}>Spotted by {post.author}</span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setActiveCommentStory(post)}
+                              className={`flex items-center gap-1 px-3 py-1.5 rounded-xl border transition-all ${theme.border} ${theme.secondaryText} hover:text-white`}
+                            >
+                              <MessageCircle size={13} className="text-[#a855f7]" />
+                              <span>Comments</span>
+                            </button>
+                            <button
+                              onClick={(e) => handleVotePost(post, e)}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all ${
+                                userVoted ? 'bg-[#ffcb05] text-black border-[#ffcb05] shadow-md' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-700')
+                              }`}
+                            >
+                              <ThumbsUp size={12} className={userVoted ? 'fill-black' : ''} />
+                              <span>{post.likes || 0}</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className={`p-8 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border}`}>
+                    No discussions found.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* MY VIBE FOOTER */}
+        <footer className={`pt-6 border-t ${theme.border} space-y-3 px-1`}>
+          <div
+            onClick={() => onOpenPartnerModal('restaurant')}
+            className={`p-4 rounded-3xl ${theme.card} border ${theme.border} flex items-center justify-between cursor-pointer hover:border-[#ffcb05]/60 transition-all shadow-sm`}
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-[#ffcb05]/15 text-[#b45309] dark:text-[#ffcb05] rounded-xl">
+                <Store size={20} />
+              </div>
+              <div>
+                <p className={`font-bold text-xs uppercase tracking-tight ${theme.text}`}>List Your Business on A2 Vibe</p>
+                <p className={`text-[10px] ${theme.secondaryText}`}>Feature your shop, restaurant, or local event</p>
+              </div>
+            </div>
+            <ArrowRight size={18} className="text-[#ffcb05]" />
+          </div>
+
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="w-full py-3.5 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500/20 font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95"
+            >
+              <LogOut size={14} />
+              <span>Sign Out ({user.email})</span>
+            </button>
+          )}
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+const HomeView = ({ 
+  theme, setSelectedItem, itineraries, dining, featuredPosts, favorites, 
+  toggleFavorite, setView, onOpenPartnerModal, onOpenParksModal, onOpenTransitModal,
+  onOpenShopsModal, onSelectShop
+}) => {
+  const featuredShopsList = useMemo(() => {
+    return SHOPS_DATA.filter(s => s.tier === 'featured');
+  }, []);
+
+  return (
+    <div className="space-y-12 animate-fade text-left relative z-10 pb-16 font-sans w-full">
+      <TheSceneHeroSlideshow
+        dining={dining}
+        itineraries={itineraries}
+        onSelectItem={setSelectedItem}
+        onSelectShop={onSelectShop}
+      />
+
+      <section>
+        <div className="flex items-center gap-2 mb-4 px-2">
+          <Zap size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Insider Picks</h2>
+        </div>
+        <div className="flex overflow-x-auto gap-4 pb-4 px-1 no-scrollbar snap-x snap-mandatory">
+          {(itineraries || []).slice(0, 5).map(item => (
+            <div key={item.id} onClick={() => setSelectedItem(item)} className={`min-w-[300px] h-36 ${theme.card} border ${theme.border} rounded-[24px] overflow-hidden flex cursor-pointer shadow-md snap-center relative group`}>
+              {item.img && <img src={item.img} className="w-24 h-full object-cover" alt="" />}
+              <div className="flex-1 p-4 flex flex-col justify-between">
+                <div>
+                  <h4 className={`font-bold text-xs ${theme.text} line-clamp-2 leading-tight uppercase tracking-tight`}>{item.name}</h4>
+                  {item.date && <p className={`text-[9px] font-bold ${theme.secondaryText} mt-1 truncate`}>{item.date}</p>}
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-black text-[#0284c7] dark:text-[#38bdf8]">{item.price}</span>
+                  <button onClick={(e) => { e.stopPropagation(); setSelectedItem(item); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">Details</button>
+                </div>
+              </div>
+              <button onClick={(e) => { e.stopPropagation(); toggleFavorite(item); }} className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === item.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/20 text-white' : 'bg-black/5 text-slate-600')}`}><Heart size={14} fill={(favorites || []).some(f => f.id === item.id) ? "currentColor" : "none"} /></button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* QUICK LAUNCH GRID */}
+      <section>
+        <div className="flex items-center gap-2 mb-4 px-2">
+          <Ticket size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Explore Ann Arbor Vibes</h2>
+        </div>
+        <div className="grid grid-cols-6 gap-2 px-1">
+          {[
+            { label: 'Eats', icon: <Utensils size={19}/>, path: 'flavors' },
+            { label: 'Events', icon: <Zap size={19}/>, path: 'fun' },
+            { label: 'Shops', icon: <ShoppingBag size={19} className="text-[#ffcb05]"/>, action: onOpenShopsModal },
+            { label: 'Parks', icon: <Trees size={19} className="text-emerald-400"/>, action: onOpenParksModal },
+            { label: 'List Biz', icon: <Store size={19}/>, action: () => onOpenPartnerModal('restaurant') },
+            { label: 'Transit', icon: <Navigation size={19}/>, action: onOpenTransitModal }
+          ].map(item => (
+            <button 
+              key={item.label} 
+              onClick={() => {
+                if (item.action) item.action();
+                else if (item.link) window.open(item.link, '_blank');
+                else if (item.path) setView(item.path);
+              }} 
+              className="flex flex-col items-center gap-1.5 active:scale-95 group"
+            >
+              <div className="p-3 sm:p-3.5 rounded-2xl text-white shadow-lg bg-[#00274c] group-hover:scale-105 transition-transform flex items-center justify-center">{item.icon}</div>
+              <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-tighter text-center ${theme.isDark ? 'text-white' : 'text-slate-700'}`}>{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section id="island-flavors">
+        <div className="flex items-center justify-between mb-4 px-2">
+          <div className="flex items-center gap-2">
+            <Utensils size={18} className="text-[#0284c7] dark:text-[#38bdf8]" />
+            <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>A2 Eats</h2>
+          </div>
+          <button onClick={() => setView('flavors')} className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] tracking-widest">View All ({dining.length})</button>
+        </div>
+        <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar">
+          {(dining || []).map(res => (
+            <div key={res.id} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`${theme.card} min-w-[220px] h-44 rounded-[24px] border ${theme.border} overflow-hidden shadow-sm active:scale-95 transition-transform cursor-pointer relative group`}>
+              {res.img ? <img src={res.img} className="w-full h-28 object-cover" alt="" /> : <div className={`w-full h-28 ${theme.isDark ? 'bg-[#00274c]/20' : 'bg-slate-100'} flex items-center justify-center`}><Building size={24} className="text-[#ffcb05]/40" /></div>}
+              <div className="p-4">
+                <h4 className={`font-bold text-[10px] ${theme.text} line-clamp-1 uppercase tracking-tight`}>{res.title || res.name}</h4>
+                <p className="text-[8px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em] mt-1">{res.cuisine || 'Gourmet A2'}</p>
+              </div>
+              <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === res.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/20 text-white' : 'bg-black/5 text-slate-600')}`}><Heart size={12} fill={(favorites || []).some(f => f.id === res.id) ? "currentColor" : "none"} /></button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FEATURED SHOPS */}
+      <section className="space-y-6 pt-2">
+        <div className="mx-1 p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#081f38] to-[#122842] border border-[#ffcb05]/40 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-2xl gap-4">
+          <div className="space-y-1.5 text-left">
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-black uppercase text-[#ffcb05] bg-[#ffcb05]/20 px-2.5 py-0.5 rounded-full tracking-widest">
+                Retail & Cannabis Hub
+              </span>
+              <span className="text-[9px] font-bold text-emerald-400">Legal 21+ Dispensaries</span>
+            </div>
+            <h4 className="text-xl font-header font-black uppercase text-white tracking-tight italic">
+              Explore Local Shops & Dispensaries
+            </h4>
+            <p className="text-xs text-slate-300 leading-relaxed max-w-md">
+              From top dispensary strains at Vibe Ann Arbor to rare vintage vinyl, indie bookstores, and Michigan gear. Discover local tree town retail.
+            </p>
+          </div>
+          <button
+            onClick={onOpenShopsModal}
+            className="px-6 py-3.5 bg-[#ffcb05] text-black rounded-2xl font-black text-xs uppercase shadow-xl active:scale-95 transition-all flex items-center gap-2 flex-shrink-0"
+          >
+            <ShoppingBag size={16} />
+            <span>Browse All Shops</span>
+          </button>
+        </div>
+
+        <div className="space-y-3 px-1">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-2">
+              <Sparkles size={16} className="text-[#ffcb05]" />
+              <h3 className={`text-sm font-header font-bold uppercase tracking-widest ${theme.text}`}>
+                Featured Local Shops
+              </h3>
+            </div>
+            <button onClick={onOpenShopsModal} className="text-[10px] font-black uppercase text-[#ffcb05] tracking-widest hover:underline">
+              View Directory →
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {featuredShopsList.map(shop => {
+              const isFavorited = (favorites || []).some(f => f.id === shop.id);
+              return (
+                <div
+                  key={shop.id}
+                  onClick={() => onSelectShop(shop)}
+                  className={`${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg cursor-pointer group hover:border-[#ffcb05]/60 active:scale-[0.99] transition-all flex flex-col relative`}
+                >
+                  <div className="relative h-44 overflow-hidden">
+                    <img src={shop.img} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <span className="absolute top-3 left-3 bg-[#ffcb05] text-black text-[8px] font-black uppercase px-2.5 py-0.5 rounded-full shadow-md">
+                      Featured Spotlight
+                    </span>
+                    <span className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-md">
+                      {shop.category}
+                    </span>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleFavorite({ ...shop, type: 'shop' }); }}
+                      className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/40 text-white'}`}
+                    >
+                      <Heart size={16} fill={isFavorited ? "currentColor" : "none"} />
+                    </button>
+                  </div>
+                  <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
+                    <div>
+                      <h4 className={`text-base font-bold uppercase tracking-tight ${theme.text}`}>
+                        {shop.name}
+                      </h4>
+                      <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${theme.secondaryText}`}>
+                        {shop.shortDesc}
+                      </p>
+                    </div>
+
+                    {shop.specials && shop.specials.length > 0 && (
+                      <div className="pt-2 border-t border-white/5">
+                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#b45309] dark:text-[#ffcb05]">
+                          <Tag size={12} />
+                          <span className="truncate">{shop.specials[0]}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="pt-1 flex items-center justify-between text-[10px]">
+                      <span className={`${theme.secondaryText} truncate max-w-[170px]`}>📍 {shop.address}</span>
+                      <span className="text-[#0284c7] dark:text-[#38bdf8] font-black uppercase">Details & Deals →</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const FlavorsView = ({ theme, setSelectedItem, toggleFavorite, favorites, dining, onOpenPartnerModal }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredDining = useMemo(() => {
+    if (!searchQuery) return dining;
+    return dining.filter(d => 
+      (d.title || d.name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+      d.cuisine?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.neighborhood?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [dining, searchQuery]);
+
+  const featuredDining = useMemo(() => {
+    const featured = dining.filter(d => d.isFeatured);
+    return featured.length > 0 ? featured.slice(0, 5) : dining.slice(0, 5);
+  }, [dining]);
+
+  return (
+    <div className="animate-fade space-y-8 text-left relative z-10 pb-20 w-full flex flex-col">
+      <div className="text-center px-4 w-full space-y-4">
+        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>Ann Arbor Flavors</h1>
+        <p className={`text-xs ${theme.secondaryText}`}>Explore all {dining.length} curated local restaurants, bars, and eateries.</p>
+      </div>
+
+      <div className="px-1 w-full">
+        <div className="flex items-center gap-2 mb-4 px-2">
+          <Sparkles size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
+          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Eats</h2>
+        </div>
+        <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
+          {featuredDining.map(res => (
+            <div key={`feat-${res.id}`} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`min-w-[280px] h-48 ${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg snap-center relative group cursor-pointer flex-shrink-0`}>
+              {res.img ? <img src={res.img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" /> : <div className={`absolute inset-0 ${theme.isDark ? 'bg-[#00274c]/20' : 'bg-slate-100'} flex items-center justify-center`}><Building size={32} className="text-[#ffcb05]/40" /></div>}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <span className="bg-[#ffcb05] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Spotlight</span>
+                <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{res.title || res.name}</h3>
+                <p className="text-[10px] font-black text-[#ffcb05] uppercase tracking-wider mt-1">{res.cuisine || 'Gourmet A2'}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+        
+      <div className="relative max-w-md mx-auto w-full px-4">
+        <Search size={18} className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-400" />
+        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search restaurants, cuisine, or neighborhood..." className={`w-full pl-12 pr-4 py-3.5 rounded-2xl ${theme.card} border ${theme.border} ${theme.text} text-xs font-bold outline-none focus:border-[#ffcb05] shadow-inner`} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 px-1 w-full">
+        {filteredDining.length > 0 ? (
+          filteredDining.map(res => {
+            const isFavorited = (favorites || []).some(f => f.id === res.id && f.type === 'dining');
+            return (
+              <div key={res.id} onClick={() => setSelectedItem({...res, type: 'dining'})} className={`${theme.card} p-4 rounded-3xl border ${theme.border} flex gap-4 cursor-pointer shadow-md items-center group active:scale-[0.99] transition-transform`}>
+                <img src={res.img} className="w-24 h-24 rounded-2xl object-cover shadow-inner flex-shrink-0" alt={res.title || res.name} />
+                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                  <h3 className={`font-bold text-sm uppercase tracking-tight truncate ${theme.text}`}>{res.title || res.name}</h3>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <span className="text-[9px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] bg-[#ffcb05]/10 px-2 py-0.5 rounded-md inline-block whitespace-nowrap">{res.cuisine || 'Eats'}</span>
+                    {res.neighborhood && <span className="text-[10px] font-bold text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-wider truncate">{res.neighborhood}</span>}
+                  </div>
+                  <p className={`text-xs mt-1 line-clamp-1 ${theme.secondaryText}`}>{res.shortDesc}</p>
+                </div>
+                <button onClick={(e) => { e.stopPropagation(); toggleFavorite({...res, type: 'dining'}); }} className={`p-3 rounded-full backdrop-blur-md flex-shrink-0 transition-transform active:scale-90 ${isFavorited ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/10 text-slate-400' : 'bg-black/5 text-slate-600')}`}><Heart size={18} fill={isFavorited ? "currentColor" : "none"} /></button>
+              </div>
+            );
+          })
+        ) : (
+          <div className={`py-20 text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.secondaryText}`}>No restaurants found matching your search.</div>
+        )}
+      </div>
+
+      <div className="pt-4">
+        <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#f97316]/30 flex items-center justify-between shadow-xl">
+          <div className="space-y-1 text-left">
+            <span className="text-[9px] font-black uppercase text-[#f97316] tracking-widest block">Local Food & Drinks</span>
+            <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Add Your Eatery or Bar</h4>
+            <p className="text-[11px] text-slate-300">Boosted culinary showcase with full menu upload.</p>
+          </div>
+          <button
+            onClick={() => onOpenPartnerModal('restaurant')}
+            className="p-3.5 bg-[#f97316] text-white rounded-2xl font-black text-xs uppercase shadow-md active:scale-90 transition-all flex items-center justify-center flex-shrink-0 ml-3"
+            title="List your eatery"
+          >
+            <Utensils size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const GuideView = ({ theme, setSelectedItem, toggleFavorite, favorites, posts, onOpenPartnerModal, onOpenContributorModal }) => {
+  const [activeCat, setActiveCat] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredPosts = useMemo(() => {
+    let list = posts || [];
+    if (activeCat !== 'All') {
+      if (activeCat === 'Meetups') {
+        list = list.filter(p => p.category === 'Meetups' || p.allCategories?.includes('Meetups'));
+      } else {
+        list = list.filter(p => (p.allCategories || [p.category]).some(c => c && c.toLowerCase().includes(activeCat.toLowerCase())));
+      }
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(p => p.title?.toLowerCase().includes(q) || p.excerpt?.toLowerCase().includes(q));
+    }
+    return list;
+  }, [posts, activeCat, searchQuery]);
+
+  const featuredStory = useMemo(() => {
+    return filteredPosts.find(p => p.isHighlight) || filteredPosts[0];
+  }, [filteredPosts]);
+
+  const remainingStories = useMemo(() => {
+    if (!featuredStory) return filteredPosts;
+    return filteredPosts.filter(p => p.id !== featuredStory.id);
+  }, [filteredPosts, featuredStory]);
+
+  return (
+    <div className="animate-fade space-y-7 text-left relative z-10 pb-20 w-full flex flex-col font-sans">
+      <div className="text-center px-4 w-full space-y-2">
+        <h1 className={`text-3xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>
+          A2 Guide
+        </h1>
+        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#b45309] dark:text-[#ffcb05]">
+          Stories, Tips & Field Notes
+        </p>
+
+        <div className="flex items-center gap-2 pt-3">
+          <div className="relative flex-1">
+            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search stories, articles, reviews..."
+              className={`w-full pl-9 pr-3 py-2.5 rounded-2xl ${theme.isDark ? 'bg-black/30 border-white/10 text-white' : 'bg-slate-100 border-slate-200 text-slate-900'} border text-xs font-medium outline-none focus:border-[#ffcb05] transition-all`}
+            />
+          </div>
+          <button
+            onClick={onOpenContributorModal}
+            className="px-4 py-2.5 bg-[#a855f7] text-white rounded-2xl text-[10px] font-black uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0"
+            title="Submit a local story"
+          >
+            <PenTool size={13} />
+            <span>Submit</span>
+          </button>
+        </div>
+
+        <div className="flex overflow-x-auto gap-2 pt-2 no-scrollbar">
+          {CATEGORIES_GUIDE.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCat(cat)}
+              className={`px-4 py-2 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all ${
+                activeCat === cat
+                  ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-md'
+                  : (theme.isDark ? 'text-slate-400 bg-white/5 border-white/5 hover:bg-white/10' : 'text-slate-700 bg-slate-100 border-slate-200 hover:bg-slate-200')
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {filteredPosts.length === 0 ? (
+        <div className={`p-10 border-2 border-dashed rounded-3xl text-center opacity-40 text-xs font-bold uppercase tracking-widest ${theme.border} mx-2`}>
+          No stories match your search.
+        </div>
+      ) : (
+        <div className="px-1 space-y-6 w-full">
+          {featuredStory && (
+            <div
+              onClick={() => setSelectedItem(featuredStory)}
+              className={`${theme.card} rounded-[36px] border ${theme.border} overflow-hidden shadow-xl cursor-pointer group transition-all duration-300 active:scale-[0.99]`}
+            >
+              <div className="relative h-72 w-full overflow-hidden">
+                {featuredStory.img ? (
+                  <img
+                    src={featuredStory.img}
+                    alt={featuredStory.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className={`w-full h-full ${theme.isDark ? 'bg-slate-800' : 'bg-slate-200'} flex items-center justify-center`}>
+                    <Building size={48} className="opacity-20" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                <span className="absolute top-4 left-4 bg-[#ffcb05] text-black text-[9px] font-black uppercase px-3 py-1 rounded-full shadow-md tracking-wider">
+                  Featured Story
+                </span>
+                <span className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md text-white text-[9px] font-black uppercase px-2.5 py-0.5 rounded-md">
+                  {featuredStory.category}
+                </span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); toggleFavorite(featuredStory); }}
+                  className={`absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === featuredStory.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : 'bg-black/30 text-white'}`}
+                >
+                  <Heart size={16} fill={(favorites || []).some(f => f.id === featuredStory.id) ? "currentColor" : "none"} />
+                </button>
+              </div>
+
+              <div className="p-5 space-y-2">
+                <h2 className={`text-xl font-header font-black uppercase italic tracking-tight leading-tight group-hover:text-[#ffcb05] transition-colors ${theme.text}`}>
+                  {featuredStory.title}
+                </h2>
+                {featuredStory.excerpt && (
+                  <p className={`text-xs leading-relaxed line-clamp-2 ${theme.secondaryText}`}>
+                    {featuredStory.excerpt}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {remainingStories.length > 0 && (
+            <div className="grid grid-cols-2 gap-x-4 gap-y-7 w-full pt-1">
+              {remainingStories.map(art => {
+                const isFavorited = (favorites || []).some(f => f.id === art.id);
+                return (
+                  <div
+                    key={art.id}
+                    onClick={() => setSelectedItem(art)}
+                    className="space-y-3 cursor-pointer group"
+                  >
+                    <div className={`relative aspect-[4/5] rounded-[30px] overflow-hidden shadow-md ${theme.isDark ? 'bg-slate-800/20 border-white/5' : 'bg-slate-100 border-slate-200'} border`}>
+                      {art.img ? (
+                        <img
+                          src={art.img}
+                          alt={art.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center opacity-10">
+                          <Building size={36} />
+                        </div>
+                      )}
+                      <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full text-[8px] font-black text-white uppercase tracking-wider">
+                        {art.category}
+                      </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); toggleFavorite(art); }}
+                        className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${isFavorited ? "bg-[#ffcb05]/20 text-[#ffcb05]" : "bg-black/20 text-white"}`}
+                      >
+                        <Heart size={14} fill={isFavorited ? "currentColor" : "none"} />
+                      </button>
+                    </div>
+
+                    <div className="px-1">
+                      <h4 className={`text-xs font-header font-black uppercase italic leading-tight tracking-tight line-clamp-2 ${theme.text} group-hover:text-[#ffcb05] transition-colors`}>
+                        {art.title}
+                      </h4>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* GUIDE BOTTOM CTA */}
+      <div className="pt-6 px-1">
+        <div className="p-5 rounded-[32px] bg-gradient-to-r from-[#170a2a] via-[#1f103b] to-[#0a121e] border border-[#a855f7]/30 flex items-center justify-between shadow-xl">
+          <div className="space-y-1 text-left">
+            <span className="text-[9px] font-black uppercase text-[#a855f7] tracking-widest block">Tree Town Editorial</span>
+            <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Feature Your Brand or Story</h4>
+            <p className="text-[11px] text-slate-300">Book an editorial feature story or launch social blasts.</p>
+          </div>
+          <button
+            onClick={() => onOpenPartnerModal('general')}
+            className="px-4 py-3 bg-[#a855f7] text-white rounded-2xl font-black text-xs uppercase shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 ml-3"
+          >
+            <span>Promote</span>
+            <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [view, setView] = useState('home');
+  const [themeKey, setThemeKey] = useState('dark');
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedPark, setSelectedPark] = useState(null);
+  const [selectedShop, setSelectedShop] = useState(null);
+  const [activeTool, setActiveTool] = useState(null);
+  const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
+  const [partnerModalCategory, setPartnerModalCategory] = useState('restaurant');
+  const [isContributorModalOpen, setIsContributorModalOpen] = useState(false);
+  const [isParksModalOpen, setIsParksModalOpen] = useState(false);
+  const [isTransitModalOpen, setIsTransitModalOpen] = useState(false);
+  const [isShopsModalOpen, setIsShopsModalOpen] = useState(false);
+    
+  const [favorites, setFavorites] = useState(() => {
+    try { const s = localStorage.getItem('a2v_favorites'); return s ? JSON.parse(s) : []; } catch { return []; }
+  });
+  const [stats, setStats] = useState(() => {
+    try { const s = localStorage.getItem('a2v_stats'); return s ? JSON.parse(s) : { water: 0, drinks: 0 }; } catch { return { water: 0, drinks: 0 }; }
+  });
+  const [bucketList, setBucketList] = useState(() => {
+    try { const s = localStorage.getItem('a2v_bucketlist'); return s ? JSON.parse(s) : DEFAULT_BUCKET_ITEMS; } catch { return DEFAULT_BUCKET_ITEMS; }
+  });
+
+  const [itineraries] = useState(happeningsData);
+  const [dining, setDining] = useState(eatsData);
+  const [posts] = useState(journalData);
+  const [featuredPosts] = useState(journalData.filter(p => p.isHighlight));
+    
+  const [activeExpCat, setActiveExpCat] = useState('All');
+  const [activeMonth, setActiveMonth] = useState('All Months');
+  const [visibleCount, setVisibleCount] = useState(6);
+  const theme = THEMES[themeKey] || THEMES.dark;
+
+  const openPartnerModal = (category = 'restaurant') => {
+    setPartnerModalCategory(category);
+    setIsPartnerModalOpen(true);
+  };
+
+  const openContributorModal = () => setIsContributorModalOpen(true);
+  const openParksModal = () => setIsParksModalOpen(true);
+  const openTransitModal = () => setIsTransitModalOpen(true);
+  const openShopsModal = () => setIsShopsModalOpen(true);
+  const handleParkSelect = (park) => setSelectedPark(park);
+  const handleShopSelect = (shop) => setSelectedShop(shop);
+
+  const handleLogin = async () => {
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+    } catch (error) {
+      console.error("Login Error:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Logout Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'Miss Kim'), (snapshot) => {
+      if (!snapshot.empty) {
+        const firestoreSpots = snapshot.docs.map(doc => ({
+          id: doc.id,
+          title: doc.data().title || doc.data().name || doc.id,
+          ...doc.data()
+        }));
+        setDining(prev => {
+          const rest = prev.filter(d => !firestoreSpots.some(fs => fs.id === d.id));
+          return [...rest, ...firestoreSpots];
+        });
+      }
+    }, (error) => {
+      console.warn("Miss Kim collection listener:", error);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        try {
+          const docSnap = await getDoc(doc(db, 'users', currentUser.uid));
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.favorites) setFavorites(data.favorites);
+            if (data.stats) setStats(data.stats);
+            if (data.bucketList) setBucketList(data.bucketList);
+          }
+        } catch (err) {
+          console.error("Error fetching user profile:", err);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const toggleFavorite = async (item) => {
+    if (item.type === 'park' || PARKS_DATA.some(p => p.id === item.id) || item.id?.startsWith('park-')) {
+      return;
+    }
+    
+    const isAlreadyFavorited = (favorites || []).some(f => f.id === item.id);
+    let updatedFavorites;
+
+    if (isAlreadyFavorited) { 
+      updatedFavorites = favorites.filter(f => f.id !== item.id); 
+    } else { 
+      const itemToSave = { 
+        ...item, 
+        type: item.type || 'experience', 
+        savedAt: Date.now() 
+      }; 
+      updatedFavorites = [...favorites, itemToSave]; 
+    }
+
+    setFavorites(updatedFavorites);
+    localStorage.setItem('a2v_favorites', JSON.stringify(updatedFavorites));
+
+    if (user) {
+      try {
+        await setDoc(doc(db, 'users', user.uid), { favorites: updatedFavorites }, { merge: true });
+      } catch (err) {
+        console.error("Error syncing favorite to Firestore:", err);
+      }
+    }
+  };
+
+  const shuffledExp = useMemo(() => {
+    let list = itineraries || [];
+    if (activeMonth !== 'All Months') list = list.filter(i => i.month === activeMonth);
+    if (activeExpCat !== 'All') {
+      list = list.filter(i => {
+        let itemCats = Array.isArray(i.category) ? i.category : (Array.isArray(i.categories) ? i.categories : (typeof i.category === 'string' ? i.category.split(',').map(c => c.trim()) : []));
+        const filterVal = activeExpCat.toLowerCase();
+        return itemCats.some(c => c.toLowerCase().includes(filterVal)) || (filterVal === 'museums' && (i.name?.toLowerCase().includes('museum') || i.shortDesc?.toLowerCase().includes('museum')));
+      });
+    }
+    return list;
+  }, [itineraries, activeExpCat, activeMonth]);
+
+  return (
+    <div className={`min-h-screen ${theme.windowBg} font-sans transition-colors duration-500 flex flex-col items-center overflow-x-hidden`}>
+      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      <div className={`w-full max-w-xl min-h-screen ${theme.appBg} relative shadow-2xl flex flex-col items-center border-x border-white/5`}>
+        
+        {/* Persistent App Header */}
+        <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/90 backdrop-blur-xl border-b ${theme.border} px-5 py-4 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTool(null); setView('home'); }}>
+            <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black flex-shrink-0">
+              <Building size={20}/>
+            </div>
+            <div className="flex flex-col leading-none text-left">
+              <span className={`text-[11px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span>
+              <span className={`text-[9px] font-header font-bold uppercase tracking-widest ${theme.secondaryText}`}>Vibe</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2.5">
+            {!user ? (
+              <button
+                onClick={handleLogin}
+                className="px-3.5 py-2 rounded-xl bg-[#ffcb05] text-black text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 transition-all"
+              >
+                <LogIn size={13} />
+                <span>Sign In</span>
+              </button>
+            ) : (
+              <button 
+                onClick={() => { setActiveTool(null); setView('profile'); }} 
+                className={`w-9 h-9 rounded-2xl ${theme.isDark ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'} flex items-center justify-center overflow-hidden border ${theme.text}`}
+                title="Open My Vibe"
+              >
+                {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <User size={16}/>}
+              </button>
+            )}
+
+            <button 
+              onClick={() => setThemeKey(theme.isDark ? 'light' : 'dark')} 
+              className={`p-2.5 rounded-2xl bg-[#00274c] hover:bg-[#ffcb05] transition-colors border border-white/10 ${theme.text}`}
+              title="Toggle theme"
+            >
+              {theme.isDark ? <Sun size={18} className="text-[#ffcb05]" /> : <Moon size={18} className="text-white" />}
+            </button>
+          </div>
+        </header>
+
+        <main className="flex-1 pt-28 pb-40 overflow-y-auto no-scrollbar w-full px-5 flex flex-col">
+          <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} item={selectedItem} theme={theme} toggleFavorite={toggleFavorite} favorites={favorites} />
+          
+          <ParkDetailModal
+            isOpen={!!selectedPark}
+            onClose={() => setSelectedPark(null)}
+            park={selectedPark}
+            theme={theme}
+          />
+
+          <ParksDirectoryModal
+            isOpen={isParksModalOpen}
+            onClose={() => setIsParksModalOpen(false)}
+            theme={theme}
+            onSelectPark={handleParkSelect}
+          />
+
+          <TransitModal
+            isOpen={isTransitModalOpen}
+            onClose={() => setIsTransitModalOpen(false)}
+            theme={theme}
+          />
+
+          <ShopsDirectoryModal
+            isOpen={isShopsModalOpen}
+            onClose={() => setIsShopsModalOpen(false)}
+            theme={theme}
+            onSelectShop={handleShopSelect}
+            toggleFavorite={toggleFavorite}
+            favorites={favorites}
+            onOpenPartnerModal={openPartnerModal}
+          />
+
+          <ShopDetailModal
+            isOpen={!!selectedShop}
+            onClose={() => setSelectedShop(null)}
+            shop={selectedShop}
+            theme={theme}
+            toggleFavorite={toggleFavorite}
+            favorites={favorites}
+          />
+
+          <PartnerListingModal 
+            isOpen={isPartnerModalOpen} 
+            onClose={() => setIsPartnerModalOpen(false)} 
+            theme={theme} 
+            user={user} 
+            initialCategory={partnerModalCategory}
+          />
+
+          <ContributorSubmissionModal
+            isOpen={isContributorModalOpen}
+            onClose={() => setIsContributorModalOpen(false)}
+            theme={theme}
+            user={user}
+            onPostSuccess={() => {}}
+          />
+
+          {activeTool ? (
+            <ToolFullScreenView 
+              type={activeTool} 
+              onClose={() => setActiveTool(null)} 
+              theme={theme} 
+              stats={stats} 
+              setStats={setStats} 
+              dining={dining} 
+              bucketList={bucketList} 
+              setBucketList={setBucketList} 
+              user={user} 
+            />
+          ) : (
+            <>
+              {view === 'home' && (
+                <HomeView 
+                  theme={theme} 
+                  setView={setView} 
+                  setSelectedItem={setSelectedItem} 
+                  itineraries={itineraries} 
+                  dining={dining} 
+                  featuredPosts={featuredPosts} 
+                  favorites={favorites} 
+                  toggleFavorite={toggleFavorite} 
+                  onOpenPartnerModal={openPartnerModal}
+                  onOpenParksModal={openParksModal}
+                  onOpenTransitModal={openTransitModal}
+                  onOpenShopsModal={openShopsModal}
+                  onSelectShop={handleShopSelect}
+                />
+              )}
+              {view === 'journal' && (
+                <GuideView 
+                  theme={theme} 
+                  setSelectedItem={setSelectedItem} 
+                  toggleFavorite={toggleFavorite} 
+                  favorites={favorites} 
+                  posts={posts} 
+                  onOpenPartnerModal={openPartnerModal} 
+                  onOpenContributorModal={openContributorModal}
+                />
+              )}
+              {view === 'flavors' && (
+                <FlavorsView 
+                  theme={theme} 
+                  setSelectedItem={setSelectedItem} 
+                  toggleFavorite={toggleFavorite} 
+                  favorites={favorites} 
+                  dining={dining}
+                  onOpenPartnerModal={openPartnerModal}
+                />
+              )}
+              {view === 'profile' && (
+                <HubView 
+                  theme={theme} 
+                  favorites={favorites} 
+                  toggleFavorite={toggleFavorite} 
+                  stats={stats} 
+                  setStats={setStats} 
+                  setSelectedItem={setSelectedItem} 
+                  setView={setView} 
+                  dining={dining} 
+                  setActiveTool={setActiveTool} 
+                  user={user} 
+                  handleLogin={handleLogin} 
+                  handleLogout={handleLogout} 
+                  onOpenPartnerModal={openPartnerModal}
+                  onOpenContributorModal={openContributorModal}
+                  onOpenParksModal={openParksModal}
+                  onOpenShopsModal={openShopsModal}
+                  onSelectShop={handleShopSelect}
+                />
+              )}
+              {view === 'fun' && (
+                <div className="space-y-12 animate-fade w-full">
+                  <div className="text-center px-4">
+                    <h1 className={`text-2xl font-header font-black uppercase italic tracking-tighter ${theme.text}`}>A2 Events</h1>
+                  </div>
+
+                  {(() => {
+                    const featuredHappenings = (itineraries || []).filter(e => e.isFeatured);
+                    const displayFeatured = featuredHappenings.length > 0 ? featuredHappenings.slice(0, 5) : (itineraries || []).slice(0, 5);
+                    return (
+                      <div className="px-1 w-full">
+                        <div className="flex items-center gap-2 mb-4 px-2">
+                          <Zap size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
+                          <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Featured Events</h2>
+                        </div>
+                        <div className="flex overflow-x-auto gap-4 px-1 pb-4 no-scrollbar snap-x snap-mandatory">
+                          {displayFeatured.map(exp => (
+                            <div key={`feat-${exp.id}`} onClick={()=>setSelectedItem(exp)} className={`min-w-[280px] h-48 ${theme.card} rounded-[32px] border ${theme.border} overflow-hidden shadow-lg snap-center relative group cursor-pointer flex-shrink-0`}>
+                              {exp.img && <img src={exp.img} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                              <div className="absolute bottom-4 left-4 right-4 text-white">
+                                <span className="bg-[#38bdf8] text-black px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest inline-block mb-2 shadow-sm">Top Pick</span>
+                                <h3 className="font-bold text-lg uppercase tracking-tight truncate drop-shadow-md">{exp.name}</h3>
+                                {exp.date && <p className="text-[10px] font-bold text-[#ffcb05] mt-0.5 truncate">{exp.date}</p>}
+                                <span className="text-[10px] font-black text-[#38bdf8] uppercase tracking-[0.2em] mt-1 block truncate">
+                                  {Array.isArray(exp.category) ? exp.category[0] : exp.category}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  <div className="text-center px-4">
+                    <div className="flex overflow-x-auto gap-3 mt-6 mb-2 no-scrollbar px-1">
+                      {MONTHS_EXP.map((m) => (
+                        <button key={m} onClick={() => setActiveMonth(m)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeMonth === m ? 'bg-[#ffcb05] border-[#ffcb05] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{m}</button>
+                      ))}
+                    </div>
+                    <div className="flex overflow-x-auto gap-3 mb-2 no-scrollbar px-1">
+                      {CATEGORIES_EXP.map((cat) => (
+                        <button key={cat} onClick={() => setActiveExpCat(cat)} className={`px-5 py-2.5 rounded-full border whitespace-nowrap text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 ${activeExpCat === cat ? 'bg-[#38bdf8] border-[#38bdf8] text-black shadow-lg scale-105' : (theme.isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200')}`}>{cat}</button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4 px-1 pt-4 w-full">
+                    {shuffledExp && shuffledExp.length > 0 ? (
+                      <>
+                        {shuffledExp.slice(0, activeExpCat === 'All' && activeMonth === 'All Months' ? visibleCount : shuffledExp.length).map(exp => (
+                          <div key={exp.id} onClick={()=>setSelectedItem(exp)} className={`${theme.card} flex flex-col sm:flex-row rounded-[32px] border ${theme.border} overflow-hidden cursor-pointer shadow-md relative group active:scale-[0.99] transition-transform`}>
+                            <div className="sm:w-36 h-40 sm:h-auto relative flex-shrink-0">
+                              {exp.img ? <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="" /> : <div className={`w-full h-full ${theme.isDark ? 'bg-black/10' : 'bg-slate-100'} flex items-center justify-center`}><Building size={28} className="opacity-30" /></div>}
+                              {exp.price && <span className="absolute bottom-3 left-3 sm:hidden bg-black/70 backdrop-blur-md text-[#ffcb05] text-[10px] font-black px-2.5 py-1 rounded-lg uppercase">{exp.price}</span>}
+                            </div>
+                            
+                            <div className="flex-1 p-5 flex flex-col justify-between text-left space-y-3">
+                              <div>
+                                <div className="flex justify-between items-start gap-2">
+                                  <h4 className={`font-bold uppercase text-sm leading-tight ${theme.text} line-clamp-1 tracking-tight`}>{exp.name}</h4>
+                                  <div className="flex items-center gap-1">
+                                    <button onClick={(e)=>{e.stopPropagation(); toggleFavorite(exp);}} className={`p-2 rounded-full transition-all duration-300 ${(favorites || []).some(f => f.id === exp.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : theme.secondaryText}`}>
+                                      <Heart size={16} fill={(favorites || []).some(f => f.id === exp.id) ? "currentColor" : "none"} />
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {exp.date && (
+                                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#0284c7] dark:text-[#38bdf8] mt-1">
+                                    <Calendar size={13} />
+                                    <span>{exp.date}</span>
+                                  </div>
+                                )}
+
+                                {exp.time && (
+                                  <div className={`flex items-center gap-1.5 text-[10px] font-medium ${theme.secondaryText} mt-0.5`}>
+                                    <Clock size={12} />
+                                    <span>{exp.time}</span>
+                                  </div>
+                                )}
+
+                                {exp.address && (
+                                  <div className={`flex items-center gap-1.5 text-[10px] ${theme.secondaryText} mt-0.5 truncate`}>
+                                    <MapPin size={12} className="flex-shrink-0" />
+                                    <span className="truncate">{exp.address}</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className={`flex items-center justify-between pt-2 border-t ${theme.border}`}>
+                                <span className="text-[10px] font-black uppercase text-[#b45309] dark:text-[#ffcb05] hidden sm:inline-block">{exp.price || 'Free'}</span>
+                                <span className="text-[9px] font-black text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-[0.2em]">{Array.isArray(exp.category) ? exp.category[0] : exp.category}</span>
+                                <button onClick={(e) => { e.stopPropagation(); setSelectedItem(exp); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase px-4 py-2 rounded-xl shadow-md active:scale-95 transition-all">Details</button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        {activeExpCat === 'All' && activeMonth === 'All Months' && visibleCount < (shuffledExp.length || 0) && (
+                          <button onClick={() => setVisibleCount(p => p + 6)} className="w-full py-5 bg-[#00274c] text-[#ffcb05] rounded-[24px] font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all mt-4 border border-[#ffcb05]/20">Load More Events</button>
+                        )}
+                      </>
+                    ) : (
+                      <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
+                    )}
+                  </div>
+
+                  {/* HAPPENINGS BOTTOM CTA */}
+                  <div className="pt-2 px-1">
+                    <div className="mx-1 p-5 rounded-[32px] bg-gradient-to-r from-[#00274c] via-[#051a34] to-[#0a121e] border border-[#38bdf8]/30 flex items-center justify-between shadow-xl">
+                      <div className="space-y-1 text-left">
+                        <span className="text-[9px] font-black uppercase text-[#38bdf8] tracking-widest block">Event Organizers & Promoters</span>
+                        <h4 className="text-base font-header font-black uppercase text-white tracking-tight">Host an Event in Ann Arbor?</h4>
+                        <p className="text-[11px] text-slate-300">Feature your festival, live music, or meetup to Tree Town.</p>
+                      </div>
+                      <button
+                        onClick={() => openPartnerModal('general')}
+                        className="px-4 py-3 bg-[#38bdf8] text-black rounded-2xl font-black text-xs uppercase shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 ml-3"
+                      >
+                        <span>List Event</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </main>
+
+        <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-[60] ${theme.card}/95 backdrop-blur-xl border-t ${theme.border} px-2.5 py-4 flex justify-around shadow-2xl rounded-t-[36px] font-sans h-24 items-center`}>
+          {[
+            { id: 'home', icon: Building, label: 'Insider', color: '#ffcb05', action: () => { setActiveTool(null); setView('home'); } }, 
+            { id: 'flavors', icon: Utensils, label: 'Eats', color: '#f97316', action: () => { setActiveTool(null); setView('flavors'); } }, 
+            { id: 'shops', icon: ShoppingBag, label: 'Shops', color: '#ffcb05', action: openShopsModal }, 
+            { id: 'fun', icon: Sparkles, label: 'Events', color: '#38bdf8', action: () => { setActiveTool(null); setView('fun'); } }, 
+            { id: 'journal', icon: BookText, label: 'Guide', color: '#a855f7', action: () => { setActiveTool(null); setView('journal'); } }, 
+            { id: 'profile', icon: User, label: 'My Vibe', color: '#10b981', action: () => { setActiveTool(null); setView('profile'); } }
+          ].map(v => {
+            const isActive = v.id === 'shops' ? isShopsModalOpen : (!activeTool && view === v.id && !isShopsModalOpen);
+            return (
+              <button 
+                key={v.id} 
+                onClick={v.action} 
+                className={`flex-1 py-1 flex flex-col items-center justify-center gap-1.5 transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-60 hover:opacity-100'}`} 
+                style={{ color: isActive ? v.color : (theme.isDark ? '#94a3b8' : '#334155') }}
+              >
+                <v.icon size={22} style={{ filter: isActive ? `drop-shadow(0 0 8px ${v.color}88)` : 'none' }} />
+                <span className="text-[10px] font-black uppercase tracking-wider leading-none">{v.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .font-header { font-family: 'Outfit', sans-serif; }
+        .wp-content img { max-width: 100% !important; height: auto !important; border-radius: 20px; margin: 15px 0; display: block; }
+        .wp-content p { margin-bottom: 1rem; line-height: 1.6; }
+        .wp-content strong { color: #ffcb05; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .bg-slate-50 .wp-content, .wp-content p { color: #00274c !important; }
+        .bg-\\[\\#0a121e\\] .wp-content, .wp-content p { color: #f1f5f9 !important; }
+      `}} />
+    </div>
+  );
+}
