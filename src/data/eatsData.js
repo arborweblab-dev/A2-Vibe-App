@@ -109,7 +109,7 @@ export const eatsData = [
     ctaText: "See Flavors",
     url: "https://blankslatecreamery.com",
     isHighlight: false,
-    isFeatured: true
+    isFeatured: false
   },
   {
     id: "eat-8",
