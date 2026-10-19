@@ -1155,7 +1155,7 @@ const sceneSlides = useMemo(() => {
         )}
 
         <div className="flex gap-1.5 justify-center pt-3">
-          {sceneSlides.slice(0, 8).map((_, i) => (
+          {sceneSlides.slice(0, 12).map((_, i) => (
             <div 
               key={i} 
               className={`h-1 rounded-full transition-all duration-300 ${
