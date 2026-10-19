@@ -221,8 +221,8 @@ export const eatsData = [
     longDesc: "<p>A multi-level restaurant with a rustic, artsy vibe offering unique artisan pizzas, truffle fries, and famous sour ales.</p>",
     ctaText: "View Menu",
     url: "https://jollypumpkin.com",
-    isHighlight: false,
-    isFeatured: true
+    isHighlight: true,
+    isFeatured: false
   },
   {
     id: "eat-16",
