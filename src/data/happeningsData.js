@@ -4,91 +4,7 @@ const BASE_SHARE_URL = "https://a2vibe.com/happenings";
 
 export const happeningsData = [
   // --- OCTOBER EVENTS ---
-  {
-    id: "oct-01",
-    name: "Edgefest 30: Freedom at the Edge",
-    month: "October",
-    date: "October 7 - 10, 2026",
-    time: "6:00 PM - 10:30 PM",
-    address: "415 N 4th Ave, Ann Arbor, MI 48104 (Kerrytown Concert House)",
-    category: ["Arts & Culture", "Festivals"],
-    price: "$20",
-    neighborhood: "Kerrytown",
-    img: "/images/oct-edgefest.jpg",
-    shortDesc: "Premier festival for avant-garde and improvisational music.",
-    longDesc: "<p>Hosted by the Kerrytown Concert House, this long-running 30th annual festival brings world-class experimental jazz and new music to Ann Arbor for several days of exciting performances.</p>",
-    url: "https://kerrytownconcerthouse.com/edgefest",
-    type: "experience",
-    share: {
-      title: "Edgefest on A2 Vibe",
-      text: "Check out Edgefest at Kerrytown Concert House on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-01`
-    }
-  },
-  {
-    id: "oct-02",
-    name: "U-M Museum of Art: Fall Re-Opening Celebration",
-    month: "October",
-    date: "October 10, 2026",
-    time: "12:00 PM - 5:00 PM",
-    address: "525 S State St, Ann Arbor, MI 48109",
-    category: ["Museums", "Arts & Culture"],
-    price: "Free",
-    neighborhood: "U-M Campus",
-    img: "/images/oct-ummaa.jpg",
-    shortDesc: "Special opening celebration for the museum's fall collection.",
-    longDesc: "<p>Explore new contemporary exhibits and classic works in the newly curated UMMA galleries. Free and open to the public.</p>",
-    url: "https://umma.umich.edu/",
-    type: "experience",
-    share: {
-      title: "U-M Museum of Art: Fall Re-Opening on A2 Vibe",
-      text: "Check out U-M Museum of Art: Fall Re-Opening on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-02`
-    }
-  },
-  {
-    id: "oct-03",
-    name: "Ann Arbor Antiquarian Book Fair",
-    month: "October",
-    date: "October 11, 2026",
-    time: "11:00 AM - 5:00 PM",
-    address: "530 S State St, Ann Arbor, MI 48109 (Michigan Union Ballroom)",
-    category: ["Hidden Gems", "Shopping"],
-    price: "$5",
-    neighborhood: "U-M Campus",
-    img: "/images/oct-bookfair.jpg",
-    shortDesc: "Dozens of dealers selling rare, collectible, and first edition books.",
-    longDesc: "<p>Held at the Michigan Union, this 50th annual event benefits the William L. Clements Library. Discover old prints, maps, and incredible pieces of Americana.</p>",
-    url: "https://mwaba.com",
-    type: "experience",
-    share: {
-      title: "Ann Arbor Antiquarian Book Fair on A2 Vibe",
-      text: "Check out Ann Arbor Antiquarian Book Fair on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-03`
-    }
-  },
-  {
-    id: "oct-04",
-    name: "U-M Football vs. Penn State",
-    month: "October",
-    date: "October 17, 2026",
-    time: "3:30 PM",
-    address: "1201 S Main St, Ann Arbor, MI 48104 (Michigan Stadium)",
-    category: ["Sports", "Festivals"],
-    price: "Varies",
-    neighborhood: "U-M Campus",
-    img: "/images/oct-football.jpg",
-    shortDesc: "The Wolverines take on the Penn State Nittany Lions.",
-    longDesc: "<p>The tradition continues at the Big House. Expect packed streets and spirited festivities all over the Diag.</p>",
-    url: "https://mgoblue.com/",
-    type: "experience",
-    share: {
-      title: "U-M Football vs. Penn State on A2 Vibe",
-      text: "Check out U-M Football vs. Penn State on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-04`
-    }
-  },
-  {
+ {
     id: "oct-05",
     name: "Ann Arbor Symphony: The Lord of the Rings Symphony",
     month: "October",
@@ -162,6 +78,7 @@ export const happeningsData = [
     price: "Free",
     neighborhood: "Downtown",
     img: "/images/oct-trick.jpg",
+    isFeatured: true,
     shortDesc: "Local shops hand out treats to kids on Main Street.",
     longDesc: "<p>A safe and fun afternoon for families to explore downtown stores and collect candy in costume along Main Street.</p>",
     url: "https://www.mainstreetannarbor.org/",
