@@ -2901,28 +2901,30 @@ const HomeView = ({
         onSelectShop={onSelectShop}
       />
 
-      <section>
+     <section>
         <div className="flex items-center gap-2 mb-4 px-2">
           <Zap size={18} className="text-[#b45309] dark:text-[#ffcb05]" />
           <h2 className={`text-base font-header font-bold uppercase tracking-widest ${theme.text}`}>Insider Picks</h2>
         </div>
         <div className="flex overflow-x-auto gap-4 pb-4 px-1 no-scrollbar snap-x snap-mandatory">
-          {(itineraries || []).slice(0, 5).map(item => (
-            <div key={item.id} onClick={() => setSelectedItem(item)} className={`min-w-[300px] h-36 ${theme.card} border ${theme.border} rounded-[24px] overflow-hidden flex cursor-pointer shadow-md snap-center relative group`}>
-              {item.img && <img src={item.img} className="w-24 h-full object-cover" alt="" />}
-              <div className="flex-1 p-4 flex flex-col justify-between">
-                <div>
-                  <h4 className={`font-bold text-xs ${theme.text} line-clamp-2 leading-tight uppercase tracking-tight`}>{item.name}</h4>
-                  {item.date && <p className={`text-[9px] font-bold ${theme.secondaryText} mt-1 truncate`}>{item.date}</p>}
+          {(itineraries || [])
+            .filter(item => item.isFeatured === true)
+            .map(item => (
+              <div key={item.id} onClick={() => setSelectedItem(item)} className={`min-w-[300px] h-36 ${theme.card} border ${theme.border} rounded-[24px] overflow-hidden flex cursor-pointer shadow-md snap-center relative group`}>
+                {item.img && <img src={item.img} className="w-24 h-full object-cover" alt="" />}
+                <div className="flex-1 p-4 flex flex-col justify-between">
+                  <div>
+                    <h4 className={`font-bold text-xs ${theme.text} line-clamp-2 leading-tight uppercase tracking-tight`}>{item.name}</h4>
+                    {item.date && <p className={`text-[9px] font-bold ${theme.secondaryText} mt-1 truncate`}>{item.date}</p>}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black text-[#0284c7] dark:text-[#38bdf8]">{item.price}</span>
+                    <button onClick={(e) => { e.stopPropagation(); setSelectedItem(item); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">Details</button>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black text-[#0284c7] dark:text-[#38bdf8]">{item.price}</span>
-                  <button onClick={(e) => { e.stopPropagation(); setSelectedItem(item); }} className="bg-[#ffcb05] text-black text-[9px] font-black uppercase py-2 px-4 rounded-xl">Details</button>
-                </div>
+                <button onClick={(e) => { e.stopPropagation(); toggleFavorite(item); }} className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === item.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/20 text-white' : 'bg-black/5 text-slate-600')}`}><Heart size={14} fill={(favorites || []).some(f => f.id === item.id) ? "currentColor" : "none"} /></button>
               </div>
-              <button onClick={(e) => { e.stopPropagation(); toggleFavorite(item); }} className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md ${(favorites || []).some(f => f.id === item.id) ? 'bg-[#ffcb05]/20 text-[#ffcb05]' : (theme.isDark ? 'bg-black/20 text-white' : 'bg-black/5 text-slate-600')}`}><Heart size={14} fill={(favorites || []).some(f => f.id === item.id) ? "currentColor" : "none"} /></button>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
 
