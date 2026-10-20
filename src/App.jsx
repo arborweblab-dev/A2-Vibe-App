@@ -1007,7 +1007,7 @@ const sceneSlides = useMemo(() => {
           categoryBadge: 'A2 Vibe City Lens',
           badgeColor: 'bg-[#ffcb05] text-black',
           title: 'The Scene',
-          subtitle: 'Curated by A2 Vibe • The Official Local City App',
+          subtitle: 'Curated by A2 Vibe • Your Local City Guide App',
           img: SLIDE_IMAGES[i % SLIDE_IMAGES.length],
           rawItem: null
         });
@@ -1058,7 +1058,7 @@ const sceneSlides = useMemo(() => {
       categoryBadge: 'A2 Vibe City Lens',
       badgeColor: 'bg-[#ffcb05] text-black',
       title: 'The Scene',
-      subtitle: 'Curated by A2 Vibe • The Official Local City App',
+      subtitle: 'Curated by A2 Vibe • Your Local City App',
       img: img,
       rawItem: null
     }));
