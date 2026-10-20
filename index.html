@@ -4,13 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5SKGDHGWWZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5SKGDHGWWZ');
+    </script>
+
     <!-- Primary Meta Tags -->
-    <title>A2 Vibe | Ann Arbor Insider</title>
-    <meta name="title" content="A2 Vibe | Ann Arbor Insider" />
+    <title>A2 Vibe | Ann Arbor Insider – Events, Food, Live Music &amp; Things To Do</title>
+    <meta name="title" content="A2 Vibe | Ann Arbor Insider – Events, Food, Live Music &amp; Things To Do" />
     <meta name="description" content="Discover the best of Ann Arbor. Explore local events, live music, dining spots, hidden gems, and culture across A2." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://a2vibe.com/" />
 
     <!-- Open Graph / Facebook / LinkedIn / iMessage -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="A2 Vibe" />
     <meta property="og:url" content="https://a2vibe.com/" />
     <meta property="og:title" content="A2 Vibe | Ann Arbor Insider" />
     <meta property="og:description" content="Discover the best of Ann Arbor. Explore local events, live music, dining spots, hidden gems, and culture across A2." />
@@ -23,26 +35,72 @@
     <meta property="twitter:description" content="Discover the best of Ann Arbor. Explore local events, live music, dining spots, hidden gems, and culture across A2." />
     <meta property="twitter:image" content="https://a2vibe.com/og-image.png" />
 
+    <!-- Structured Data (helps search engines and AI tools understand the site) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "A2 Vibe",
+      "alternateName": "A2 Vibe | Ann Arbor Insider",
+      "url": "https://a2vibe.com/",
+      "description": "A city guide to Ann Arbor, Michigan: local events, live music, dining, hidden gems, and culture.",
+      "inLanguage": "en-US",
+      "about": {
+        "@type": "City",
+        "name": "Ann Arbor",
+        "containedInPlace": { "@type": "AdministrativeArea", "name": "Michigan" }
+      }
+    }
+    </script>
+
     <!-- Site Icon: Styled Maize & Blue Building Emblem -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23ffcb05'/><path d='M35 80V32a4 4 0 0 1 4-4h22a4 4 0 0 1 4 4v48M30 80h40M44 40h12M44 52h12M44 64h12' fill='none' stroke='%2300274c' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/></svg>">
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Mobile PWA / Status Bar Styling -->
     <meta name="theme-color" content="#00274c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <style>
       body { margin: 0; background-color: #0a121e; color: white; overflow-x: hidden; }
       #root { min-height: 100vh; display: flex; justify-content: center; }
+      .seo-fallback { max-width: 640px; padding: 24px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; line-height: 1.6; }
+      .seo-fallback h1 { font-family: 'Outfit', system-ui, sans-serif; color: #ffcb05; margin-bottom: 8px; }
+      .seo-fallback a { color: #ffcb05; }
     </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Crawlable fallback content: visible to search engines and AI tools that don't run JavaScript.
+           React replaces everything inside #root as soon as the app loads. -->
+      <main class="seo-fallback">
+        <h1>A2 Vibe – Your Ann Arbor Insider</h1>
+        <p>
+          A2 Vibe is a city guide to Ann Arbor, Michigan. Discover local events, live music,
+          restaurants and cafes, hidden gems, and culture across A2, whether you're a University
+          of Michigan student, a longtime resident, or just visiting.
+        </p>
+        <h2>What you can find on A2 Vibe</h2>
+        <ul>
+          <li>Events happening around Ann Arbor</li>
+          <li>Live music and nightlife</li>
+          <li>Restaurants, cafes, and local food spots</li>
+          <li>Things to do, hidden gems, and culture</li>
+        </ul>
+        <p>Loading the app… If it doesn't load, please enable JavaScript.</p>
+      </main>
+    </div>
+    <noscript>
+      <p style="padding:24px;font-family:sans-serif;">
+        A2 Vibe is an Ann Arbor city guide covering events, live music, dining, hidden gems, and culture.
+        Please enable JavaScript to use the app.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
