@@ -107,7 +107,7 @@ const SHOPS_DATA = [
     category: 'Dispensaries',
     tier: 'featured',
     rating: '4.9',
-    address: '407 N 5th Ave, Ann Arbor, MI 48104',
+    address: '603 E William St, Ann Arbor, MI 48104',
     url: 'https://letsvibe420.com/shop/shop-ann-arbor/',
     img: 'https://a2vibe.com/images/vibe-weed.jpg',
     shortDesc: 'Premier downtown cannabis dispensary offering elite strains, top-shelf edibles, concentrates, and knowledgeable budtenders.',
