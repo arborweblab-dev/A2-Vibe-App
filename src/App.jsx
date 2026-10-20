@@ -2980,7 +2980,7 @@ const HomeView = ({
       </section>
 
       {/* FEATURED SHOPS */}
-      <section className="space-y-6 pt-2">
+        <section data-nosnippet className="space-y-6 pt-2">
         <div className="mx-1 p-6 rounded-[36px] bg-gradient-to-br from-[#00274c] via-[#081f38] to-[#122842] border border-[#ffcb05]/40 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-2xl gap-4">
           <div className="space-y-1.5 text-left">
             <div className="flex items-center gap-2">
