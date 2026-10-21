@@ -54,7 +54,7 @@ const SHOPS_DATA = [
     rating: '4.8',
     address: '4567 Washtenaw Ave, Ann Arbor, MI 48108',
     url: 'https://scrapcreativereuse.org/Ann-Arbor',
-    img: 'https://a2vibe.com/images/Scrap-Creative-Reuse.jpg',
+    img: 'https://a2vibe.com/images/Scrap.jpg',
     shortDesc: 'A eco-friendly creative treasure trove offering donated craft materials, art supplies, and upcycling inspiration.',
     longDesc: '<p>SCRAP Creative Reuse is a non-profit dedicated to educating and inspiring the community around reuse and sustainability. Browse an ever-shifting inventory of affordable art supplies, fabric, paper goods, vintage notions, and unique materials saved from landfills.</p>',
     specials: [
