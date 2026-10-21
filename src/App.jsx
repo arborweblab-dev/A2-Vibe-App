@@ -46,6 +46,25 @@ const SHOPS_DATA = [
     hours: 'Mon - Sat: 10:00 AM - 8:00 PM | Sun: 12:00 PM - 6:00 PM'
   },
   {
+    id: 'shop-scrap-creative-reuse',
+    name: 'Scrap Creative Reuse',
+    type: 'shop',
+    category: 'Arts & Crafts',
+    tier: 'featured',
+    rating: '4.8',
+    address: '4567 Washtenaw Ave, Ann Arbor, MI 48108',
+    url: 'https://scrapcreativereuse.org/Ann-Arbor',
+    img: 'https://a2vibe.com/images/Scrap-Creative-Reuse.jpg',
+    shortDesc: 'A eco-friendly creative treasure trove offering donated craft materials, art supplies, and upcycling inspiration.',
+    longDesc: '<p>SCRAP Creative Reuse is a non-profit dedicated to educating and inspiring the community around reuse and sustainability. Browse an ever-shifting inventory of affordable art supplies, fabric, paper goods, vintage notions, and unique materials saved from landfills.</p>',
+    specials: [
+      'Fill-a-Bag craft material discounts',
+      'Discounted bulk fabric and yarn deals'
+    ],
+    features: ['Eco-Friendly & Sustainable', 'Donation Center', 'Community Workshops', 'Non-Profit'],
+    hours: 'Tue - Sat: 11:00 AM - 6:00 PM | Sun - Mon: Closed'
+  },
+  {
     id: 'shop-wazoo-records',
     name: 'Wazoo Records',
     type: 'shop',
