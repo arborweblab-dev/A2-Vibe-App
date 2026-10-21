@@ -100,6 +100,7 @@ export const happeningsData = [
     price: "$25",
     neighborhood: "U-M Campus",
     img: "/images/oct-umhalloween.jpg",
+    isFeatured: true,
     shortDesc: "A spooky and spirited orchestral performance at Hill Auditorium.",
     longDesc: "<p>Members of the University Symphony and Philharmonia Orchestras perform in full costume. Enjoy classic chilling compositions in a highly entertaining atmosphere.</p>",
     url: "https://smtd.umich.edu",
