@@ -15,6 +15,22 @@ export const journalData = [
       <p>Looking for something highly Instagrammable? Lab Cafe serves up unique, bold creations like a lavender and honey latte. For a true hidden gem, seek out the Shinola Cafe, tucked away underneath the Shinola watch store downtown.</p>
     `
   },
+    {
+    id: "post-hidden-king",
+    title: "Downtown Spotlight: The Hidden King Cafe & Bar",
+    excerpt: "In-house botanical tonic, rare vermouth flights, and cold brew martinis topped with Guernsey Farms whipped cream on Main Street.",
+    author: "City Insider",
+    img: "https://a2vibe.com/images/Hidden-King-2.jpg",
+    category: "Food & Drink",
+    allCategories: ["Food & Drink", "Local Secrets", "Nightlife"],
+    isHighlight: true,
+    type: "article",
+    longDesc: `
+      <h3>Main Street's Intimate European Retreat</h3>
+      <p>Tucked away at 210 S Main Street, <strong>The Hidden King Cafe & Bar</strong> brings a cozy, dimly lit European lounge vibe to the heart of Downtown Ann Arbor. Free of noisy TVs and outfitted with tabletop chessboards and historic local photos, it has quickly become an essential stop for craft drink enthusiasts and quiet evening conversations.</p>
+      <p>The beverage program stands out with impressive in-house craftsmanship. Highlights include their signature Gin & Tonic crafted with custom botanically brewed tonic water, rare four-sample vermouth flights, and rich Cold Brew Martinis crowned with fresh Guernsey Farms Dairy whipped cream. Non-alcoholic options feature a curated selection of loose-leaf brews from local favorite TeaHaus, alongside gluten-free light bites.</p>
+    `
+  },
   {
     id: "post-2",
     title: "Look Up: The Law Quad Corbels",
