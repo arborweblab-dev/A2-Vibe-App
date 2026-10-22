@@ -5,7 +5,7 @@
 ---
 
 ## 🚀 Live Demo & Deployment
-* **Live Application:** [View on Vercel](https://arborweblab-dev.vercel.app) *(Update with your exact deployment link)*
+* **Live Application:** Vercel
 
 ---
 
