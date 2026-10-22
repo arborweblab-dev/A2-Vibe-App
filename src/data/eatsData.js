@@ -54,6 +54,24 @@ export const eatsData = [
     isHighlight: true
   },
   {
+    id: "eat-hidden-king",
+    title: "The Hidden King Cafe & Bar",
+    neighborhood: "Downtown / Main St",
+    tags: ["Cocktails", "Cafe", "European Bar", "Coffee Cocktails"],
+    cuisine: "Craft Cocktails & European Cafe",
+    address: "210 S Main St, Ann Arbor, MI 48104",
+    img: "https://a2vibe.com/images/Hidden-King.jpg",
+    images: [
+      "https://a2vibe.com/images/Hidden-King.jpg"
+    ],
+    shortDesc: "Intimate European-inspired neighborhood cafe and bar serving craft cocktails, artisanal coffee, and house-made tonic drinks.",
+    longDesc: "<p>Located on Main Street in Downtown Ann Arbor, The Hidden King Cafe & Bar delivers a cozy, dimly-lit European atmosphere. Renowned for its craft drink menu—ranging from house-steeped teas and specialty espresso cocktails to custom vermouth flights—it stands out as a unique local favorite for evening drinks and relaxed gatherings.</p><h4>Menu Highlights:</h4><ul><li><strong>Signature G&T:</strong> Made with custom in-house botanically brewed tonic water.</li><li><strong>Coffee Cocktails:</strong> Highlighting cold brew martinis topped with fresh Guernsey Farms Dairy whipped cream.</li><li><strong>Vermouth Flights:</strong> Rare local flight selections sampling distinct European vermouths.</li><li><strong>Teas & Light Bites:</strong> TeaHaus tea selections paired with small plates and gluten-free snack offerings.</li></ul>",
+    ctaText: "View Menu",
+    url: "https://order.toasttab.com/online/the-hidden-king-210-south-main-street", 
+    isHighlight: true,
+    isFeatured: true
+  },
+  {
     id: "eat-4",
     title: "Mani Osteria & Bar",
     neighborhood: "Downtown",
