@@ -90,6 +90,27 @@ export const happeningsData = [
     }
   },
   {
+    id: "oct-20",
+    name: "Candle-Making Workshop at Bløm",
+    month: "October",
+    date: "October 27, 2026",
+    time: "6:00 PM",
+    address: "100 S 4th Ave Ste 110, Ann Arbor, MI 48104 (Bløm Mead + Cider)",
+    category: ["Arts & Culture", "Nightlife"],
+    price: "Varies",
+    neighborhood: "Downtown",
+    img: "/images/Candle_Making.jpg",
+    shortDesc: "A candle making masterclass paired with local mead and cider.",
+    longDesc: "<p>Join Bløm Mead + Cider for a hands-on candle making masterclass. Enjoy crafting your own custom candle while sipping on locally sourced meads and ciders in a cozy downtown setting.</p>",
+    url: "https://www.drinkblom.com/",
+    type: "experience",
+    share: {
+      title: "Candle-Making Workshop at Bløm on A2 Vibe",
+      text: "Check out the Candle-Making Workshop at Bløm Mead + Cider on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-20`
+    }
+  },
+  {
     id: "oct-09",
     name: "U-M Orchestras Halloween Concert",
     month: "October",
