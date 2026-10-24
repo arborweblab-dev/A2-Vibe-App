@@ -216,6 +216,27 @@ export const happeningsData = [
       url: `${BASE_SHARE_URL}#oct-18`
     }
   },
+  {
+    id: "oct-22",
+    name: "Autumn Days: Halloween Finale",
+    month: "October",
+    date: "October 31, 2026",
+    time: "10:00 AM - 4:00 PM",
+    address: "3001 Earhart Rd, Ann Arbor, MI 48105 (Domino's Farms Petting Farm)",
+    category: ["Family Friendly", "Festivals"],
+    price: "Varies",
+    neighborhood: "East Ann Arbor",
+    img: "/images/Autumn_Days.jpg",
+    shortDesc: "The culminating family-friendly Halloween celebration at the Petting Farm.",
+    longDesc: "<p>The Autumn Days: Halloween Finale is the culminating celebration of the month-long fall festival at The Petting Farm at Domino's Farms[cite: 1, 2]. Scheduled for Saturday, October 31, 2026, from 10:00 AM to 4:00 PM, this family-friendly event blends a traditional working farm environment with immersive Halloween entertainment[cite: 1, 2]. The Halloween wrap-up features a costume contest, pony rides, a haunted caboose, pumpkin carving, a fall hayride, and a trick-or-treat trail[cite: 1].</p>",
+    url: "https://www.pettingfarm.com/",
+    type: "experience",
+    share: {
+      title: "Autumn Days: Halloween Finale on A2 Vibe",
+      text: "Check out Autumn Days: Halloween Finale at Domino's Farms on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-22`
+    }
+  },
 
   // --- NOVEMBER EVENTS ---
   {
