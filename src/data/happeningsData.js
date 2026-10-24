@@ -112,6 +112,27 @@ export const happeningsData = [
     }
   },
   {
+    id: "oct-19",
+    name: "Live Jazz Quartet at Blue LLama",
+    month: "October",
+    date: "October 25, 2026",
+    time: "6:00 PM",
+    address: "314 S Main St, Ann Arbor, MI 48104 (Blue LLama Jazz Club and Restaurant)",
+    category: ["Arts & Culture", "Nightlife"],
+    price: "Varies",
+    neighborhood: "Downtown",
+    img: "/images/Blue_Llama.jpg",
+    shortDesc: "A live indoor jazz quartet performance at Ann Arbor's stylish jazz club.",
+    longDesc: "<p>Experience an intimate evening of live music at the Blue LLama Jazz Club. Enjoy a sensational performance by a talented jazz quartet, perfectly paired with the lounge's signature Afro Caribbean-inspired menu and craft cocktails.</p>",
+    url: "https://www.bluellamaclub.com/",
+    type: "experience",
+    share: {
+      title: "Live Jazz Quartet at Blue LLama on A2 Vibe",
+      text: "Check out Live Jazz Quartet at Blue LLama on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-19`
+    }
+  },
+  {
     id: "oct-16",
     name: "The Mystic Market",
     month: "October",
