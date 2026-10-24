@@ -198,6 +198,28 @@ export const happeningsData = [
     }
   },
   {
+    id: "nov-09",
+    name: "Wheel of Fortune Live!",
+    month: "November",
+    date: "November 3, 2026",
+    time: "8:00 PM",
+    address: "603 E Liberty St, Ann Arbor, MI 48104 (Michigan Theater)",
+    category: ["Arts & Culture", "Family Friendly"],
+    price: "Varies",
+    neighborhood: "Downtown",
+    img: "/images/nov-wheeloffortune.jpg",
+    shortDesc: "Experience the thrill of Wheel of Fortune live on stage with a chance to win real prizes.",
+    longDesc: "<p>Wheel of Fortune Live! is coming to Ann Arbor for a live, interactive stage experience. Give yourself the chance to be randomly selected to take the stage, spin a replica wheel, solve puzzles, and win real prizes like cash or trips. Note: The historic Michigan Theater does not have an elevator operating between the Main Floor and the Balcony, so keep that in mind when choosing your seats.</p>",
+    url: "https://michtheater.org",
+    type: "experience",
+    share: {
+      title: "Wheel of Fortune Live! on A2 Vibe",
+      text: "Check out Wheel of Fortune Live! at the Michigan Theater on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#nov-09`
+    }
+  }
+
+  {
     id: "nov-03",
     name: "U-M Football vs. Michigan State",
     month: "November",
