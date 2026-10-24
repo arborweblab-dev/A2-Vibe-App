@@ -4,7 +4,7 @@ const BASE_SHARE_URL = "https://a2vibe.com/happenings";
 
 export const happeningsData = [
   // --- OCTOBER EVENTS ---
- {
+  {
     id: "oct-05",
     name: "Ann Arbor Symphony: The Lord of the Rings Symphony",
     month: "October",
@@ -90,6 +90,69 @@ export const happeningsData = [
     }
   },
   {
+    id: "oct-16",
+    name: "The Mystic Market",
+    month: "October",
+    date: "October 25, 2026",
+    time: "10:00 AM - 6:00 PM",
+    address: "114 S Main St, Ann Arbor, MI 48104 (Crazy Wisdom Bookstore)",
+    category: ["Shopping", "Hidden Gems", "Arts & Culture"],
+    price: "Free",
+    neighborhood: "Downtown",
+    img: "/images/Crazy-Wisdom-Bookstore-Mystic-Market-2026.jpg",
+    shortDesc: "An enchanted artisan gathering featuring mystical makers, intuitive readers, and esoteric crafts.",
+    longDesc: "<p>Crazy Wisdom Bookstore hosts an enchanted artisan gathering celebrating the otherworldly, esoteric, and botanical with gifted readers, makers, and photo booths.</p>",
+    url: "https://crazywisdom.net",
+    type: "experience",
+    share: {
+      title: "The Mystic Market on A2 Vibe",
+      text: "Check out The Mystic Market at Crazy Wisdom on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-16`
+    }
+  },
+  {
+    id: "oct-19",
+    name: "Live Jazz Quartet at Blue LLama",
+    month: "October",
+    date: "October 25, 2026",
+    time: "6:00 PM",
+    address: "314 S Main St, Ann Arbor, MI 48104 (Blue LLama Jazz Club and Restaurant)",
+    category: ["Arts & Culture", "Nightlife"],
+    price: "Varies",
+    neighborhood: "Downtown",
+    img: "/images/Blue_Llama.jpg",
+    shortDesc: "A live indoor jazz quartet performance at Ann Arbor's stylish jazz club.",
+    longDesc: "<p>Experience an intimate evening of live music at the Blue LLama Jazz Club. Enjoy a sensational performance by a talented jazz quartet, perfectly paired with the lounge's signature Afro Caribbean-inspired menu and craft cocktails.</p>",
+    url: "https://www.bluellamaclub.com/",
+    type: "experience",
+    share: {
+      title: "Live Jazz Quartet at Blue LLama on A2 Vibe",
+      text: "Check out Live Jazz Quartet at Blue LLama on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-19`
+    }
+  },
+  {
+    id: "oct-21",
+    name: "Not-So-Scary Haunted House",
+    month: "October",
+    date: "October 25, 2026",
+    time: "12:30 PM",
+    address: "343 S 5th Ave, Ann Arbor, MI 48104 (Ann Arbor District Library: Downtown)",
+    category: ["Family Friendly", "Festivals"],
+    price: "Free",
+    neighborhood: "Downtown",
+    img: "/images/Not_so_scary_haunted_house.jpg",
+    shortDesc: "A family-friendly, accessible, low-light indoor Halloween attraction.",
+    longDesc: "<p>Head to the Ann Arbor District Library: Downtown for a Not-So-Scary Haunted House. This accessible, low-light indoor walk-through features a 200-foot path complete with an eyeball swamp and a ghost-filled graveyard. Perfect for a family-friendly Halloween outing!</p>",
+    url: "https://aadl.org/",
+    type: "experience",
+    share: {
+      title: "Not-So-Scary Haunted House on A2 Vibe",
+      text: "Check out the Not-So-Scary Haunted House at AADL on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-21`
+    }
+  },
+  {
     id: "oct-20",
     name: "Candle-Making Workshop at Bløm",
     month: "October",
@@ -130,69 +193,6 @@ export const happeningsData = [
       title: "U-M Orchestras Halloween Concert on A2 Vibe",
       text: "Check out U-M Orchestras Halloween Concert on A2 Vibe!",
       url: `${BASE_SHARE_URL}#oct-09`
-    }
-  },
-  {
-    id: "oct-19",
-    name: "Live Jazz Quartet at Blue LLama",
-    month: "October",
-    date: "October 25, 2026",
-    time: "6:00 PM",
-    address: "314 S Main St, Ann Arbor, MI 48104 (Blue LLama Jazz Club and Restaurant)",
-    category: ["Arts & Culture", "Nightlife"],
-    price: "Varies",
-    neighborhood: "Downtown",
-    img: "/images/Blue_Llama.jpg",
-    shortDesc: "A live indoor jazz quartet performance at Ann Arbor's stylish jazz club.",
-    longDesc: "<p>Experience an intimate evening of live music at the Blue LLama Jazz Club. Enjoy a sensational performance by a talented jazz quartet, perfectly paired with the lounge's signature Afro Caribbean-inspired menu and craft cocktails.</p>",
-    url: "https://www.bluellamaclub.com/",
-    type: "experience",
-    share: {
-      title: "Live Jazz Quartet at Blue LLama on A2 Vibe",
-      text: "Check out Live Jazz Quartet at Blue LLama on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-19`
-    }
-  },
-  {
-    id: "oct-16",
-    name: "The Mystic Market",
-    month: "October",
-    date: "October 25, 2026",
-    time: "10:00 AM - 6:00 PM",
-    address: "114 S Main St, Ann Arbor, MI 48104 (Crazy Wisdom Bookstore)",
-    category: ["Shopping", "Hidden Gems", "Arts & Culture"],
-    price: "Free",
-    neighborhood: "Downtown",
-    img: "/images/Crazy-Wisdom-Bookstore-Mystic-Market-2026.jpg",
-    shortDesc: "An enchanted artisan gathering featuring mystical makers, intuitive readers, and esoteric crafts.",
-    longDesc: "<p>Crazy Wisdom Bookstore hosts an enchanted artisan gathering celebrating the otherworldly, esoteric, and botanical with gifted readers, makers, and photo booths.</p>",
-    url: "https://crazywisdom.net",
-    type: "experience",
-    share: {
-      title: "The Mystic Market on A2 Vibe",
-      text: "Check out The Mystic Market at Crazy Wisdom on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-16`
-    }
-  },
-  {
-    id: "oct-21",
-    name: "Not-So-Scary Haunted House",
-    month: "October",
-    date: "October 25, 2026",
-    time: "12:30 PM",
-    address: "343 S 5th Ave, Ann Arbor, MI 48104 (Ann Arbor District Library: Downtown)",
-    category: ["Family Friendly", "Festivals"],
-    price: "Free",
-    neighborhood: "Downtown",
-    img: "/images/Not_so_scary_haunted_house.jpg",
-    shortDesc: "A family-friendly, accessible, low-light indoor Halloween attraction.",
-    longDesc: "<p>Head to the Ann Arbor District Library: Downtown for a Not-So-Scary Haunted House. This accessible, low-light indoor walk-through features a 200-foot path complete with an eyeball swamp and a ghost-filled graveyard. Perfect for a family-friendly Halloween outing!</p>",
-    url: "https://aadl.org/",
-    type: "experience",
-    share: {
-      title: "Not-So-Scary Haunted House on A2 Vibe",
-      text: "Check out the Not-So-Scary Haunted House at AADL on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-21`
     }
   },
   {
@@ -240,27 +240,6 @@ export const happeningsData = [
     }
   },
   {
-    id: "nov-02",
-    name: "U-M Women's Basketball vs. UConn",
-    month: "November",
-    date: "November 5, 2026",
-    time: "6:30 PM",
-    address: "333 Stadium Dr, Ann Arbor, MI 48109 (Crisler Center)",
-    category: ["Sports", "Family Friendly"],
-    price: "Varies",
-    neighborhood: "U-M Campus",
-    img: "/images/UM-Womens-Basketball.jpg",
-    shortDesc: "The Wolverines take on the Huskies in a major early-season matchup.",
-    longDesc: "<p>Head to Crisler Center to watch the Michigan Women's Basketball team battle powerhouse UConn.</p>",
-    url: "https://mgoblue.com",
-    type: "experience",
-    share: {
-      title: "U-M Women's Basketball vs. UConn on A2 Vibe",
-      text: "Check out U-M Women's Basketball vs. UConn on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#nov-02`
-    }
-  },
-  {
     id: "nov-09",
     name: "Wheel of Fortune Live!",
     month: "November",
@@ -279,6 +258,27 @@ export const happeningsData = [
       title: "Wheel of Fortune Live! on A2 Vibe",
       text: "Check out Wheel of Fortune Live! at the Michigan Theater on A2 Vibe!",
       url: `${BASE_SHARE_URL}#nov-09`
+    }
+  },
+  {
+    id: "nov-02",
+    name: "U-M Women's Basketball vs. UConn",
+    month: "November",
+    date: "November 5, 2026",
+    time: "6:30 PM",
+    address: "333 Stadium Dr, Ann Arbor, MI 48109 (Crisler Center)",
+    category: ["Sports", "Family Friendly"],
+    price: "Varies",
+    neighborhood: "U-M Campus",
+    img: "/images/UM-Womens-Basketball.jpg",
+    shortDesc: "The Wolverines take on the Huskies in a major early-season matchup.",
+    longDesc: "<p>Head to Crisler Center to watch the Michigan Women's Basketball team battle powerhouse UConn.</p>",
+    url: "https://mgoblue.com",
+    type: "experience",
+    share: {
+      title: "U-M Women's Basketball vs. UConn on A2 Vibe",
+      text: "Check out U-M Women's Basketball vs. UConn on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#nov-02`
     }
   },
   {
