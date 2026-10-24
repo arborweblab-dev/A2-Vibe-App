@@ -217,8 +217,7 @@ export const happeningsData = [
       text: "Check out Wheel of Fortune Live! at the Michigan Theater on A2 Vibe!",
       url: `${BASE_SHARE_URL}#nov-09`
     }
-  }
-
+  },
   {
     id: "nov-03",
     name: "U-M Football vs. Michigan State",
