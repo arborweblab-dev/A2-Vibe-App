@@ -175,6 +175,27 @@ export const happeningsData = [
     }
   },
   {
+    id: "oct-21",
+    name: "Not-So-Scary Haunted House",
+    month: "October",
+    date: "October 25, 2026",
+    time: "12:30 PM",
+    address: "343 S 5th Ave, Ann Arbor, MI 48104 (Ann Arbor District Library: Downtown)",
+    category: ["Family Friendly", "Festivals"],
+    price: "Free",
+    neighborhood: "Downtown",
+    img: "/images/Not_so_scary_haunted_house.jpg",
+    shortDesc: "A family-friendly, accessible, low-light indoor Halloween attraction.",
+    longDesc: "<p>Head to the Ann Arbor District Library: Downtown for a Not-So-Scary Haunted House. This accessible, low-light indoor walk-through features a 200-foot path complete with an eyeball swamp and a ghost-filled graveyard. Perfect for a family-friendly Halloween outing!</p>",
+    url: "https://aadl.org/",
+    type: "experience",
+    share: {
+      title: "Not-So-Scary Haunted House on A2 Vibe",
+      text: "Check out the Not-So-Scary Haunted House at AADL on A2 Vibe!",
+      url: `${BASE_SHARE_URL}#oct-21`
+    }
+  },
+  {
     id: "oct-18",
     name: "Ann Arbor Halloween Bar Crawl",
     month: "October",
