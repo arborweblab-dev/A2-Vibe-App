@@ -165,7 +165,7 @@ export const happeningsData = [
     img: "/images/Candle_Making.jpg",
     shortDesc: "A candle making masterclass paired with local mead and cider.",
     longDesc: "<p>Join Bløm Mead + Cider for a hands-on candle making masterclass. Enjoy crafting your own custom candle while sipping on locally sourced meads and ciders in a cozy downtown setting.</p>",
-    url: "https://www.drinkblom.com/",
+    url: "https://www.drinkblom.com/events/2026/universe-workshop",
     type: "experience",
     share: {
       title: "Candle-Making Workshop at Bløm on A2 Vibe",
