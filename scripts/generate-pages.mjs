@@ -2,6 +2,7 @@
 // Runs AFTER `vite build`. Generates static, crawlable pages into dist/:
 //   /guide/                 + /guide/<slug>/        (from src/data/journalData.js)
 //   /happenings/            + /happenings/<slug>/   (from src/data/happeningsData.js)
+//   /eats/                  + /eats/<slug>/         (from src/data/eatsData.js)
 // and rewrites dist/sitemap.xml to include everything.
 
 import fs from 'node:fs';
@@ -32,6 +33,7 @@ const load = async (rel, exportName) => {
 
 const journalData = await load('src/data/journalData.js', 'journalData');
 const happeningsData = await load('src/data/happeningsData.js', 'happeningsData');
+const eatsData = await load('src/data/eatsData.js', 'eatsData');
 
 /* =========================================================================
    Helpers
@@ -97,6 +99,11 @@ h2{font-family:'Outfit',system-ui,sans-serif}
 .content h3{font-family:'Outfit',system-ui,sans-serif;font-size:24px;margin:28px 0 8px}
 .content p{margin:0 0 1rem}
 .content img{max-width:100%;height:auto;border-radius:16px}
+.content h2{font-size:22px;margin:24px 0 8px}.content ul{padding-left:22px}.content li{margin:6px 0}
+.tags{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0 0 20px}
+.tags li{font-size:13px;font-weight:700;border:1px solid var(--border);background:var(--card);border-radius:999px;padding:4px 12px;margin:0}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:0 0 24px}
+.gallery img{width:100%;height:140px;object-fit:cover;border-radius:14px}
 .box{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:22px;margin:36px 0}
 .more ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
 .more li a{display:block;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;text-decoration:none;color:var(--text);font-weight:700}
@@ -120,6 +127,7 @@ details.past{margin:32px 0}
 details.past summary{cursor:pointer;font-weight:800;font-family:'Outfit',system-ui,sans-serif;font-size:20px}
 footer{border-top:1px solid var(--border);color:var(--muted);font-size:14px;padding:28px 0 48px;margin-top:40px}
 @media(max-width:480px){.facts div{grid-template-columns:1fr;gap:2px}}
+@media(max-width:420px){.bt{display:none}nav{gap:10px}}
 `;
 
 const shell = ({ title, description, canonical, image, type = 'website', jsonld = [], body, extraHead = '' }) => `<!DOCTYPE html>
@@ -155,8 +163,8 @@ ${jsonld.map(ld).join('\n')}
 </head>
 <body>
 <header class="site"><div class="wrap">
-  <a class="brand" href="/"><img src="/favicon-48x48.png" width="32" height="32" alt="">A2 Vibe</a>
-  <nav><a href="/guide/">Guides</a><a href="/happenings/">Events</a><a class="cta" href="/">Open app</a></nav>
+  <a class="brand" href="/"><img src="/favicon-48x48.png" width="32" height="32" alt=""><span class="bt">A2 Vibe</span></a>
+  <nav><a href="/eats/">Eats</a><a href="/happenings/">Events</a><a href="/guide/">Guides</a><a class="cta" href="/">Open app</a></nav>
 </div></header>
 <div class="wrap">
 ${body}
@@ -504,7 +512,7 @@ ${others.map((o) => `<li><a href="/happenings/${o.slug}/">${esc(o.name)}<span>${
 }
 
 /* ---------- events index ---------- */
-const evCard = (e) => `    <a class="card evcard" id="${esc(e.id || e.slug)}" data-cats="${e.cats.map(slugify).join(' ')}" href="/happenings/${e.slug}/">
+const evCard = (e) => `    <a class="card evcard fcard" id="${esc(e.id || e.slug)}" data-cats="${e.cats.map(slugify).join(' ')}" href="/happenings/${e.slug}/">
       ${e.img ? `<img src="${esc(abs(e.img))}" alt="${esc(e.name)}" loading="lazy" width="96" height="96">` : ''}
       <div><small>${esc(e.date)}${e.time ? ` · ${esc(e.time.split(/[(,]/)[0].trim())}` : ''}</small><b>${esc(e.name)}</b><small>${esc(e.addr.venue || e.addr.street)}${e.price ? ` · ${esc(e.price)}` : ''}</small><small>${esc(e.shortDesc || '')}</small></div>
     </a>`;
@@ -524,8 +532,8 @@ const filterScript = `<script>
 var chips=document.querySelectorAll('.chip');if(!chips.length)return;
 chips.forEach(function(c){c.addEventListener('click',function(){var v=c.getAttribute('data-cat');
 chips.forEach(function(x){x.classList.toggle('on',x===c)});
-document.querySelectorAll('.month').forEach(function(sec){var any=false;
-sec.querySelectorAll('.evcard').forEach(function(k){var cs=(k.getAttribute('data-cats')||'').split(' ');var show=(v==='all'||cs.indexOf(v)>-1);k.style.display=show?'':'none';if(show)any=true;});
+document.querySelectorAll('.fsec').forEach(function(sec){var any=false;
+sec.querySelectorAll('.fcard').forEach(function(k){var cs=(k.getAttribute('data-cats')||'').split(' ');var show=(v==='all'||cs.indexOf(v)>-1);k.style.display=show?'':'none';if(show)any=true;});
 sec.style.display=any?'':'none';});});});})();
 </script>`;
 
@@ -568,7 +576,7 @@ write(
 ${
   upcoming.length
     ? [...byMonth.values()]
-        .map((g) => `  <section class="month">\n    <h2>${esc(g.label)}</h2>\n    <div class="cards">\n${g.list.map(evCard).join('\n')}\n    </div>\n  </section>`)
+        .map((g) => `  <section class="month fsec">\n    <h2>${esc(g.label)}</h2>\n    <div class="cards">\n${g.list.map(evCard).join('\n')}\n    </div>\n  </section>`)
         .join('\n')
     : '  <p>No upcoming events are listed right now. Check back soon, or open the A2 Vibe app.</p>'
 }
@@ -589,6 +597,219 @@ ${filterScript}`,
 addUrl(`${SITE}/happenings/`, today, 'daily', '0.9');
 
 /* =========================================================================
+   EATS (RESTAURANTS, BARS, CAFES)
+   ========================================================================= */
+// Works for any "City, ST 12345" address, with an optional "(Venue)" suffix.
+function parseStreetAddress(addr = '') {
+  const m = String(addr).match(/^(.*?),\s*([^,]+),\s*([A-Z]{2})\s*(\d{5})?(?:\s*\((.*)\))?\s*$/);
+  if (!m) return { street: String(addr), city: 'Ann Arbor', state: 'MI', zip: null };
+  return { street: m[1].trim(), city: m[2].trim(), state: m[3], zip: m[4] || null };
+}
+
+const usedEatSlugs = new Set();
+const eats = (eatsData || [])
+  .filter((r) => r && (r.title || r.name))
+  .map((r) => {
+    const name = r.title || r.name;
+    const slug = uniqueSlug(r.slug ? slugify(r.slug) : slugify(name), usedEatSlugs, r.id);
+    const cuisine = r.cuisine ? String(r.cuisine) : '';
+    const hood = r.neighborhood ? String(r.neighborhood) : '';
+    const where = [cuisine, hood].filter(Boolean).join(' · ');
+    return {
+      ...r,
+      name,
+      slug,
+      url: `${SITE}/eats/${slug}/`,
+      site: r.url && /^https?:\/\//.test(r.url) ? r.url : null,
+      cuisine,
+      hood,
+      addr: r.address ? parseStreetAddress(r.address) : null,
+      phone: r.phone || r.telephone || null,
+      tags: toArray(r.tags).map(String),
+      gallery: [...new Set(toArray(r.images).map(abs))].filter((u) => u !== abs(r.img)).slice(0, 8),
+      ctaText: r.ctaText ? String(r.ctaText) : 'Official website',
+      description: (() => {
+        const short = stripHtml(r.shortDesc || '') || name;
+        return clip(`${short}${/[.!?]$/.test(short) ? '' : '.'} ${where ? `${where} · ` : ''}Ann Arbor, MI`);
+      })(),
+      bodyHtml: (r.longDesc || (r.shortDesc ? `<p>${esc(r.shortDesc)}</p>` : ''))
+        .replace(/<h4(\s|>)/g, '<h2$1')
+        .replace(/<\/h4>/g, '</h2>'),
+    };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const eatMapsLink = (r) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${r.name} ${r.address || 'Ann Arbor, MI'}`)}`;
+
+const eatType = (r) => {
+  if (/ice cream/i.test(r.cuisine)) return 'IceCreamShop';
+  if (/grocery/i.test(r.tags.join(' '))) return 'GroceryStore';
+  if (/\b(bar|pub|brewpub|brewery|taproom|tavern|cocktails?)\b/i.test(r.cuisine)) return 'BarOrPub';
+  return 'Restaurant';
+};
+
+const eatJsonLd = (r) => {
+  const priceRange = typeof r.price === 'string' && /^(\${1,4}|\$\d[\d\s$\-–.]*)$/.test(r.price.trim()) ? r.price.trim() : null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': eatType(r),
+    name: r.name,
+    url: r.site || r.url,
+    mainEntityOfPage: r.url,
+    image: [abs(r.img), ...r.gallery],
+    description: r.description,
+    ...(r.tags.length ? { keywords: r.tags.join(', ') } : {}),
+    ...(r.cuisine ? { servesCuisine: r.cuisine } : {}),
+    ...(r.addr
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: r.addr.street,
+            addressLocality: r.addr.city,
+            addressRegion: r.addr.state,
+            ...(r.addr.zip ? { postalCode: r.addr.zip } : {}),
+            addressCountry: 'US',
+          },
+        }
+      : {}),
+    ...(r.phone ? { telephone: String(r.phone) } : {}),
+    ...(priceRange ? { priceRange } : {}),
+    ...(typeof r.menu === 'string' && /^https?:\/\//.test(r.menu) ? { hasMenu: r.menu } : {}),
+  };
+};
+
+for (const r of eats) {
+  const sameCuisine = eats.filter((o) => o.slug !== r.slug && r.cuisine && o.cuisine === r.cuisine);
+  const rest = eats.filter((o) => o.slug !== r.slug && !sameCuisine.includes(o));
+  const others = [...sameCuisine, ...rest].slice(0, 5);
+  const rel = `noopener${r.sponsored ? ' sponsored nofollow' : ''}`;
+
+  const body = `
+<main>
+<article>
+  <p class="kicker">${esc(r.cuisine || 'Ann Arbor Eats')}</p>
+  <h1>${esc(r.name)}</h1>
+  <dl class="facts">
+    ${r.cuisine ? `<div><dt>Cuisine</dt><dd>${esc(r.cuisine)}</dd></div>` : ''}
+    ${r.address ? `<div><dt>Address</dt><dd>${esc(r.address)}</dd></div>` : ''}
+    ${r.hood ? `<div><dt>Area</dt><dd>${esc(r.hood)}</dd></div>` : ''}
+    ${r.price ? `<div><dt>Price</dt><dd>${esc(r.price)}</dd></div>` : ''}
+    ${r.hours ? `<div><dt>Hours</dt><dd>${esc(r.hours)}</dd></div>` : ''}
+    ${r.phone ? `<div><dt>Phone</dt><dd><a href="tel:${esc(String(r.phone).replace(/[^\d+]/g, ''))}">${esc(r.phone)}</a></dd></div>` : ''}
+  </dl>
+  ${r.tags.length ? `<ul class="tags">${r.tags.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+  <div class="actions">
+    ${r.site ? `<a class="btn" href="${esc(r.site)}" target="_blank" rel="${rel}">${esc(r.ctaText)}</a>` : ''}
+    <a class="btn alt" href="${esc(eatMapsLink(r))}" target="_blank" rel="noopener">Get directions</a>
+  </div>
+  ${r.img ? `<img class="hero" src="${esc(abs(r.img))}" alt="${esc(r.name)}" loading="eager">` : ''}
+  ${r.gallery.length ? `<div class="gallery">${r.gallery.map((u, i) => `<img src="${esc(u)}" alt="${esc(r.name)} photo ${i + 2}" loading="lazy">`).join('')}</div>` : ''}
+  <div class="content">${r.bodyHtml}</div>
+</article>
+<div class="box">
+  <strong>More to explore in Ann Arbor</strong>
+  <p style="margin:6px 0 14px">Save your favorites and find shops, parks and events in the free A2 Vibe app.</p>
+  <a class="btn" href="/">Open A2 Vibe</a> <a class="btn alt" href="/eats/">All Ann Arbor eats</a>
+</div>
+${others.length ? `<aside class="more"><h2>More places to eat</h2><ul>
+${others.map((o) => `<li><a href="/eats/${o.slug}/">${esc(o.name)}<span>${esc([o.cuisine, o.hood].filter(Boolean).join(' · '))}</span></a></li>`).join('\n')}
+</ul></aside>` : ''}
+</main>`;
+
+  write(
+    `eats/${r.slug}/index.html`,
+    shell({
+      title: `${r.name} | Ann Arbor Eats | A2 Vibe`,
+      description: r.description,
+      canonical: r.url,
+      image: abs(r.img),
+      jsonld: [
+        eatJsonLd(r),
+        crumbs([
+          { name: 'A2 Vibe', url: `${SITE}/` },
+          { name: 'Ann Arbor Eats', url: `${SITE}/eats/` },
+          { name: r.name, url: r.url },
+        ]),
+      ],
+      body,
+    })
+  );
+  addUrl(r.url, today, 'monthly', '0.7');
+}
+
+/* ---------- eats index ---------- */
+const eatCard = (r) => `    <a class="card fcard" id="${esc(r.id || r.slug)}" data-cats="${catsOf(r).map(slugify).join(' ')}" href="/eats/${r.slug}/">
+      ${r.img ? `<img src="${esc(abs(r.img))}" alt="${esc(r.name)}" loading="lazy" width="96" height="96">` : ''}
+      <div><small>${esc([r.cuisine, r.hood].filter(Boolean).join(' · '))}</small><b>${esc(r.name)}</b><small>${esc(r.shortDesc || '')}</small></div>
+    </a>`;
+
+const catsOf = (r) => (r.tags.length ? r.tags : r.cuisine ? [r.cuisine] : []);
+const tagCount = new Map();
+eats.forEach((r) => catsOf(r).forEach((t) => { const k = slugify(t); const cur = tagCount.get(k) || { label: t, n: 0 }; cur.n++; tagCount.set(k, cur); }));
+const topCuisines = [...tagCount].filter(([, v]) => v.n >= 2).sort((a, b) => b[1].n - a[1].n).slice(0, 12).map(([k, v]) => [k, v.label]);
+const featuredEats = eats.filter((r) => r.isFeatured);
+const otherEats = eats.filter((r) => !r.isFeatured);
+
+write(
+  'eats/index.html',
+  shell({
+    title: 'Ann Arbor Restaurants, Bars & Cafes | A2 Vibe Eats',
+    description:
+      'A curated guide to Ann Arbor, Michigan restaurants, bars and cafes: find local favorites by cuisine and neighborhood with A2 Vibe.',
+    canonical: `${SITE}/eats/`,
+    image: `${SITE}/og-image.png`,
+    jsonld: [
+      crumbs([
+        { name: 'A2 Vibe', url: `${SITE}/` },
+        { name: 'Ann Arbor Eats', url: `${SITE}/eats/` },
+      ]),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'Ann Arbor Eats',
+        url: `${SITE}/eats/`,
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: eats.map((r, i) => ({ '@type': 'ListItem', position: i + 1, url: r.url })),
+        },
+      },
+    ],
+    body: `
+<main>
+  <p class="kicker">A2 Eats</p>
+  <h1>Ann Arbor Restaurants, Bars &amp; Cafes</h1>
+  <p class="meta">${eats.length} local spots curated by A2 Vibe. Hours and menus change, so check with each place before you go.</p>
+  ${
+    topCuisines.length
+      ? `<div class="chips" aria-label="Filter by type of place"><button type="button" class="chip on" data-cat="all">All</button>${topCuisines
+          .map(([k, label]) => `<button type="button" class="chip" data-cat="${esc(k)}">${esc(label)}</button>`)
+          .join('')}</div>`
+      : ''
+  }
+${
+  featuredEats.length
+    ? `  <section class="fsec">\n    <h2>Featured</h2>\n    <div class="cards">\n${featuredEats.map(eatCard).join('\n')}\n    </div>\n  </section>`
+    : ''
+}
+  <section class="fsec">
+    <h2>${featuredEats.length ? 'All Ann Arbor eats' : 'Ann Arbor eats'}</h2>
+    <div class="cards">
+${otherEats.map(eatCard).join('\n')}
+    </div>
+  </section>
+  <div class="box">
+    <strong>Own a restaurant or bar in Ann Arbor?</strong>
+    <p style="margin:6px 0 14px">Open the A2 Vibe app to list or feature your business.</p>
+    <a class="btn" href="/">Open A2 Vibe</a>
+  </div>
+</main>
+${filterScript}`,
+  })
+);
+addUrl(`${SITE}/eats/`, today, 'weekly', '0.9');
+
+/* =========================================================================
    Sitemap
    ========================================================================= */
 const all = [{ loc: `${SITE}/`, lastmod: today, changefreq: 'weekly', priority: '1.0' }, ...sitemapUrls];
@@ -607,5 +828,5 @@ ${all
 `
 );
 
-console.log(`✓ ${guides.length} guide page(s), ${events.length} event page(s) (${upcoming.length} upcoming, ${past.length} past)`);
+console.log(`✓ ${guides.length} guide page(s), ${events.length} event page(s) (${upcoming.length} upcoming, ${past.length} past), ${eats.length} eats page(s)`);
 console.log(`✓ sitemap.xml with ${all.length} URLs (build date ${today})`);
