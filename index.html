@@ -73,13 +73,26 @@
     <style>
       body { margin: 0; background-color: #0a121e; color: white; overflow-x: hidden; }
       #root { min-height: 100vh; display: flex; justify-content: center; }
-      .seo-fallback { max-width: 640px; padding: 24px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; line-height: 1.6; }
+      /* SEO/no-JS fallback: present in the HTML for crawlers, hidden from people using the app */
+      .seo-fallback { display: none; max-width: 640px; padding: 24px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; line-height: 1.6; }
+      /* Brief branded splash shown until React mounts */
+      .splash { flex: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+      .splash img { border-radius: 18px; animation: a2pulse 1.2s ease-in-out infinite; }
+      @keyframes a2pulse { 0%, 100% { opacity: .45; transform: scale(.96); } 50% { opacity: 1; transform: scale(1); } }
+      @media (prefers-reduced-motion: reduce) { .splash img { animation: none; opacity: .9; } }
       .seo-fallback h1 { font-family: 'Outfit', system-ui, sans-serif; color: #ffcb05; margin-bottom: 8px; }
       .seo-fallback a { color: #ffcb05; }
     </style>
+    <noscript>
+      <style>
+        .seo-fallback { display: block !important; }
+        .splash { display: none !important; }
+      </style>
+    </noscript>
   </head>
   <body>
     <div id="root">
+      <div class="splash" aria-hidden="true"><img src="/favicon-96x96.png" width="64" height="64" alt=""></div>
       <!-- Crawlable fallback content: visible to search engines and AI tools that don't run JavaScript.
            React replaces everything inside #root as soon as the app loads. -->
       <main class="seo-fallback">
