@@ -3568,16 +3568,16 @@ export default function App() {
       <div className={`w-full max-w-xl min-h-screen ${theme.appBg} relative shadow-2xl flex flex-col items-center border-x border-white/5`}>
         
         {/* Persistent App Header */}
-        <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/90 backdrop-blur-xl border-b ${theme.border} px-5 py-4 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTool(null); setView('home'); }}>
-            <div className="bg-[#ffcb05] w-10 h-10 rounded-xl flex items-center justify-center rotate-6 shadow-lg text-black flex-shrink-0">
-              <Building size={20}/>
-            </div>
-            <div className="flex flex-col leading-none text-left">
-              <span className={`text-[11px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span>
-              <span className={`text-[9px] font-header font-bold uppercase tracking-widest ${theme.secondaryText}`}>Vibe</span>
-            </div>
-          </div>
+<header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 ${theme.card}/90 backdrop-blur-xl border-b ${theme.border} px-5 py-4 flex justify-between items-center rounded-b-[40px] shadow-lg`}>
+  <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTool(null); setView('home'); }}>
+    <div className="bg-[#ffcb05] h-10 w-10 rounded-xl flex items-center justify-center rotate-3 shadow-lg text-black flex-shrink-0">
+      <Trees size={24} />
+    </div>
+    <div className="flex flex-col leading-none text-left">
+      <span className={`text-[11px] font-header font-black uppercase tracking-tighter ${theme.text}`}>A2</span>
+      <span className={`text-[9px] font-header font-bold uppercase tracking-widest ${theme.secondaryText}`}>Vibe</span>
+    </div>
+  </div>
           
           <div className="flex items-center gap-2.5">
             {!user ? (
