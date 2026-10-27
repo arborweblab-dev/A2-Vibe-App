@@ -2934,6 +2934,10 @@ const HubView = ({
           )}
         </section>
 
+         {/* TIKTOK CTA BANNER */}
+                  <TikTokCTA />
+
+
         {/* MY VIBE FOOTER */}
         <footer className={`pt-6 border-t ${theme.border} space-y-3 px-1`}>
           <div
