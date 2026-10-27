@@ -190,7 +190,7 @@ export const happeningsData = [
     category: ["Workshops", "Arts & Culture"],
     price: "$100",
     neighborhood: "West Side",
-    img: "/images/Lullco5.jpg",
+    img: "/images/Lullco4.jpg",
     shortDesc: "Hands-on Bring Your Own Project upholstery and restoration classes with morning and afternoon sessions. Bring a friend FREE!",
     longDesc: "<p>Join hands-on, Bring Your Own Project upholstery and restoration classes at LullCo Design Studio in Ann Arbor, MI, or join live over Zoom. Whether you’re refinishing a thrifted chair or reviving a family heirloom, expert guidance is provided every step of the way. All tools and materials are available on-site, and classes are beginner-friendly. <strong>All BYOP classes are Bring a Friend FREE to help with your project!</strong></p>",
     url: "https://lullcostudio.com",
