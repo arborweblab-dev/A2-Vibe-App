@@ -680,6 +680,45 @@ const TikTokLogo = ({ size = 24, className = '' }) => (
     />
   </svg>
 );
+const TikTokCTA = () => (
+  <section className="px-2 pt-2">
+    <div
+      onClick={() => window.open('https://www.tiktok.com/@mya2vibe', '_blank', 'noopener,noreferrer')}
+      className="relative overflow-hidden rounded-[32px] p-6 cursor-pointer group shadow-xl bg-gradient-to-br from-gray-900 via-black to-gray-900 border border-white/10 active:scale-95 transition-all"
+    >
+      {/* TikTok Color Glow Accents */}
+      <div className="absolute -top-10 -left-10 w-32 h-32 bg-[#25F4EE]/30 blur-3xl rounded-full pointer-events-none transition-all group-hover:bg-[#25F4EE]/40" />
+      <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#FE2C55]/30 blur-3xl rounded-full pointer-events-none transition-all group-hover:bg-[#FE2C55]/40" />
+
+      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-4 text-center sm:text-left">
+          {/* Logo badge */}
+          <div className="w-14 h-14 rounded-2xl bg-black border border-white/15 flex items-center justify-center shadow-lg flex-shrink-0 group-hover:scale-105 transition-transform">
+            <TikTokLogo size={30} />
+          </div>
+
+          <div className="space-y-1.5">
+            <span className="text-[10px] font-black uppercase text-[#FE2C55] tracking-[0.2em] block">
+              @mya2vibe on TikTok
+            </span>
+            <h4 className="text-xl font-header font-black uppercase text-white tracking-tight italic">
+              See The City In Action
+            </h4>
+            <p className="text-xs text-slate-300 leading-relaxed max-w-[260px]">
+              Hit follow for POV city tours, hidden foodie gems, and live local weekend happenings.
+            </p>
+          </div>
+        </div>
+
+        <button className="px-5 py-3.5 bg-white text-black rounded-2xl font-black text-xs uppercase shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:shadow-[0_0_20px_rgba(37,244,238,0.4)] transition-all flex items-center gap-2 flex-shrink-0">
+          <TikTokLogo size={14} className="invert" />
+          <span>Follow Us</span>
+          <ArrowRight size={14} />
+        </button>
+      </div>
+    </div>
+  </section>
+);
 
 const PARKS_DATA = [
   {
@@ -3001,44 +3040,8 @@ const HomeView = ({
           ))}
         </div>
       </section>
-              {/* TIKTOK CTA BANNER */}
-      <section className="px-2 pt-2">
-        <div
-          onClick={() => window.open('https://www.tiktok.com/@mya2vibe', '_blank', 'noopener,noreferrer')}
-          className="relative overflow-hidden rounded-[32px] p-6 cursor-pointer group shadow-xl bg-gradient-to-br from-gray-900 via-black to-gray-900 border border-white/10 active:scale-95 transition-all"
-        >
-          {/* TikTok Color Glow Accents */}
-          <div className="absolute -top-10 -left-10 w-32 h-32 bg-[#25F4EE]/30 blur-3xl rounded-full pointer-events-none transition-all group-hover:bg-[#25F4EE]/40" />
-          <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#FE2C55]/30 blur-3xl rounded-full pointer-events-none transition-all group-hover:bg-[#FE2C55]/40" />
-
-          <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4 text-center sm:text-left">
-              {/* Logo badge */}
-              <div className="w-14 h-14 rounded-2xl bg-black border border-white/15 flex items-center justify-center shadow-lg flex-shrink-0 group-hover:scale-105 transition-transform">
-                <TikTokLogo size={30} />
-              </div>
-
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-black uppercase text-[#FE2C55] tracking-[0.2em] block">
-                  @mya2vibe on TikTok
-                </span>
-                <h4 className="text-xl font-header font-black uppercase text-white tracking-tight italic">
-                  See The City In Action
-                </h4>
-                <p className="text-xs text-slate-300 leading-relaxed max-w-[260px]">
-                  Hit follow for POV city tours, hidden foodie gems, and live local weekend happenings.
-                </p>
-              </div>
-            </div>
-
-            <button className="px-5 py-3.5 bg-white text-black rounded-2xl font-black text-xs uppercase shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:shadow-[0_0_20px_rgba(37,244,238,0.4)] transition-all flex items-center gap-2 flex-shrink-0">
-              <TikTokLogo size={14} className="invert" />
-              <span>Follow Us</span>
-              <ArrowRight size={14} />
-            </button>
-          </div>
-        </div>
-      </section>
+                   {/* TIKTOK CTA BANNER */}
+      <TikTokCTA />
             
           
       <section id="island-flavors">
@@ -3878,6 +3881,10 @@ export default function App() {
                       <div className={`py-20 text-center opacity-40 text-sm italic ${theme.secondaryText}`}>No events found for this filter combination.</div>
                     )}
                   </div>
+
+                   {/* TIKTOK CTA BANNER */}
+                  <TikTokCTA />
+
 
                   {/* HAPPENINGS BOTTOM CTA */}
                   <div className="pt-2 px-1">
