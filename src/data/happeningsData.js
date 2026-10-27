@@ -181,6 +181,27 @@ export const happeningsData = [
     }
   },
   {
+    id: "nov-10",
+    name: "Bring Your Own Project: Upholstery & Restoration Classes",
+    month: "November",
+    date: "November 6, 2026",
+    time: "9:00 AM & 2:00 PM",
+    address: "3744 Plaza Dr, Ann Arbor, MI 48108 (LullCo Design Studio / Hybrid Live Zoom)",
+    category: ["Workshops", "Arts & Culture"],
+    price: "$100",
+    neighborhood: "West Side",
+    img: "/images/Lullco5.jpg",
+    shortDesc: "Hands-on Bring Your Own Project upholstery and restoration classes with morning and afternoon sessions. Bring a friend FREE!",
+    longDesc: "<p>Join hands-on, Bring Your Own Project upholstery and restoration classes at LullCo Design Studio in Ann Arbor, MI, or join live over Zoom. Whether you’re refinishing a thrifted chair or reviving a family heirloom, expert guidance is provided every step of the way. All tools and materials are available on-site, and classes are beginner-friendly. <strong>All BYOP classes are Bring a Friend FREE to help with your project!</strong></p>",
+    url: "https://lullcostudio.com",
+    type: "experience",
+    share: {
+      title: "Bring Your Own Project: Upholstery at LullCo Design Studio",
+      text: "Check out Upholstery Classes with LullCo Design Studio!",
+      url: `${BASE_SHARE_URL}#nov-10`
+    }
+  },
+  {
     id: "nov-03",
     name: "U-M Football vs. Michigan State",
     month: "November",
