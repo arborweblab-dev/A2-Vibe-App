@@ -4,27 +4,7 @@ const BASE_SHARE_URL = "https://a2vibe.com/happenings";
 
 export const happeningsData = [
   // --- OCTOBER EVENTS ---
-  {
-    id: "oct-05",
-    name: "Ann Arbor Symphony: The Lord of the Rings Symphony",
-    month: "October",
-    date: "October 23, 2026",
-    time: "7:30 PM",
-    address: "825 N University Ave, Ann Arbor, MI 48109 (Hill Auditorium)",
-    category: ["Arts & Culture", "Nightlife"],
-    price: "Varies",
-    neighborhood: "U-M Campus",
-    img: "/images/oct-symphony.jpg",
-    shortDesc: "A symphonic journey from the Shire to Mordor.",
-    longDesc: "<p>An operatic tapestry of J.R.R. Tolkien’s Middle-earth performed by the A2SO, featuring the U-M Men's and Women's Glee Clubs.</p>",
-    url: "https://a2so.com/",
-    type: "experience",
-    share: {
-      title: "A2SO: The Lord of the Rings Symphony on A2 Vibe",
-      text: "Check out A2SO: The Lord of the Rings Symphony on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-05`
-    }
-  },
+  
   {
     id: "oct-06",
     name: "Great Lakes Cup Show",
@@ -36,6 +16,7 @@ export const happeningsData = [
     price: "Free",
     neighborhood: "West Side",
     img: "/images/oct-cupshow.jpg",
+    isFeatured: true,
     shortDesc: "Juried exhibition highlighting the artistry of ceramic cups.",
     longDesc: "<p>Yourist Studio Gallery hosts this celebration of form and function. Browse unique ceramic cups handmade by 45 juried artists.</p>",
     url: "https://youriststudio.com",
@@ -46,112 +27,7 @@ export const happeningsData = [
       url: `${BASE_SHARE_URL}#oct-06`
     }
   },
-  {
-    id: "oct-07",
-    name: "U-M Football vs. Indiana",
-    month: "October",
-    date: "October 24, 2026",
-    time: "1:00 PM",
-    address: "1201 S Main St, Ann Arbor, MI 48104 (Michigan Stadium)",
-    category: ["Sports", "Family Friendly"],
-    price: "Varies",
-    neighborhood: "U-M Campus",
-    img: "/images/UMvsIndiana.jpg",
-    shortDesc: "The Wolverines take on the Indiana Hoosiers at the Big House.",
-    longDesc: "<p>Experience the thrill of Big Ten football as Michigan defends the Big House against the Indiana Hoosiers.</p>",
-    url: "https://mgoblue.com/",
-    type: "experience",
-    share: {
-      title: "U-M Football vs. Indiana on A2 Vibe",
-      text: "Check out U-M Football vs. Indiana on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-07`
-    }
-  },
-  {
-    id: "oct-08",
-    name: "Downtown Trick-or-Treat Parade",
-    month: "October",
-    date: "October 25, 2026",
-    time: "11:30 AM - 3:00 PM",
-    address: "Main St, Ann Arbor, MI 48104",
-    category: ["Family Friendly", "Festivals"],
-    price: "Free",
-    neighborhood: "Downtown",
-    img: "/images/oct-trick.jpg",
-    isFeatured: true,
-    shortDesc: "Local shops hand out treats to kids on Main Street.",
-    longDesc: "<p>A safe and fun afternoon for families to explore downtown stores and collect candy in costume along Main Street.</p>",
-    url: "https://www.mainstreetannarbor.org/",
-    type: "experience",
-    share: {
-      title: "Downtown Trick-or-Treat Parade on A2 Vibe",
-      text: "Check out Downtown Trick-or-Treat Parade on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-08`
-    }
-  },
-  {
-    id: "oct-16",
-    name: "The Mystic Market",
-    month: "October",
-    date: "October 25, 2026",
-    time: "10:00 AM - 6:00 PM",
-    address: "114 S Main St, Ann Arbor, MI 48104 (Crazy Wisdom Bookstore)",
-    category: ["Shopping", "Hidden Gems", "Arts & Culture"],
-    price: "Free",
-    neighborhood: "Downtown",
-    img: "/images/Crazy-Wisdom-Bookstore-Mystic-Market-2026.jpg",
-    shortDesc: "An enchanted artisan gathering featuring mystical makers, intuitive readers, and esoteric crafts.",
-    longDesc: "<p>Crazy Wisdom Bookstore hosts an enchanted artisan gathering celebrating the otherworldly, esoteric, and botanical with gifted readers, makers, and photo booths.</p>",
-    url: "https://crazywisdom.net",
-    type: "experience",
-    share: {
-      title: "The Mystic Market on A2 Vibe",
-      text: "Check out The Mystic Market at Crazy Wisdom on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-16`
-    }
-  },
-  {
-    id: "oct-19",
-    name: "Live Jazz Quartet at Blue LLama",
-    month: "October",
-    date: "October 25, 2026",
-    time: "6:00 PM",
-    address: "314 S Main St, Ann Arbor, MI 48104 (Blue LLama Jazz Club and Restaurant)",
-    category: ["Arts & Culture", "Nightlife"],
-    price: "Varies",
-    neighborhood: "Downtown",
-    img: "/images/Blue_Llama.jpg",
-    shortDesc: "A live indoor jazz quartet performance at Ann Arbor's stylish jazz club.",
-    longDesc: "<p>Experience an intimate evening of live music at the Blue LLama Jazz Club. Enjoy a sensational performance by a talented jazz quartet, perfectly paired with the lounge's signature Afro Caribbean-inspired menu and craft cocktails.</p>",
-    url: "https://www.bluellamaclub.com/",
-    type: "experience",
-    share: {
-      title: "Live Jazz Quartet at Blue LLama on A2 Vibe",
-      text: "Check out Live Jazz Quartet at Blue LLama on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-19`
-    }
-  },
-  {
-    id: "oct-21",
-    name: "Not-So-Scary Haunted House",
-    month: "October",
-    date: "October 25, 2026",
-    time: "12:30 PM",
-    address: "343 S 5th Ave, Ann Arbor, MI 48104 (Ann Arbor District Library: Downtown)",
-    category: ["Family Friendly", "Festivals"],
-    price: "Free",
-    neighborhood: "Downtown",
-    img: "/images/Not_so_scary_haunted_house.jpg",
-    shortDesc: "A family-friendly, accessible, low-light indoor Halloween attraction.",
-    longDesc: "<p>Head to the Ann Arbor District Library: Downtown for a Not-So-Scary Haunted House. This accessible, low-light indoor walk-through features a 200-foot path complete with an eyeball swamp and a ghost-filled graveyard. Perfect for a family-friendly Halloween outing!</p>",
-    url: "https://aadl.org/",
-    type: "experience",
-    share: {
-      title: "Not-So-Scary Haunted House on A2 Vibe",
-      text: "Check out the Not-So-Scary Haunted House at AADL on A2 Vibe!",
-      url: `${BASE_SHARE_URL}#oct-21`
-    }
-  },
+ 
   {
     id: "oct-20",
     name: "Candle-Making Workshop at Bløm",
@@ -163,6 +39,7 @@ export const happeningsData = [
     price: "Varies",
     neighborhood: "Downtown",
     img: "/images/Candle_Making.jpg",
+    isFeatured: true,
     shortDesc: "A candle making masterclass paired with local mead and cider.",
     longDesc: "<p>Join Bløm Mead + Cider for a hands-on candle making masterclass. Enjoy crafting your own custom candle while sipping on locally sourced meads and ciders in a cozy downtown setting.</p>",
     url: "https://www.drinkblom.com/events/2026/universe-workshop",
@@ -206,6 +83,7 @@ export const happeningsData = [
     price: "Varies",
     neighborhood: "U-M Campus / Downtown",
     img: "/images/Halloween-Bar-Crawl.jpg",
+    isFeatured: true,
     shortDesc: "Spooktacular Halloween bar crawl featuring creepy cocktails and costume contests.",
     longDesc: "<p>Crawl With Us brings a massive Halloween bar crawl through Ann Arbor's top bars, featuring drink specials, professional photographers, custom badges, and an epic after-party.</p>",
     url: "https://www.crawlwith.us/annarbor/halloween",
