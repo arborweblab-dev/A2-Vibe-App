@@ -654,6 +654,32 @@ const TransitModal = ({ isOpen, onClose, theme }) => {
     </div>
   );
 };
+const TikTokLogo = ({ size = 24, className = '' }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    className={`flex-shrink-0 ${className}`}
+    style={{ display: 'block' }}
+    aria-label="TikTok"
+    role="img"
+  >
+    <path
+      transform="translate(-0.8 -0.8)"
+      fill="#25F4EE"
+      d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"
+    />
+    <path
+      transform="translate(0.8 0.8)"
+      fill="#FE2C55"
+      d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"
+    />
+    <path
+      fill="#FFFFFF"
+      d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"
+    />
+  </svg>
+);
 
 const PARKS_DATA = [
   {
@@ -2975,7 +3001,7 @@ const HomeView = ({
           ))}
         </div>
       </section>
-         {/* TIKTOK CTA BANNER */}
+              {/* TIKTOK CTA BANNER */}
       <section className="px-2 pt-2">
         <div
           onClick={() => window.open('https://www.tiktok.com/@mya2vibe', '_blank', 'noopener,noreferrer')}
@@ -2986,24 +3012,27 @@ const HomeView = ({
           <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#FE2C55]/30 blur-3xl rounded-full pointer-events-none transition-all group-hover:bg-[#FE2C55]/40" />
 
           <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="space-y-1.5 text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#25F4EE" className="flex-shrink-0">
-                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-                </svg>
-                <span className="text-[10px] font-black uppercase text-[#FE2C55] tracking-[0.2em]">
+            <div className="flex items-center gap-4 text-center sm:text-left">
+              {/* Logo badge */}
+              <div className="w-14 h-14 rounded-2xl bg-black border border-white/15 flex items-center justify-center shadow-lg flex-shrink-0 group-hover:scale-105 transition-transform">
+                <TikTokLogo size={30} />
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-black uppercase text-[#FE2C55] tracking-[0.2em] block">
                   @mya2vibe on TikTok
                 </span>
+                <h4 className="text-xl font-header font-black uppercase text-white tracking-tight italic">
+                  See The City In Action
+                </h4>
+                <p className="text-xs text-slate-300 leading-relaxed max-w-[260px]">
+                  Hit follow for POV city tours, hidden foodie gems, and live local weekend happenings.
+                </p>
               </div>
-              <h4 className="text-xl font-header font-black uppercase text-white tracking-tight italic">
-                See The City In Action
-              </h4>
-              <p className="text-xs text-slate-300 leading-relaxed max-w-[260px] mx-auto sm:mx-0">
-                Hit follow for POV city tours, hidden foodie gems, and live local weekend happenings.
-              </p>
             </div>
 
             <button className="px-5 py-3.5 bg-white text-black rounded-2xl font-black text-xs uppercase shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:shadow-[0_0_20px_rgba(37,244,238,0.4)] transition-all flex items-center gap-2 flex-shrink-0">
+              <TikTokLogo size={14} className="invert" />
               <span>Follow Us</span>
               <ArrowRight size={14} />
             </button>
