@@ -35,7 +35,7 @@ const SHOPS_DATA = [
     rating: '4.6',
     address: '3744 Plaza Dr, Ann Arbor, MI 48108',
     url: 'https://lullcostudio.com',
-    img: 'https://a2vibe.com/images/Lullco.jpg',
+    img: 'https://a2vibe.com/images/Lullco2.jpg',
     shortDesc: 'Ann Arbor’s premier community maker space and studio offering professional equipment, upholstery workshops, and a fully stocked fabric store.',
     longDesc: '<p>Spanning 6,200 square feet near Zingerman’s Bakehouse, LullCo Design Studio is a dedicated haven for local makers, upholsterers, and textile enthusiasts. Whether you want to hire expert craftsmen to restore your vintage furniture or rent workspace to tackle a DIY project yourself, LullCo provides professional-grade tools, supplies, foam, notions, and hands-on guidance for all experience levels.</p>',
     specials: [
