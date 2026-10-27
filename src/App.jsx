@@ -2975,13 +2975,7 @@ const HomeView = ({
           ))}
         </div>
       </section>
-      {/* TIKTOK CTA BANNER */}
-      <section className="px-2 pt-2">
-        <div 
-          onClick={() => window.open('https://www.tiktok.com/@mya2vibe', '_blank', 'noopener,noreferrer')}
-          className="relative overflow-hidden rounded-[32px] p-6 cursor-pointer group shadow-xl bg-gradient-to-br from-gray-900 via-black to-gray-900 border border-white/10 active:scale-95 transition-all"
-        >
-         {/* TIKTOK CTA BANNER */}
+    {/* TIKTOK CTA BANNER */}
 <section className="px-2 pt-2">
   <div 
     onClick={() => window.open('https://www.tiktok.com/@mya2vibe', '_blank', 'noopener,noreferrer')}
@@ -2994,8 +2988,8 @@ const HomeView = ({
     <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div className="space-y-1.5 text-center sm:text-left">
         <div className="flex items-center justify-center sm:justify-start gap-2">
-          {/* Official TikTok SVG Icon */}
-          <svg className="w-4 h-4 text-[#25F4EE]" viewBox="0 0 24 24" fill="currentColor">
+          {/* Explicitly sized TikTok SVG Icon */}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#25F4EE" className="flex-shrink-0">
             <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
           </svg>
           <span className="text-[10px] font-black uppercase text-[#FE2C55] tracking-[0.2em]">
