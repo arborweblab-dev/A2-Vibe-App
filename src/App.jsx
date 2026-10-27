@@ -44,7 +44,7 @@ const SHOPS_DATA = [
     ],
     features: ['Upholstery Workspace', 'Fabric & Supply Store', 'Expert Furniture Restoration', 'Creative Workshops & Lessons'],
     hours: 'Mon - Fri: 9:00 AM - 6:00 PM | Sat - Sun: 9:00 AM - 4:00 PM'
-  }
+  },
   {
     id: 'shop-literati',
     name: 'Literati Bookstore',
