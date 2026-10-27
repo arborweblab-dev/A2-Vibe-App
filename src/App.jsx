@@ -27,6 +27,25 @@ import { happeningsData } from './data/happeningsData';
 const SHOPS_DATA = [
   
   {
+    id: 'shop-lullco-design-studio',
+    name: 'LullCo Design Studio',
+    type: 'shop',
+    category: 'Arts & Crafts',
+    tier: 'featured',
+    rating: '4.6',
+    address: '3744 Plaza Dr, Ann Arbor, MI 48108',
+    url: 'https://lullcostudio.com',
+    img: 'https://a2vibe.com/images/LullCo.jpg',
+    shortDesc: 'Ann Arbor’s premier community maker space and studio offering professional equipment, upholstery workshops, and a fully stocked fabric store.',
+    longDesc: '<p>Spanning 6,200 square feet near Zingerman’s Bakehouse, LullCo Design Studio is a dedicated haven for local makers, upholsterers, and textile enthusiasts. Whether you want to hire expert craftsmen to restore your vintage furniture or rent workspace to tackle a DIY project yourself, LullCo provides professional-grade tools, supplies, foam, notions, and hands-on guidance for all experience levels.</p>',
+    specials: [
+      'Introductory upholstery and sewing workshop discounts',
+      'Open studio project pass bundle savings'
+    ],
+    features: ['Upholstery Workspace', 'Fabric & Supply Store', 'Expert Furniture Restoration', 'Creative Workshops & Lessons'],
+    hours: 'Mon - Fri: 9:00 AM - 6:00 PM | Sat - Sun: 9:00 AM - 4:00 PM'
+  }
+  {
     id: 'shop-literati',
     name: 'Literati Bookstore',
     type: 'shop',
