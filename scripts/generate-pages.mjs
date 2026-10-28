@@ -1,8 +1,9 @@
 // scripts/generate-pages.mjs
 // Runs AFTER `vite build`. Generates static, crawlable pages into dist/:
-//   /guide/                 + /guide/<slug>/        (from src/data/journalData.js)
-//   /happenings/            + /happenings/<slug>/   (from src/data/happeningsData.js)
-//   /eats/                  + /eats/<slug>/         (from src/data/eatsData.js)
+//   /guide/               + /guide/<slug>/         (from src/data/journalData.js)
+//   /happenings/          + /happenings/<slug>/    (from src/data/happeningsData.js)
+//   /eats/                + /eats/<slug>/          (from src/data/eatsData.js)
+//   /shops/               + /shops/<slug>/         (from src/data/shopsData.js)
 // and rewrites dist/sitemap.xml to include everything.
 
 import fs from 'node:fs';
@@ -34,6 +35,7 @@ const load = async (rel, exportName) => {
 const journalData = await load('src/data/journalData.js', 'journalData');
 const happeningsData = await load('src/data/happeningsData.js', 'happeningsData');
 const eatsData = await load('src/data/eatsData.js', 'eatsData');
+const shopsData = await load('src/data/shopsData.js', 'SHOPS_DATA');
 
 /* =========================================================================
    Helpers
@@ -164,7 +166,7 @@ ${jsonld.map(ld).join('\n')}
 <body>
 <header class="site"><div class="wrap">
   <a class="brand" href="/"><img src="/favicon-48x48.png" width="32" height="32" alt=""><span class="bt">A2 Vibe</span></a>
-  <nav><a href="/eats/">Eats</a><a href="/happenings/">Events</a><a href="/guide/">Guides</a><a class="cta" href="/">Open app</a></nav>
+  <nav><a href="/eats/">Eats</a><a href="/shops/">Shops</a><a href="/happenings/">Events</a><a href="/guide/">Guides</a><a class="cta" href="/">Open app</a></nav>
 </div></header>
 <div class="wrap">
 ${body}
@@ -317,7 +319,6 @@ const MONTHS = ['january','february','march','april','may','june','july','august
 const MONTH_NAMES = MONTHS.map((m) => m[0].toUpperCase() + m.slice(1));
 const monthIdx = (s) => MONTHS.findIndex((m) => m.startsWith(String(s).toLowerCase().slice(0, 3)));
 
-// "October 23, 2026" | "October 23 - November 14, 2026" | "December 11 - 13, 2026"
 function parseDateRange(str) {
   const m = String(str || '').trim().match(/^([A-Za-z]+)\.?\s+(\d{1,2})(?:\s*[-–]\s*(?:([A-Za-z]+)\.?\s+)?(\d{1,2}))?,?\s*(\d{4})$/);
   if (!m) return null;
@@ -334,7 +335,6 @@ function parseDateRange(str) {
 
 const to24 = (h, min, ap) => ({ h: (+h % 12) + (/p/i.test(ap) ? 12 : 0), min: +min });
 
-// "7:30 PM" | "12:00 PM - 6:00 PM (Tues...)" | "12:00 PM Kickoff" | "Dec 11 (7:00 PM), ..."
 function parseTimes(str) {
   const s = String(str || '');
   const range = s.match(/^\s*(\d{1,2}):(\d{2})\s*([AP]M)\s*[-–]\s*(\d{1,2}):(\d{2})\s*([AP]M)/i);
@@ -344,7 +344,6 @@ function parseTimes(str) {
   return { start: null, end: null };
 }
 
-// US Eastern daylight-saving rules (2nd Sunday of March -> 1st Sunday of November)
 const nthSunday = (y, m, n) => 1 + ((7 - new Date(Date.UTC(y, m, 1)).getUTCDay()) % 7) + (n - 1) * 7;
 const offsetFor = (y, m, d, h) => {
   const t = Date.UTC(y, m, d, h);
@@ -377,7 +376,6 @@ function eventTimes(ev) {
   return { startISO: iso(r.start, t.start), endISO, firstDay: ymd(r.start), lastDay: ymd(r.end), startYM: ymd(r.start).slice(0, 7), startMonth: r.start.m, startYear: r.start.y };
 }
 
-// "825 N University Ave, Ann Arbor, MI 48109 (Hill Auditorium)"
 function parseAddress(addr = '') {
   const m = String(addr).match(/^(.*?),\s*Ann Arbor,\s*MI\s*(\d{5})?\s*(?:\((.*)\))?\s*$/i);
   if (!m) return { street: String(addr), zip: null, venue: null };
@@ -511,7 +509,6 @@ ${others.map((o) => `<li><a href="/happenings/${o.slug}/">${esc(o.name)}<span>${
   addUrl(e.url, e.isPast ? e.times?.lastDay || today : today, 'weekly', e.isPast ? '0.3' : '0.7');
 }
 
-/* ---------- events index ---------- */
 const evCard = (e) => `    <a class="card evcard fcard" id="${esc(e.id || e.slug)}" data-cats="${e.cats.map(slugify).join(' ')}" href="/happenings/${e.slug}/">
       ${e.img ? `<img src="${esc(abs(e.img))}" alt="${esc(e.name)}" loading="lazy" width="96" height="96">` : ''}
       <div><small>${esc(e.date)}${e.time ? ` · ${esc(e.time.split(/[(,]/)[0].trim())}` : ''}</small><b>${esc(e.name)}</b><small>${esc(e.addr.venue || e.addr.street)}${e.price ? ` · ${esc(e.price)}` : ''}</small><small>${esc(e.shortDesc || '')}</small></div>
@@ -599,7 +596,6 @@ addUrl(`${SITE}/happenings/`, today, 'daily', '0.9');
 /* =========================================================================
    EATS (RESTAURANTS, BARS, CAFES)
    ========================================================================= */
-// Works for any "City, ST 12345" address, with an optional "(Venue)" suffix.
 function parseStreetAddress(addr = '') {
   const m = String(addr).match(/^(.*?),\s*([^,]+),\s*([A-Z]{2})\s*(\d{5})?(?:\s*\((.*)\))?\s*$/);
   if (!m) return { street: String(addr), city: 'Ann Arbor', state: 'MI', zip: null };
@@ -738,7 +734,6 @@ ${others.map((o) => `<li><a href="/eats/${o.slug}/">${esc(o.name)}<span>${esc([o
   addUrl(r.url, today, 'monthly', '0.7');
 }
 
-/* ---------- eats index ---------- */
 const eatCard = (r) => `    <a class="card fcard" id="${esc(r.id || r.slug)}" data-cats="${catsOf(r).map(slugify).join(' ')}" href="/eats/${r.slug}/">
       ${r.img ? `<img src="${esc(abs(r.img))}" alt="${esc(r.name)}" loading="lazy" width="96" height="96">` : ''}
       <div><small>${esc([r.cuisine, r.hood].filter(Boolean).join(' · '))}</small><b>${esc(r.name)}</b><small>${esc(r.shortDesc || '')}</small></div>
@@ -810,6 +805,203 @@ ${filterScript}`,
 addUrl(`${SITE}/eats/`, today, 'weekly', '0.9');
 
 /* =========================================================================
+   SHOPS (RETAIL, BOUTIQUES, MARKETS)
+   ========================================================================= */
+const usedShopSlugs = new Set();
+const shops = (shopsData || [])
+  .filter((s) => s && (s.title || s.name))
+  .map((s) => {
+    const name = s.title || s.name;
+    const slug = uniqueSlug(s.slug ? slugify(s.slug) : slugify(name), usedShopSlugs, s.id);
+    const category = s.category ? String(s.category) : '';
+    return {
+      ...s,
+      name,
+      slug,
+      url: `${SITE}/shops/${slug}/`,
+      site: s.url && /^https?:\/\//.test(s.url) ? s.url : null,
+      category,
+      addr: s.address ? parseStreetAddress(s.address) : null,
+      phone: s.phone || s.telephone || null,
+      features: toArray(s.features).map(String),
+      specials: toArray(s.specials).map(String),
+      gallery: [...new Set(toArray(s.images).map(abs))].filter((u) => u !== abs(s.img)).slice(0, 8),
+      ctaText: s.ctaText ? String(s.ctaText) : 'Official website',
+      description: (() => {
+        const short = stripHtml(s.shortDesc || '') || name;
+        return clip(`${short}${/[.!?]$/.test(short) ? '' : '.'} ${category ? `${category} · ` : ''}Ann Arbor, MI`);
+      })(),
+      bodyHtml: (s.longDesc || (s.shortDesc ? `<p>${esc(s.shortDesc)}</p>` : ''))
+        .replace(/<h4(\s|>)/g, '<h2$1')
+        .replace(/<\/h4>/g, '</h2>'),
+    };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const shopMapsLink = (s) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.name} ${s.address || 'Ann Arbor, MI'}`)}`;
+
+const shopType = (s) => {
+  const cat = s.category.toLowerCase();
+  if (cat.includes('book') || cat.includes('vinyl')) return 'BookStore';
+  if (cat.includes('market') || cat.includes('grocery')) return 'GroceryStore';
+  return 'Store';
+};
+
+const shopJsonLd = (s) => {
+  return {
+    '@context': 'https://schema.org',
+    '@type': shopType(s),
+    name: s.name,
+    url: s.site || s.url,
+    mainEntityOfPage: s.url,
+    image: [abs(s.img), ...s.gallery],
+    description: s.description,
+    ...(s.category ? { category: s.category } : {}),
+    ...(s.addr
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: s.addr.street,
+            addressLocality: s.addr.city,
+            addressRegion: s.addr.state,
+            ...(s.addr.zip ? { postalCode: s.addr.zip } : {}),
+            addressCountry: 'US',
+          },
+        }
+      : {}),
+    ...(s.phone ? { telephone: String(s.phone) } : {}),
+  };
+};
+
+for (const s of shops) {
+  const sameCat = shops.filter((o) => o.slug !== s.slug && s.category && o.category === s.category);
+  const rest = shops.filter((o) => o.slug !== s.slug && !sameCat.includes(o));
+  const others = [...sameCat, ...rest].slice(0, 5);
+  const rel = `noopener${s.tier === 'featured' ? '' : ''}`;
+
+  const body = `
+<main>
+<article>
+  <p class="kicker">${esc(s.category || 'Ann Arbor Shop')}</p>
+  <h1>${esc(s.name)}</h1>
+  <dl class="facts">
+    ${s.category ? `<div><dt>Category</dt><dd>${esc(s.category)}</dd></div>` : ''}
+    ${s.address ? `<div><dt>Address</dt><dd>${esc(s.address)}</dd></div>` : ''}
+    ${s.hours ? `<div><dt>Hours</dt><dd>${esc(s.hours)}</dd></div>` : ''}
+    ${s.phone ? `<div><dt>Phone</dt><dd><a href="tel:${esc(String(s.phone).replace(/[^\d+]/g, ''))}">${esc(s.phone)}</a></dd></div>` : ''}
+  </dl>
+  ${s.features.length ? `<ul class="tags">${s.features.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+  <div class="actions">
+    ${s.site ? `<a class="btn" href="${esc(s.site)}" target="_blank" rel="${rel}">${esc(s.ctaText)}</a>` : ''}
+    <a class="btn alt" href="${esc(shopMapsLink(s))}" target="_blank" rel="noopener">Get directions</a>
+  </div>
+  ${s.img ? `<img class="hero" src="${esc(abs(s.img))}" alt="${esc(s.name)}" loading="eager">` : ''}
+  ${s.gallery.length ? `<div class="gallery">${s.gallery.map((u, i) => `<img src="${esc(u)}" alt="${esc(s.name)} photo ${i + 2}" loading="lazy">`).join('')}</div>` : ''}
+  <div class="content">${s.bodyHtml}</div>
+  ${s.specials.length ? `<div class="box"><strong>Specials &amp; Perks</strong><ul>${s.specials.map((sp) => `<li>${esc(sp)}</li>`).join('')}</ul></div>` : ''}
+</article>
+<div class="box">
+  <strong>More to explore in Ann Arbor</strong>
+  <p style="margin:6px 0 14px">Save your favorites and find restaurants, parks and events in the free A2 Vibe app.</p>
+  <a class="btn" href="/">Open A2 Vibe</a> <a class="btn alt" href="/shops/">All Ann Arbor shops</a>
+</div>
+${others.length ? `<aside class="more"><h2>More local shops</h2><ul>
+${others.map((o) => `<li><a href="/shops/${o.slug}/">${esc(o.name)}<span>${esc(o.category)}</span></a></li>`).join('\n')}
+</ul></aside>` : ''}
+</main>`;
+
+  write(
+    `shops/${s.slug}/index.html`,
+    shell({
+      title: `${s.name} | Ann Arbor Shops | A2 Vibe`,
+      description: s.description,
+      canonical: s.url,
+      image: abs(s.img),
+      jsonld: [
+        shopJsonLd(s),
+        crumbs([
+          { name: 'A2 Vibe', url: `${SITE}/` },
+          { name: 'Ann Arbor Shops', url: `${SITE}/shops/` },
+          { name: s.name, url: s.url },
+        ]),
+      ],
+      body,
+    })
+  );
+  addUrl(s.url, today, 'monthly', '0.7');
+}
+
+const shopCard = (s) => `    <a class="card fcard" id="${esc(s.id || s.slug)}" data-cats="${slugify(s.category)}" href="/shops/${s.slug}/">
+      ${s.img ? `<img src="${esc(abs(s.img))}" alt="${esc(s.name)}" loading="lazy" width="96" height="96">` : ''}
+      <div><small>${esc(s.category)}</small><b>${esc(s.name)}</b><small>${esc(s.shortDesc || '')}</small></div>
+    </a>`;
+
+const shopCatCount = new Map();
+shops.forEach((s) => { if (s.category) { const k = slugify(s.category); const cur = shopCatCount.get(k) || { label: s.category, n: 0 }; cur.n++; shopCatCount.set(k, cur); } });
+const topShopCategories = [...shopCatCount].sort((a, b) => b[1].n - a[1].n).map(([k, v]) => [k, v.label]);
+const featuredShops = shops.filter((s) => s.tier === 'featured');
+const otherShops = shops.filter((s) => s.tier !== 'featured');
+
+write(
+  'shops/index.html',
+  shell({
+    title: 'Ann Arbor Shops, Boutiques & Markets | A2 Vibe',
+    description:
+      'Explore local Ann Arbor, Michigan shops, independent bookstores, vintage boutiques, dispensaries and specialty markets curated by A2 Vibe.',
+    canonical: `${SITE}/shops/`,
+    image: `${SITE}/og-image.png`,
+    jsonld: [
+      crumbs([
+        { name: 'A2 Vibe', url: `${SITE}/` },
+        { name: 'Ann Arbor Shops', url: `${SITE}/shops/` },
+      ]),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'Ann Arbor Shops',
+        url: `${SITE}/shops/`,
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: shops.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: s.url })),
+        },
+      },
+    ],
+    body: `
+<main>
+  <p class="kicker">A2 Shops</p>
+  <h1>Ann Arbor Shops, Boutiques &amp; Markets</h1>
+  <p class="meta">${shops.length} local retail spots, bookstores, dispensaries, and markets curated by A2 Vibe.</p>
+  ${
+    topShopCategories.length
+      ? `<div class="chips" aria-label="Filter shops by category"><button type="button" class="chip on" data-cat="all">All</button>${topShopCategories
+          .map(([k, label]) => `<button type="button" class="chip" data-cat="${esc(k)}">${esc(label)}</button>`)
+          .join('')}</div>`
+      : ''
+  }
+${
+  featuredShops.length
+    ? `  <section class="fsec">\n    <h2>Featured Shops</h2>\n    <div class="cards">\n${featuredShops.map(shopCard).join('\n')}\n    </div>\n  </section>`
+    : ''
+}
+  <section class="fsec">
+    <h2>${featuredShops.length ? 'All Ann Arbor shops' : 'Ann Arbor shops'}</h2>
+    <div class="cards">
+${otherShops.map(shopCard).join('\n')}
+    </div>
+  </section>
+  <div class="box">
+    <strong>Own a shop or boutique in Ann Arbor?</strong>
+    <p style="margin:6px 0 14px">Open the A2 Vibe app to list or feature your business.</p>
+    <a class="btn" href="/">Open A2 Vibe</a>
+  </div>
+</main>
+${filterScript}`,
+  })
+);
+addUrl(`${SITE}/shops/`, today, 'weekly', '0.9');
+
+/* =========================================================================
    Sitemap
    ========================================================================= */
 const all = [{ loc: `${SITE}/`, lastmod: today, changefreq: 'weekly', priority: '1.0' }, ...sitemapUrls];
@@ -828,5 +1020,5 @@ ${all
 `
 );
 
-console.log(`✓ ${guides.length} guide page(s), ${events.length} event page(s) (${upcoming.length} upcoming, ${past.length} past), ${eats.length} eats page(s)`);
+console.log(`✓ ${guides.length} guide page(s), ${events.length} event page(s) (${upcoming.length} upcoming, ${past.length} past), ${eats.length} eats page(s), ${shops.length} shop page(s)`);
 console.log(`✓ sitemap.xml with ${all.length} URLs (build date ${today})`);
