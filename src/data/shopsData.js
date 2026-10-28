@@ -83,6 +83,25 @@ export const SHOPS_DATA = [
     img: 'https://a2vibe.com/images/Encore-Records.jpg'
   },
   {
+    id: 'shop-monahans-seafood',
+    name: 'Monahan’s Seafood Market',
+    type: 'shop',
+    category: 'Specialty Markets',
+    tier: 'featured',
+    rating: '4.7',
+    address: '407 N 5th Ave, Ann Arbor, MI 48104',
+    url: 'http://monahansseafood.com/',
+    img: 'https://a2vibe.com/images/Monahans.jpg',
+    shortDesc: 'Long-standing Kerrytown market stall offering fresh local and imported seafood, ready-to-eat lunch, and take-home meals.',
+    longDesc: '<p>A beloved cornerstone of the Kerrytown Market & Shops since 1979, Monahan’s Seafood Market provides Ann Arbor with the highest quality fresh fish, shellfish, and gourmet seafood specialties. Beyond the iced market counters showcasing daily catches from around the world, Monahan’s operates a bustling lunch counter serving legendary fish and chips, fresh fish tacos, clam chowder, and grilled seafood plates.</p>',
+    specials: [
+      'Daily fresh catch selections and seasonal oysters',
+      'Freshly prepared fish and chips lunch specials'
+    ],
+    features: ['Fresh Seafood Counter', 'Lunch & Take-Home Meals', 'Kerrytown Landmark', 'Expert Fishmongers'],
+    hours: 'Mon - Fri: 8:00 AM - 7:00 PM | Sat: 7:00 AM - 5:00 PM | Sun: 10:00 AM - 5:00 PM'
+  },
+  {
     id: 'shop-bivouac',
     name: 'Bivouac Outdoor & Boutique',
     type: 'shop',
