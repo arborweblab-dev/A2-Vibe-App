@@ -101,20 +101,6 @@ export const eatsData = [
     isFeatured: true
   },
   {
-    id: "eat-6",
-    title: "Aventura",
-    neighborhood: "Downtown",
-    tags: ["Spanish", "Tapas", "Wine Bar"],
-    cuisine: "Spanish Tapas",
-    address: "216 E Washington St, Ann Arbor, MI 48104",
-    img: "/images/aventura.jpg",
-    shortDesc: "Lively downtown tapas bar featuring authentic Spanish small plates.",
-    longDesc: "<p>Enjoy traditional jamón, patatas bravas, fresh seafood paella, and an impressive selection of Spanish wines and sherries.</p>",
-    ctaText: "Reserve a Table",
-    url: "https://aventuraannarbor.com",
-    isHighlight: false
-  },
-  {
     id: "eat-7",
     title: "Blank Slate Creamery",
     neighborhood: "West Liberty",
